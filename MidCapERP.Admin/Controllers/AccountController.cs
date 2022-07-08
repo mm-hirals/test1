@@ -6,21 +6,17 @@ using MidCapERP.Infrastructure.Services.Token;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class AuthorizeController : Controller
+    public class AccountController : Controller
     {
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthorizeController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService)
+        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService)
         {
             _httpContextAccessor = httpContextAccessor;
             _tokenService = tokenService;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
@@ -28,10 +24,25 @@ namespace MidCapERP.Admin.Controllers
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<IActionResult> login(TokenRequest request, CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<IActionResult> Login(CancellationToken cancellationToken)
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Login(TokenRequest request, CancellationToken cancellationToken)
         {
             request.Username = "kparmar@magnusminds.net";
             request.Password = "Password@1";
@@ -39,7 +50,7 @@ namespace MidCapERP.Admin.Controllers
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, true);
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MidCapERP.Admin.Models;
+using MidCapERP.Infrastructure.Constants;
 using System.Diagnostics;
 
 namespace MidCapERP.Admin.Controllers
@@ -13,6 +15,7 @@ namespace MidCapERP.Admin.Controllers
             _logger = logger;
         }
 
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
             return View();

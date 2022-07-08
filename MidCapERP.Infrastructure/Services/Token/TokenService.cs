@@ -132,7 +132,7 @@ namespace MidCapERP.Infrastructure.Services.Token
                     new Claim(TokenEnum.NameIdentifier.ToString(), user.Email),
                     new Claim(TokenEnum.Role.ToString(), roleName),
                     new Claim(TokenEnum.RoleId.ToString(), roleDetails.Id)
-                });
+                }, isCookie ? CookieAuthenticationDefaults.AuthenticationScheme : null);
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {

@@ -1,0 +1,73 @@
+﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.DataAccess.UnitOfWork;
+using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.Categories;
+
+namespace MidCapERP.BusinessLogic.Repositories
+{
+    public class CategoriesBL : ICategoriesBL
+    {
+        private IUnitOfWorkDA _unitOfWorkDA;
+        public readonly IMapper _mapper;
+
+        public CategoriesBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper)
+        {
+            _unitOfWorkDA = unitOfWorkDA;
+            _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<CategoriesResponseDto>> GetAll(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
+            var DataToReturn = _mapper.Map<List<CategoriesResponseDto>>(data.ToList());
+            return DataToReturn;
+        }
+
+        public async Task<CategoriesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            return _mapper.Map<CategoriesResponseDto>(data);
+        }
+
+        public async Task<CategoriesRequestDto> GetById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            return _mapper.Map<CategoriesRequestDto>(data);
+        }
+
+        public async Task<CategoriesRequestDto> CreateCategory(CategoriesRequestDto model, CancellationToken cancellationToken)
+        {
+            var categoryToInsert = _mapper.Map<Categories>(model);
+            var data = await _unitOfWorkDA.CategoriesDA.CreateCategory(categoryToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
+            return _mappedUser;
+        }
+
+        public async Task<CategoriesRequestDto> UpdateCategory(int Id, CategoriesRequestDto model, CancellationToken cancellationToken)
+        {
+            var oldData = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            MapToDbObject(model, oldData);
+            var data = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, oldData, cancellationToken);
+            var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
+            return _mappedUser;
+        }
+
+        private static void MapToDbObject(CategoriesRequestDto model, Categories oldData)
+        {
+            oldData.CategoryName = model.CategoryName;
+        }
+
+        public async Task<CategoriesRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken)
+        {
+            var categoryToUpdate = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            if (categoryToUpdate != null)
+            {
+                categoryToUpdate.IsActive = false;
+            }
+            var data = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, categoryToUpdate, cancellationToken);
+            var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
+            return _mappedUser;
+        }
+    }
+}
