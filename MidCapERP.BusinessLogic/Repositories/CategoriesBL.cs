@@ -27,12 +27,20 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CategoriesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Category not found");
+            }
             return _mapper.Map<CategoriesResponseDto>(data);
         }
 
         public async Task<CategoriesRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Category not found");
+            }
             return _mapper.Map<CategoriesRequestDto>(data);
         }
 
@@ -47,6 +55,10 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CategoriesRequestDto> UpdateCategory(int Id, CategoriesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
+            if (oldData == null)
+            {
+                throw new Exception("Category not found");
+            }
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
@@ -61,10 +73,11 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CategoriesRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken)
         {
             var categoryToUpdate = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
-            if (categoryToUpdate != null)
+            if (categoryToUpdate == null)
             {
-                categoryToUpdate.IsActive = false;
+                throw new Exception("Category not found");
             }
+            categoryToUpdate.IsActive = false;
             var data = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, categoryToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
             return _mappedUser;
