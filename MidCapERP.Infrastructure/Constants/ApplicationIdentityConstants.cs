@@ -22,7 +22,7 @@
                 {
                     $"Permissions.{module}.Create",
                     $"Permissions.{module}.View",
-                    $"Permissions.{module}.Edit",
+                    $"Permissions.{module}.Update",
                     $"Permissions.{module}.Delete",
                 };
             }
@@ -30,7 +30,10 @@
             public static List<string> GetAllPermissions()
             {
                 return GeneratePermissionsForModule("Users")
-                .Union(GeneratePermissionsForModule("Role")).ToList();
+                .Union(GeneratePermissionsForModule("Role"))
+                .Union(GeneratePermissionsForModule("Dashboard"))
+                .Union(GeneratePermissionsForModule("Category"))
+                .ToList();
             }
 
             public static bool CheckPermission(string permission)
@@ -47,7 +50,7 @@
             {
                 public const string View = "Permissions.Users.View";
                 public const string Create = "Permissions.Users.Create";
-                public const string Edit = "Permissions.Users.Edit";
+                public const string Update = "Permissions.Users.Update";
                 public const string Delete = "Permissions.Users.Delete";
             }
 
@@ -55,8 +58,24 @@
             {
                 public const string View = "Permissions.Role.View";
                 public const string Create = "Permissions.Role.Create";
-                public const string Edit = "Permissions.Role.Edit";
+                public const string Update = "Permissions.Role.Update";
                 public const string Delete = "Permissions.Role.Delete";
+            }
+
+            public static class Dashboard
+            {
+                public const string View = "Permissions.Dashboard.View";
+                public const string Create = "Permissions.Dashboard.Create";
+                public const string Update = "Permissions.Dashboard.Update";
+                public const string Delete = "Permissions.Dashboard.Delete";
+            }
+
+            public static class Category
+            {
+                public const string View = "Permissions.Category.View";
+                public const string Create = "Permissions.Category.Create";
+                public const string Update = "Permissions.Category.Update";
+                public const string Delete = "Permissions.Category.Delete";
             }
         }
     }

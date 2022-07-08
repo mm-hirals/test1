@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MidCapERP.BusinessLogic\MidCapERP.BusinessLogic.csproj" />
+    <ProjectReference Include="..\MidCapERP.DataAccess\MidCapERP.DataAccess.csproj" />
     <ProjectReference Include="..\MidCapERP.DataEntities\MidCapERP.DataEntities.csproj" />
   </ItemGroup>
 

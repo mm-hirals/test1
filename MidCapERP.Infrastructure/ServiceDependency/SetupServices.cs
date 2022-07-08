@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MidCapERP.BusinessLogic.Extention;
+using MidCapERP.DataAccess.Extention;
 using MidCapERP.Infrastructure.Identity.Authorization;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
@@ -17,6 +19,9 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.Configure<TokenConfiguration>(configuration.GetSection("token"));
             services.AddScoped<ITokenService, TokenService>();
             services.SetAuthorization();
+            services.SetupUnitOfWorkDA();
+            services.SetupUnitOfWorkBL();
+            services.SetupAutoMapper();
         }
 
         public static void SetAuthorization(this IServiceCollection services)
@@ -29,9 +34,8 @@ namespace MidCapERP.Infrastructure.ServiceDependency
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                     options.SlidingExpiration = true;
                     options.AccessDeniedPath = "/Forbidden/";
-                    options.LoginPath = "/Login";
+                    options.LoginPath = "/Authorize/Login";
                 });
-
             services.AddAuthorization(
                 options =>
                 {
