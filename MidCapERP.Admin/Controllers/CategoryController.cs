@@ -24,34 +24,34 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
-        public async Task<IActionResult> Create(CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
+        public async Task<IActionResult> CreateOrUpdate(int Id, CancellationToken cancellationToken)
         {
-            var categories = await _unitOfWorkBL.CategoriesBL.GetAll(cancellationToken);
-            return View(categories);
+            if (Id == 0)
+            {
+                return PartialView("_CategoryPartial");
+            }
+            else
+            {
+                var categories = await _unitOfWorkBL.CategoriesBL.GetById(Id, cancellationToken);
+                return PartialView("_CategoryPartial", categories);
+            }
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
-        public async Task<IActionResult> Create(CategoriesRequestDto categoriesRequestDto, CancellationToken cancellationToken)
-        {
-            var categories = await _unitOfWorkBL.CategoriesBL.CreateCategory(categoriesRequestDto, cancellationToken);
-            return View(categories);
-        }
-
-        [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateOrUpdate(int Id, CategoriesRequestDto categoriesRequestDto, CancellationToken cancellationToken)
         {
-            var categories = await _unitOfWorkBL.CategoriesBL.GetById(Id, cancellationToken);
-            return View(categories);
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CategoriesRequestDto categoriesRequestDto, CancellationToken cancellationToken)
-        {
-            var categories = await _unitOfWorkBL.CategoriesBL.UpdateCategory(Id, categoriesRequestDto, cancellationToken);
-            return View(categories);
+            if (Id == 0)
+            {
+                var categories = await _unitOfWorkBL.CategoriesBL.CreateCategory(categoriesRequestDto, cancellationToken);
+            }
+            else
+            {
+                var categories = await _unitOfWorkBL.CategoriesBL.UpdateCategory(Id, categoriesRequestDto, cancellationToken);
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             var categories = await _unitOfWorkBL.CategoriesBL.DeleteCategory(Id, cancellationToken);
-            return View(categories);
+            return RedirectToAction("Index");
         }
     }
 }

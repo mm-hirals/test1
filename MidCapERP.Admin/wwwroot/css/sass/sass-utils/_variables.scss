@@ -6,6 +6,7 @@ $black: #202020;
 $gray: #7e909a;
 $darkGray:#454545;
 $crystal: #a5d8dd;
+$formLabelColor: #606060;
 // Layout Color
 $primary: #4b49ac;
 $secondary: #98bdff;
@@ -30,4 +31,10 @@ $footerHeight: 54px;
 $navWidth: 68px;
 $sideBarZindex: 100;
 $headerShadow: 0px 0px 12px 0px rgba($black, 0.2);
+//Modal Scroll
+$modalHeaderHeight: 63px;
+$modalFooterHeight: 71px;
+//Form Config
+$form-label-font-weight: 600;
+$form-label-color: $formLabelColor;
 //========================= End Layout Config =================

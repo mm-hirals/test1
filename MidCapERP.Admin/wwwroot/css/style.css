@@ -2229,6 +2229,8 @@ progress {
 
 .form-label {
   margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #606060;
 }
 
 .col-form-label {
@@ -2236,7 +2238,9 @@ progress {
   padding-bottom: calc(0.375rem + 1px);
   margin-bottom: 0;
   font-size: inherit;
+  font-weight: 600;
   line-height: 1.5;
+  color: #606060;
 }
 
 .col-form-label-lg {
@@ -12213,6 +12217,14 @@ body {
   overflow-y: auto;
 }
 
+.form-group {
+  margin: 0 0 16px;
+}
+
+.control-label {
+  font-weight: 600;
+}
+
 .c-card--wrapper {
   background: #fafafa;
   border-radius: 6px;
@@ -12301,6 +12313,9 @@ body {
 
 .modal.right .modal-body {
   padding: 15px 15px 80px;
+  height: calc(100vh - 63px - 71px);
+  max-height: calc(100vh - 63px - 71px);
+  overflow: auto;
 }
 
 .modal.right.fade .modal-dialog {
@@ -12329,6 +12344,17 @@ body {
   border-bottom-color: #f1f1f1;
   background-color: #fafafa;
   border-radius: 0;
+}
+
+.modal .modal-form--wrapper {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
 }
 
 .modal-dialog .modal-header {

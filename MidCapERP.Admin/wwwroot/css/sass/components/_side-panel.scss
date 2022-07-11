@@ -13,6 +13,9 @@
         }
         .modal-body {
             padding: 15px 15px 80px;
+            height: calc(100vh - #{$modalHeaderHeight} - #{$modalFooterHeight});
+            max-height: calc(100vh - #{$modalHeaderHeight} - #{$modalFooterHeight});
+            overflow: auto;
         }
         &.fade {
             .modal-dialog {
@@ -40,5 +43,10 @@
         border-bottom-color: $offWhite;
         background-color: $white;
         border-radius: 0;
+    }
+    .modal-form--wrapper{
+        height: 100%;
+        display: flex;
+        flex-flow: column;
     }
 }

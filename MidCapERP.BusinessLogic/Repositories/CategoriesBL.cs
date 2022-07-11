@@ -47,6 +47,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CategoriesRequestDto> CreateCategory(CategoriesRequestDto model, CancellationToken cancellationToken)
         {
             var categoryToInsert = _mapper.Map<Categories>(model);
+            categoryToInsert.IsDeleted = true;
             var data = await _unitOfWorkDA.CategoriesDA.CreateCategory(categoryToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
             return _mappedUser;
@@ -59,6 +60,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Category not found");
             }
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
@@ -77,7 +80,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Category not found");
             }
-            categoryToUpdate.IsActive = false;
+            categoryToUpdate.IsDeleted = false;
+            categoryToUpdate.UpdatedDate = DateTime.Now;
+            categoryToUpdate.UpdatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, categoryToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<CategoriesRequestDto>(data);
             return _mappedUser;
