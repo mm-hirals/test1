@@ -1,0 +1,4 @@
+// Spacing
+@function spacing($value: 1) {
+  @return $baseFont * $value;
+}

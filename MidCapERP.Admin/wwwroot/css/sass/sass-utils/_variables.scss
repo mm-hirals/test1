@@ -1,0 +1,33 @@
+//========================= Start Color =================
+// Global
+$white: #fafafa;
+$offWhite: #f1f1f1;
+$black: #202020;
+$gray: #7e909a;
+$darkGray:#454545;
+$crystal: #a5d8dd;
+// Layout Color
+$primary: #4b49ac;
+$secondary: #98bdff;
+$tertiary: #f3797e;
+// Component Color
+$layoutBgColor: lighten($secondary, 18%);
+$defaultBorderColor: $crystal;
+//========================= End Color =================
+//========================= Start Breakpoints =================
+$breakpoints: ( sm: 576px, md: 768px, lg: 992px, xl: 1201px, );
+//========================= End Breakpoints =================
+//========================= Start Layout Config =================
+// Global Config
+$defaultRadius: 6px;
+$defaulShaodw: 2px 2px 15px 0px rgba($black, 0.1);
+$cardTitleFontSize: 18px;
+$cardTitleFontWeight: 700;
+$cardTitleColor: $darkGray;
+// Header Config
+$headerHeight: 3rem;
+$footerHeight: 54px;
+$navWidth: 68px;
+$sideBarZindex: 100;
+$headerShadow: 0px 0px 12px 0px rgba($black, 0.2);
+//========================= End Layout Config =================
