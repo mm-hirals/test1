@@ -1,0 +1,10 @@
+body {
+    background-color: $layoutBgColor;
+}
+
+.c-main-content--wrapper {
+    padding: spacing(1.5);
+    height: calc(100vh - #{$headerHeight} - #{$footerHeight});
+    max-height: calc(100vh - (#{$headerHeight} + #{$footerHeight}));
+    overflow-y: auto;
+}

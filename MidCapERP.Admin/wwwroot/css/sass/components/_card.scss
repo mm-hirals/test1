@@ -1,0 +1,40 @@
+$cardDefaultSpacing: spacing();
+.c-card {
+    &--wrapper {
+        background: $white;
+        border-radius: $defaultRadius;
+        box-shadow: $defaulShaodw;
+    }
+    &--header {
+        padding: $cardDefaultSpacing;
+        border-bottom: 1px solid $defaultBorderColor;
+        @include flexbox($hAlign: space-between);
+        &-action {
+            @include flexbox($vAlign: center);
+            &-btn {
+                @include flexbox($vAlign: center);
+            }
+            >*+* {
+                margin-left: spacing();
+            }
+        }
+        &-no-spacing {
+            padding: 0;
+        }
+        &-title {
+            font-size: $cardTitleFontSize;
+            font-weight: $cardTitleFontWeight;
+            color: $cardTitleColor;
+            margin-bottom: 0;
+        }
+        &-no-border {
+            border-bottom: none;
+        }
+    }
+    &--body {
+        padding: $cardDefaultSpacing;
+        &-no-spacing {
+            padding: 0;
+        }
+    }
+}
