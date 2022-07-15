@@ -84,11 +84,11 @@ namespace MidCapERP.Admin.Middleware
                                          + htmlTrStart + htmlTdStart + "TimeStamp" + htmlTdEnd + htmlTdStart + logEntry.TimeStamp + htmlTdEnd + htmlTrEnd
                                          + htmlTrStart + htmlTdStart + "ActionDescriptor" + htmlTdEnd + htmlTdStart + logEntry.ActionDescriptor + htmlTdEnd + htmlTrEnd
                                          + htmlTrStart + htmlTdStart + "IpAddress" + htmlTdEnd + htmlTdStart + logEntry.IpAddress + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "Message" + htmlTdEnd + htmlTdStart + logEntry.Message.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "Exception" + htmlTdEnd + htmlTdStart + logEntry.Exception.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
                                          + htmlTrStart + htmlTdStart + "Source" + htmlTdEnd + htmlTdStart + logEntry.Source + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "StackTrace" + htmlTdEnd + htmlTdStart + logEntry.StackTrace.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
                                          + htmlTrStart + htmlTdStart + "Type" + htmlTdEnd + htmlTdStart + logEntry.Type + htmlTdEnd + htmlTrEnd
+                                         + htmlTrStart + htmlTdStart + "Message" + htmlTdEnd + htmlTdStart + logEntry.Message?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
+                                         + htmlTrStart + htmlTdStart + "Exception" + htmlTdEnd + htmlTdStart + logEntry.Exception?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
+                                         + htmlTrStart + htmlTdStart + "StackTrace" + htmlTdEnd + htmlTdStart + logEntry.StackTrace?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
                                          + htmlTrStart + htmlTdStart + "BrowserName" + htmlTdEnd + htmlTdStart + logEntry.BrowserName + htmlTdEnd + htmlTrEnd
                                          + htmlTableEnd;
 
@@ -100,8 +100,7 @@ namespace MidCapERP.Admin.Middleware
                             message.To.Add(new MailboxAddress("MidCap-ERP Error Email", item));
                         message.Subject = "Error Exception | MidCap-ERP | " + DateTime.Now;
                         message.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = htmlContent };
-                        _emailSender.SendEmailAsync(message);
-                        //await Task.Run(() => { _emailSender.SendEmailAsync(message); });
+                        Task.Run(async () => { await _emailSender.SendEmailAsync(message); });
                     }
                 }
             }
