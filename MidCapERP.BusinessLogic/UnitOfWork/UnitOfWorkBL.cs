@@ -11,7 +11,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public UnitOfWorkBL(ICategoriesBL categoriesBL, ApplicationDbContext context)
         {
             this._context = context;
-            this._context = context;
             this.CategoriesBL = categoriesBL;
         }
 
