@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.BusinessLogic.Extention;
 using MidCapERP.DataAccess.Extention;
+using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Identity.Authorization;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
@@ -18,6 +19,7 @@ namespace MidCapERP.Infrastructure.ServiceDependency
         {
             services.Configure<TokenConfiguration>(configuration.GetSection("token"));
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<CurrentUser>();
             services.SetAuthorization();
             services.SetupUnitOfWorkDA();
             services.SetupUnitOfWorkBL();

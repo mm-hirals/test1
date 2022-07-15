@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.Admin.Models;
+using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Constants;
 using System.Diagnostics;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CurrentUser _currentUser;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CurrentUser currentUser)
         {
+            _currentUser = currentUser;
             _logger = logger;
         }
 

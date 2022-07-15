@@ -9,6 +9,7 @@ namespace MidCapERP.DataEntities.Models
         public string LastName { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public int UserID { get; set; }
 
         [IgnoreDataMember]
         public string FullName

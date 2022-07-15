@@ -8,6 +8,7 @@
         NameIdentifier,
         Role,
         RoleId,
-        EmailAddress
+        EmailAddress,
+        TenantID,
     }
 }

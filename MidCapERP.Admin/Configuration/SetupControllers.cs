@@ -1,4 +1,6 @@
-﻿namespace MidCapERP.Admin.Configuration
+﻿using MidCapERP.Admin.Middleware;
+
+namespace MidCapERP.Admin.Configuration
 {
     /// <summary>
     ///     Configure MVC options
@@ -14,6 +16,11 @@
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<CurrentUserActionFilter>();
+            services.AddMvc(options =>
+            {
+                options.Filters.AddService<CurrentUserActionFilter>();
+            });
 
             // API controllers
             //services.AddControllers(
