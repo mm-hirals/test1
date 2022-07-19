@@ -16,9 +16,28 @@ namespace MidCapERP.Infrastructure.ServiceDependency
         /// <param name="configuration"></param>
         public static void SetupIdentityDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MidCapERP.DataEntities")));
+            string dataBaseEnvironment = configuration.GetConnectionString("DataBaseEnvironment");
 
+            if (dataBaseEnvironment == "MSSQL")
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MidCapERP.DataEntities")));
+            }
+
+            if (dataBaseEnvironment == "MYSQL")
+            {
+                services.AddDbContextPool<ApplicationDbContext>(options =>
+                {
+                    options.UseMySql(
+                        configuration.GetConnectionString("DefaultConnection"),
+                        ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection")),
+                        options => options.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null)
+                        );
+                });
+            }
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                     .AddDefaultTokenProviders()
                     .AddUserManager<UserManager<ApplicationUser>>()
