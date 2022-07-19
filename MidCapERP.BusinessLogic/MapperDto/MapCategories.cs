@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto.Categories;
+using MidCapERP.Dto.Lookups;
 
 namespace MidCapERP.BusinessLogic.MapperDto
 {
@@ -10,6 +11,9 @@ namespace MidCapERP.BusinessLogic.MapperDto
         {
             CreateMap<Categories, CategoriesResponseDto>().ReverseMap();
             CreateMap<Categories, CategoriesRequestDto>().ReverseMap();
+
+            CreateMap<Lookups, LookupsResponseDto>().ReverseMap();
+            CreateMap<Lookups, LookupsRequestDto>().ReverseMap();
         }
     }
 }
