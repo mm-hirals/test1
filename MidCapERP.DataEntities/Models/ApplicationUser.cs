@@ -21,6 +21,6 @@ namespace MidCapERP.DataEntities.Models
         }
 
         //[JsonIgnore]
-        public List<RefreshToken> RefreshTokens { get; set; }
+        //public List<RefreshToken> RefreshTokens { get; set; }
     }
 }
