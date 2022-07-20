@@ -11,9 +11,6 @@ namespace MidCapERP.BusinessLogic.MapperDto
         {
             CreateMap<Categories, CategoriesResponseDto>().ReverseMap();
             CreateMap<Categories, CategoriesRequestDto>().ReverseMap();
-
-            CreateMap<Lookups, LookupsResponseDto>().ReverseMap();
-            CreateMap<Lookups, LookupsRequestDto>().ReverseMap();
         }
     }
 }

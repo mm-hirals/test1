@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 using MidCapERP.Dto.Lookups;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -10,11 +11,13 @@ namespace MidCapERP.BusinessLogic.Repositories
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
+        private readonly CurrentUser _currentUser;
 
-        public LookupsBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper)
+        public LookupsBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<LookupsResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -48,7 +51,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var lookupToInsert = _mapper.Map<Lookups>(model);
             lookupToInsert.IsDeleted = false;
-            lookupToInsert.CreatedBy = 1;
+            lookupToInsert.CreatedBy = _currentUser.UserId;
+            lookupToInsert.TenantId = _currentUser.TenantId;
             lookupToInsert.CreatedDate = DateTime.Now;
             lookupToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.LookupsDA.CreateLookup(lookupToInsert, cancellationToken);
@@ -63,7 +67,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Lookup not found");
             }
-            oldData.UpdatedBy = 1;
+            oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
@@ -76,7 +80,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             oldData.LookupName = model.LookupName;
             oldData.IsDeleted = model.IsDeleted;
-            oldData.TenantId = model.TenantId;
         }
 
         public async Task<LookupsRequestDto> DeleteLookup(int Id, CancellationToken cancellationToken)

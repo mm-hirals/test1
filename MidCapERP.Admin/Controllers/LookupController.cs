@@ -6,7 +6,7 @@ using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class LookupController : Controller
+    public class LookupController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
