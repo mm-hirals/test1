@@ -1,5 +1,7 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities;
+using MidCapERP.DataEntities.Models;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
 {
@@ -7,11 +9,13 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesBL CategoriesBL { get; }
+        public ISubjectTypesBL SubjectTypesBL { get; }
 
-        public UnitOfWorkBL(ICategoriesBL categoriesBL, ApplicationDbContext context)
+        public UnitOfWorkBL(ICategoriesBL categoriesBL, ApplicationDbContext context,  ISubjectTypesBL subjectTypesBL)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;
+            this.SubjectTypesBL = subjectTypesBL;
         }
 
         #region DisposeMethod

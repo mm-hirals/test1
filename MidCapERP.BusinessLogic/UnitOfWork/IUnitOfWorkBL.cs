@@ -5,5 +5,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     public interface IUnitOfWorkBL
     {
         ICategoriesBL CategoriesBL { get; }
+        ISubjectTypesBL SubjectTypesBL { get; }
     }
 }
