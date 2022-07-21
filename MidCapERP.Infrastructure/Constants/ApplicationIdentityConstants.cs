@@ -33,6 +33,7 @@
                 .Union(GeneratePermissionsForModule("Role"))
                 .Union(GeneratePermissionsForModule("Dashboard"))
                 .Union(GeneratePermissionsForModule("Category"))
+                .Union(GeneratePermissionsForModule("Statuses"))
                 .ToList();
             }
 
@@ -76,6 +77,14 @@
                 public const string Create = "Permissions.Category.Create";
                 public const string Update = "Permissions.Category.Update";
                 public const string Delete = "Permissions.Category.Delete";
+            }
+
+            public static class Statuses
+            {
+                public const string View = "Permissions.Statuses.View";
+                public const string Create = "Permissions.Statuses.Create";
+                public const string Update = "Permissions.Statuses.Update";
+                public const string Delete = "Permissions.Statuses.Delete";
             }
         }
     }
