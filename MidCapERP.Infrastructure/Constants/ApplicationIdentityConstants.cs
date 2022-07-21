@@ -77,6 +77,14 @@
                 public const string Update = "Permissions.Category.Update";
                 public const string Delete = "Permissions.Category.Delete";
             }
+
+            public static class Contractor
+            {
+                public const string View = "Permissions.Category.View";
+                public const string Create = "Permissions.Category.Create";
+                public const string Update = "Permissions.Category.Update";
+                public const string Delete = "Permissions.Category.Delete";
+            }
         }
     }
 }

@@ -7,11 +7,13 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesBL CategoriesBL { get; }
+        public IContractorsBL ContractorsBL { get; }
 
-        public UnitOfWorkBL(ICategoriesBL categoriesBL, ApplicationDbContext context)
+        public UnitOfWorkBL(ICategoriesBL categoriesBL, IContractorsBL contractorsBL, ApplicationDbContext context)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;
+            this.ContractorsBL = contractorsBL;
         }
 
         #region DisposeMethod
