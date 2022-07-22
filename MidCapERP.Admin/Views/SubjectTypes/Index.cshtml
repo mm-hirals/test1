@@ -1,46 +1,46 @@
 ﻿@model IEnumerable<MidCapERP.Dto.SubjectTypes.SubjectTypesResponseDto>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <div class="c-card--wrapper">
-    <div class="c-card--header">
-        <h4 class="c-card--header-title">SubjectType</h4>
-        <div class="c-card--header-action">
-            <a class="c-card--header-action-btn btn btn-outline-primary"><i class='bx bx-plus me-2'></i>Filters</a>
-            <a asp-controller="SubjectTypes" asp-action="Create"
-               data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
-               data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
-        </div>
-    </div>
-    <div class="c-card--body" id="UpdateContentDiv">
-        <partial name="_SubjectTypesTable" model="@Model" />
-        <div id="UpdateContentDiv">
-        </div>
-    </div>
-        
+	<div class="c-card--header">
+		<h4 class="c-card--header-title">SubjectType</h4>
+		<div class="c-card--header-action">
+			<a class="c-card--header-action-btn btn btn-outline-primary"><i class='bx bx-plus me-2'></i>Filters</a>
+			<a asp-controller="SubjectTypes" asp-action="Create"
+			   data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
+			   data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
+		</div>
+	</div>
+	<div class="c-card--body" id="UpdateContentDiv">
+		<partial name="_SubjectTypesTable" model="@Model" />
+		<div id="UpdateContentDiv">
+		</div>
+	</div>
+
 </div>
 
 
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" />
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-    <script>
-        $(function() {
-            $("#tblSubjectType").DataTable({
-                "searching": false
-            });
-        });
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" />
+	<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+	<script>
+		$(function() {
+			$("#tblSubjectType").DataTable({
+				"searching": false
+			});
+		});
 
-        function onComplete() {
-            $("#exampleModal").modal('show');
-        }
-    </script>
+		function onComplete() {
+			$("#exampleModal").modal('show');
+		}
+	</script>
 }

@@ -11,7 +11,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICategoriesBL CategoriesBL { get; }
         public ISubjectTypesBL SubjectTypesBL { get; }
 
-        public UnitOfWorkBL(ICategoriesBL categoriesBL, ApplicationDbContext context,  ISubjectTypesBL subjectTypesBL)
+        public UnitOfWorkBL(ApplicationDbContext context, ICategoriesBL categoriesBL, ISubjectTypesBL subjectTypesBL)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;

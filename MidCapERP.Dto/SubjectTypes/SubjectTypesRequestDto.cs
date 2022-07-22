@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace MidCapERP.Dto.SubjectTypes
 {
     public  class SubjectTypesRequestDto
     {
-        
 		public int SubjectTypeId { get; set; }
-
 		[DisplayName("SubjectType Name")]
 		public string SubjectTypeName { get; set; }
-
 		[DisplayName("Comment")]
 		public string Comments { get; set; }
 		public int TenantId { get; set; }
-
 		[DisplayName("IsDeleted")]
 		public bool IsDeleted { get; set; }
 		public int CreatedBy { get; set; }

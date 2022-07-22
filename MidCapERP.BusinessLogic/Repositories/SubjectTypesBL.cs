@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
@@ -25,8 +20,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<SubjectTypesResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var DataToReturn = _mapper.Map<List<SubjectTypesResponseDto>>(data.ToList());
-            return DataToReturn;
+            var dataToReturn = _mapper.Map<List<SubjectTypesResponseDto>>(data.ToList());
+            return dataToReturn;
         }
 
         public async Task<SubjectTypesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)

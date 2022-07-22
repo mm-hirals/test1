@@ -29,20 +29,20 @@ namespace MidCapERP.Admin.Controllers
             return PartialView("_SubjectTypesPartial");
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Create)]
+        public async Task<IActionResult> Create(int Id, SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
+        {
+            var subjectTypes = await _unitOfWorkBL.SubjectTypesBL.CreateSubjectTypes(SubjectTypesRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var SubjectTypes = await _unitOfWorkBL.SubjectTypesBL.GetById(Id, cancellationToken);
             return PartialView("_SubjectTypesPartial", SubjectTypes);
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Create)]
-        public async Task<IActionResult> Create(int Id, SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
-        {
-            var SubjectTypes = await _unitOfWorkBL.SubjectTypesBL.CreateSubjectTypes(SubjectTypesRequestDto, cancellationToken);
-            return RedirectToAction("Index");
         }
 
         [HttpPost]
