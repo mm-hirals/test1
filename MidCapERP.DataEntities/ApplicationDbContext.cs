@@ -22,5 +22,6 @@ namespace MidCapERP.DataEntities
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<Categories> Categories { get; set; }
+        public DbSet<Customers> Customers { get; set; }
     }
 }
