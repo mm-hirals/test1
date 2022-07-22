@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MidCapERP.Dto.Contractors.ContractorsResponseDto>
+
 @{
     ViewData["Title"] = "Contractor";
 }
@@ -18,13 +19,12 @@
         <div id="UpdateContentDiv">
         </div>
     </div>
-        
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        //await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
     }
 
     <script>
@@ -33,6 +33,7 @@
                 "searching": false
             });
         });
+
         function onComplete() {
             $("#exampleModal").modal('show');
         }

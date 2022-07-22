@@ -9,7 +9,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public ICategoriesDA CategoriesDA { get; }
         public IContractorsDA ContractorsDA { get; }
 
-        public UnitOfWorkDA(ICategoriesDA categoriesDA, IContractorsDA contractorsDA, ApplicationDbContext context)
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA, IContractorsDA contractorsDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;

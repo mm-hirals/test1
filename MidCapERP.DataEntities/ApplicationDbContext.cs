@@ -15,7 +15,8 @@ namespace MidCapERP.DataEntities
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ApplicationUser>(b => {
+            builder.Entity<ApplicationUser>(b =>
+            {
                 b.Property(x => x.UserId).UseIdentityColumn();
                 b.Property(x => x.UserId).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
