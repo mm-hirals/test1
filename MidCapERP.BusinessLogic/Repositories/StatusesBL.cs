@@ -8,7 +8,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 {
     public class StatusesBL :  IStatusesBL
     {
-
             private IUnitOfWorkDA _unitOfWorkDA;
             public readonly IMapper _mapper;
 

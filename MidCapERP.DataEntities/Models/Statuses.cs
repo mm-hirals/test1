@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MidCapERP.DataEntities.Models
 {
     [Table("Statuses")]
-    public class  Statuses :BaseEntity
+    public class Statuses : BaseEntity
     {
-
         [Key]
         public int StatusId { get; set; }
         public string StatusTitle { get; set; }

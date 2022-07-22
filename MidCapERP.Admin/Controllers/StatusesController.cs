@@ -28,20 +28,20 @@ namespace MidCapERP.Admin.Controllers
             return PartialView("_StatusesPartial");
         }
 
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Update)]
-        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
-        {
-            var Statuses = await _unitOfWorkBL.StatusesBL.GetById(Id, cancellationToken);
-            return PartialView("_StatusesPartial", Statuses);
-        }
-
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Create)]
         public async Task<IActionResult> Create(int Id, StatusesRequestDto StatusesRequestDto, CancellationToken cancellationToken)
         {
-            var Statuses = await _unitOfWorkBL.StatusesBL.CreateStatuses(StatusesRequestDto, cancellationToken);
+            var statuses = await _unitOfWorkBL.StatusesBL.CreateStatuses(StatusesRequestDto, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Update)]
+        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
+        {
+            var statuses = await _unitOfWorkBL.StatusesBL.GetById(Id, cancellationToken);
+            return PartialView("_StatusesPartial", statuses);
         }
 
         [HttpPost]
@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, StatusesRequestDto StatusesRequestDto, CancellationToken cancellationToken)
         {
             Id = StatusesRequestDto.StatusId;
-            var Statuses = await _unitOfWorkBL.StatusesBL.UpdateStatuses(Id, StatusesRequestDto, cancellationToken);
+            var statuses = await _unitOfWorkBL.StatusesBL.UpdateStatuses(Id, StatusesRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -57,10 +57,9 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var Statuses = await _unitOfWorkBL.StatusesBL.DeleteStatuses(Id, cancellationToken);
+            var statuses = await _unitOfWorkBL.StatusesBL.DeleteStatuses(Id, cancellationToken);
             return RedirectToAction("Index", "Statuses");
         }
-
 
         #region privateMethods
         private async Task<IEnumerable<StatusesResponseDto>> GetAllStatuses(CancellationToken cancellationToken)
@@ -68,7 +67,6 @@ namespace MidCapERP.Admin.Controllers
             return await _unitOfWorkBL.StatusesBL.GetAll(cancellationToken);
         }
         #endregion
-
 
     }
 }

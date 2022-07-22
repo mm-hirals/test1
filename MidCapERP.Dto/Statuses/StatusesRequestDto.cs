@@ -8,15 +8,11 @@ namespace MidCapERP.Dto.Statuses
 
         [DisplayName("StatusTitle")]
         public string StatusTitle { get; set; }
-
         public string StatusDescription { get; set; }
-
         public int StatusOrder { get; set; }
-
         public int TenantId { get; set; }
         [DisplayName("IsCompleted")]
         public bool IsCompleted { get; set; }
-
         public bool IsDeleted { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
