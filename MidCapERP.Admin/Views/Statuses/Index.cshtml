@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<MidCapERP.Dto.Statuses.StatusesResponseDto>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Status";
 }
 
 <div class="c-card--wrapper">
@@ -13,7 +13,7 @@
                data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
         </div>
     </div>
-    <div class="c-card--body" id="UpdateContentDiv1">
+    <div class="c-card--body">
         <partial name="_StatusesTable" model="@Model" />
         <div id="UpdateContentDiv">
         </div>
@@ -24,11 +24,9 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
     }
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" />
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(function() {
             $("#tblStatuses").DataTable({

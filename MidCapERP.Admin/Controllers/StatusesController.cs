@@ -15,29 +15,29 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Status.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View(await GetAllStatuses(cancellationToken));
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Create)]
-        public async Task<IActionResult> Create(int Id, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Status.Create)]
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_StatusesPartial");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Create)]
-        public async Task<IActionResult> Create(int Id, StatusesRequestDto StatusesRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Status.Create)]
+        public async Task<IActionResult> Create(StatusesRequestDto statusesRequestDto, CancellationToken cancellationToken)
         {
-            var statuses = await _unitOfWorkBL.StatusesBL.CreateStatuses(StatusesRequestDto, cancellationToken);
+            var statuses = await _unitOfWorkBL.StatusesBL.CreateStatuses(statusesRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Status.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var statuses = await _unitOfWorkBL.StatusesBL.GetById(Id, cancellationToken);
@@ -45,16 +45,16 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Update)]
-        public async Task<IActionResult> Update(int Id, StatusesRequestDto StatusesRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Status.Update)]
+        public async Task<IActionResult> Update(StatusesRequestDto statusesRequestDto, CancellationToken cancellationToken)
         {
-            Id = StatusesRequestDto.StatusId;
-            var statuses = await _unitOfWorkBL.StatusesBL.UpdateStatuses(Id, StatusesRequestDto, cancellationToken);
+            int Id = statusesRequestDto.StatusId;
+            var statuses = await _unitOfWorkBL.StatusesBL.UpdateStatuses(Id, statusesRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Statuses.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Status.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             var statuses = await _unitOfWorkBL.StatusesBL.DeleteStatuses(Id, cancellationToken);

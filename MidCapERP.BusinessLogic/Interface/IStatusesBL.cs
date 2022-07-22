@@ -6,8 +6,6 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<StatusesResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<StatusesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
-
         public Task<StatusesRequestDto> GetById(int Id, CancellationToken cancellationToken);
 
         public Task<StatusesRequestDto> CreateStatuses(StatusesRequestDto model, CancellationToken cancellationToken);

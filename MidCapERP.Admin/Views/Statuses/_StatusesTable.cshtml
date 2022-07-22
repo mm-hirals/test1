@@ -26,7 +26,7 @@
                  
                    <a asp-controller="Statuses" asp-action="Delete"  asp-route-id="@item.StatusId"     
                    data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
-                   data-ajax-mode="replace">Delete</a>
+                   data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Delete</a>
                 </td>
             </tr>
         }

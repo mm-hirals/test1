@@ -79,12 +79,12 @@
                 public const string Delete = "Permissions.Category.Delete";
             }
 
-            public static class Statuses
+            public static class Status
             {
-                public const string View = "Permissions.Statuses.View";
-                public const string Create = "Permissions.Statuses.Create";
-                public const string Update = "Permissions.Statuses.Update";
-                public const string Delete = "Permissions.Statuses.Delete";
+                public const string View = "Permissions.Status.View";
+                public const string Create = "Permissions.Status.Create";
+                public const string Update = "Permissions.Status.Update";
+                public const string Delete = "Permissions.Status.Delete";
             }
         }
     }

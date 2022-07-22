@@ -24,22 +24,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return DataToReturn;
             }
 
-            public async Task<StatusesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
-            {
-                var data = await _unitOfWorkDA.StatusesDA.GetById(Id, cancellationToken);
-                if (data == null)
-                {
-                    throw new Exception("Statuses not found");
-                }
-                return _mapper.Map<StatusesResponseDto>(data);
-            }
 
             public async Task<StatusesRequestDto> GetById(int Id, CancellationToken cancellationToken)
             {
                 var data = await _unitOfWorkDA.StatusesDA.GetById(Id, cancellationToken);
                 if (data == null)
                 {
-                    throw new Exception("Statuses not found");
+                    throw new Exception("Status not found");
                 }
                 return _mapper.Map<StatusesRequestDto>(data);
             }
@@ -61,7 +52,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var oldData = await _unitOfWorkDA.StatusesDA.GetById(Id, cancellationToken);
                 if (oldData == null)
                 {
-                    throw new Exception("Statuses not found");
+                    throw new Exception("Status not found");
                 }
                 oldData.UpdatedBy = 1;
                 oldData.UpdatedDate = DateTime.Now;
@@ -88,7 +79,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var StatusesToUpdate = await _unitOfWorkDA.StatusesDA.GetById(Id, cancellationToken);
                 if (StatusesToUpdate == null)
                 {
-                    throw new Exception("Statuses not found");
+                    throw new Exception("Status not found");
                 }
                 StatusesToUpdate.IsDeleted = true;
                 StatusesToUpdate.UpdatedDate = DateTime.Now;
