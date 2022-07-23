@@ -23,14 +23,14 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Lookup.Create)]
-        public async Task<IActionResult> Create(int Id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_LookupPartial");
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Lookup.Create)]
-        public async Task<IActionResult> Create(int Id, LookupsRequestDto lookupsRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(LookupsRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             var lookups = await _unitOfWorkBL.LookupsBL.CreateLookup(lookupsRequestDto, cancellationToken);
             return RedirectToAction("Index");

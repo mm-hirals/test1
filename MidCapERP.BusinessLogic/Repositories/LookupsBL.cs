@@ -39,12 +39,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<LookupsRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Lookup not found");
-            }
-            return _mapper.Map<LookupsRequestDto>(data);
+            var lookUpDataById = LookupGetById(Id, cancellationToken).Result;
+            return _mapper.Map<LookupsRequestDto>(lookUpDataById);
         }
 
         public async Task<LookupsRequestDto> CreateLookup(LookupsRequestDto model, CancellationToken cancellationToken)
@@ -62,11 +58,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<LookupsRequestDto> UpdateLookup(int Id, LookupsRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
-            if (oldData == null)
-            {
-                throw new Exception("Lookup not found");
-            }
+            var oldData = LookupGetById(Id, cancellationToken).Result;
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -84,11 +76,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<LookupsRequestDto> DeleteLookup(int Id, CancellationToken cancellationToken)
         {
-            var lookupToUpdate = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
-            if (lookupToUpdate == null)
-            {
-                throw new Exception("Lookup not found");
-            }
+            var lookupToUpdate = LookupGetById(Id, cancellationToken).Result;
             lookupToUpdate.IsDeleted = true;
             lookupToUpdate.UpdatedDate = DateTime.Now;
             lookupToUpdate.UpdatedUTCDate = DateTime.UtcNow;
@@ -96,5 +84,17 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<LookupsRequestDto>(data);
             return _mappedUser;
         }
+
+        #region otherMethod
+        private async Task<Lookups> LookupGetById(int Id, CancellationToken cancellationToken)
+        {
+            var lookupDataById = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
+            if (lookupDataById == null)
+            {
+                throw new Exception("Lookup not found");
+            }
+            return lookupDataById;
+        }
+        #endregion
     }
 }

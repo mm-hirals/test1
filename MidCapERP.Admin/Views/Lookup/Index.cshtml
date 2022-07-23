@@ -14,15 +14,12 @@
                data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
         </div>
     </div>
-    <div class="c-card--body" id="UpdateContentDiv1">
+    <div class="c-card--body">
         <partial name="_LookupTable" model="@Model" />
         <div id="UpdateContentDiv">
         </div>
     </div>
-        
 </div>
-
-
 
 @section Scripts {
     @{
@@ -38,7 +35,7 @@
         });
 
         function onComplete() {
-            $("#exampleModal").modal('show');
+            $("#lookupModal").modal('show');
         }
     </script>
 }
