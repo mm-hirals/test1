@@ -29,21 +29,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorsResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.ContractorsDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Contractor not found");
-            }
+            Contractors data = await GetContractorById(Id, cancellationToken);
             return _mapper.Map<ContractorsResponseDto>(data);
         }
 
         public async Task<ContractorsRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.ContractorsDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Contractor not found");
-            }
+            Contractors data = await GetContractorById(Id, cancellationToken);
             return _mapper.Map<ContractorsRequestDto>(data);
         }
 
@@ -102,5 +94,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<ContractorsRequestDto>(data);
             return _mappedUser;
         }
+
+        #region PrivateMethods
+
+        private async Task<Contractors> GetContractorById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.ContractorsDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Contractor not found");
+            }
+            return data;
+        }
+
+        #endregion PrivateMethods
     }
 }
