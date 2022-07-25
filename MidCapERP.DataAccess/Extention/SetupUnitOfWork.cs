@@ -12,6 +12,7 @@ namespace MidCapERP.DataAccess.Extention
         {
             services.AddScoped(typeof(ISqlRepository<>), typeof(SqlDBRepository<>));
             services.AddScoped<ICategoriesDA, CategoriesDA>();
+            services.AddScoped<IErrorLogsDA, ErrorLogsDA>();
 
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
