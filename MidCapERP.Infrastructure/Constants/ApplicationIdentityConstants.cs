@@ -95,6 +95,14 @@
                 public const string Update = "Permissions.Status.Update";
                 public const string Delete = "Permissions.Status.Delete";
             }
+
+            public static class Contractor
+            {
+                public const string View = "Permissions.Contractor.View";
+                public const string Create = "Permissions.Contractor.Create";
+                public const string Update = "Permissions.Contractor.Update";
+                public const string Delete = "Permissions.Contractor.Delete";
+            }
         }
     }
 }

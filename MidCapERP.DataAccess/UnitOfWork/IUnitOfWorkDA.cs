@@ -6,7 +6,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
     {
         ICategoriesDA CategoriesDA { get; }
         ILookupsDA LookupsDA { get; }
-        
         IStatusesDA StatusesDA { get; }  
+        IContractorsDA ContractorsDA { get; }
     }
 }

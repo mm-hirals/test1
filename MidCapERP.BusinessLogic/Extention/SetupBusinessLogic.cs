@@ -12,6 +12,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<ICategoriesBL, CategoriesBL>();
             services.AddScoped<IStatusesBL, StatusesBL>();
             services.AddScoped<ILookupsBL, LookupsBL>();
+            services.AddScoped<IContractorsBL, ContractorsBL>();
 
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
