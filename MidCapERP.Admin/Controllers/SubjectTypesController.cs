@@ -16,29 +16,29 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View(await GetAllSubjectTypes(cancellationToken));
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Create)]
-        public async Task<IActionResult> Create(int Id, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Create)]
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_SubjectTypesPartial");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Create)]
-        public async Task<IActionResult> Create(int Id, SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Create)]
+        public async Task<IActionResult> Create(SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
         {
             var subjectTypes = await _unitOfWorkBL.SubjectTypesBL.CreateSubjectTypes(SubjectTypesRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var SubjectTypes = await _unitOfWorkBL.SubjectTypesBL.GetById(Id, cancellationToken);
@@ -46,7 +46,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Update)]
         public async Task<IActionResult> Update(int Id, SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
         {
             Id = SubjectTypesRequestDto.SubjectTypeId;
@@ -55,7 +55,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.SubjectTypes.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             var SubjectTypes = await _unitOfWorkBL.SubjectTypesBL.DeleteSubjectTypes(Id, cancellationToken);

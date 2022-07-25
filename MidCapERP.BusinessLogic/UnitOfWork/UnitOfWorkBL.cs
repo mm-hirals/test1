@@ -9,12 +9,18 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesBL CategoriesBL { get; }
+        public ILookupsBL LookupsBL { get; }
+        public IStatusesBL StatusesBL { get; }
+        public IContractorsBL ContractorsBL { get; }
         public ISubjectTypesBL SubjectTypesBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, ICategoriesBL categoriesBL, ISubjectTypesBL subjectTypesBL)
+        public UnitOfWorkBL(ApplicationDbContext context,ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;
+            this.LookupsBL = lookupsBL;
+            this.StatusesBL = statusesBL;
+            this.ContractorsBL = contractorsBL;
             this.SubjectTypesBL = subjectTypesBL;
         }
 

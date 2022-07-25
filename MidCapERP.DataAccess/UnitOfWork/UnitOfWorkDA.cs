@@ -7,13 +7,19 @@ namespace MidCapERP.DataAccess.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesDA CategoriesDA { get; }
+        public IContractorsDA ContractorsDA { get; }
 
+        public ILookupsDA LookupsDA { get; }
+        public IStatusesDA StatusesDA { get; }
         public ISubjectTypesDA SubjectTypesDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context,ICategoriesDA categoriesDA, ISubjectTypesDA subjectTypesDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;
+            this.ContractorsDA = contractorsDA;
+            this.LookupsDA = lookupsDA;
+            this.StatusesDA = statusesBL;
             this.SubjectTypesDA = subjectTypesDA;
         }
 

@@ -5,6 +5,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
     public interface IUnitOfWorkDA
     {
         ICategoriesDA CategoriesDA { get; }
+        ILookupsDA LookupsDA { get; }
+        IStatusesDA StatusesDA { get; }  
+        IContractorsDA ContractorsDA { get; }
         ISubjectTypesDA SubjectTypesDA { get; }
     }
 }
