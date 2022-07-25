@@ -34,7 +34,8 @@
                 .Union(GeneratePermissionsForModule("Dashboard"))
                 .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Lookup"))
-                .Union(GeneratePermissionsForModule("Statuses"))
+                .Union(GeneratePermissionsForModule("Status"))
+                .Union(GeneratePermissionsForModule("SubjectType"))
                 .ToList();
             }
 
@@ -102,6 +103,14 @@
                 public const string Create = "Permissions.Contractor.Create";
                 public const string Update = "Permissions.Contractor.Update";
                 public const string Delete = "Permissions.Contractor.Delete";
+            }
+
+            public static class SubjectType
+            {
+                public const string View = "Permissions.SubjectType.View";
+                public const string Create = "Permissions.SubjectType.Create";
+                public const string Update = "Permissions.SubjectType.Update";
+                public const string Delete = "Permissions.SubjectType.Delete";
             }
         }
     }

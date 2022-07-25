@@ -32,5 +32,6 @@ namespace MidCapERP.DataEntities
         public DbSet<Lookups> Lookups { get; set; }
         public DbSet<Statuses> Statuses { get; set; }
         public DbSet<Contractors> Contractors { get; set; }
+        public DbSet<SubjectTypes> SubjectTypes { get; set; }
     }
 }

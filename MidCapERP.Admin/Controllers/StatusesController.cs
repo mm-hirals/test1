@@ -6,11 +6,11 @@ using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class StatusesController : BaseController
+    public class StatusController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public StatusesController(IUnitOfWorkBL unitOfWorkBL)
+        public StatusController(IUnitOfWorkBL unitOfWorkBL)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
@@ -25,7 +25,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            return PartialView("_StatusesPartial");
+            return PartialView("_StatusPartial");
         }
 
         [HttpPost]
@@ -41,7 +41,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var statuses = await _unitOfWorkBL.StatusesBL.GetById(Id, cancellationToken);
-            return PartialView("_StatusesPartial", statuses);
+            return PartialView("_StatusPartial", statuses);
         }
 
         [HttpPost]
@@ -58,7 +58,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             var statuses = await _unitOfWorkBL.StatusesBL.DeleteStatuses(Id, cancellationToken);
-            return RedirectToAction("Index", "Statuses");
+            return RedirectToAction("Index");
         }
 
         #region privateMethods
