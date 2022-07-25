@@ -7,11 +7,13 @@ namespace MidCapERP.DataAccess.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesDA CategoriesDA { get; }
+        public ILookupValuesDA LookupValuesDA { get; }
 
-        public UnitOfWorkDA(ICategoriesDA categoriesDA, ApplicationDbContext context)
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA, ILookupValuesDA lookupValuesDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;
+            this.LookupValuesDA = lookupValuesDA;
         }
 
         #region DisposeMethod
