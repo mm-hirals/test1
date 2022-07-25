@@ -8,10 +8,12 @@ namespace MidCapERP.Dto.Lookups
 
         [DisplayName("Lookup Name")]
         public string LookupName { get; set; }
+
         public int TenantId { get; set; }
 
         [DisplayName("Deleted")]
         public bool IsDeleted { get; set; }
+
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
