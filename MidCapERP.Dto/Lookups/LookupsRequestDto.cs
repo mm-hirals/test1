@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.Categories
+namespace MidCapERP.Dto.Lookups
 {
-    public class CategoriesResponseDto
+    public class LookupsRequestDto
     {
-        public int CategoryID { get; set; }
+        public int LookupId { get; set; }
 
-        [DisplayName("Category Name")]
-        public string CategoryName { get; set; }
+        [DisplayName("Lookup Name")]
+        public string LookupName { get; set; }
 
-        [DisplayName("Active")]
+        public int TenantId { get; set; }
+
+        [DisplayName("Deleted")]
         public bool IsDeleted { get; set; }
 
         public int CreatedBy { get; set; }

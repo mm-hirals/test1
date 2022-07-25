@@ -33,6 +33,8 @@
                 .Union(GeneratePermissionsForModule("Role"))
                 .Union(GeneratePermissionsForModule("Dashboard"))
                 .Union(GeneratePermissionsForModule("Category"))
+                .Union(GeneratePermissionsForModule("Lookup"))
+                .Union(GeneratePermissionsForModule("Statuses"))
                 .ToList();
             }
 
@@ -78,12 +80,28 @@
                 public const string Delete = "Permissions.Category.Delete";
             }
 
+            public static class Lookup
+            {
+                public const string View = "Permissions.Lookup.View";
+                public const string Create = "Permissions.Lookup.Create";
+                public const string Update = "Permissions.Lookup.Update";
+                public const string Delete = "Permissions.Lookup.Delete";
+            }
+
+            public static class Status
+            {
+                public const string View = "Permissions.Status.View";
+                public const string Create = "Permissions.Status.Create";
+                public const string Update = "Permissions.Status.Update";
+                public const string Delete = "Permissions.Status.Delete";
+            }
+
             public static class Contractor
             {
-                public const string View = "Permissions.Category.View";
-                public const string Create = "Permissions.Category.Create";
-                public const string Update = "Permissions.Category.Update";
-                public const string Delete = "Permissions.Category.Delete";
+                public const string View = "Permissions.Contractor.View";
+                public const string Create = "Permissions.Contractor.Create";
+                public const string Update = "Permissions.Contractor.Update";
+                public const string Delete = "Permissions.Contractor.Delete";
             }
         }
     }

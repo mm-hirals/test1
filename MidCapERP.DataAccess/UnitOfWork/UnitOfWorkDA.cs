@@ -9,11 +9,16 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public ICategoriesDA CategoriesDA { get; }
         public IContractorsDA ContractorsDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA, IContractorsDA contractorsDA)
+        public ILookupsDA LookupsDA { get; }
+        public IStatusesDA StatusesDA { get; }
+
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;
             this.ContractorsDA = contractorsDA;
+            this.LookupsDA = lookupsDA;
+            this.StatusesDA = statusesBL;
         }
 
         #region DisposeMethod

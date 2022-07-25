@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.6" ExcludeAssets="All" />
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
 		<PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.7.1" />
