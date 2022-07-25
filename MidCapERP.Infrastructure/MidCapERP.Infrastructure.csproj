@@ -21,6 +21,7 @@
     <ProjectReference Include="..\MidCapERP.BusinessLogic\MidCapERP.BusinessLogic.csproj" />
     <ProjectReference Include="..\MidCapERP.DataAccess\MidCapERP.DataAccess.csproj" />
     <ProjectReference Include="..\MidCapERP.DataEntities\MidCapERP.DataEntities.csproj" />
+    <ProjectReference Include="..\MidCapERP.Dto\MidCapERP.Dto.csproj" />
   </ItemGroup>
 
 </Project>
