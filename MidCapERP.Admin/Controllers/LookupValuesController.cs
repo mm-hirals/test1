@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.LookupValues;
 using MidCapERP.Infrastructure.Constants;
 
@@ -19,6 +20,20 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View(await GetAllLookupValues(cancellationToken));
+        }
+
+        [HttpPost]
+        public IActionResult GetLookupValuesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var data = _unitOfWorkBL.LookupValuesBL.GetFilterLookupValuesData(dataTableFilterDto, cancellationToken);
+                return Ok(data.Result);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpGet]
@@ -48,7 +63,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.LookupValues.Update)]
         public async Task<IActionResult> Update(int Id, LookupValuesRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
-            Id = lookupsRequestDto.LookupId;
             var lookups = await _unitOfWorkBL.LookupValuesBL.UpdateLookupValues(Id, lookupsRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
@@ -62,10 +76,12 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region privateMethods
+
         private async Task<IEnumerable<LookupValuesResponseDto>> GetAllLookupValues(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.LookupValuesBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion privateMethods
     }
 }

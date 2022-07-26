@@ -1,10 +1,13 @@
-﻿using MidCapERP.Dto.LookupValues;
+﻿using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.LookupValues;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
     public interface ILookupValuesBL
     {
         public Task<IEnumerable<LookupValuesResponseDto>> GetAll(CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<LookupValuesResponseDto>> GetFilterLookupValuesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<LookupValuesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 

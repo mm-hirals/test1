@@ -3,6 +3,7 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.LookupValues;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -27,6 +28,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             return dataToReturn;
         }
 
+        public async Task<JsonRepsonse<LookupValuesResponseDto>> GetFilterLookupValuesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            dataTableFilterDto.pageSize = dataTableFilterDto.length != null ? Convert.ToInt32(dataTableFilterDto.length) : 0;
+            dataTableFilterDto.skip = dataTableFilterDto.start != null ? Convert.ToInt32(dataTableFilterDto.start) : 0;
+            var customerData = (from tempcustomer in await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken) select tempcustomer);
+            dataTableFilterDto.recordsTotal = customerData.Count();
+            var data = customerData.Skip(dataTableFilterDto.skip).Take(dataTableFilterDto.pageSize).ToList();
+            var lookupValueResponseData = _mapper.Map<List<LookupValuesResponseDto>>(data.ToList());
+            var jsonData = new JsonRepsonse<LookupValuesResponseDto> { draw = dataTableFilterDto.draw, recordsFiltered = dataTableFilterDto.recordsTotal, recordsTotal = dataTableFilterDto.recordsTotal, data = lookupValueResponseData };
+
+            return jsonData;
+        }
+
         public async Task<LookupValuesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
             var data = await LookupValuesGetById(Id, cancellationToken);
@@ -46,6 +60,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             lookupToInsert.CreatedBy = _currentUser.UserId;
             lookupToInsert.CreatedDate = DateTime.Now;
             lookupToInsert.CreatedUTCDate = DateTime.UtcNow;
+
             var data = await _unitOfWorkDA.LookupValuesDA.CreateLookupValue(lookupToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<LookupValuesRequestDto>(data);
             return _mappedUser;
@@ -58,6 +73,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
+
             var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<LookupValuesRequestDto>(data);
             return _mappedUser;
@@ -82,6 +98,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region otherMethod
+
         private async Task<LookupValues> LookupValuesGetById(int Id, CancellationToken cancellationToken)
         {
             var lookupValuesDataById = await _unitOfWorkDA.LookupValuesDA.GetById(Id, cancellationToken);
@@ -91,6 +108,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             return lookupValuesDataById;
         }
-        #endregion
+
+        #endregion otherMethod
     }
 }
