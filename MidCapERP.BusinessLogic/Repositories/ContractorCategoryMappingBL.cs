@@ -30,7 +30,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ContractorCategoryMappingRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
-
             return _mapper.Map<ContractorCategoryMappingRequestDto>(data);
         }
 
@@ -38,7 +37,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var contractorCategoryToInsert = _mapper.Map<ContractorCategoryMapping>(model);
             contractorCategoryToInsert.ContractorId = model.ContractorId;
-            contractorCategoryToInsert.CategoryId =model.CategoryId;
+            contractorCategoryToInsert.CategoryId = model.CategoryId;
             contractorCategoryToInsert.IsDeleted = false;
             contractorCategoryToInsert.CreatedDate = DateTime.Now;
             contractorCategoryToInsert.CreatedUTCDate = DateTime.UtcNow;
@@ -73,7 +72,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             contractorCategoryToUpdate.IsDeleted = true;
             contractorCategoryToUpdate.UpdatedDate = DateTime.Now;
             contractorCategoryToUpdate.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id,contractorCategoryToUpdate, cancellationToken);
+            var data = await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, contractorCategoryToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<ContractorCategoryMappingRequestDto>(data);
             return _mappedUser;
         }
@@ -81,12 +80,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         #region otherMethod
         private async Task<ContractorCategoryMapping> ContractorCategoryMappingGetById(int Id, CancellationToken cancellationToken)
         {
-            var lookupDataById = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
-            if (lookupDataById == null)
+            var contractorCategoryMappingDataById = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
+            if (contractorCategoryMappingDataById == null)
             {
                 throw new Exception("ContractorCategoryMapping not found");
             }
-            return lookupDataById;
+            return contractorCategoryMappingDataById;
         }
         #endregion
     }

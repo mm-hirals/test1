@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, ContractorCategoryMappingRequestDto contractorCategoryMappingRequestDto, CancellationToken cancellationToken)
         {
             Id = contractorCategoryMappingRequestDto.ContractorCategoryMappingId;
-            var ContractorCategoryMapping = await _unitOfWorkBL.ContractorCategoryMappingBL.UpdateContractorCategoryMapping(Id, contractorCategoryMappingRequestDto, cancellationToken);
+            var contractorCategoryMapping = await _unitOfWorkBL.ContractorCategoryMappingBL.UpdateContractorCategoryMapping(Id, contractorCategoryMappingRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
