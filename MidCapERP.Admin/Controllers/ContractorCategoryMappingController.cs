@@ -48,7 +48,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.ContractorCategoryMapping.Update)]
         public async Task<IActionResult> Update(int Id, ContractorCategoryMappingRequestDto contractorCategoryMappingRequestDto, CancellationToken cancellationToken)
         {
-            Id = contractorCategoryMappingRequestDto.ContractorCategoryMappingId;
             var contractorCategoryMapping = await _unitOfWorkBL.ContractorCategoryMappingBL.UpdateContractorCategoryMapping(Id, contractorCategoryMappingRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
