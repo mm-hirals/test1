@@ -37,6 +37,7 @@
                 .Union(GeneratePermissionsForModule("Status"))
                 .Union(GeneratePermissionsForModule("SubjectType"))
                 .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
+                .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .ToList();
             }
 
@@ -136,6 +137,11 @@
                 public const string Create = "Permissions.Customer.Create";
                 public const string Update = "Permissions.Customer.Update";
                 public const string Delete = "Permissions.Customer.Delete";
+            }
+
+            public static class ErrorLogs
+            {
+                public const string View = "Permissions.ErrorLogs.View";
             }
         }
     }

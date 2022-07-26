@@ -12,5 +12,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         ILookupValuesBL LookupValuesBL { get; }
         IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
         ICustomersBL CustomersBL { get; }
+        IErrorLogsBL ErrorLogsBL { get; }
     }
 }

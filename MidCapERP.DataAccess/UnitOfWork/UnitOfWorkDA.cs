@@ -3,7 +3,7 @@ using MidCapERP.DataEntities;
 
 namespace MidCapERP.DataAccess.UnitOfWork
 {
-    public class UnitOfWorkDA : IUnitOfWorkDA
+	public class UnitOfWorkDA : IUnitOfWorkDA
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesDA CategoriesDA { get; }
@@ -14,7 +14,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public ISubjectTypesDA SubjectTypesDA { get; }
         public IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
         public ICustomersDA CustomersDA { get; }
-        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA)
+        public IErrorLogsDA ErrorLogsDA { get; }
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;
@@ -25,6 +26,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
             this.LookupValuesDA = lookupValuesDA;
             this.ContractorCategoryMappingDA = contractorCategoryMappingDa;
             this.CustomersDA = customersDA;
+            this.ErrorLogsDA = errorLogsDA;
         }
 
         #region DisposeMethod
