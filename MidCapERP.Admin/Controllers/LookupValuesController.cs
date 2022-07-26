@@ -25,27 +25,20 @@ namespace MidCapERP.Admin.Controllers
         [HttpPost]
         public IActionResult GetLookupValuesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            try
-            {
-                var data = _unitOfWorkBL.LookupValuesBL.GetFilterLookupValuesData(dataTableFilterDto, cancellationToken);
-                return Ok(data.Result);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var data = _unitOfWorkBL.LookupValuesBL.GetFilterLookupValuesData(dataTableFilterDto, cancellationToken);
+            return Ok(data.Result);
         }
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.LookupValues.Create)]
-        public async Task<IActionResult> Create(int Id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_LookupValuesPartial");
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.LookupValues.Create)]
-        public async Task<IActionResult> Create(int Id, LookupValuesRequestDto lookupsRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(LookupValuesRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             var lookups = await _unitOfWorkBL.LookupValuesBL.CreateLookupValues(lookupsRequestDto, cancellationToken);
             return RedirectToAction("Index");
