@@ -20,7 +20,7 @@ namespace MidCapERP.Admin.Middleware
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            await CurrentUserInfo(context); 
+            await CurrentUserInfo(context);
             await next();
         }
 
@@ -35,13 +35,14 @@ namespace MidCapERP.Admin.Middleware
                     {
                         var userRoleNames = await _userManager.GetRolesAsync(user);
                         var userRoles = _roleManager.Roles.Where(x => userRoleNames.Contains(x.Name)).FirstOrDefault();
-                        _currentUser.UserId = user.UserID;
+                        _currentUser.UserId = user.UserId;
                         _currentUser.Name = user.FirstName;
                         _currentUser.FullName = user.FullName;
                         _currentUser.EmailAddress = user.Email;
                         _currentUser.RoleId = userRoles?.Id;
                         _currentUser.Role = userRoles?.Name;
-                        //_currentUser.TenantId = ;
+                        _currentUser.TenantId = 1;
+                        _currentUser.TenantName = "MagnusMinds";
                     }
                 }
             }

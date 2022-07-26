@@ -1,5 +1,5 @@
-﻿using MagnusMinds.Utility.EmailService;
-using MimeKit;
+﻿using MidCapERP.Dto;
+using MidCapERP.Infrastructure.Services.Email;
 using System.Net;
 using System.Text.Json;
 using UAParser;
@@ -10,8 +10,9 @@ namespace MidCapERP.Admin.Middleware
     {
         private readonly RequestDelegate _next;
         private ILogger<UseExceptionHandlerMiddleware> _logger;
-        private IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
+        private CurrentUser _currentUser;
+        private IEmailHelper _emailHelper;
 
         public UseExceptionHandlerMiddleware(RequestDelegate next, IConfiguration configuration)
         {
@@ -22,7 +23,8 @@ namespace MidCapERP.Admin.Middleware
         public async Task Invoke(HttpContext context)
         {
             _logger = context.RequestServices.GetService<ILogger<UseExceptionHandlerMiddleware>>();
-            _emailSender = context.RequestServices.GetService<IEmailSender>();
+            _currentUser = context.RequestServices.GetService<CurrentUser>();
+            _emailHelper = context.RequestServices.GetService<IEmailHelper>();
             try
             {
                 await _next(context);
@@ -63,47 +65,60 @@ namespace MidCapERP.Admin.Middleware
                     StackTrace = error.StackTrace,
                     Type = Convert.ToString(error.GetType()),
                     BrowserName = Convert.ToString(c.UserAgent),
+                    UserId = _currentUser?.UserId,
+                    Name = _currentUser?.Name,
+                    EmailAddress = _currentUser?.EmailAddress,
+                    TenantId = _currentUser?.TenantId,
+                    TenantName = _currentUser?.TenantName,
                 };
 
                 var result = JsonSerializer.Serialize(new { errorMessage = Newtonsoft.Json.JsonConvert.SerializeObject(logEntry) });
                 _logger.LogError(result);
+                await SendEmailAsync(logEntry);
+            }
+        }
 
-                var sendExceptionEmail = Convert.ToString(_configuration["AppSettings:SendExceptionEmail"]);
-                var exceptionEmailToList = Convert.ToString(_configuration["AppSettings:ExceptionEmailToList"]);
+        private async Task SendEmailAsync(dynamic logEntry)
+        {
+            var sendExceptionEmail = Convert.ToString(_configuration["AppSettings:SendExceptionEmail"]);
+            var exceptionEmailToList = _configuration.GetSection("AppSettings:ExceptionEmailToList").Get<List<string>>();
 
-                if (sendExceptionEmail == "1" && !string.IsNullOrEmpty(exceptionEmailToList))
+            if (sendExceptionEmail == "1" && exceptionEmailToList.Any())
+            {
+                // Send log in email
+                string htmlContent = GenerateHTMl(logEntry);
+
+                if (logEntry.Message != "The client has disconnected")
                 {
-                    // Send log in email
-                    string htmlTableStart = "<table style=\"width: 100 %; border: 1px solid #e5e5e5;\" border=\"1\" cellspacing=\"0\" cellpadding=\"6\">";
-                    string htmlTrStart = "<tr>";
-                    string htmlTableEnd = "</table>";
-                    string htmlTrEnd = "</tr>";
-                    string htmlTdStart = "<td>";
-                    string htmlTdEnd = "</td>";
-                    string htmlContent = htmlTableStart + htmlTrStart + htmlTdStart + "RequestPath" + htmlTdEnd + htmlTdStart + logEntry.RequestPath + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "TimeStamp" + htmlTdEnd + htmlTdStart + logEntry.TimeStamp + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "ActionDescriptor" + htmlTdEnd + htmlTdStart + logEntry.ActionDescriptor + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "IpAddress" + htmlTdEnd + htmlTdStart + logEntry.IpAddress + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "Source" + htmlTdEnd + htmlTdStart + logEntry.Source + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "Type" + htmlTdEnd + htmlTdStart + logEntry.Type + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "Message" + htmlTdEnd + htmlTdStart + logEntry.Message?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "Exception" + htmlTdEnd + htmlTdStart + logEntry.Exception?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "StackTrace" + htmlTdEnd + htmlTdStart + logEntry.StackTrace?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
-                                         + htmlTrStart + htmlTdStart + "BrowserName" + htmlTdEnd + htmlTdStart + logEntry.BrowserName + htmlTdEnd + htmlTrEnd
-                                         + htmlTableEnd;
-
-                    if (logEntry.Message != "The client has disconnected")
-                    {
-                        var message = new MimeMessage();
-                        var toEmailList = exceptionEmailToList.Split(',');
-                        foreach (var item in toEmailList)
-                            message.To.Add(new MailboxAddress("MidCap-ERP Error Email", item));
-                        message.Subject = "Error Exception | MidCap-ERP | " + DateTime.Now;
-                        message.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = htmlContent };
-                        Task.Run(async () => { await _emailSender.SendEmailAsync(message); });
-                    }
+                  await  _emailHelper.SendEmail(subject: "Error Exception | MidCap-ERP | " + DateTime.Now, htmlContent: htmlContent, to: exceptionEmailToList);
                 }
             }
+        }
+
+        private static string GenerateHTMl(dynamic logEntry)
+        {
+            string htmlTableStart = "<table style=\"width: 100 %; border: 1px solid #e5e5e5;\" border=\"1\" cellspacing=\"0\" cellpadding=\"6\">";
+            string htmlTrStart = "<tr>";
+            string htmlTableEnd = "</table>";
+            string htmlTrEnd = "</tr>";
+            string htmlTdStart = "<td>";
+            string htmlTdEnd = "</td>";
+            string htmlContent = htmlTableStart + htmlTrStart + htmlTdStart + "RequestPath" + htmlTdEnd + htmlTdStart + logEntry.RequestPath + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "TimeStamp" + htmlTdEnd + htmlTdStart + logEntry.TimeStamp + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "ActionDescriptor" + htmlTdEnd + htmlTdStart + logEntry.ActionDescriptor + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "IpAddress" + htmlTdEnd + htmlTdStart + logEntry.IpAddress + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "EmailAddress" + htmlTdEnd + htmlTdStart + logEntry.EmailAddress + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "UserId" + htmlTdEnd + htmlTdStart + logEntry.UserId + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "TenantID" + htmlTdEnd + htmlTdStart + logEntry.TenantId + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "TenantName" + htmlTdEnd + htmlTdStart + logEntry.TenantName + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "Source" + htmlTdEnd + htmlTdStart + logEntry.Source + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "Type" + htmlTdEnd + htmlTdStart + logEntry.Type + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "Message" + htmlTdEnd + htmlTdStart + logEntry.Message?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "Exception" + htmlTdEnd + htmlTdStart + logEntry.Exception?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "StackTrace" + htmlTdEnd + htmlTdStart + logEntry.StackTrace?.Replace("\r\n", Environment.NewLine) + htmlTdEnd + htmlTrEnd
+                                 + htmlTrStart + htmlTdStart + "BrowserName" + htmlTdEnd + htmlTdStart + logEntry.BrowserName + htmlTdEnd + htmlTrEnd
+                                 + htmlTableEnd;
+            return htmlContent;
         }
     }
 }
