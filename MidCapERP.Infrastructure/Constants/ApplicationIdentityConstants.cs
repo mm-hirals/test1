@@ -112,6 +112,14 @@
                 public const string Update = "Permissions.SubjectType.Update";
                 public const string Delete = "Permissions.SubjectType.Delete";
             }
+
+            public static class LookupValues
+            {
+                public const string View = "Permissions.LookupValues.View";
+                public const string Create = "Permissions.LookupValues.Create";
+                public const string Update = "Permissions.LookupValues.Update";
+                public const string Delete = "Permissions.LookupValues.Delete";
+            }
         }
     }
 }
