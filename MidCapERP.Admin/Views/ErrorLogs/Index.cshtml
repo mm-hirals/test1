@@ -9,10 +9,11 @@
         <h4 class="c-card--header-title">ErrorLogs</h4>
         <div class="c-card--header-title">
             <label>Filter Date</label>
-            <input class="form-control" type="datetime-local" id="filterDate" name="filterDate" />
+            <input class="form-control" type="datetime-local"  id="filterDate" name="filterDate" />
+            <input type="submit">
         </div>
     </div>
-    <div class="c-card--body" id="UpdateContentDiv1">
+    <div class="c-card--body" >
         <partial name="_ErrorLogsTable" model="@Model" />
         <div id="UpdateContentDiv">
         </div>
@@ -30,12 +31,12 @@
 
     <script>
         $(function() {
-            $("#tblLookup").DataTable({
+            $("#tblErrorLogs").DataTable({
                 "searching": true
             });
         });
         function onComplete() {
-            $("#exampleModal").modal('show');
+            $("#ErrorLogsModal").modal('show');
         }
     </script>
 }

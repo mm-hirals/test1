@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MidCapERP.DataAccess.Generic;
+﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 
 namespace MidCapERP.DataAccess.Repositories
 {
-    internal class ErrorLogsDA : IErrorLogsDA
+    public class ErrorLogsDA : IErrorLogsDA
     {
         private readonly ISqlRepository<ErrorLogs> _errorLogs;
 
@@ -27,8 +22,5 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _errorLogs.GetByIdAsync(Id, cancellationToken);
         }
-
-       
-
     }
 }

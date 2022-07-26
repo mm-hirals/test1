@@ -7,7 +7,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesBL CategoriesBL { get; }
-        public  IErrorLogsBL ErrorLogsBL { get; }
+        public IErrorLogsBL ErrorLogsBL { get; }
 
         public UnitOfWorkBL(ApplicationDbContext context, ICategoriesBL categoriesBL, IErrorLogsBL errorLogsBL)
         {

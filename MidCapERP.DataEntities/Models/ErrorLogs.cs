@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
-    [Table("ErrorLogs")]
+	[Table("ErrorLogs")]
     public class ErrorLogs
     {
         [Key]

@@ -3,13 +3,13 @@ using MidCapERP.DataEntities;
 
 namespace MidCapERP.DataAccess.UnitOfWork
 {
-    public class UnitOfWorkDA : IUnitOfWorkDA
+	public class UnitOfWorkDA : IUnitOfWorkDA
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesDA CategoriesDA { get; }
         public IErrorLogsDA ErrorLogsDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context,ICategoriesDA categoriesDA, IErrorLogsDA errorLogsDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA, IErrorLogsDA errorLogsDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;

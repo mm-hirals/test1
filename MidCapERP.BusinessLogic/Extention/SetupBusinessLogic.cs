@@ -5,7 +5,7 @@ using MidCapERP.BusinessLogic.UnitOfWork;
 
 namespace MidCapERP.BusinessLogic.Extention
 {
-    public static class SetupBusinessLogic
+	public static class SetupBusinessLogic
     {
         public static void SetupUnitOfWorkBL(this IServiceCollection services)
         {

@@ -6,7 +6,7 @@ using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class ErrorLogsController : Controller
+	public class ErrorLogsController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 

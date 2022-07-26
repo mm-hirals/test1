@@ -79,7 +79,7 @@
                 public const string Delete = "Permissions.Category.Delete";
             }
 
-            public static class  ErrorLogs  
+            public static class ErrorLogs
             {
                 public const string View = "Permissions.ErrorLogs.View";
             }

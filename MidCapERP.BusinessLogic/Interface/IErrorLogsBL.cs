@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MidCapERP.Dto.ErrorLogs;
+﻿using MidCapERP.Dto.ErrorLogs;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
-    public  interface  IErrorLogsBL
+	public  interface  IErrorLogsBL
     {
         public Task<IEnumerable<ErrorLogsResponseDto>> GetAll(CancellationToken cancellationToken);
 
