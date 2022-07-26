@@ -36,5 +36,6 @@ namespace MidCapERP.DataEntities
         public DbSet<LookupValues> LookupValues { get; set; }
         public DbSet<ContractorCategoryMapping> ContractorCategoryMapping { get; set; }
 
+        public DbSet<Customers> Customers { get; set; }
     }
 }

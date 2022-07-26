@@ -13,7 +13,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IStatusesDA StatusesDA { get; }
         public ISubjectTypesDA SubjectTypesDA { get; }
         public IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
-        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa)
+        public ICustomersDA CustomersDA { get; }
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;
@@ -23,6 +24,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
             this.SubjectTypesDA = subjectTypesDA;
             this.LookupValuesDA = lookupValuesDA;
             this.ContractorCategoryMappingDA = contractorCategoryMappingDa;
+            this.CustomersDA = customersDA;
         }
 
         #region DisposeMethod

@@ -129,6 +129,14 @@
                 public const string Update = "Permissions.ContractorCategoryMapping.Update";
                 public const string Delete = "Permissions.ContractorCategoryMapping.Delete";
             }
+
+            public static class Customer
+            {
+                public const string View = "Permissions.Customer.View";
+                public const string Create = "Permissions.Customer.Create";
+                public const string Update = "Permissions.Customer.Update";
+                public const string Delete = "Permissions.Customer.Delete";
+            }
         }
     }
 }

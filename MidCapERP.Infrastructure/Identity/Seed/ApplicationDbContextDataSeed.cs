@@ -52,6 +52,7 @@ namespace MidCapERP.Infrastructure.Identity.Seed
             await AddPermissionClaim(roleManager, administratorRole, "SubjectType");
             await AddPermissionClaim(roleManager, administratorRole, "LookupValues");
             await AddPermissionClaim(roleManager, administratorRole, "ContractorCategoryMapping");
+            await AddPermissionClaim(roleManager, administratorRole, "Customer");
         }
 
         /// <summary>

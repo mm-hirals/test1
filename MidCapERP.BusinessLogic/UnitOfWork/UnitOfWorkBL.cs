@@ -15,7 +15,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ISubjectTypesBL SubjectTypesBL { get; }
         public ILookupValuesBL LookupValuesBL { get; }
         public IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
-        public UnitOfWorkBL(ApplicationDbContext context,ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping)
+        public ICustomersBL CustomersBL { get; }
+        public UnitOfWorkBL(ApplicationDbContext context,ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;
@@ -25,6 +26,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.SubjectTypesBL = subjectTypesBL;
             this.LookupValuesBL = lookupValuesBL;
             this.ContractorCategoryMappingBL = contractorCategoryMapping;
+            this.CustomersBL = customersBL;
         }
 
         #region DisposeMethod
