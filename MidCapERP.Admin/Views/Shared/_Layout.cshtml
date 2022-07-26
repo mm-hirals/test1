@@ -84,6 +84,7 @@
     <!-- Start Custom JS -->
     <script src="~/js/custom.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("NToastNotify")    
     <!-- End Custom JS -->
 </body>
 </html>
