@@ -36,6 +36,7 @@
                 .Union(GeneratePermissionsForModule("Lookup"))
                 .Union(GeneratePermissionsForModule("Status"))
                 .Union(GeneratePermissionsForModule("SubjectType"))
+                .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
                 .ToList();
             }
 
@@ -119,6 +120,14 @@
                 public const string Create = "Permissions.LookupValues.Create";
                 public const string Update = "Permissions.LookupValues.Update";
                 public const string Delete = "Permissions.LookupValues.Delete";
+            }
+
+            public static class ContractorCategoryMapping
+            {
+                public const string View = "Permissions.ContractorCategoryMapping.View";
+                public const string Create = "Permissions.ContractorCategoryMapping.Create";
+                public const string Update = "Permissions.ContractorCategoryMapping.Update";
+                public const string Delete = "Permissions.ContractorCategoryMapping.Delete";
             }
         }
     }

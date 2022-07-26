@@ -10,5 +10,6 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IContractorsDA ContractorsDA { get; }
         ISubjectTypesDA SubjectTypesDA { get; }
         ILookupValuesDA LookupValuesDA { get; }
+        IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
     }
 }
