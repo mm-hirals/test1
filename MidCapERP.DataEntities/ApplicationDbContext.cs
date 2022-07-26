@@ -29,6 +29,13 @@ namespace MidCapERP.DataEntities
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<Categories> Categories { get; set; }
+        public DbSet<Lookups> Lookups { get; set; }
+        public DbSet<Statuses> Statuses { get; set; }
+        public DbSet<Contractors> Contractors { get; set; }
+        public DbSet<SubjectTypes> SubjectTypes { get; set; }
+        public DbSet<LookupValues> LookupValues { get; set; }
+        public DbSet<ContractorCategoryMapping> ContractorCategoryMapping { get; set; }
+        public DbSet<Customers> Customers { get; set; }
         public DbSet<ErrorLogs> ErrorLogs { get; set; }
     }
 }

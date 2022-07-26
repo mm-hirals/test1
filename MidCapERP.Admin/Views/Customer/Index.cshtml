@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MidCapERP.Dto.Customers.CustomersResponseDto>
+
+@{
+    ViewData["Title"] = "Customer";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Customer</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary"><i class='bx bx-plus me-2'></i>Filters</a>
+            <a asp-controller="Customer" asp-action="Create"
+               data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
+               data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body" id="UpdateContentDiv1">
+        <partial name="_CustomerTable" model="@Model" />
+        <div id="UpdateContentDiv">
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+    }
+
+    <script>
+        $(function() {
+            $("#tblCustomer").DataTable({
+                "searching": false
+            });
+        });
+        function onComplete() {
+            $("#customerModal").modal('show');
+        }
+    </script>
+} 
