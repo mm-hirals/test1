@@ -8,8 +8,11 @@ namespace MidCapERP.Dto.Customers
 
         [DisplayName("Customer Name")]
         public string CustomerName { get; set; }
+        [DisplayName("Billing Address")]
         public string BillingAddress { get; set; }
+        [DisplayName("Shipping Address")]
         public string ShippingAddress { get; set; }
+        [DisplayName("Phone Number")]
         public string PhoneNumber { get; set; }
         public int? TenantId { get; set; }
 

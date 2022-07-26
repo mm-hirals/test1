@@ -29,7 +29,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomersResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            var data = CustomerGetById(Id, cancellationToken).Result;
             if (data == null)
             {
                 throw new Exception("Customer not found");
@@ -39,7 +39,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomersRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            var data = CustomerGetById(Id, cancellationToken).Result;
             if (data == null)
             {
                 throw new Exception("Customer not found");
@@ -62,7 +62,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomersRequestDto> UpdateCustomers(int Id, CustomersRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            var oldData = CustomerGetById(Id, cancellationToken).Result;
             if (oldData == null)
             {
                 throw new Exception("Customer not found");
@@ -89,7 +89,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomersRequestDto> DeleteCustomers(int Id, CancellationToken cancellationToken)
         {
-            var customerToInsert = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            var customerToInsert = CustomerGetById(Id, cancellationToken).Result;
             if (customerToInsert == null)
             {
                 throw new Exception("Customer not found");
@@ -102,5 +102,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
             return _mappedUser;
         }
+
+        #region PrivateMethods
+
+        private async Task<Customers> CustomerGetById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            return data;
+        }
+
+        #endregion PrivateMethods
     }
 }
