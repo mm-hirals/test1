@@ -2,60 +2,59 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Dto.Statuses;
+using MidCapERP.Dto.Status;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
-    public class StatusesBL : IStatusesBL
+    public class StatusBL : IStatusBL
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
 
-        public StatusesBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper)
+        public StatusBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<StatusesResponseDto>> GetAll(CancellationToken cancellationToken)
+        public async Task<IEnumerable<StatusResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.StatusesDA.GetAll(cancellationToken);
-            var DataToReturn = _mapper.Map<List<StatusesResponseDto>>(data.ToList());
+            var data = await _unitOfWorkDA.StatusDA.GetAll(cancellationToken);
+            var DataToReturn = _mapper.Map<List<StatusResponseDto>>(data.ToList());
             return DataToReturn;
         }
 
-
-        public async Task<StatusesRequestDto> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<StatusRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = StatusesGetById(Id, cancellationToken).Result;
-            return _mapper.Map<StatusesRequestDto>(data);
+            var data = StatusGetById(Id, cancellationToken).Result;
+            return _mapper.Map<StatusRequestDto>(data);
         }
 
-        public async Task<StatusesRequestDto> CreateStatuses(StatusesRequestDto model, CancellationToken cancellationToken)
+        public async Task<StatusRequestDto> CreateStatus(StatusRequestDto model, CancellationToken cancellationToken)
         {
-            var StatusesToInsert = _mapper.Map<Statuses>(model);
-            StatusesToInsert.IsDeleted = false;
-            StatusesToInsert.CreatedBy = 1;
-            StatusesToInsert.CreatedDate = DateTime.Now;
-            StatusesToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.StatusesDA.CreateStatuses(StatusesToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<StatusesRequestDto>(data);
+            var StatusToInsert = _mapper.Map<Statuses>(model);
+            StatusToInsert.IsDeleted = false;
+            StatusToInsert.CreatedBy = 1;
+            StatusToInsert.CreatedDate = DateTime.Now;
+            StatusToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.StatusDA.CreateStatus(StatusToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<StatusRequestDto>(data);
             return _mappedUser;
         }
 
-        public async Task<StatusesRequestDto> UpdateStatuses(int Id, StatusesRequestDto model, CancellationToken cancellationToken)
+        public async Task<StatusRequestDto> UpdateStatus(int Id, StatusRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = StatusesGetById(Id, cancellationToken).Result;
+            var oldData = StatusGetById(Id, cancellationToken).Result;
             oldData.UpdatedBy = 1;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.StatusesDA.UpdateStatuses(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<StatusesRequestDto>(data);
+            var data = await _unitOfWorkDA.StatusDA.UpdateStatus(Id, oldData, cancellationToken);
+            var _mappedUser = _mapper.Map<StatusRequestDto>(data);
             return _mappedUser;
         }
 
-        private static void MapToDbObject(StatusesRequestDto model, Statuses oldData)
+        private static void MapToDbObject(StatusRequestDto model, Statuses oldData)
         {
             oldData.StatusTitle = model.StatusTitle;
             oldData.StatusDescription = model.StatusDescription;
@@ -63,30 +62,31 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.TenantId = model.TenantId;
             oldData.IsCompleted = model.IsCompleted;
             oldData.IsDeleted = model.IsDeleted;
-
         }
 
-        public async Task<StatusesRequestDto> DeleteStatuses(int Id, CancellationToken cancellationToken)
+        public async Task<StatusRequestDto> DeleteStatus(int Id, CancellationToken cancellationToken)
         {
-            var StatusesToUpdate = StatusesGetById(Id, cancellationToken).Result;
-            StatusesToUpdate.IsDeleted = true;
-            StatusesToUpdate.UpdatedDate = DateTime.Now;
-            StatusesToUpdate.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.StatusesDA.UpdateStatuses(Id, StatusesToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<StatusesRequestDto>(data);
+            var StatusToUpdate = StatusGetById(Id, cancellationToken).Result;
+            StatusToUpdate.IsDeleted = true;
+            StatusToUpdate.UpdatedDate = DateTime.Now;
+            StatusToUpdate.UpdatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.StatusDA.UpdateStatus(Id, StatusToUpdate, cancellationToken);
+            var _mappedUser = _mapper.Map<StatusRequestDto>(data);
             return _mappedUser;
         }
 
         #region otherMethod
-        private async Task<Statuses> StatusesGetById(int Id, CancellationToken cancellationToken)
+
+        private async Task<Statuses> StatusGetById(int Id, CancellationToken cancellationToken)
         {
-            var StatusesDataById = await _unitOfWorkDA.StatusesDA.GetById(Id, cancellationToken);
-            if (StatusesDataById == null)
+            var StatusDataById = await _unitOfWorkDA.StatusDA.GetById(Id, cancellationToken);
+            if (StatusDataById == null)
             {
                 throw new Exception("Status not found");
             }
-            return StatusesDataById;
+            return StatusDataById;
         }
-        #endregion
+
+        #endregion otherMethod
     }
 }

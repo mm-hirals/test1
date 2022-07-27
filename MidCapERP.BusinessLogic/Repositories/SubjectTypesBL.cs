@@ -47,6 +47,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<SubjectTypesRequestDto> CreateSubjectTypes(SubjectTypesRequestDto model, CancellationToken cancellationToken)
         {
             var SubjectTypesToInsert = _mapper.Map<SubjectTypes>(model);
+            SubjectTypesToInsert.TenantId = 1;
             SubjectTypesToInsert.IsDeleted = true;
             SubjectTypesToInsert.CreatedDate = DateTime.Now;
             SubjectTypesToInsert.CreatedUTCDate = DateTime.UtcNow;
@@ -73,7 +74,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        private static void MapToDbObject(SubjectTypesRequestDto model, SubjectTypes  oldData)
+        private static void MapToDbObject(SubjectTypesRequestDto model, SubjectTypes oldData)
         {
             oldData.SubjectTypeName = model.SubjectTypeName;
         }
@@ -94,4 +95,3 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
     }
 }
-   

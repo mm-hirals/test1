@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.Statuses
+namespace MidCapERP.Dto.Status
 {
-    public class StatusesResponseDto
+    public class StatusResponseDto
     {
         public int StatusId { get; set; }
 
@@ -12,11 +12,11 @@ namespace MidCapERP.Dto.Statuses
         public string StatusDescription { get; set; }
 
         public string StatusOrder { get; set; }
+
         [DisplayName("IsCompleted")]
         public bool IsCompleted { get; set; }
 
         public int TenantId { get; set; }
-     
 
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

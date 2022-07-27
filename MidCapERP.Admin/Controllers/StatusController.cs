@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.Statuses;
+using MidCapERP.Dto.Status;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
@@ -21,7 +21,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Status.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            return View(await GetAllStatuses(cancellationToken));
+            return View(await GetAllStatus(cancellationToken));
         }
 
         [HttpGet]
@@ -33,8 +33,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Create)]
-        public async Task<IActionResult> Create(StatusesRequestDto statusesRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(StatusRequestDto statusRequestDto, CancellationToken cancellationToken)
         {
+            var status = await _unitOfWorkBL.StatusBL.CreateStatus(statusRequestDto, cancellationToken);
             var statuses = await _unitOfWorkBL.StatusesBL.CreateStatuses(statusesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Status Saved Succesfully!");
             return RedirectToAction("Index");
@@ -44,14 +45,16 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var statuses = await _unitOfWorkBL.StatusesBL.GetById(Id, cancellationToken);
-            return PartialView("_StatusPartial", statuses);
+            var status = await _unitOfWorkBL.StatusBL.GetById(Id, cancellationToken);
+            return PartialView("_StatusPartial", status);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Update)]
-        public async Task<IActionResult> Update(StatusesRequestDto statusesRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(StatusRequestDto statusRequestDto, CancellationToken cancellationToken)
         {
+            int Id = statusRequestDto.StatusId;
+            var status = await _unitOfWorkBL.StatusBL.UpdateStatus(Id, statusRequestDto, cancellationToken);
             int Id = statusesRequestDto.StatusId;
             var statuses = await _unitOfWorkBL.StatusesBL.UpdateStatuses(Id, statusesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Status Saved Succesfully!");
@@ -62,16 +65,17 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var statuses = await _unitOfWorkBL.StatusesBL.DeleteStatuses(Id, cancellationToken);
+            var status = await _unitOfWorkBL.StatusBL.DeleteStatus(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
         #region privateMethods
-        private async Task<IEnumerable<StatusesResponseDto>> GetAllStatuses(CancellationToken cancellationToken)
-        {
-            return await _unitOfWorkBL.StatusesBL.GetAll(cancellationToken);
-        }
-        #endregion
 
+        private async Task<IEnumerable<StatusResponseDto>> GetAllStatus(CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.StatusBL.GetAll(cancellationToken);
+        }
+
+        #endregion privateMethods
     }
 }

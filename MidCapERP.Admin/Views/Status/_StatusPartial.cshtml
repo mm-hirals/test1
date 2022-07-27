@@ -1,4 +1,4 @@
-﻿@model MidCapERP.Dto.Statuses.StatusesRequestDto
+﻿@model MidCapERP.Dto.Status.StatusRequestDto
 @{
 	string action = "";
 	if(Model != null && Model.StatusId != 0)
@@ -79,3 +79,6 @@
 	</div>
 </div>
 
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Dto.Statuses;
+using MidCapERP.Dto.Status;
 
 namespace MidCapERP.BusinessLogic.MapperDto
 {
-    public class MapStatuses : Profile
+    public class MapStatus : Profile
     {
-        public MapStatuses()
+        public MapStatus()
         {
-            CreateMap<Statuses, StatusesResponseDto>().ReverseMap();
-            CreateMap<Statuses, StatusesRequestDto>().ReverseMap();
+            CreateMap<Statuses, StatusResponseDto>().ReverseMap();
+            CreateMap<Statuses, StatusRequestDto>().ReverseMap();
         }
     }
 }

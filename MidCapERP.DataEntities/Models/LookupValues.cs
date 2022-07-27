@@ -8,6 +8,7 @@ namespace MidCapERP.DataEntities.Models
     {
         [Key]
         public int LookupValueId { get; set; }
+
         public int LookupId { get; set; }
         public string LookupValueName { get; set; }
     }

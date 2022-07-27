@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MidCapERP.Dto.ErrorLogs.ErrorLogsResponseDto>
+<table class="table" id="tblErrorLogs"
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ErrorLogId)</th>
+            <th>@Html.DisplayNameFor(model => model.UserId)</th>
+            <th>@Html.DisplayNameFor(model => model.TenantId)</th>
+            <th>@Html.DisplayNameFor(model => model.RequestPath)</th>
+            <th>@Html.DisplayNameFor(model => model.ErrorMessage)</th>
+            <th>@Html.DisplayNameFor(model => model.ErrorException)</th>
+            <th>@Html.DisplayNameFor(model => model.ErrorStackTrace)</th>
+            <th>@Html.DisplayNameFor(model => model.ErrorType)</th>
+            <th>@Html.DisplayNameFor(model => model.BrowserName)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedBy)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedUTCDate)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ErrorLogId)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserId)</td>
+                <td>@Html.DisplayFor(modelItem => item.TenantId)</td>
+                <td>@Html.DisplayFor(modelItem => item.RequestPath)</td>
+                <td>@Html.DisplayFor(modelItem => item.ErrorMessage)</td>
+                <td>@Html.DisplayFor(modelItem => item.ErrorException)</td>
+                <td>@Html.DisplayFor(modelItem => item.ErrorStackTrace)</td>
+                <td>@Html.DisplayFor(modelItem => item.ErrorType)</td>
+                <td>@Html.DisplayFor(modelItem => item.BrowserName)</td>
+                <td>@Html.DisplayFor(modelitem => item.CreatedBy)</td>
+                <td>@Html.DisplayFor(modelitem => item.CreatedDate)</td>
+                <td>@Html.DisplayFor(modelitem => item.CreatedUTCDate)</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
