@@ -1,17 +1,17 @@
-﻿using MidCapERP.Dto.Statuses;
+﻿using MidCapERP.Dto.Status;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
-    public interface IStatusesBL
+    public interface IStatusBL
     {
-        public Task<IEnumerable<StatusesResponseDto>> GetAll(CancellationToken cancellationToken);
+        public Task<IEnumerable<StatusResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<StatusesRequestDto> GetById(int Id, CancellationToken cancellationToken);
+        public Task<StatusRequestDto> GetById(int Id, CancellationToken cancellationToken);
 
-        public Task<StatusesRequestDto> CreateStatuses(StatusesRequestDto model, CancellationToken cancellationToken);
+        public Task<StatusRequestDto> CreateStatus(StatusRequestDto model, CancellationToken cancellationToken);
 
-        public Task<StatusesRequestDto> UpdateStatuses(int Id, StatusesRequestDto model, CancellationToken cancellationToken);
+        public Task<StatusRequestDto> UpdateStatus(int Id, StatusRequestDto model, CancellationToken cancellationToken);
 
-        public Task<StatusesRequestDto> DeleteStatuses(int Id, CancellationToken cancellationToken);
+        public Task<StatusRequestDto> DeleteStatus(int Id, CancellationToken cancellationToken);
     }
 }
