@@ -1,5 +1,6 @@
 $cardDefaultSpacing: spacing();
-.c-card {
+$cardRootTree: ".c-card";
+#{$cardRootTree} {
     &--wrapper {
         background: $white;
         border-radius: $defaultRadius;
@@ -13,6 +14,13 @@ $cardDefaultSpacing: spacing();
             @include flexbox($vAlign: center);
             &-btn {
                 @include flexbox($vAlign: center);
+            }
+            .filter-icon {
+                .bx-plus {
+                    &:before {
+                        content: "\eb8b";
+                    }
+                }
             }
             >*+* {
                 margin-left: spacing();
@@ -35,6 +43,24 @@ $cardDefaultSpacing: spacing();
         padding: $cardDefaultSpacing;
         &-no-spacing {
             padding: 0;
+        }
+    }
+    &--footer {
+        @include flexbox($hAlign: flex-end);
+        padding: $cardDefaultSpacing;
+    }
+    &-sm--wrapper {
+        #{$cardRootTree}--header {
+            padding: spacing(0.5) spacing();
+            &-title {
+                font-size: $cardsmTitleFontSize;
+            }
+        }
+        #{$cardRootTree}--body {
+            padding: spacing(0.5) spacing();
+        }
+        #{$cardRootTree}--footer {
+            padding: spacing(0.5) spacing();
         }
     }
 }
