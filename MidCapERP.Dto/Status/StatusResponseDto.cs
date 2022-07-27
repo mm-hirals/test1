@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.Statuses
+namespace MidCapERP.Dto.Status
 {
-    public class StatusesResponseDto
+    public class StatusResponseDto
     {
         public int StatusId { get; set; }
 
