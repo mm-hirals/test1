@@ -8,6 +8,7 @@ namespace MidCapERP.Dto.Customers
 
         [DisplayName("Customer Name")]
         public string CustomerName { get; set; }
+
         public string BillingAddress { get; set; }
         public string ShippingAddress { get; set; }
         public string PhoneNumber { get; set; }
@@ -15,6 +16,7 @@ namespace MidCapERP.Dto.Customers
 
         [DisplayName("Deleted")]
         public bool IsDeleted { get; set; }
+
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

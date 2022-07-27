@@ -6,7 +6,7 @@ using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
-	public class ErrorLogsController : Controller
+    public class ErrorLogsController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
@@ -23,10 +23,12 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region privateMethods
+
         private async Task<IEnumerable<ErrorLogsResponseDto>> GetAllErrorLogs(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.ErrorLogsBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion privateMethods
     }
 }

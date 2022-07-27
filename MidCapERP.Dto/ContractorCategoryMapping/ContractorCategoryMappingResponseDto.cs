@@ -2,7 +2,7 @@
 
 namespace MidCapERP.Dto.ContractorCategoryMapping
 {
-    public class ContractorCategoryMappingResponseDto 
+    public class ContractorCategoryMappingResponseDto
     {
         public int ContractorCategoryMappingId { get; set; }
         public int ContractorId { get; set; }

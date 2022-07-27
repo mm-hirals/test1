@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
-	[Table("ErrorLogs")]
+    [Table("ErrorLogs")]
     public class ErrorLogs
     {
         [Key]
         public long ErrorLogId { get; set; }
+
         public int UserId { get; set; }
         public int TenantId { get; set; }
         public string RequestPath { get; set; }

@@ -1,7 +1,5 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities;
-using MidCapERP.DataEntities.Models;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
 {
@@ -17,7 +15,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
         public ICustomersBL CustomersBL { get; }
         public IErrorLogsBL ErrorLogsBL { get; }
-        public UnitOfWorkBL(ApplicationDbContext context,ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL)
+
+        public UnitOfWorkBL(ApplicationDbContext context, ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;

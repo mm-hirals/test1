@@ -2,7 +2,7 @@
 
 namespace MidCapERP.BusinessLogic.Interface
 {
-	public  interface  IErrorLogsBL
+    public interface IErrorLogsBL
     {
         public Task<IEnumerable<ErrorLogsResponseDto>> GetAll(CancellationToken cancellationToken);
 

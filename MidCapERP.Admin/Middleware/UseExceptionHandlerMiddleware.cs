@@ -90,7 +90,7 @@ namespace MidCapERP.Admin.Middleware
 
                 if (logEntry.Message != "The client has disconnected")
                 {
-                  await  _emailHelper.SendEmail(subject: "Error Exception | MidCap-ERP | " + DateTime.Now, htmlContent: htmlContent, to: exceptionEmailToList);
+                    await _emailHelper.SendEmail(subject: "Error Exception | MidCap-ERP | " + DateTime.Now, htmlContent: htmlContent, to: exceptionEmailToList);
                 }
             }
         }

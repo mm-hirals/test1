@@ -8,6 +8,7 @@ namespace MidCapERP.DataEntities.Models
     {
         [Key]
         public int ContractorCategoryMappingId { get; set; }
+
         public int ContractorId { get; set; }
         public int CategoryId { get; set; }
     }

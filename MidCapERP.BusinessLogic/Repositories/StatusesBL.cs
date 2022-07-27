@@ -24,7 +24,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return DataToReturn;
         }
 
-
         public async Task<StatusesRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = StatusesGetById(Id, cancellationToken).Result;
@@ -63,7 +62,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.TenantId = model.TenantId;
             oldData.IsCompleted = model.IsCompleted;
             oldData.IsDeleted = model.IsDeleted;
-
         }
 
         public async Task<StatusesRequestDto> DeleteStatuses(int Id, CancellationToken cancellationToken)
@@ -78,6 +76,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region otherMethod
+
         private async Task<Statuses> StatusesGetById(int Id, CancellationToken cancellationToken)
         {
             var StatusesDataById = await _unitOfWorkDA.StatusesDA.GetById(Id, cancellationToken);
@@ -87,6 +86,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             return StatusesDataById;
         }
-        #endregion
+
+        #endregion otherMethod
     }
 }

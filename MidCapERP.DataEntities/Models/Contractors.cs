@@ -8,6 +8,7 @@ namespace MidCapERP.DataEntities.Models
     {
         [Key]
         public int ContractorId { get; set; }
+
         public string ContractorName { get; set; }
         public string PhoneNumber { get; set; }
         public string IMEI { get; set; }

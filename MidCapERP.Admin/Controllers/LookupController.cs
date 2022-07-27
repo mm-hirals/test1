@@ -62,10 +62,12 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region privateMethods
+
         private async Task<IEnumerable<LookupsResponseDto>> GetAllLookup(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.LookupsBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion privateMethods
     }
 }

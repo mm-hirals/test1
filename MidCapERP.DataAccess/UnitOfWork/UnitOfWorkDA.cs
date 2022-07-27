@@ -3,7 +3,7 @@ using MidCapERP.DataEntities;
 
 namespace MidCapERP.DataAccess.UnitOfWork
 {
-	public class UnitOfWorkDA : IUnitOfWorkDA
+    public class UnitOfWorkDA : IUnitOfWorkDA
     {
         private readonly ApplicationDbContext _context;
         public ICategoriesDA CategoriesDA { get; }
@@ -15,7 +15,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
         public ICustomersDA CustomersDA { get; }
         public IErrorLogsDA ErrorLogsDA { get; }
-        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA,ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA)
+
+        public UnitOfWorkDA(ApplicationDbContext context, ICategoriesDA categoriesDA, ILookupsDA lookupsDA, IStatusesDA statusesBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA)
         {
             this._context = context;
             this.CategoriesDA = categoriesDA;

@@ -1,129 +1,152 @@
 body {
-  position: relative;
-  margin: $headerHeight 0 0 0;
-  @include media(">md") {
-    margin: calc($headerHeight + 1rem) 0 0 0;
-    padding-left: $navWidth;
-  }
-}
-.header {
-  width: 100%;
-  height: $headerHeight;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 0 1rem;
-  background-color: $offWhite;
-  z-index: $sideBarZindex;
-  box-shadow: $headerShadow;
-  @include flexbox($hAlign: space-between);
-  @include transition();
+    position: relative;
+    margin: $headerHeight 0 0 0;
 
-  @include media(">md") {
-    height: calc($headerHeight + 1rem);
-    padding: 0 2rem 0 calc($navWidth + 2rem);
-  }
-}
-.header_toggle {
-  color: $primary;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-.header_img {
-  width: 35px;
-  height: 35px;
-  display: flex;
-  justify-content: center;
-  border-radius: 50%;
-  overflow: hidden;
-  img {
-    width: 40px;
     @include media(">md") {
-      width: 45px;
+        margin: calc($headerHeight + 1rem) 0 0 0;
+        padding-left: $navWidth;
     }
-  }
-  @include media(">md") {
-    width: 40px;
-    height: 40px;
-  }
+}
+
+.header {
+    width: 100%;
+    height: $headerHeight;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0 1rem;
+    background-color: $offWhite;
+    z-index: $sideBarZindex;
+    box-shadow: $headerShadow;
+    @include flexbox($hAlign: space-between);
+    @include transition();
+
+    @include media(">md") {
+        height: calc($headerHeight + 1rem);
+        padding: 0 2rem 0 calc($navWidth + 2rem);
+    }
+}
+
+.header_toggle {
+    color: $primary;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.header_img {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+        width: 40px;
+
+        @include media(">md") {
+            width: 45px;
+        }
+    }
+
+    @include media(">md") {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 .l-navbar {
-  position: fixed;
-  top: 0;
-  left: -30%;
-  width: $navWidth;
-  height: 100vh;
-  background-color: $primary;
-  padding: 0.5rem 1rem 0 0;
-  @include transition();
-  z-index: $sideBarZindex;
-  @include media(">md") {
-    left: 0;
-    padding: 1rem 1rem 0 0;
-  }
+    position: fixed;
+    top: 0;
+    left: -30%;
+    width: $navWidth;
+    height: 100vh;
+    background-color: $primary;
+    padding: 0.5rem 1rem 0 0;
+    @include transition();
+    z-index: $sideBarZindex;
+
+    @include media(">md") {
+        left: 0;
+        padding: 1rem 1rem 0 0;
+    }
 }
+
 .nav {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
 }
+
 .nav_logo,
 .nav_link {
-  display: grid;
-  grid-template-columns: max-content max-content;
-  align-items: center;
-  column-gap: 1rem;
-  padding: 0.5rem 0 0.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    column-gap: 1rem;
+    padding: 0.5rem 0 0.5rem 1.5rem;
 }
+
 .nav_logo {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 }
+
 .nav_logo-icon {
-  font-size: 1.25rem;
-  color: $white;
+    font-size: 1.25rem;
+    color: $white;
 }
+
 .nav_logo-name {
-  color: $white;
-  font-weight: 700;
+    color: $white;
+    font-weight: 700;
 }
+
 .nav_link {
-  position: relative;
-  color: $secondary;
-  margin-bottom: 1.5rem;
-  transition: 0.3s;
+    position: relative;
+    color: $secondary;
+    margin-bottom: 1.5rem;
+    transition: 0.3s;
 }
+
 .nav_link:hover {
-  color: $white;
+    color: $white;
 }
+
 .nav_icon {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }
+
 .show {
-  left: 0;
-  @include media(">md") {
-    width: calc($navWidth + 156px);
-  }
-}
-.active {
-  color: $white;
-  &::before {
-    content: "";
-    position: absolute;
     left: 0;
-    width: 2px;
-    height: 32px;
-    background-color: $white;
-  }
+
+    @include media(">md") {
+        width: calc($navWidth + 156px);
+    }
 }
+
+.active {
+    color: $white;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 2px;
+        height: 32px;
+        background-color: $white;
+    }
+}
+
 .height-100 {
-  height: 100vh;
+    height: 100vh;
 }
+
 .body-pd {
-  padding-left: $navWidth;
-  @include media(">md") {
-    padding-left: calc($navWidth + 158px);
-  }
+    padding-left: $navWidth;
+
+    @include media(">md") {
+        padding-left: calc($navWidth + 158px);
+    }
 }

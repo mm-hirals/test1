@@ -73,7 +73,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        private static void MapToDbObject(SubjectTypesRequestDto model, SubjectTypes  oldData)
+        private static void MapToDbObject(SubjectTypesRequestDto model, SubjectTypes oldData)
         {
             oldData.SubjectTypeName = model.SubjectTypeName;
         }
@@ -94,4 +94,3 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
     }
 }
-   

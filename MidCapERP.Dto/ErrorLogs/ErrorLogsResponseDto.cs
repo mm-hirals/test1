@@ -1,6 +1,6 @@
 ﻿namespace MidCapERP.Dto.ErrorLogs
 {
-	public class ErrorLogsResponseDto
+    public class ErrorLogsResponseDto
     {
         public long ErrorLogId { get; set; }
         public int UserId { get; set; }

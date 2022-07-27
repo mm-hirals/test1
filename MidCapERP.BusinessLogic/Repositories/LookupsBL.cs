@@ -86,6 +86,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region otherMethod
+
         private async Task<Lookups> LookupGetById(int Id, CancellationToken cancellationToken)
         {
             var lookupDataById = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
@@ -95,6 +96,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             return lookupDataById;
         }
-        #endregion
+
+        #endregion otherMethod
     }
 }

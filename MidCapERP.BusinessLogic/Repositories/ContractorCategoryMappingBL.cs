@@ -78,6 +78,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region otherMethod
+
         private async Task<ContractorCategoryMapping> ContractorCategoryMappingGetById(int Id, CancellationToken cancellationToken)
         {
             var contractorCategoryMappingDataById = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
@@ -87,6 +88,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             return contractorCategoryMappingDataById;
         }
-        #endregion
+
+        #endregion otherMethod
     }
 }

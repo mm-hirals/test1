@@ -61,10 +61,12 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region privateMethods
+
         private async Task<IEnumerable<ContractorCategoryMappingResponseDto>> GetAllContractorCategoryMapping(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.ContractorCategoryMappingBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion privateMethods
     }
 }
