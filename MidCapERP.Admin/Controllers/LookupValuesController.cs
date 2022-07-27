@@ -4,21 +4,24 @@ using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.LookupValues;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class LookupValuesController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-
-        public LookupValuesController(IUnitOfWorkBL unitOfWorkBL)
+        private readonly IToastNotification _toastNotification;
+        public LookupValuesController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.LookupValues.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            _toastNotification.AddWarningToastMessage("This about Lookup values");
             return View(await GetAllLookupValues(cancellationToken));
         }
 
@@ -41,6 +44,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(LookupValuesRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.LookupValuesBL.CreateLookupValues(lookupsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -57,6 +61,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, LookupValuesRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.LookupValuesBL.UpdateLookupValues(Id, lookupsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
