@@ -18,7 +18,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            return View(await _unitOfWorkBL.ContractorsBL.GetAllContractor(cancellationToken));
+            return base.View(await GetAllContractors(cancellationToken));
         }
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var contractors = await _unitOfWorkBL.ContractorsBL.DeleteContractor(Id, cancellationToken);
+            await _unitOfWorkBL.ContractorsBL.DeleteContractor(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -48,7 +48,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Create)]
         public async Task<IActionResult> Create(ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
-            var contractors = await _unitOfWorkBL.ContractorsBL.CreateContractor(contractorsRequestDto, cancellationToken);
+            await _unitOfWorkBL.ContractorsBL.CreateContractor(contractorsRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -56,9 +56,17 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
         public async Task<IActionResult> Update(int Id, ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
-            Id = contractorsRequestDto.ContractorId;
-            var contractors = await _unitOfWorkBL.ContractorsBL.UpdateContractor(Id, contractorsRequestDto, cancellationToken);
+            await _unitOfWorkBL.ContractorsBL.UpdateContractor(Id, contractorsRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
+
+        #region PrivateMethods
+
+        private async Task<IEnumerable<ContractorsResponseDto>> GetAllContractors(CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.ContractorsBL.GetAllContractor(cancellationToken);
+        }
+
+        #endregion PrivateMethods
     }
 }

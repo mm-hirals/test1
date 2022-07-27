@@ -32,10 +32,11 @@
                 return GeneratePermissionsForModule("Users")
                 .Union(GeneratePermissionsForModule("Role"))
                 .Union(GeneratePermissionsForModule("Dashboard"))
-                .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Lookup"))
                 .Union(GeneratePermissionsForModule("Status"))
                 .Union(GeneratePermissionsForModule("SubjectType"))
+                .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
+                .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .ToList();
             }
 
@@ -71,14 +72,6 @@
                 public const string Create = "Permissions.Dashboard.Create";
                 public const string Update = "Permissions.Dashboard.Update";
                 public const string Delete = "Permissions.Dashboard.Delete";
-            }
-
-            public static class Category
-            {
-                public const string View = "Permissions.Category.View";
-                public const string Create = "Permissions.Category.Create";
-                public const string Update = "Permissions.Category.Update";
-                public const string Delete = "Permissions.Category.Delete";
             }
 
             public static class Lookup
@@ -119,6 +112,27 @@
                 public const string Create = "Permissions.LookupValues.Create";
                 public const string Update = "Permissions.LookupValues.Update";
                 public const string Delete = "Permissions.LookupValues.Delete";
+            }
+
+            public static class ContractorCategoryMapping
+            {
+                public const string View = "Permissions.ContractorCategoryMapping.View";
+                public const string Create = "Permissions.ContractorCategoryMapping.Create";
+                public const string Update = "Permissions.ContractorCategoryMapping.Update";
+                public const string Delete = "Permissions.ContractorCategoryMapping.Delete";
+            }
+
+            public static class Customer
+            {
+                public const string View = "Permissions.Customer.View";
+                public const string Create = "Permissions.Customer.Create";
+                public const string Update = "Permissions.Customer.Update";
+                public const string Delete = "Permissions.Customer.Delete";
+            }
+
+            public static class ErrorLogs
+            {
+                public const string View = "Permissions.ErrorLogs.View";
             }
         }
     }

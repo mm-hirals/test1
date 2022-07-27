@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MidCapERP.DataAccess.Generic;
+﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 
@@ -49,4 +44,3 @@ namespace MidCapERP.DataAccess.Repositories
         }
     }
 }
-

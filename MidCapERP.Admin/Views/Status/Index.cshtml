@@ -1,11 +1,12 @@
-﻿@model IEnumerable<MidCapERP.Dto.Statuses.StatusesResponseDto>
+﻿@model IEnumerable<MidCapERP.Dto.Status.StatusResponseDto>
+
 @{
     ViewData["Title"] = "Status";
 }
 
 <div class="c-card--wrapper">
     <div class="c-card--header">
-        <h4 class="c-card--header-title">Statuses</h4>
+        <h4 class="c-card--header-title">Status</h4>
         <div class="c-card--header-action">
             <a class="c-card--header-action-btn btn btn-outline-primary"><i class='bx bx-plus me-2'></i>Filters</a>
             <a asp-controller="Status" asp-action="Create"
@@ -29,7 +30,7 @@
 
     <script>
         $(function() {
-            $("#tblStatuses").DataTable({
+            $("#tblStatus").DataTable({
                 "searching": false
             });
         });

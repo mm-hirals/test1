@@ -43,8 +43,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var contractorToInsert = _mapper.Map<Contractors>(model);
             contractorToInsert.IsDeleted = false;
-            contractorToInsert.CreatedBy = _currentUser.UserId;
             contractorToInsert.TenantId = _currentUser.TenantId;
+            contractorToInsert.CreatedBy = _currentUser.UserId;
             contractorToInsert.CreatedDate = DateTime.Now;
             contractorToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.ContractorsDA.CreateContractor(contractorToInsert, cancellationToken);
@@ -54,12 +54,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorsRequestDto> UpdateContractor(int Id, ContractorsRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await _unitOfWorkDA.ContractorsDA.GetById(Id, cancellationToken);
-            if (oldData == null)
-            {
-                throw new Exception("Contractor not found");
-            }
-            model.TenantId = _currentUser.TenantId;
+            var oldData = await GetContractorById(Id, cancellationToken);
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -75,18 +70,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.IMEI = model.IMEI;
             oldData.EmailId = model.EmailId;
-            oldData.TenantId = model.TenantId;
-            oldData.IsDeleted = model.IsDeleted;
         }
 
         public async Task<ContractorsRequestDto> DeleteContractor(int Id, CancellationToken cancellationToken)
         {
-            var contractorToUpdate = await _unitOfWorkDA.ContractorsDA.GetById(Id, cancellationToken);
-            if (contractorToUpdate == null)
-            {
-                throw new Exception("Contractor not found");
-            }
-            contractorToUpdate.TenantId = _currentUser.TenantId;
+            var contractorToUpdate = await GetContractorById(Id, cancellationToken);
             contractorToUpdate.IsDeleted = true;
             contractorToUpdate.UpdatedDate = DateTime.Now;
             contractorToUpdate.UpdatedUTCDate = DateTime.UtcNow;

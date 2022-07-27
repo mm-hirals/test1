@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Lookup.Create)]
         public async Task<IActionResult> Create(LookupsRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
-            var lookups = await _unitOfWorkBL.LookupsBL.CreateLookup(lookupsRequestDto, cancellationToken);
+            await _unitOfWorkBL.LookupsBL.CreateLookup(lookupsRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -48,8 +48,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Lookup.Update)]
         public async Task<IActionResult> Update(int Id, LookupsRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
-            Id = lookupsRequestDto.LookupId;
-            var lookups = await _unitOfWorkBL.LookupsBL.UpdateLookup(Id, lookupsRequestDto, cancellationToken);
+            await _unitOfWorkBL.LookupsBL.UpdateLookup(Id, lookupsRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -57,15 +56,17 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Lookup.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var lookup = await _unitOfWorkBL.LookupsBL.DeleteLookup(Id, cancellationToken);
+            await _unitOfWorkBL.LookupsBL.DeleteLookup(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
-        #region privateMethods
+        #region PrivateMethods
+
         private async Task<IEnumerable<LookupsResponseDto>> GetAllLookup(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.LookupsBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion PrivateMethods
     }
 }

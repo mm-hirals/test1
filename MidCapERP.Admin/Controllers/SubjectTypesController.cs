@@ -33,7 +33,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Create)]
         public async Task<IActionResult> Create(SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
         {
-            var subjectTypes = await _unitOfWorkBL.SubjectTypesBL.CreateSubjectTypes(SubjectTypesRequestDto, cancellationToken);
+            await _unitOfWorkBL.SubjectTypesBL.CreateSubjectTypes(SubjectTypesRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -49,8 +49,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Update)]
         public async Task<IActionResult> Update(int Id, SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
         {
-            Id = SubjectTypesRequestDto.SubjectTypeId;
-            var SubjectTypes = await _unitOfWorkBL.SubjectTypesBL.UpdateSubjectTypes(Id, SubjectTypesRequestDto, cancellationToken);
+            await _unitOfWorkBL.SubjectTypesBL.UpdateSubjectTypes(Id, SubjectTypesRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -58,15 +57,17 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var SubjectTypes = await _unitOfWorkBL.SubjectTypesBL.DeleteSubjectTypes(Id, cancellationToken);
+            await _unitOfWorkBL.SubjectTypesBL.DeleteSubjectTypes(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
-        #region privateMethods
+        #region PrivateMethods
+
         private async Task<IEnumerable<SubjectTypesResponseDto>> GetAllSubjectTypes(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.SubjectTypesBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion PrivateMethods
     }
 }

@@ -1,4 +1,5 @@
 ﻿@model MidCapERP.Dto.LookupValues.LookupValuesRequestDto
+
 @{
     string action = "";
     if (Model != null && Model.LookupId != 0)
@@ -10,6 +11,7 @@
         action = "Create";
     }
 }
+
 <!-- Modal -->
 <div class="modal right fade" id="lookUpValuesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
@@ -57,3 +59,7 @@
         </div>
     </div>
 </div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

@@ -1,5 +1,6 @@
-﻿@model IEnumerable<MidCapERP.Dto.Statuses.StatusesResponseDto>
-<table class="table" id="tblStatuses">
+﻿@model IEnumerable<MidCapERP.Dto.Status.StatusResponseDto>
+
+<table class="table" id="tblStatus">
     <thead>
         <tr>
              <th>@Html.DisplayNameFor(model => model.StatusTitle)</th>
@@ -26,11 +27,9 @@
                  
                    <a asp-controller="Status" asp-action="Delete"  asp-route-id="@item.StatusId"     
                    data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
-                   data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Delete</a>
+                   data-ajax-mode="replace">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-

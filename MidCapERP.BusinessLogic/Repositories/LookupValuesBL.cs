@@ -31,13 +31,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<LookupValuesResponseDto>> GetFilterLookupValuesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             dataTableFilterDto.pageSize = dataTableFilterDto.length != null ? Convert.ToInt32(dataTableFilterDto.length) : 0;
-            dataTableFilterDto.skip = dataTableFilterDto.start != null ? Convert.ToInt32(dataTableFilterDto.start) : 0;
+            dataTableFilterDto.skip = dataTableFilterDto.start != 0 ? Convert.ToInt32(dataTableFilterDto.start) : 0;
             var customerData = (from tempcustomer in await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken) select tempcustomer);
             dataTableFilterDto.recordsTotal = customerData.Count();
             var data = customerData.Skip(dataTableFilterDto.skip).Take(dataTableFilterDto.pageSize).ToList();
             var lookupValueResponseData = _mapper.Map<List<LookupValuesResponseDto>>(data.ToList());
             var jsonData = new JsonRepsonse<LookupValuesResponseDto> { draw = dataTableFilterDto.draw, recordsFiltered = dataTableFilterDto.recordsTotal, recordsTotal = dataTableFilterDto.recordsTotal, data = lookupValueResponseData };
-
             return jsonData;
         }
 
@@ -60,7 +59,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             lookupToInsert.CreatedBy = _currentUser.UserId;
             lookupToInsert.CreatedDate = DateTime.Now;
             lookupToInsert.CreatedUTCDate = DateTime.UtcNow;
-
             var data = await _unitOfWorkDA.LookupValuesDA.CreateLookupValue(lookupToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<LookupValuesRequestDto>(data);
             return _mappedUser;
@@ -73,7 +71,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
-
             var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<LookupValuesRequestDto>(data);
             return _mappedUser;
@@ -83,7 +80,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             oldData.LookupValueName = model.LookupValueName;
             oldData.LookupValueId = model.LookupValueId;
-            oldData.IsDeleted = model.IsDeleted;
         }
 
         public async Task<LookupValuesRequestDto> DeleteLookupValues(int Id, CancellationToken cancellationToken)
@@ -97,7 +93,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        #region otherMethod
+        #region PrivateMethods
 
         private async Task<LookupValues> LookupValuesGetById(int Id, CancellationToken cancellationToken)
         {
@@ -109,6 +105,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return lookupValuesDataById;
         }
 
-        #endregion otherMethod
+        #endregion PrivateMethods
     }
 }
