@@ -3,21 +3,25 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Categories;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CategoryController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IToastNotification _toastNotification;
 
-        public CategoryController(IUnitOfWorkBL unitOfWorkBL)
+        public CategoryController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            _toastNotification.AddSuccessToastMessage("Category Data Load succesfully");
             var categories = await _unitOfWorkBL.CategoriesBL.GetAll(cancellationToken);
             return View(categories);
         }

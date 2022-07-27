@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Statuses;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class StatusController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IToastNotification _toastNotification;
 
-        public StatusController(IUnitOfWorkBL unitOfWorkBL)
+        public StatusController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Status.View)]
@@ -33,6 +36,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(StatusesRequestDto statusesRequestDto, CancellationToken cancellationToken)
         {
             var statuses = await _unitOfWorkBL.StatusesBL.CreateStatuses(statusesRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Status Saved Succesfully!");
             return RedirectToAction("Index");
         }
 
@@ -50,6 +54,7 @@ namespace MidCapERP.Admin.Controllers
         {
             int Id = statusesRequestDto.StatusId;
             var statuses = await _unitOfWorkBL.StatusesBL.UpdateStatuses(Id, statusesRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Status Saved Succesfully!");
             return RedirectToAction("Index");
         }
 

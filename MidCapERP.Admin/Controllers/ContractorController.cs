@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Contractors;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class ContractorController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IToastNotification _toastNotification;
 
-        public ContractorController(IUnitOfWorkBL unitOfWorkBL)
+        public ContractorController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.View)]
@@ -49,6 +52,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
             var contractors = await _unitOfWorkBL.ContractorsBL.CreateContractor(contractorsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -58,6 +62,7 @@ namespace MidCapERP.Admin.Controllers
         {
             Id = contractorsRequestDto.ContractorId;
             var contractors = await _unitOfWorkBL.ContractorsBL.UpdateContractor(Id, contractorsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
     }

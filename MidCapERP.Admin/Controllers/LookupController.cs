@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Lookups;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class LookupController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IToastNotification _toastNotification;
 
-        public LookupController(IUnitOfWorkBL unitOfWorkBL)
+        public LookupController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Lookup.View)]
@@ -33,6 +36,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(LookupsRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             var lookups = await _unitOfWorkBL.LookupsBL.CreateLookup(lookupsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -50,6 +54,7 @@ namespace MidCapERP.Admin.Controllers
         {
             Id = lookupsRequestDto.LookupId;
             var lookups = await _unitOfWorkBL.LookupsBL.UpdateLookup(Id, lookupsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
