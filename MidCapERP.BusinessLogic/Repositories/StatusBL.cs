@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 using MidCapERP.Dto.Status;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -10,11 +11,13 @@ namespace MidCapERP.BusinessLogic.Repositories
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
+        private readonly CurrentUser _currentUser;
 
-        public StatusBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper)
+        public StatusBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<StatusResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -26,7 +29,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<StatusRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = StatusGetById(Id, cancellationToken).Result;
+            var data = await StatusGetById(Id, cancellationToken);
             return _mapper.Map<StatusRequestDto>(data);
         }
 
@@ -34,7 +37,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var StatusToInsert = _mapper.Map<Statuses>(model);
             StatusToInsert.IsDeleted = false;
-            StatusToInsert.CreatedBy = 1;
+            StatusToInsert.TenantId = _currentUser.TenantId;
+            StatusToInsert.CreatedBy = _currentUser.UserId;
             StatusToInsert.CreatedDate = DateTime.Now;
             StatusToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.StatusDA.CreateStatus(StatusToInsert, cancellationToken);
@@ -45,7 +49,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<StatusRequestDto> UpdateStatus(int Id, StatusRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = StatusGetById(Id, cancellationToken).Result;
-            oldData.UpdatedBy = 1;
+            oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
@@ -61,13 +65,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.StatusOrder = model.StatusOrder;
             oldData.TenantId = model.TenantId;
             oldData.IsCompleted = model.IsCompleted;
-            oldData.IsDeleted = model.IsDeleted;
         }
 
         public async Task<StatusRequestDto> DeleteStatus(int Id, CancellationToken cancellationToken)
         {
             var StatusToUpdate = StatusGetById(Id, cancellationToken).Result;
             StatusToUpdate.IsDeleted = true;
+            StatusToUpdate.UpdatedBy = _currentUser.UserId;
             StatusToUpdate.UpdatedDate = DateTime.Now;
             StatusToUpdate.UpdatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.StatusDA.UpdateStatus(Id, StatusToUpdate, cancellationToken);

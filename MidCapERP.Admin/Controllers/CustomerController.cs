@@ -18,7 +18,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            return View(await _unitOfWorkBL.CustomersBL.GetAllCustomers(cancellationToken));
+            return base.View(await GetAllCustomers(cancellationToken));
         }
 
         [HttpGet]
@@ -26,6 +26,14 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_CustomerPartial");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -36,6 +44,14 @@ namespace MidCapERP.Admin.Controllers
             return PartialView("_CustomerPartial", customers);
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<IActionResult> Update(int Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
@@ -44,20 +60,13 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        #region PrivateMethods
+
+        private async Task<IEnumerable<CustomersResponseDto>> GetAllCustomers(CancellationToken cancellationToken)
         {
-            var customers = await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
-            return RedirectToAction("Index");
+            return await _unitOfWorkBL.CustomersBL.GetAllCustomers(cancellationToken);
         }
 
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
-        public async Task<IActionResult> Update(int Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
-        {
-            var customers = await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
-            return RedirectToAction("Index");
-        }
+        #endregion PrivateMethods
     }
 }

@@ -29,7 +29,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorCategoryMappingRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
+            var data = await ContractorCategoryMappingGetById(Id, cancellationToken);
             return _mapper.Map<ContractorCategoryMappingRequestDto>(data);
         }
 
@@ -48,7 +48,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorCategoryMappingRequestDto> UpdateContractorCategoryMapping(int Id, ContractorCategoryMappingRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
+            var oldData = await ContractorCategoryMappingGetById(Id, cancellationToken);
             oldData.ContractorId = model.ContractorId;
             oldData.CategoryId = model.CategoryId;
             oldData.UpdatedBy = _currentUser.UserId;
@@ -63,12 +63,11 @@ namespace MidCapERP.BusinessLogic.Repositories
         private static void MapToDbObject(ContractorCategoryMappingRequestDto model, ContractorCategoryMapping oldData)
         {
             oldData.ContractorCategoryMappingId = model.ContractorCategoryMappingId;
-            oldData.IsDeleted = model.IsDeleted;
         }
 
         public async Task<ContractorCategoryMappingRequestDto> DeleteContractorCategoryMapping(int Id, CancellationToken cancellationToken)
         {
-            var contractorCategoryToUpdate = ContractorCategoryMappingGetById(Id, cancellationToken).Result;
+            var contractorCategoryToUpdate = await ContractorCategoryMappingGetById(Id, cancellationToken);
             contractorCategoryToUpdate.IsDeleted = true;
             contractorCategoryToUpdate.UpdatedDate = DateTime.Now;
             contractorCategoryToUpdate.UpdatedUTCDate = DateTime.UtcNow;
@@ -77,7 +76,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        #region otherMethod
+        #region PrivateMethods
 
         private async Task<ContractorCategoryMapping> ContractorCategoryMappingGetById(int Id, CancellationToken cancellationToken)
         {
@@ -89,6 +88,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return contractorCategoryMappingDataById;
         }
 
-        #endregion otherMethod
+        #endregion PrivateMethods
     }
 }

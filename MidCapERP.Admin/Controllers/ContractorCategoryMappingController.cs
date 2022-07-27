@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.ContractorCategoryMapping.Create)]
         public async Task<IActionResult> Create(ContractorCategoryMappingRequestDto contractorCategoryMappingRequestDto, CancellationToken cancellationToken)
         {
-            var getAllContractorCategoryMapping = await _unitOfWorkBL.ContractorCategoryMappingBL.CreateContractorCategoryMapping(contractorCategoryMappingRequestDto, cancellationToken);
+            await _unitOfWorkBL.ContractorCategoryMappingBL.CreateContractorCategoryMapping(contractorCategoryMappingRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -48,7 +48,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.ContractorCategoryMapping.Update)]
         public async Task<IActionResult> Update(int Id, ContractorCategoryMappingRequestDto contractorCategoryMappingRequestDto, CancellationToken cancellationToken)
         {
-            var contractorCategoryMapping = await _unitOfWorkBL.ContractorCategoryMappingBL.UpdateContractorCategoryMapping(Id, contractorCategoryMappingRequestDto, cancellationToken);
+            await _unitOfWorkBL.ContractorCategoryMappingBL.UpdateContractorCategoryMapping(Id, contractorCategoryMappingRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -56,17 +56,17 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.ContractorCategoryMapping.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var contractorCategoryMapping = await _unitOfWorkBL.ContractorCategoryMappingBL.DeleteContractorCategoryMapping(Id, cancellationToken);
+            await _unitOfWorkBL.ContractorCategoryMappingBL.DeleteContractorCategoryMapping(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
-        #region privateMethods
+        #region PrivateMethods
 
         private async Task<IEnumerable<ContractorCategoryMappingResponseDto>> GetAllContractorCategoryMapping(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.ContractorCategoryMappingBL.GetAll(cancellationToken);
         }
 
-        #endregion privateMethods
+        #endregion PrivateMethods
     }
 }

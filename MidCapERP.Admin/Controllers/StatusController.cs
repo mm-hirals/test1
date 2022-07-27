@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Create)]
         public async Task<IActionResult> Create(StatusRequestDto statusRequestDto, CancellationToken cancellationToken)
         {
-            var status = await _unitOfWorkBL.StatusBL.CreateStatus(statusRequestDto, cancellationToken);
+            await _unitOfWorkBL.StatusBL.CreateStatus(statusRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -46,10 +46,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Update)]
-        public async Task<IActionResult> Update(StatusRequestDto statusRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, StatusRequestDto statusRequestDto, CancellationToken cancellationToken)
         {
-            int Id = statusRequestDto.StatusId;
-            var status = await _unitOfWorkBL.StatusBL.UpdateStatus(Id, statusRequestDto, cancellationToken);
+            await _unitOfWorkBL.StatusBL.UpdateStatus(Id, statusRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -57,17 +56,17 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Status.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var status = await _unitOfWorkBL.StatusBL.DeleteStatus(Id, cancellationToken);
+            await _unitOfWorkBL.StatusBL.DeleteStatus(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
-        #region privateMethods
+        #region PrivateMethods
 
         private async Task<IEnumerable<StatusResponseDto>> GetAllStatus(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.StatusBL.GetAll(cancellationToken);
         }
 
-        #endregion privateMethods
+        #endregion PrivateMethods
     }
 }

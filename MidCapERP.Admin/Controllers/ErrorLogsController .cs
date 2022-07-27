@@ -22,13 +22,13 @@ namespace MidCapERP.Admin.Controllers
             return View(await GetAllErrorLogs(cancellationToken));
         }
 
-        #region privateMethods
+        #region PrivateMethods
 
         private async Task<IEnumerable<ErrorLogsResponseDto>> GetAllErrorLogs(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.ErrorLogsBL.GetAll(cancellationToken);
         }
 
-        #endregion privateMethods
+        #endregion PrivateMethods
     }
 }

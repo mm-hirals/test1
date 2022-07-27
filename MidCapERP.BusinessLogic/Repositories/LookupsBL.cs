@@ -29,17 +29,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<LookupsResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Lookup not found");
-            }
+            var data = await GetLookupGetById(Id, cancellationToken);
             return _mapper.Map<LookupsResponseDto>(data);
         }
 
         public async Task<LookupsRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var lookUpDataById = LookupGetById(Id, cancellationToken).Result;
+            var lookUpDataById = await GetLookupGetById(Id, cancellationToken);
             return _mapper.Map<LookupsRequestDto>(lookUpDataById);
         }
 
@@ -47,8 +43,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var lookupToInsert = _mapper.Map<Lookups>(model);
             lookupToInsert.IsDeleted = false;
-            lookupToInsert.CreatedBy = _currentUser.UserId;
             lookupToInsert.TenantId = _currentUser.TenantId;
+            lookupToInsert.CreatedBy = _currentUser.UserId;
             lookupToInsert.CreatedDate = DateTime.Now;
             lookupToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.LookupsDA.CreateLookup(lookupToInsert, cancellationToken);
@@ -58,7 +54,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<LookupsRequestDto> UpdateLookup(int Id, LookupsRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = LookupGetById(Id, cancellationToken).Result;
+            var oldData = await GetLookupGetById(Id, cancellationToken);
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -71,12 +67,11 @@ namespace MidCapERP.BusinessLogic.Repositories
         private static void MapToDbObject(LookupsRequestDto model, Lookups oldData)
         {
             oldData.LookupName = model.LookupName;
-            oldData.IsDeleted = model.IsDeleted;
         }
 
         public async Task<LookupsRequestDto> DeleteLookup(int Id, CancellationToken cancellationToken)
         {
-            var lookupToUpdate = LookupGetById(Id, cancellationToken).Result;
+            var lookupToUpdate = await GetLookupGetById(Id, cancellationToken);
             lookupToUpdate.IsDeleted = true;
             lookupToUpdate.UpdatedDate = DateTime.Now;
             lookupToUpdate.UpdatedUTCDate = DateTime.UtcNow;
@@ -85,9 +80,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        #region otherMethod
+        #region PrivateMethods
 
-        private async Task<Lookups> LookupGetById(int Id, CancellationToken cancellationToken)
+        private async Task<Lookups> GetLookupGetById(int Id, CancellationToken cancellationToken)
         {
             var lookupDataById = await _unitOfWorkDA.LookupsDA.GetById(Id, cancellationToken);
             if (lookupDataById == null)
@@ -97,6 +92,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return lookupDataById;
         }
 
-        #endregion otherMethod
+        #endregion PrivateMethods
     }
 }
