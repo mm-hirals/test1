@@ -11,7 +11,6 @@ namespace MidCapERP.DataAccess.Extention
         public static void SetupUnitOfWorkDA(this IServiceCollection services)
         {
             services.AddScoped(typeof(ISqlRepository<>), typeof(SqlDBRepository<>));
-            services.AddScoped<ICategoriesDA, CategoriesDA>();
             services.AddScoped<ILookupsDA, LookupsDA>();
             services.AddScoped<IStatusDA, StatusDA>();
             services.AddScoped<IContractorsDA, ContractorsDA>();

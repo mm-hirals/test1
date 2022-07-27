@@ -6,7 +6,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     public class UnitOfWorkBL : IUnitOfWorkBL
     {
         private readonly ApplicationDbContext _context;
-        public ICategoriesBL CategoriesBL { get; }
         public ILookupsBL LookupsBL { get; }
         public IStatusBL StatusBL { get; }
         public IContractorsBL ContractorsBL { get; }
@@ -16,10 +15,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICustomersBL CustomersBL { get; }
         public IErrorLogsBL ErrorLogsBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusBL statusBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL)
+        public UnitOfWorkBL(ApplicationDbContext context, ILookupsBL lookupsBL, IStatusBL statusBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL)
         {
             this._context = context;
-            this.CategoriesBL = categoriesBL;
             this.LookupsBL = lookupsBL;
             this.StatusBL = statusBL;
             this.ContractorsBL = contractorsBL;
