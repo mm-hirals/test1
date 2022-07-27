@@ -3,22 +3,25 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.SubjectTypes;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class SubjectTypesController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-
-        public SubjectTypesController(IUnitOfWorkBL unitOfWorkBL)
+        private readonly IToastNotification _toastNotification;
+        public SubjectTypesController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            _toastNotification.AddSuccessToastMessage("This is Subject Types");
             return View(await GetAllSubjectTypes(cancellationToken));
         }
 
@@ -34,6 +37,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.SubjectTypesBL.CreateSubjectTypes(SubjectTypesRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -50,6 +54,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, SubjectTypesRequestDto SubjectTypesRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.SubjectTypesBL.UpdateSubjectTypes(Id, SubjectTypesRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 

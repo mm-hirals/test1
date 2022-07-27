@@ -24,6 +24,8 @@ namespace MidCapERP.Admin.Configuration
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseNToastNotify();
+
             //app.UseMiddleware<UseExceptionHandlerMiddleware>();
             app.UseExceptionHandlerMiddleware();
             app.UseRouting();
