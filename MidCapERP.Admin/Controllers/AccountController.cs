@@ -24,7 +24,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -34,9 +34,8 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>

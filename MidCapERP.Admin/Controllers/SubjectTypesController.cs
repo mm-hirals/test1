@@ -63,10 +63,12 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region privateMethods
+
         private async Task<IEnumerable<SubjectTypesResponseDto>> GetAllSubjectTypes(CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.SubjectTypesBL.GetAll(cancellationToken);
         }
-        #endregion
+
+        #endregion privateMethods
     }
 }

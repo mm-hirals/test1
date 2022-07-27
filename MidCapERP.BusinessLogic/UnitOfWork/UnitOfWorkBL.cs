@@ -1,7 +1,5 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities;
-using MidCapERP.DataEntities.Models;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
 {
@@ -13,8 +11,12 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IStatusesBL StatusesBL { get; }
         public IContractorsBL ContractorsBL { get; }
         public ISubjectTypesBL SubjectTypesBL { get; }
+        public ILookupValuesBL LookupValuesBL { get; }
+        public IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
+        public ICustomersBL CustomersBL { get; }
+        public IErrorLogsBL ErrorLogsBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context,ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL)
+        public UnitOfWorkBL(ApplicationDbContext context, ICategoriesBL categoriesBL, ILookupsBL lookupsBL, IStatusesBL statusesBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL)
         {
             this._context = context;
             this.CategoriesBL = categoriesBL;
@@ -22,6 +24,10 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.StatusesBL = statusesBL;
             this.ContractorsBL = contractorsBL;
             this.SubjectTypesBL = subjectTypesBL;
+            this.LookupValuesBL = lookupValuesBL;
+            this.ContractorCategoryMappingBL = contractorCategoryMapping;
+            this.CustomersBL = customersBL;
+            this.ErrorLogsBL = errorLogsBL;
         }
 
         #region DisposeMethod

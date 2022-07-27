@@ -9,5 +9,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IStatusesBL StatusesBL { get; }
         IContractorsBL ContractorsBL { get; }
         ISubjectTypesBL SubjectTypesBL { get; }
+        ILookupValuesBL LookupValuesBL { get; }
+        IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
+        ICustomersBL CustomersBL { get; }
+        IErrorLogsBL ErrorLogsBL { get; }
     }
 }

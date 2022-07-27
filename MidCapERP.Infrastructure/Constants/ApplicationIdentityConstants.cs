@@ -36,6 +36,8 @@
                 .Union(GeneratePermissionsForModule("Lookup"))
                 .Union(GeneratePermissionsForModule("Status"))
                 .Union(GeneratePermissionsForModule("SubjectType"))
+                .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
+                .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .ToList();
             }
 
@@ -111,6 +113,35 @@
                 public const string Create = "Permissions.SubjectType.Create";
                 public const string Update = "Permissions.SubjectType.Update";
                 public const string Delete = "Permissions.SubjectType.Delete";
+            }
+
+            public static class LookupValues
+            {
+                public const string View = "Permissions.LookupValues.View";
+                public const string Create = "Permissions.LookupValues.Create";
+                public const string Update = "Permissions.LookupValues.Update";
+                public const string Delete = "Permissions.LookupValues.Delete";
+            }
+
+            public static class ContractorCategoryMapping
+            {
+                public const string View = "Permissions.ContractorCategoryMapping.View";
+                public const string Create = "Permissions.ContractorCategoryMapping.Create";
+                public const string Update = "Permissions.ContractorCategoryMapping.Update";
+                public const string Delete = "Permissions.ContractorCategoryMapping.Delete";
+            }
+
+            public static class Customer
+            {
+                public const string View = "Permissions.Customer.View";
+                public const string Create = "Permissions.Customer.Create";
+                public const string Update = "Permissions.Customer.Update";
+                public const string Delete = "Permissions.Customer.Delete";
+            }
+
+            public static class ErrorLogs
+            {
+                public const string View = "Permissions.ErrorLogs.View";
             }
         }
     }

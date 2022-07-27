@@ -8,11 +8,11 @@ namespace MidCapERP.DataEntities.Models
     {
         [Key]
         public int StatusId { get; set; }
+
         public string StatusTitle { get; set; }
         public string StatusDescription { get; set; }
         public int StatusOrder { get; set; }
         public bool IsCompleted { get; set; }
         public int TenantId { get; set; }
-
     }
 }

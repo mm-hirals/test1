@@ -2,7 +2,6 @@
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 
-
 namespace MidCapERP.DataAccess.Repositories
 {
     public class StatusesDA : IStatusesDA

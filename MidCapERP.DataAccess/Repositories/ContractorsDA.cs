@@ -7,6 +7,7 @@ namespace MidCapERP.DataAccess.Repositories
     public class ContractorsDA : IContractorsDA
     {
         private readonly ISqlRepository<Contractors> _contractors;
+
         public ContractorsDA(ISqlRepository<Contractors> contractors)
         {
             _contractors = contractors;
