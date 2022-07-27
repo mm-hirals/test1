@@ -32,7 +32,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             dataTableFilterDto.pageSize = dataTableFilterDto.length != null ? Convert.ToInt32(dataTableFilterDto.length) : 0;
             dataTableFilterDto.skip = dataTableFilterDto.start != 0 ? Convert.ToInt32(dataTableFilterDto.start) : 0;
-            var customerData = (from tempcustomer in await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken) select tempcustomer);
+            var customerData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             dataTableFilterDto.recordsTotal = customerData.Count();
             var data = customerData.Skip(dataTableFilterDto.skip).Take(dataTableFilterDto.pageSize).ToList();
             var lookupValueResponseData = _mapper.Map<List<LookupValuesResponseDto>>(data.ToList());
