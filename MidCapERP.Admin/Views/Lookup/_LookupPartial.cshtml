@@ -1,0 +1,58 @@
+﻿@model MidCapERP.Dto.Lookups.LookupsRequestDto
+
+@{
+    string action = "";
+    if (Model != null && Model.LookupId != 0)
+    {
+        action = "Update";
+    }
+    else
+    {
+        action = "Create";
+    }
+}
+
+<!-- Modal -->
+<div class="modal right fade" id="lookupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lookup</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <form asp-action="@action" class="modal-form--wrapper">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="LookupId" hidden class="form-control" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="LookupName" class="form-label"></label>
+                                <input asp-for="LookupName" class="form-control" />
+                                <span asp-validation-for="LookupName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}

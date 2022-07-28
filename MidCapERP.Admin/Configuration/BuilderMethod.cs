@@ -16,6 +16,7 @@ namespace MidCapERP.Admin.Configuration
             builder.Services.SetupControllers();
             builder.Services.SetupIdentityDatabase(configuration);
             builder.Services.SetupDIServices(configuration);
+            builder.Services.AddRazorPages().AddNToastNotifyToastr();
         }
     }
 }

@@ -32,7 +32,11 @@
                 return GeneratePermissionsForModule("Users")
                 .Union(GeneratePermissionsForModule("Role"))
                 .Union(GeneratePermissionsForModule("Dashboard"))
-                .Union(GeneratePermissionsForModule("Category"))
+                .Union(GeneratePermissionsForModule("Lookup"))
+                .Union(GeneratePermissionsForModule("Status"))
+                .Union(GeneratePermissionsForModule("SubjectType"))
+                .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
+                .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .ToList();
             }
 
@@ -70,12 +74,65 @@
                 public const string Delete = "Permissions.Dashboard.Delete";
             }
 
-            public static class Category
+            public static class Lookup
             {
-                public const string View = "Permissions.Category.View";
-                public const string Create = "Permissions.Category.Create";
-                public const string Update = "Permissions.Category.Update";
-                public const string Delete = "Permissions.Category.Delete";
+                public const string View = "Permissions.Lookup.View";
+                public const string Create = "Permissions.Lookup.Create";
+                public const string Update = "Permissions.Lookup.Update";
+                public const string Delete = "Permissions.Lookup.Delete";
+            }
+
+            public static class Status
+            {
+                public const string View = "Permissions.Status.View";
+                public const string Create = "Permissions.Status.Create";
+                public const string Update = "Permissions.Status.Update";
+                public const string Delete = "Permissions.Status.Delete";
+            }
+
+            public static class Contractor
+            {
+                public const string View = "Permissions.Contractor.View";
+                public const string Create = "Permissions.Contractor.Create";
+                public const string Update = "Permissions.Contractor.Update";
+                public const string Delete = "Permissions.Contractor.Delete";
+            }
+
+            public static class SubjectType
+            {
+                public const string View = "Permissions.SubjectType.View";
+                public const string Create = "Permissions.SubjectType.Create";
+                public const string Update = "Permissions.SubjectType.Update";
+                public const string Delete = "Permissions.SubjectType.Delete";
+            }
+
+            public static class LookupValues
+            {
+                public const string View = "Permissions.LookupValues.View";
+                public const string Create = "Permissions.LookupValues.Create";
+                public const string Update = "Permissions.LookupValues.Update";
+                public const string Delete = "Permissions.LookupValues.Delete";
+            }
+
+            public static class ContractorCategoryMapping
+            {
+                public const string View = "Permissions.ContractorCategoryMapping.View";
+                public const string Create = "Permissions.ContractorCategoryMapping.Create";
+                public const string Update = "Permissions.ContractorCategoryMapping.Update";
+                public const string Delete = "Permissions.ContractorCategoryMapping.Delete";
+            }
+
+            public static class Customer
+            {
+                public const string View = "Permissions.Customer.View";
+                public const string Create = "Permissions.Customer.Create";
+                public const string Update = "Permissions.Customer.Update";
+                public const string Delete = "Permissions.Customer.Delete";
+            }
+
+            public static class ErrorLogs
+            {
+                public const string View = "Permissions.ErrorLogs.View";
             }
         }
     }

@@ -11,6 +11,9 @@ namespace MidCapERP.Admin.Configuration
             // seed the default data
             app.Services.SeedIdentityDataAsync().Wait();
 
+            // Set Common DateTime Format Globally
+            app.ConfigureCulture();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -20,6 +23,8 @@ namespace MidCapERP.Admin.Configuration
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseNToastNotify();
 
             //app.UseMiddleware<UseExceptionHandlerMiddleware>();
             app.UseExceptionHandlerMiddleware();

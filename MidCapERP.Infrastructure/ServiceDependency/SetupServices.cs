@@ -5,8 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.BusinessLogic.Extention;
 using MidCapERP.DataAccess.Extention;
+using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Identity.Authorization;
 using MidCapERP.Infrastructure.Identity.Models;
+using MidCapERP.Infrastructure.Services.Email;
 using MidCapERP.Infrastructure.Services.Token;
 using static MidCapERP.Infrastructure.Constants.ApplicationIdentityConstants;
 
@@ -18,6 +20,8 @@ namespace MidCapERP.Infrastructure.ServiceDependency
         {
             services.Configure<TokenConfiguration>(configuration.GetSection("token"));
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IEmailHelper, EmailHelper>();
+            services.AddScoped<CurrentUser>();
             services.SetAuthorization();
             services.SetupUnitOfWorkDA();
             services.SetupUnitOfWorkBL();
