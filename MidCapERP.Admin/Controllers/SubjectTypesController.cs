@@ -21,7 +21,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.SubjectType.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            _toastNotification.AddSuccessToastMessage("This is Subject Types");
             return View(await GetAllSubjectTypes(cancellationToken));
         }
 

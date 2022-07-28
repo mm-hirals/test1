@@ -24,7 +24,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
-            _toastNotification.AddWarningToastMessage("You are at Home Page!");
             return View();
         }
 

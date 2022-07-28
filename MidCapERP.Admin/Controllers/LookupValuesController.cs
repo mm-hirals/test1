@@ -21,15 +21,15 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.LookupValues.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            _toastNotification.AddWarningToastMessage("This about Lookup values");
-            return View(await GetAllLookupValues(cancellationToken));
+            return View();
         }
 
         [HttpPost]
-        public IActionResult GetLookupValuesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.LookupValues.View)]
+        public async Task<IActionResult> GetLookupValuesDataAsync([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var data = _unitOfWorkBL.LookupValuesBL.GetFilterLookupValuesData(dataTableFilterDto, cancellationToken);
-            return Ok(data.Result);
+            var data = await _unitOfWorkBL.LookupValuesBL.GetFilterLookupValuesData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
         }
 
         [HttpGet]
@@ -72,14 +72,5 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.LookupValuesBL.DeleteLookupValues(Id, cancellationToken);
             return RedirectToAction("Index");
         }
-
-        #region PrivateMethods
-
-        private async Task<IEnumerable<LookupValuesResponseDto>> GetAllLookupValues(CancellationToken cancellationToken)
-        {
-            return await _unitOfWorkBL.LookupValuesBL.GetAll(cancellationToken);
-        }
-
-        #endregion PrivateMethods
     }
 }

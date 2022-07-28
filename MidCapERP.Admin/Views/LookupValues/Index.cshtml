@@ -19,10 +19,7 @@
         <div id="UpdateLookupValuesDiv">
         </div>
     </div>
-
 </div>
-
-
 
 @section Scripts {
     @{
@@ -31,8 +28,9 @@
     }
 
     <script type="text/javascript">
+        var tblLookup;
         $(document).ready(function() {
-            $("#tblLookupValues").DataTable({
+            tblLookup = $("#tblLookupValues").DataTable({
                 "searching": false,
                 "processing": true,
                 "serverSide": true,

@@ -15,7 +15,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IQueryable<LookupValues>> GetAll(CancellationToken cancellationToken)
         {
-            return await _lookupValues.GetAsync(cancellationToken);
+            return await _lookupValues.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
 
         public async Task<LookupValues> GetById(int Id, CancellationToken cancellationToken)
