@@ -1,0 +1,813 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="">
+    <div class="card-product--wrapper">
+        <div class="card-product--image">
+            <input type="file" hidden />
+            <div class="product--image">
+                <img src="images/round-chair.jpg" alt="Product Name" />
+                <div class="edit--image">
+                    <i class="bx bx-pencil"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-prpoduct-cotent--wrapper">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Product Category <span class="required">*</span>
+                            </label>
+                            <select class="form-select">
+                                <option selected>
+                                    Dining Chair
+                                </option>
+                                <option>
+                                    Table Base
+                                </option>
+                                <option>
+                                    Sofa Chair
+                                </option>
+                                <option>
+                                    Sofa / Corner / Lounger
+                                </option>
+                                <option>
+                                    Recliner CHair
+                                </option>
+                                <option>
+                                    Barstools
+                                </option>
+                                <option>
+                                    Puffy
+                                </option>
+                                <option>
+                                    Imported (Marble / Ceramic)
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Product Title <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" placeholder="Product Title">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Product Code <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-control" placeholder="Product Code">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Product Demensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth)</span>
+                            </label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Width">
+                                    @*<label class="form-label">Width</label>*@
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Height">
+                                    @*<label class="form-label">Height</label>*@
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Depth">
+                                    @*<label class="form-label">Depth</label>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* <div class="product-info--wrapper">
+            </div>*@
+            <div class="row">
+                <div class="col-12">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Comments
+                            </label>
+                            <textarea class="form-control" placeholder="Comments"></textarea>
+                        </div>
+                    </div>
+                    @*<div class="product-info--wrapper">
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mt-4">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            @*<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>*@
+            <button class="nav-link active" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
+            <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Materials</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--header">
+                    <h4 class="c-card--header-title">Product Images</h4>
+                </div>
+                <div class="c-card--body">
+                    <div id="dropzone">
+                        <div class="dropzone needsclick" id="demo-upload" action="/upload">
+                            <div class="dz-message needsclick">
+                                Drop files here or click to upload.
+                                <br>
+                                <span class="note needsclick">
+                                    (This is just a demo dropzone. Selected
+                                    files are <strong>not</strong> actually uploaded.)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-rowmaterial" role="tabpanel" aria-labelledby="nav-rowmaterial-tab">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Wooden Type</h4>
+                        </div>
+                        <div class="c-card--body">
+                            <table class="table c-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Material
+                                        </th>
+                                        <th>
+                                            Unit Price
+                                        </th>
+                                        <th>
+                                            Product Quantity
+                                        </th>
+                                        <th>
+                                            Current Price
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="add-icon">
+                                                <i class="bx bx-plus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Row Material</h4>
+                        </div>
+                        <div class="c-card--body">
+                            <table class="table c-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Material
+                                        </th>
+                                        <th>
+                                            Unit Price
+                                        </th>
+                                        <th>
+                                            Product Quantity
+                                        </th>
+                                        <th>
+                                            Current Price
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="add-icon">
+                                                <i class="bx bx-plus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="c-card--wrapper c-card-sm--wrapper  mb-3">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Accessories</h4>
+                        </div>
+                        <div class="c-card--body">
+                            <table class="table c-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Material
+                                        </th>
+                                        <th>
+                                            Unit Price
+                                        </th>
+                                        <th>
+                                            Product Quantity
+                                        </th>
+                                        <th>
+                                            Current Price
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="add-icon">
+                                                <i class="bx bx-plus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Polish</h4>
+                        </div>
+                        <div class="c-card--body">
+                            <table class="table c-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Material
+                                        </th>
+                                        <th>
+                                            Unit Price
+                                        </th>
+                                        <th>
+                                            Product Quantity
+                                        </th>
+                                        <th>
+                                            Current Price
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="add-icon">
+                                                <i class="bx bx-plus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="c-card--wrapper c-card-sm--wrapper">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Cushion</h4>
+                        </div>
+                        <div class="c-card--body">
+                            <table class="table c-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Material
+                                        </th>
+                                        <th>
+                                            Unit Price
+                                        </th>
+                                        <th>
+                                            Product Quantity
+                                        </th>
+                                        <th>
+                                            Current Price
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="add-icon">
+                                                <i class="bx bx-plus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select class="form-select">
+                                                <option selected>
+                                                    Akasa Wood
+                                                </option>
+                                                <option>
+                                                    Ash Wood
+                                                </option>
+                                                <option>
+                                                    Bamboo Wood
+                                                </option>
+                                                <option>
+                                                    Beech Wood
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Current Price">
+                                        </td>
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="c-card--wrapper c-card-sm--wrapper price-card--wrapper">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Total Price</h4>
+                        </div>
+                        <div class="c-card--body">
+                            <ul class="price-list--wrapper">
+                                <li class="price-list--item">
+                                    <span class="price-list--title">
+                                        Total Price
+                                    </span>
+                                    <div class="price-list--value">
+                                        ₹142250
+                                    </div>
+                                </li>
+                                <li class="price-list--item">
+                                    <span class="price-list--title">
+                                        Retailers Price
+                                    </span>
+                                    <div class="price-list--value price-list--input">
+                                        <span class="price--icon">
+                                            ₹
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Enter Retailers Price" value="32">
+                                    </div>
+                                </li>
+                                <li class="price-list--item">
+                                    <span class="price-list--title">
+                                        Wholesalers Price
+                                    </span>
+                                    <div class="price-list--value price-list--input">
+                                        <span class="price--icon">
+                                            ₹
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Enter Wholesalers Price" value="85">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

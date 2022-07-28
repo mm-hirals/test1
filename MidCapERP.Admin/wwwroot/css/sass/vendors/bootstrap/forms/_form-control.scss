@@ -1,7 +1,6 @@
 //
 // General form controls (plus a few specific high-level interventions)
 //
-
 .form-control {
     display: block;
     width: 100%;
@@ -16,14 +15,12 @@
     border: $input-border-width solid $input-border-color;
     appearance: none; // Fix appearance for date inputs in Safari
     // Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
-    @include border-radius($input-border-radius, 0);
-
+    // @include border-radius($input-border-radius, 0);
+    border-radius: 0;
     @include box-shadow($input-box-shadow);
     @include transition($input-transition);
-
     &[type="file"] {
         overflow: hidden; // prevent pseudo element button overlap
-
         &:not(:disabled):not([readonly]) {
             cursor: pointer;
         }
@@ -34,21 +31,20 @@
         background-color: $input-focus-bg;
         border-color: $input-focus-border-color;
         outline: 0;
-
-        @if $enable-shadows {
-            @include box-shadow($input-box-shadow, $input-focus-box-shadow);
-        }
-        @else {
-            // Avoid using mixin so we can pass custom focus shadow properly
-            box-shadow: $input-focus-box-shadow;
-        }
+        // @if $enable-shadows {
+        //     @include box-shadow($input-box- shadow, $input-focus-box-shadow);
+        // }
+        // @else {
+        //     // Avoid using mixin so we can pass custom focus shadow properly
+        //     box-shadow: $input-focus-box-shadow;
+        // }
     }
     // Add some height to date inputs on iOS
     // https://github.com/twbs/bootstrap/issues/23307
     // TODO: we can remove this workaround once https://bugs.webkit.org/show_bug.cgi?id=198959 is resolved
     &::-webkit-date-and-time-value {
         // Multiply line-height by 1em if it has no unit
-        height: if(unit($input-line-height) == "", $input-line-height * 1em, $input-line-height);
+        height: if(unit($input-line-height)=="", $input-line-height * 1em, $input-line-height);
     }
     // Placeholder
     &::placeholder {
@@ -83,11 +79,9 @@
         border-radius: 0; // stylelint-disable-line property-disallowed-list
         @include transition($btn-transition);
     }
-
     &:hover:not(:disabled):not([readonly])::file-selector-button {
         background-color: $form-file-button-hover-bg;
     }
-
     &::-webkit-file-upload-button {
         padding: $input-padding-y $input-padding-x;
         margin: (-$input-padding-y) (-$input-padding-x);
@@ -102,7 +96,6 @@
         border-radius: 0; // stylelint-disable-line property-disallowed-list
         @include transition($btn-transition);
     }
-
     &:hover:not(:disabled):not([readonly])::-webkit-file-upload-button {
         background-color: $form-file-button-hover-bg;
     }
@@ -112,7 +105,6 @@
 //
 // Apply class to a readonly input to make it appear like regular plain
 // text (without any border, background color, focus indicator)
-
 .form-control-plaintext {
     display: block;
     width: 100%;
@@ -123,7 +115,6 @@
     background-color: transparent;
     border: solid transparent;
     border-width: $input-border-width 0;
-
     &.form-control-sm,
     &.form-control-lg {
         padding-right: 0;
@@ -137,19 +128,16 @@
 // height and font-size of form controls.
 //
 // Repeated in `_input_group.scss` to avoid Sass extend issues.
-
 .form-control-sm {
     min-height: $input-height-sm;
     padding: $input-padding-y-sm $input-padding-x-sm;
     @include font-size($input-font-size-sm);
     @include border-radius($input-border-radius-sm);
-
     &::file-selector-button {
         padding: $input-padding-y-sm $input-padding-x-sm;
         margin: (-$input-padding-y-sm) (-$input-padding-x-sm);
         margin-inline-end: $input-padding-x-sm;
     }
-
     &::-webkit-file-upload-button {
         padding: $input-padding-y-sm $input-padding-x-sm;
         margin: (-$input-padding-y-sm) (-$input-padding-x-sm);
@@ -162,13 +150,11 @@
     padding: $input-padding-y-lg $input-padding-x-lg;
     @include font-size($input-font-size-lg);
     @include border-radius($input-border-radius-lg);
-
     &::file-selector-button {
         padding: $input-padding-y-lg $input-padding-x-lg;
         margin: (-$input-padding-y-lg) (-$input-padding-x-lg);
         margin-inline-end: $input-padding-x-lg;
     }
-
     &::-webkit-file-upload-button {
         padding: $input-padding-y-lg $input-padding-x-lg;
         margin: (-$input-padding-y-lg) (-$input-padding-x-lg);
@@ -183,33 +169,28 @@ textarea {
     &.form-control {
         min-height: $input-height;
     }
-
     &.form-control-sm {
         min-height: $input-height-sm;
     }
-
     &.form-control-lg {
         min-height: $input-height-lg;
     }
 }
-// stylelint-enable selector-no-qualifying-type
 
+// stylelint-enable selector-no-qualifying-type
 .form-control-color {
     width: $form-color-width;
     height: auto; // Override fixed browser height
     padding: $input-padding-y;
-
     &:not(:disabled):not([readonly]) {
         cursor: pointer;
     }
-
     &::-moz-color-swatch {
-        height: if(unit($input-line-height) == "", $input-line-height * 1em, $input-line-height);
+        height: if(unit($input-line-height)=="", $input-line-height * 1em, $input-line-height);
         @include border-radius($input-border-radius);
     }
-
     &::-webkit-color-swatch {
-        height: if(unit($input-line-height) == "", $input-line-height * 1em, $input-line-height);
+        height: if(unit($input-line-height)=="", $input-line-height * 1em, $input-line-height);
         @include border-radius($input-border-radius);
     }
 }

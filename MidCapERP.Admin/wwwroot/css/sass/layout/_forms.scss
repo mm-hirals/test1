@@ -1,7 +1,57 @@
 .form-group {
     margin: 0 0 spacing();
+    .dimension-input {
+        font-size: 10px;
+        font-style: italic;
+    }
 }
 
 .control-label {
     font-weight: 600;
+}
+
+.input-group {
+    >div {
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+
+.product-upload--image {
+    height: 300px;
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.dropzone {
+    border: 2px dashed rgba($gray, 0.4);
+    border-radius: 10px;
+}
+
+.add-icon,
+.minus-icon {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: $white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-icon {
+    background-color: $primary;
+}
+
+.minus-icon {
+    background-color: $tertiary;
+}
+
+.required {
+    color: $errorColor;
 }

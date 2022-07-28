@@ -5,8 +5,10 @@
 @import 'sass/sass-utils/functions';
 @import 'sass/sass-utils/helpers';
 // Vendors
-@import 'sass/vendors/bootstrap';
+@import 'sass/vendors/datepicker';
 @import 'sass/vendors/boxIcon';
+@import 'sass/vendors/bootstrap';
+@import 'sass/vendors/dropzone';
 // Base
 @import 'sass/base/reset';
 @import 'sass/base/typography';
@@ -16,6 +18,7 @@
 @import 'sass/layout/footer';
 @import 'sass/layout/bodyContent';
 @import 'sass/layout/forms';
+@import 'sass/layout/tabbing';
 // Components
 @import 'sass/components/buttons';
 @import 'sass/components/card';
@@ -27,3 +30,4 @@
 // Pages
 @import 'sass/pages/dashboard';
 @import 'sass/pages/product';
+@import 'sass/pages/category';

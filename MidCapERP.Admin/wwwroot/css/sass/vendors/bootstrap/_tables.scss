@@ -1,55 +1,15 @@
 //
 // Basic Bootstrap table
 //
-
 .table {
-    --# {
-        $variable-prefix
-    }
-
-    table-bg: #{$table-bg};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-accent-bg: #{$table-accent-bg};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-striped-color: #{$table-striped-color};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-striped-bg: #{$table-striped-bg};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-active-color: #{$table-active-color};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-active-bg: #{$table-active-bg};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-hover-color: #{$table-hover-color};
-
-    --# {
-        $variable-prefix
-    }
-
-    table-hover-bg: #{$table-hover-bg};
+    --#{$variable-prefix}table-bg: #{$table-bg};
+    --#{$variable-prefix}table-accent-bg: #{$table-accent-bg};
+    --#{$variable-prefix}table-striped-color: #{$table-striped-color};
+    --#{$variable-prefix}table-striped-bg: #{$table-striped-bg};
+    --#{$variable-prefix}table-active-color: #{$table-active-color};
+    --#{$variable-prefix}table-active-bg: #{$table-active-bg};
+    --#{$variable-prefix}table-hover-color: #{$table-hover-color};
+    --#{$variable-prefix}table-hover-bg: #{$table-hover-bg};
     width: 100%;
     margin-bottom: $spacer;
     color: $table-color;
@@ -60,18 +20,16 @@
     // We use the universal selectors here to simplify the selector (else we would need 6 different selectors).
     // Another advantage is that this generates less code and makes the selector less specific making it easier to override.
     // stylelint-disable-next-line selector-max-universal
-    > :not(caption) > * > * {
+    > :not(caption)>*>* {
         padding: $table-cell-padding-y $table-cell-padding-x;
         background-color: var(--#{$variable-prefix}table-bg);
-        border-bottom-width: $table-border-width;
+        // border-bottom-width: $table-border-width;
         box-shadow: inset 0 0 0 9999px var(--#{$variable-prefix}table-accent-bg);
     }
-
-    > tbody {
+    >tbody {
         vertical-align: inherit;
     }
-
-    > thead {
+    >thead {
         vertical-align: bottom;
     }
     // Highlight border color between thead, tbody and tfoot.
@@ -83,7 +41,6 @@
 //
 // Change placement of captions with a class
 //
-
 .caption-top {
     caption-side: top;
 }
@@ -91,10 +48,9 @@
 //
 // Condensed table w/ half padding
 //
-
 .table-sm {
     // stylelint-disable-next-line selector-max-universal
-    > :not(caption) > * > * {
+    > :not(caption)>*>* {
         padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
     }
 }
@@ -107,12 +63,11 @@
 // these borders do not have the same color or if they are semi-transparent.
 // Therefor we add top and border bottoms to the `tr`s and left and right borders
 // to the `td`s or `th`s
-
 .table-bordered {
-    > :not(caption) > * {
+    > :not(caption)>* {
         border-width: $table-border-width 0;
         // stylelint-disable-next-line selector-max-universal
-        > * {
+        >* {
             border-width: 0 $table-border-width;
         }
     }
@@ -120,10 +75,9 @@
 
 .table-borderless {
     // stylelint-disable-next-line selector-max-universal
-    > :not(caption) > * > * {
+    > :not(caption)>*>* {
         border-bottom-width: 0;
     }
-
     > :not(:first-child) {
         border-top-width: 0;
     }
@@ -132,14 +86,9 @@
 // Zebra-striping
 //
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
-
 .table-striped {
-    > tbody > tr:nth-of-type(#{$table-striped-order}) > * {
-        --# {
-            $variable-prefix
-        }
-
-        table-accent-bg: var(--#{$variable-prefix}table-striped-bg);
+    >tbody>tr:nth-of-type(#{$table-striped-order})>* {
+        --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-striped-bg);
         color: var(--#{$variable-prefix}table-striped-color);
     }
 }
@@ -147,27 +96,17 @@
 // Active table
 //
 // The `.table-active` class can be added to highlight rows or cells
-
 .table-active {
-    --# {
-        $variable-prefix
-    }
-
-    table-accent-bg: var(--#{$variable-prefix}table-active-bg);
+    --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-active-bg);
     color: var(--#{$variable-prefix}table-active-color);
 }
 
 // Hover effect
 //
 // Placed here since it has to come after the potential zebra striping
-
 .table-hover {
-    > tbody > tr:hover > * {
-        --# {
-            $variable-prefix
-        }
-
-        table-accent-bg: var(--#{$variable-prefix}table-hover-bg);
+    >tbody>tr:hover>* {
+        --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-hover-bg);
         color: var(--#{$variable-prefix}table-hover-color);
     }
 }
@@ -176,8 +115,8 @@
 //
 // Table variants set the table cell backgrounds, border colors
 // and the colors of the striped, hovered & active tables
-
-@each $color, $value in $table-variants {
+@each $color,
+$value in $table-variants {
     @include table-variant($color, $value);
 }
 
@@ -185,10 +124,8 @@
 //
 // Generate series of `.table-responsive-*` classes for configuring the screen
 // size of where your table will overflow.
-
 @each $breakpoint in map-keys($grid-breakpoints) {
     $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
-
     @include media-breakpoint-down($breakpoint) {
         .table-responsive#{$infix} {
             overflow-x: auto;

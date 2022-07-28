@@ -1,9 +1,9 @@
 body {
     position: relative;
     margin: $headerHeight 0 0 0;
-
     @include media(">md") {
-        margin: calc($headerHeight + 1rem) 0 0 0;
+        // margin: calc(#{$headerHeight} + 1rem) 0 0 0;
+        margin: $headerHeight 0 0 0;
         padding-left: $navWidth;
     }
 }
@@ -20,10 +20,10 @@ body {
     box-shadow: $headerShadow;
     @include flexbox($hAlign: space-between);
     @include transition();
-
     @include media(">md") {
-        height: calc($headerHeight + 1rem);
-        padding: 0 2rem 0 calc($navWidth + 2rem);
+        // height: calc(#{$headerHeight} + 1rem);
+        height: $headerHeight;
+        padding: 0 2rem 0 calc(#{$navWidth} + 2rem);
     }
 }
 
@@ -40,15 +40,12 @@ body {
     justify-content: center;
     border-radius: 50%;
     overflow: hidden;
-
     img {
         width: 40px;
-
         @include media(">md") {
             width: 45px;
         }
     }
-
     @include media(">md") {
         width: 40px;
         height: 40px;
@@ -65,7 +62,6 @@ body {
     padding: 0.5rem 1rem 0 0;
     @include transition();
     z-index: $sideBarZindex;
-
     @include media(">md") {
         left: 0;
         padding: 1rem 1rem 0 0;
@@ -118,17 +114,15 @@ body {
     font-size: 1.25rem;
 }
 
-.show {
+.navbar-show {
     left: 0;
-
     @include media(">md") {
-        width: calc($navWidth + 156px);
+        width: calc(#{$navWidth} + 156px);
     }
 }
 
 .active {
     color: $white;
-
     &::before {
         content: "";
         position: absolute;
@@ -145,8 +139,7 @@ body {
 
 .body-pd {
     padding-left: $navWidth;
-
     @include media(">md") {
-        padding-left: calc($navWidth + 158px);
+        padding-left: calc(#{$navWidth} + 158px);
     }
 }

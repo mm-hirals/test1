@@ -8,16 +8,27 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Lookup</h4>
         <div class="c-card--header-action">
-            <a class="c-card--header-action-btn btn btn-outline-primary"><i class='bx bx-plus me-2'></i>Filters</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lookupFilter"><i class='bx bx-plus me-1'></i>Filters</a>
             <a asp-controller="Lookup" asp-action="Create"
                data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
                data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
         </div>
     </div>
     <div class="c-card--body">
-        <partial name="_LookupTable" model="@Model" />
-        <div id="UpdateContentDiv">
+        <div class="card mb-4 p-3" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Product Name
+                        </label>
+                        <input type="text" class="form-control" placeholder="Product Name" />
+                    </div>
+                </div>
+            </div>
         </div>
+        <partial name="_LookupTable" model="@Model" />
+        <div id="UpdateContentDiv"></div>
     </div>
 </div>
 
@@ -32,6 +43,11 @@
             $("#tblLookup").DataTable({
                 "searching": false
             });
+        });
+
+        $("#lookupFilter").click(function() {
+            $(this).toggleClass("filter-icon");
+            $("#FilterCard").slideToggle("slow");
         });
 
         function onComplete() {
