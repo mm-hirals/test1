@@ -1,15 +1,46 @@
-﻿namespace MidCapERP.Dto.DataGrid
+﻿using Newtonsoft.Json;
+
+namespace MidCapERP.Dto.DataGrid
 {
     public class DataTableFilterDto
     {
-        public string draw { get; set; } = String.Empty;
-        public int start { get; set; } = 0;
-        public string length { get; set; } = String.Empty;
-        public string sortColumn { get; set; } = String.Empty;
-        public string sortColumnDirection { get; set; } = String.Empty;
-        public string searchValue { get; set; } = String.Empty;
-        public int pageSize { get; set; } = 0;
-        public int skip { get; set; } = 0;
-        public int recordsTotal { get; set; } = 0;
+        [JsonProperty("draw")]
+        public string Draw { get; set; } = String.Empty;
+
+        [JsonProperty("start")]
+        public int Start { get; set; } = 0;
+
+        [JsonProperty("length")]
+        public string Length { get; set; } = String.Empty;
+
+        [JsonProperty("sortColumn")]
+        public string SortColumn { get; set; } = String.Empty;
+
+        [JsonProperty("sortColumnDirection")]
+        public string SortColumnDirection { get; set; } = String.Empty;
+
+        [JsonProperty("searchValue")]
+        public string SearchValue { get; set; } = String.Empty;
+
+        [JsonProperty("pageSize")]
+        public int PageSize
+        {
+            get
+            {
+                return Length != null ? Convert.ToInt32(this.Length) : 0;
+            }
+        }
+
+        [JsonProperty("skip")]
+        public int Skip
+        {
+            get
+            {
+                return Start;
+            }
+        }
+
+        [JsonProperty("recordsTotal")]
+        public int RecordsTotal { get; set; } = 0;
     }
 }

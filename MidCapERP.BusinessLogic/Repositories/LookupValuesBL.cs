@@ -5,6 +5,7 @@ using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.LookupValues;
+using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -30,14 +31,10 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<LookupValuesResponseDto>> GetFilterLookupValuesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            dataTableFilterDto.pageSize = dataTableFilterDto.length != null ? Convert.ToInt32(dataTableFilterDto.length) : 0;
-            dataTableFilterDto.skip = dataTableFilterDto.start != 0 ? Convert.ToInt32(dataTableFilterDto.start) : 0;
             var customerData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            dataTableFilterDto.recordsTotal = customerData.Count();
-            var data = customerData.Skip(dataTableFilterDto.skip).Take(dataTableFilterDto.pageSize).ToList();
-            var lookupValueResponseData = _mapper.Map<List<LookupValuesResponseDto>>(data.ToList());
-            var jsonData = new JsonRepsonse<LookupValuesResponseDto> { draw = dataTableFilterDto.draw, recordsFiltered = dataTableFilterDto.recordsTotal, recordsTotal = dataTableFilterDto.recordsTotal, data = lookupValueResponseData };
-            return jsonData;
+            var data = new PagedList<LookupValues>(customerData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var lookupValueResponseData = _mapper.Map<List<LookupValuesResponseDto>>(data);
+            return new JsonRepsonse<LookupValuesResponseDto>(dataTableFilterDto.Draw, data.TotalCount, data.TotalCount, lookupValueResponseData);
         }
 
         public async Task<LookupValuesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)

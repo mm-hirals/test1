@@ -1,19 +1,11 @@
-﻿@model MidCapERP.Dto.LookupValues.LookupValuesRequestDto
+﻿@model MidCapERP.Dto.Category.CategoryRequestDto
 
 @{
-    string action = "";
-    if (Model != null && Model.LookupId != 0)
-    {
-        action = "Update";
-    }
-    else
-    {
-        action = "Create";
-    }
+    string action = (Model != null && Model.LookupId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="lookUpValuesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -22,7 +14,10 @@
                     <i class='bx bx-x'></i>
                 </button>
             </div>
-            <form asp-action="@action" method="post" data-ajax="true" data-ajax-method="post" data-ajax-complete="completed" data-ajax-failure="failed" class="modal-form--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper"
+                data-ajax="true" data-ajax-method="post" 
+                data-ajax-complete="CategoryModel.onSuccess" 
+                data-ajax-failure="CategoryModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="LookupValueId" hidden class="form-control" />
@@ -41,13 +36,6 @@
                                 <span asp-validation-for="LookupValueName" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -62,15 +50,3 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
-
-<script>
-    completed = function(xhr) {
-        tblLookup.ajax.reload();
-        $("#lookUpValuesModal").modal('hide');
-    };
-
-    failed = function(xhr) {
-        tblLookup.ajax.reload();
-        $("#lookUpValuesModal").modal('hide');
-    };
-</script>

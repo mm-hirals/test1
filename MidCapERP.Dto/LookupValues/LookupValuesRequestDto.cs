@@ -12,9 +12,7 @@ namespace MidCapERP.Dto.LookupValues
         [DisplayName("LookupValues Name")]
         public string LookupValueName { get; set; }
 
-        [DisplayName("Deleted")]
         public bool IsDeleted { get; set; }
-
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
