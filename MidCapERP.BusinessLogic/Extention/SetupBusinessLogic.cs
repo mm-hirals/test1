@@ -9,7 +9,6 @@ namespace MidCapERP.BusinessLogic.Extention
     {
         public static void SetupUnitOfWorkBL(this IServiceCollection services)
         {
-            services.AddScoped<IStatusBL, StatusBL>();
             services.AddScoped<ILookupsBL, LookupsBL>();
             services.AddScoped<IContractorsBL, ContractorsBL>();
             services.AddScoped<ISubjectTypesBL, SubjectTypesBL>();

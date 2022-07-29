@@ -5,7 +5,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     public interface IUnitOfWorkBL
     {
         ILookupsBL LookupsBL { get; }
-        IStatusBL StatusBL { get; }
         IContractorsBL ContractorsBL { get; }
         ISubjectTypesBL SubjectTypesBL { get; }
         ILookupValuesBL LookupValuesBL { get; }
