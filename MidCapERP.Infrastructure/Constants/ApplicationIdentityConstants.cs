@@ -38,6 +38,7 @@
                 .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
                 .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .Union(GeneratePermissionsForModule("Category"))
+                .Union(GeneratePermissionsForModule("Unit"))
                 .ToList();
             }
 
@@ -142,6 +143,13 @@
                 public const string Create = "Permissions.Category.Create";
                 public const string Update = "Permissions.Category.Update";
                 public const string Delete = "Permissions.Category.Delete";
+            }
+            public static class Unit
+            {
+                public const string View = "Permissions.Unit.View";
+                public const string Create = "Permissions.Unit.Create";
+                public const string Update = "Permissions.Unit.Update";
+                public const string Delete = "Permissions.Unit.Delete";
             }
         }
     }
