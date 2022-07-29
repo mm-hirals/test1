@@ -39,6 +39,7 @@
                 .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Company"))
+                .Union(GeneratePermissionsForModule("Unit"))
                 .ToList();
             }
 
@@ -151,6 +152,14 @@
                 public const string Create = "Permissions.Company.Create";
                 public const string Update = "Permissions.Company.Update";
                 public const string Delete = "Permissions.Company.Delete";
+            }
+
+            public static class Unit
+            {
+                public const string View = "Permissions.Unit.View";
+                public const string Create = "Permissions.Unit.Create";
+                public const string Update = "Permissions.Unit.Update";
+                public const string Delete = "Permissions.Unit.Delete";
             }
         }
     }
