@@ -4,11 +4,11 @@
 @{
 }
 <div class="">
-    <div class="card-product--wrapper">
+    <div class="card-product--wrapper mb-3">
         <div class="card-product--image">
             <input type="file" hidden />
             <div class="product--image">
-                <img src="images/round-chair.jpg" alt="Product Name" />
+                <img src="~/images/round-chair.jpg" alt="Product Name" />
                 <div class="edit--image">
                     <i class="bx bx-pencil"></i>
                 </div>
@@ -113,11 +113,12 @@
             </div>
         </div>
     </div>
-    <nav class="mt-4">
+    <nav class="product-nav-tab--sticky">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             @*<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>*@
             <button class="nav-link active" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
             <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Materials</button>
+            <button class="nav-link disabled" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Workflow</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -641,7 +642,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="c-card--wrapper c-card-sm--wrapper">
+                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
                         <div class="c-card--header">
                             <h4 class="c-card--header-title">Cushion</h4>
                         </div>
@@ -804,6 +805,20 @@
                                     </div>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row c-card-footer--btn">
+                <div class="col-12">
+                    <div class="c-card--wrapper c-card-sm--wrapper">
+                        <div class="c-card--footer">
+                            <a class="btn btn-danger" href="">
+                                Cancle
+                            </a>
+                            <a class="btn btn-primary ms-2" href="">
+                                Save
+                            </a>
                         </div>
                     </div>
                 </div>

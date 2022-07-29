@@ -79,7 +79,7 @@
 
 .price-card--wrapper {
     position: sticky;
-    top: 0;
+    top: 40px;
     .price-list--wrapper {
         padding: 0;
         margin: 0;
@@ -111,4 +111,16 @@
             font-weight: 600;
         }
     }
+}
+
+.product-nav-tab--sticky {
+    position: sticky;
+    top: -25px;
+    background-color: $layoutBgColor;
+    z-index: 1;
+}
+
+.c-card-footer--btn {
+    position: sticky;
+    bottom: -25px;
 }
