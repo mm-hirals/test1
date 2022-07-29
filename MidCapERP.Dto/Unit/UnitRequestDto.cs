@@ -7,8 +7,10 @@ namespace MidCapERP.Dto.Unit
     {
         public int LookupValueId { get; set; }
         public int LookupId { get; set; } = (int)MasterPagesEnum.Unit;
-        [DisplayName(" Unit Name")]
+        
+        [DisplayName("Unit Name")]
         public string LookupValueName { get; set; }
+
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
