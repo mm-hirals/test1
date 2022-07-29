@@ -34,9 +34,16 @@
                 .Union(GeneratePermissionsForModule("Dashboard"))
                 .Union(GeneratePermissionsForModule("Lookup"))
                 .Union(GeneratePermissionsForModule("Status"))
+                .Union(GeneratePermissionsForModule("Contractor"))
                 .Union(GeneratePermissionsForModule("SubjectType"))
+                .Union(GeneratePermissionsForModule("LookupValues"))
                 .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
+                .Union(GeneratePermissionsForModule("Customer"))
                 .Union(GeneratePermissionsForModule("ErrorLogs"))
+                .Union(GeneratePermissionsForModule("Category"))
+                .Union(GeneratePermissionsForModule("Company"))
+                .Union(GeneratePermissionsForModule("Unit"))
+                .Union(GeneratePermissionsForModule("WoodType"))
                 .ToList();
             }
 
@@ -133,6 +140,38 @@
             public static class ErrorLogs
             {
                 public const string View = "Permissions.ErrorLogs.View";
+            }
+
+            public static class Category
+            {
+                public const string View = "Permissions.Category.View";
+                public const string Create = "Permissions.Category.Create";
+                public const string Update = "Permissions.Category.Update";
+                public const string Delete = "Permissions.Category.Delete";
+            }
+
+            public static class Company
+            {
+                public const string View   = "Permissions.Company.View";
+                public const string Create = "Permissions.Company.Create";
+                public const string Update = "Permissions.Company.Update";
+                public const string Delete = "Permissions.Company.Delete";
+            }
+
+            public static class Unit
+            {
+                public const string View = "Permissions.Unit.View";
+                public const string Create = "Permissions.Unit.Create";
+                public const string Update = "Permissions.Unit.Update";
+                public const string Delete = "Permissions.Unit.Delete";
+            }
+
+            public static class WoodType
+            {
+                public const string View = "Permissions.WoodType.View";
+                public const string Create = "Permissions.WoodType.Create";
+                public const string Update = "Permissions.WoodType.Update";
+                public const string Delete = "Permissions.WoodType.Delete";
             }
         }
     }

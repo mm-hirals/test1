@@ -9,18 +9,16 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IContractorsDA ContractorsDA { get; }
         public ILookupValuesDA LookupValuesDA { get; }
         public ILookupsDA LookupsDA { get; }
-        public IStatusDA StatusDA { get; }
         public ISubjectTypesDA SubjectTypesDA { get; }
         public IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
         public ICustomersDA CustomersDA { get; }
         public IErrorLogsDA ErrorLogsDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IStatusDA statusBL, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA)
         {
             this._context = context;
             this.ContractorsDA = contractorsDA;
             this.LookupsDA = lookupsDA;
-            this.StatusDA = statusBL;
             this.SubjectTypesDA = subjectTypesDA;
             this.LookupValuesDA = lookupValuesDA;
             this.ContractorCategoryMappingDA = contractorCategoryMappingDa;

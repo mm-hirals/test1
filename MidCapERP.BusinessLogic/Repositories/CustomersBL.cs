@@ -67,8 +67,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
         {
             oldData.CustomerName = model.CustomerName;
-            oldData.BillingAddress = model.BillingAddress;
-            oldData.ShippingAddress = model.ShippingAddress;
+            //oldData.BillingAddress = model.BillingAddress;
+            //oldData.ShippingAddress = model.ShippingAddress;
             oldData.PhoneNumber = model.PhoneNumber;
         }
 
@@ -76,6 +76,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerToInsert = await CustomerGetById(Id, cancellationToken);
             customerToInsert.IsDeleted = true;
+            customerToInsert.UpdatedBy = _currentUser.UserId;
             customerToInsert.UpdatedDate = DateTime.Now;
             customerToInsert.UpdatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, customerToInsert, cancellationToken);
