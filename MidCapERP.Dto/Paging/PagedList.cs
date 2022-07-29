@@ -23,6 +23,7 @@
 
             Length = pageSize;
             RecordsToSkip = recordsToSkip;
+            
             AddRange(source.Skip(recordsToSkip).Take(pageSize).ToList());
         }
 

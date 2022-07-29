@@ -6,10 +6,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
     public class UnitOfWorkBL : IUnitOfWorkBL
     {
         private readonly ApplicationDbContext _context;
-        public ILookupsBL LookupsBL { get; }
         public IContractorsBL ContractorsBL { get; }
         public ISubjectTypesBL SubjectTypesBL { get; }
-        public ILookupValuesBL LookupValuesBL { get; }
         public IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
         public ICustomersBL CustomersBL { get; }
         public IErrorLogsBL ErrorLogsBL { get; }
@@ -18,13 +16,11 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IUnitBL UnitBL { get; }
         public IWoodTypeBL WoodTypeBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, ILookupsBL lookupsBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL)
         {
             this._context = context;
-            this.LookupsBL = lookupsBL;
             this.ContractorsBL = contractorsBL;
             this.SubjectTypesBL = subjectTypesBL;
-            this.LookupValuesBL = lookupValuesBL;
             this.ContractorCategoryMappingBL = contractorCategoryMapping;
             this.CustomersBL = customersBL;
             this.ErrorLogsBL = errorLogsBL;
