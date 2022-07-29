@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using MidCapERP.Dto.Constants;
+using System.ComponentModel;
 
 namespace MidCapERP.Dto.Category
 {
     public class CategoryRequestDto
     {
         public int LookupValueId { get; set; }
-        public int LookupId { get; set; }
+        public int LookupId { get; set; } = (int)MasterPagesEnum.Category;
 
         [DisplayName("Category Name")]
         public string LookupValueName { get; set; }
