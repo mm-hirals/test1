@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MidCapERP.Dto.WoodType.WoodTypeResponseDto>
+
+@{
+    ViewData["Title"] = "WoodType";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Wood Types</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkWoodTypeFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+            <a asp-controller="WoodType" asp-action="Create"
+               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="WoodTypeModel.onComplete" data-ajax-update="#divUpdateWoodType">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Wood Type Name</label>
+                        <input type="text" class="form-control" placeholder="Wood Type Name" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_WoodTypeTable" model="@Model" />
+        <div id="divUpdateWoodType"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/WoodType.js" asp-append-version="true"></script>
+    }
+}

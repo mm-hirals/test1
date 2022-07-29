@@ -34,12 +34,16 @@
                 .Union(GeneratePermissionsForModule("Dashboard"))
                 .Union(GeneratePermissionsForModule("Lookup"))
                 .Union(GeneratePermissionsForModule("Status"))
+                .Union(GeneratePermissionsForModule("Contractor"))
                 .Union(GeneratePermissionsForModule("SubjectType"))
+                .Union(GeneratePermissionsForModule("LookupValues"))
                 .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
+                .Union(GeneratePermissionsForModule("Customer"))
                 .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Company"))
                 .Union(GeneratePermissionsForModule("Unit"))
+                .Union(GeneratePermissionsForModule("WoodType"))
                 .ToList();
             }
 
@@ -160,6 +164,14 @@
                 public const string Create = "Permissions.Unit.Create";
                 public const string Update = "Permissions.Unit.Update";
                 public const string Delete = "Permissions.Unit.Delete";
+            }
+
+            public static class WoodType
+            {
+                public const string View = "Permissions.WoodType.View";
+                public const string Create = "Permissions.WoodType.Create";
+                public const string Update = "Permissions.WoodType.Update";
+                public const string Delete = "Permissions.WoodType.Delete";
             }
         }
     }

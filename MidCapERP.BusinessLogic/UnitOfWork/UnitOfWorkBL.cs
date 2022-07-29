@@ -17,8 +17,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICategoryBL CategoryBL { get; }
         public ICompanyBL CompanyBL { get; }
         public IUnitBL UnitBL { get; }
+        public IWoodTypeBL WoodTypeBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, ILookupsBL lookupsBL, IStatusBL statusBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL)
+        public UnitOfWorkBL(ApplicationDbContext context, ILookupsBL lookupsBL, IStatusBL statusBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL)
         {
             this._context = context;
             this.LookupsBL = lookupsBL;
@@ -32,6 +33,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.CategoryBL = categoryBL;
             this.CompanyBL = companyBL;
             this.UnitBL = unitBL;
+            this.WoodTypeBL = woodTypeBL;
         }
 
         #region DisposeMethod
