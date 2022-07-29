@@ -32,8 +32,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var UnitAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var UnitResponseData = (from x in UnitAllData
+            var unitAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var unitResponseData = (from x in unitAllData
                                     join y in _unitOfWorkDA.LookupsDA.GetAll(cancellationToken).Result
                                          on new { x.LookupId } equals new { y.LookupId }
                                     where x.LookupId == (int)MasterPagesEnum.Unit
@@ -51,9 +51,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                         UpdatedDate = x.UpdatedDate,
                                         UpdatedUTCDate = x.UpdatedUTCDate
                                     }).ToList();
-            var unitData = new PagedList<UnitResponseDto>(UnitResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var unitData = new PagedList<UnitResponseDto>(unitResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             //var UnitResponseData = _mapper.Map<List<UnitResponseDto>>(UnitData);
-            return new JsonRepsonse<UnitResponseDto>(dataTableFilterDto.Draw, unitData.TotalCount, unitData.TotalCount, UnitResponseData);
+            return new JsonRepsonse<UnitResponseDto>(dataTableFilterDto.Draw, unitData.TotalCount, unitData.TotalCount, unitResponseData);
         }
 
         public async Task<UnitResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
