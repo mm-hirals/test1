@@ -2,9 +2,14 @@
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class AddProductController : Controller
+    public class ProductController : Controller
     {
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Create()
         {
             return View();
         }

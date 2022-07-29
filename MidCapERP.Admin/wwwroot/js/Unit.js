@@ -20,8 +20,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<a data-ajax-complete="UnitModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateUnit" href="/Unit/Update/' + o.lookupValueId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '&nbsp<a data-ajax-complete="UnitModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Unit/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a>';
+                    return '<div class="c-action-btn-group"><a data-ajax-complete="UnitModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateUnit" href="/Unit/Update/' + o.lookupValueId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="UnitModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Unit/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
