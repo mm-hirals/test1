@@ -4,10 +4,23 @@
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.CustomerName)</th>
-            @*<th>@Html.DisplayNameFor(model => model.BillingAddress)</th>
-            <th>@Html.DisplayNameFor(model => model.ShippingAddress)</th>*@
+            <th>@Html.DisplayNameFor(model => model.EmailId)</th>
             <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.IsDeleted)</th>
+            <th>@Html.DisplayNameFor(model => model.AltPhoneNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingStreet1)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingStreet2)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingLandmark)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingArea)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingCity)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingState)</th>
+            <th>@Html.DisplayNameFor(model => model.BillingZipCode)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingStreet1)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingStreet2)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingLandmark)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingArea)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingCity)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingState)</th>
+            <th>@Html.DisplayNameFor(model => model.ShippingZipCode)</th>
             <th></th>
         </tr>
     </thead>
@@ -16,10 +29,23 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
-                @*<td>@Html.DisplayFor(modelItem => item.BillingAddress)</td>
-                <td>@Html.DisplayFor(modelItem => item.ShippingAddress)</td>*@
+                <td>@Html.DisplayFor(modelItem => item.EmailId)</td>
                 <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.IsDeleted)</td>
+                <td>@Html.DisplayFor(modelItem => item.AltPhoneNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingStreet1)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingStreet2)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingLandmark)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingArea)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingCity)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingState)</td>
+                <td>@Html.DisplayFor(modelItem => item.BillingZipCode)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingStreet1)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingStreet2)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingLandmark)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingArea)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingCity)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingState)</td>
+                <td>@Html.DisplayFor(modelItem => item.ShippingZipCode)</td>
                 <td>
                     <a asp-controller="Customer" asp-action="Update" asp-route-id="@item.CustomerId"
                    data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"

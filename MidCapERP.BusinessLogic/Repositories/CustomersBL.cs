@@ -64,14 +64,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
-        {
-            oldData.CustomerName = model.CustomerName;
-            //oldData.BillingAddress = model.BillingAddress;
-            //oldData.ShippingAddress = model.ShippingAddress;
-            oldData.PhoneNumber = model.PhoneNumber;
-        }
-
         public async Task<CustomersRequestDto> DeleteCustomers(int Id, CancellationToken cancellationToken)
         {
             var customerToInsert = await CustomerGetById(Id, cancellationToken);
@@ -94,6 +86,28 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Customer not found");
             }
             return data;
+        }
+
+        private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
+        {
+            oldData.CustomerName = model.CustomerName;
+            oldData.EmailId = model.EmailId;
+            oldData.PhoneNumber = model.PhoneNumber;
+            oldData.AltPhoneNumber = model.AltPhoneNumber;
+            oldData.BillingStreet1 = model.BillingStreet1;
+            oldData.BillingStreet2 = model.BillingStreet2;
+            oldData.BillingLandmark = model.BillingLandmark;
+            oldData.BillingArea = model.BillingArea;
+            oldData.BillingCity = model.BillingCity;
+            oldData.BillingState = model.BillingState;
+            oldData.BillingZipCode = model.BillingZipCode;
+            oldData.ShippingStreet1 = model.ShippingStreet1;
+            oldData.ShippingStreet2 = model.ShippingStreet2;
+            oldData.ShippingLandmark = model.ShippingLandmark;
+            oldData.ShippingArea = model.ShippingArea;
+            oldData.ShippingCity = model.ShippingCity;
+            oldData.ShippingState = model.ShippingState;
+            oldData.ShippingZipCode = model.ShippingZipCode;
         }
 
         #endregion PrivateMethods
