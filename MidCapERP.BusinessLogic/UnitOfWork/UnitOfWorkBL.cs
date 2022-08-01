@@ -17,7 +17,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IWoodTypeBL WoodTypeBL { get; }
         public IAccessoriesTypesBL AccessoriesTypesBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, ILookupsBL lookupsBL, IStatusBL statusBL, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, ILookupValuesBL lookupValuesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypesBL accessoriesTypesBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypesBL accessoriesTypesBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;

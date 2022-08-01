@@ -1,17 +1,20 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.AccessoriesTypes
 {
     public class AccessoriesTypesRequestDto
     {
+        [Required]
         public int AccessoriesTypeId { get; set; }
+
         public int CategoryId { get; set; }
 
-        [DisplayName("TypeName")]
+        [DisplayName("Type Name")]
         public string TypeName { get; set; }
         public int TenantId { get; set; }
 
-        [DisplayName("IsCompleted")]
+        [DisplayName("Is Completed?")]
         public bool IsCompleted { get; set; }
 
         public bool IsDeleted { get; set; }

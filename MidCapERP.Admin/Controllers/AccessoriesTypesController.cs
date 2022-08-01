@@ -21,7 +21,7 @@ namespace MidCapERP.Admin.Controllers
             _toastNotification = toastNotification;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
@@ -29,7 +29,7 @@ namespace MidCapERP.Admin.Controllers
 
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
@@ -47,7 +47,7 @@ namespace MidCapERP.Admin.Controllers
 
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
         public async Task<IActionResult> Create(AccessoriesTypesRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.AccessoriesTypesBL.CreateAccessoriesTypes(accessoriesTypesRequestDto, cancellationToken);
@@ -56,7 +56,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.View)]
         public async Task<IActionResult> GetAccessoriesTypesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.AccessoriesTypesBL.GetFilterAccessoriesTypesData(dataTableFilterDto, cancellationToken);
@@ -65,7 +65,7 @@ namespace MidCapERP.Admin.Controllers
 
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
@@ -82,7 +82,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]
         public async Task<IActionResult> Update(int Id, AccessoriesTypesRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
         {
 
@@ -92,7 +92,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesTypes.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.AccessoriesTypesBL.DeleteAccessoriesTypes(Id, cancellationToken);
