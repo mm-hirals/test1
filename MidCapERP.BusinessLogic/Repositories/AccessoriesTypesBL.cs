@@ -39,14 +39,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<AccessoriesTypesResponseDto>> GetFilterAccessoriesTypesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypesDA.GetAll(cancellationToken);
-            var lookupValueData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var companyResponseData = (from x in accessoriesTypesAllData
-                                       join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupId }
+                                       join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupValueId }
                                        select new AccessoriesTypesResponseDto()
                                        {
                                            AccessoriesTypeId = x.AccessoriesTypeId,
                                            CategoryId = x.CategoryId,
-                                           CategoryName = y.LookupName,
+                                           CategoryName = y.LookupValueName,
                                            TypeName = x.TypeName,   
                                            IsDeleted = x.IsDeleted,
                                            CreatedBy = x.CreatedBy,

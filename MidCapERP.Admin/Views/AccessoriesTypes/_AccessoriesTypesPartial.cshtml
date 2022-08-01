@@ -23,8 +23,10 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
+                                <label asp-for="CategoryId" class="form-label"></label>
                                 <select asp-for="CategoryId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectItemList, "Value", "Text"))">
+                                            <option>Please Select Cateagory</option>
                                 </select>
                                 <span asp-validation-for="CategoryId" class="text-danger"></span>
                             </div>

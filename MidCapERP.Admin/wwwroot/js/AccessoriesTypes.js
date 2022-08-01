@@ -16,8 +16,7 @@ $(function () {
         },
         "columns": [
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
-            { "data": "typeName", "name": "TypeName", "autoWidth": true },     
-            { "data": "isDeleted", "name": "isDeleted", "autoWidth": true },   
+            { "data": "typeName", "name": "TypeName", "autoWidth": true },   
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

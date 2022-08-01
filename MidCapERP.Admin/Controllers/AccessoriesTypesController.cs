@@ -36,7 +36,7 @@ namespace MidCapERP.Admin.Controllers
             var data = categoryData.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList().Select(a =>
                                   new SelectListItem
                                   {
-                                      Value = Convert.ToString(a.LookupId),
+                                      Value = Convert.ToString(a.LookupValueId),
                                       Text = a.LookupValueName
                                   }).ToList();
 
@@ -70,11 +70,11 @@ namespace MidCapERP.Admin.Controllers
         {
             var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
             var data = categoryData.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList().Select(a =>
-                               new SelectListItem
-                               {
-                                   Value = Convert.ToString(a.LookupId),
-                                   Text = a.LookupValueName
-                               }).ToList();
+                                  new SelectListItem
+                                  {
+                                      Value = Convert.ToString(a.LookupValueId),
+                                      Text = a.LookupValueName
+                                  }).ToList();
 
             ViewBag.CategorySelectItemList = data;
             var accessoriesTypes = await _unitOfWorkBL.AccessoriesTypesBL.GetById(Id, cancellationToken);
