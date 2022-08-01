@@ -14,5 +14,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IErrorLogsBL ErrorLogsBL { get; }
         ICategoryBL CategoryBL { get; }
         ICompanyBL CompanyBL { get; }
+        IAccessoriesTypesBL AccessoriesTypesBL { get; }
     }
 }

@@ -39,6 +39,7 @@
                 .Union(GeneratePermissionsForModule("ErrorLogs"))
                 .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Company"))
+                .Union(GeneratePermissionsForModule("AccessoriesTypes"))       
                 .ToList();
             }
 
@@ -151,6 +152,14 @@
                 public const string Create = "Permissions.Company.Create";
                 public const string Update = "Permissions.Company.Update";
                 public const string Delete = "Permissions.Company.Delete";
+            }
+
+            public static class AccessoriesTypes
+            {
+                public const string View   = "Permissions.AccessoriesTypes.View";
+                public const string Create = "Permissions.AccessoriesTypes.Create";
+                public const string Update = "Permissions.AccessoriesTypes.Update";
+                public const string Delete = "Permissions.AccessoriesTypes.Delete";
             }
         }
     }
