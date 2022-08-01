@@ -10,14 +10,6 @@ namespace MidCapERP.BusinessLogic.MapperDto
         {
             CreateMap<LookupValues, CategoryRequestDto>().ReverseMap();
             CreateMap<LookupValues, CategoryResponseDto>().ReverseMap();
-
-            //CreateMap<LookupValues, CategoryResponseDto>()
-            //   .ForMember(d => d.LookupValueName, opt => opt.MapFrom(s => s.LookupValueName))
-            //   .ForMember(d => d.LookupValueId, opt => opt.MapFrom(s => s.LookupValueId))
-            //   .ForMember(d => d.LookupId, opt => opt.MapFrom(s => s.LookupId));
-
-            //CreateMap<Lookups, CategoryResponseDto>()
-            //    .ForMember(d => d.LookupName, opt => opt.MapFrom(s => s.LookupName));
         }
     }
 }

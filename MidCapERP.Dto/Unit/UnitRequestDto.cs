@@ -1,19 +1,17 @@
 ﻿using System.ComponentModel;
+using MidCapERP.Dto.Constants;
 
-namespace MidCapERP.Dto.Lookups
+namespace MidCapERP.Dto.Unit
 {
-    public class LookupsRequestDto
+    public class UnitRequestDto
     {
-        public int LookupId { get; set; }
+        public int LookupValueId { get; set; }
+        public int LookupId { get; set; } = (int)MasterPagesEnum.Unit;
+        
+        [DisplayName("Unit Name")]
+        public string LookupValueName { get; set; }
 
-        [DisplayName("Lookup Name")]
-        public string LookupName { get; set; }
-
-        public int TenantId { get; set; }
-
-        [DisplayName("Deleted")]
         public bool IsDeleted { get; set; }
-
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

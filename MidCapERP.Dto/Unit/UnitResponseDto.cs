@@ -1,19 +1,19 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.Lookups
+namespace MidCapERP.Dto.Unit
 {
-    public class LookupsResponseDto
+    public class UnitResponseDto
     {
+        public int LookupValueId { get; set; }
         public int LookupId { get; set; }
 
         [DisplayName("Lookup Name")]
         public string LookupName { get; set; }
 
-        public int TenantId { get; set; }
+        [DisplayName("Unit Name")]
+        public string LookupValueName { get; set; }
 
-        [DisplayName("Deleted")]
         public bool IsDeleted { get; set; }
-
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

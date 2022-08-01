@@ -1,0 +1,39 @@
+﻿@model IEnumerable<MidCapERP.Dto.Unit.UnitResponseDto>
+@{
+    ViewData["Title"] = "Unit";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Units</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkUnitFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+            <a asp-controller="Unit" asp-action="Create"
+               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="UnitModel.onComplete" data-ajax-update="#divUpdateUnit">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Unit Name</label>
+                        <input type="text" class="form-control" placeholder="Unit Name" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_UnitTable" model="@Model" />
+        <div id="divUpdateUnit"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Unit.js" asp-append-version="true"></script>
+    }
+}

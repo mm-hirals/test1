@@ -52,8 +52,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedUTCDate = x.UpdatedUTCDate
                                        }).ToList();
             var companyData = new PagedList<CompanyResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
-            //var companyResponseData = _mapper.Map<List<CompanyResponseDto>>(companyData);
-            return new JsonRepsonse<CompanyResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyResponseData);
+            return new JsonRepsonse<CompanyResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }
 
         public async Task<CompanyResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)

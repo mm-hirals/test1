@@ -1,11 +1,10 @@
-﻿@model MidCapERP.Dto.Category.CategoryRequestDto
-
+﻿@model MidCapERP.Dto.Unit.UnitRequestDto
 @{
     string action = (Model != null && Model.LookupId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="divCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divUnitModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,8 +15,8 @@
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                 data-ajax="true" data-ajax-method="post" 
-                data-ajax-complete="CategoryModel.onSuccess" 
-                data-ajax-failure="CategoryModel.onFailed">
+                data-ajax-complete="UnitModel.onSuccess" 
+                data-ajax-failure="UnitModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="LookupValueId" hidden class="form-control" />

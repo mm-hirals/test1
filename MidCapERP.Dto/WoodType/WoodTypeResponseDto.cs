@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.LookupValues
+namespace MidCapERP.Dto.WoodType
 {
-    public class LookupValuesRequestDto
+    public class WoodTypeResponseDto
     {
         public int LookupValueId { get; set; }
-
-        [DisplayName("Lookup Name")]
         public int LookupId { get; set; }
 
-        [DisplayName("LookupValues Name")]
+        [DisplayName("Lookup Name")]
+        public string LookupName { get; set; }
+
+        [DisplayName("WoodType Name")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }

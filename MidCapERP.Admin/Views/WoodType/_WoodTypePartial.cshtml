@@ -1,23 +1,23 @@
-﻿@model MidCapERP.Dto.Category.CategoryRequestDto
+﻿@model MidCapERP.Dto.WoodType.WoodTypeRequestDto
 
 @{
     string action = (Model != null && Model.LookupId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="divCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divWoodTypeModal" tabindex="-1" aria-labelledby="woodTypeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Lookup</h5>
+                <h5 class="modal-title" id="woodTypeModalLabel">Lookup</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
-                data-ajax="true" data-ajax-method="post" 
-                data-ajax-complete="CategoryModel.onSuccess" 
-                data-ajax-failure="CategoryModel.onFailed">
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="WoodTypeModel.onSuccess"
+                  data-ajax-failure="WoodTypeModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="LookupValueId" hidden class="form-control" />
