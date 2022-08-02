@@ -84,20 +84,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<AccessoriesTypesRequestDto> UpdateAccessoriesTypes(int Id, AccessoriesTypesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = AccessoriesTypesGetById(Id, cancellationToken).Result;
-            UpdateAccessoriesType(oldData, _currentUser);
+            UpdateAccessoriesType(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.AccessoriesTypesDA.UpdateAccessoriesTypes(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<AccessoriesTypesRequestDto>(data);
             return _mappedUser;
         }
-
-        public static void UpdateAccessoriesType(AccessoriesTypes oldData, CurrentUser currentUser)
-        {
-            oldData.UpdatedBy = currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
-        }
-       
 
         private static void MapToDbObject(AccessoriesTypesRequestDto model, AccessoriesTypes oldData)
         {
@@ -110,12 +102,17 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var accessoriesTypesToUpdate = AccessoriesTypesGetById(Id, cancellationToken).Result;
             accessoriesTypesToUpdate.IsDeleted = true;
-            accessoriesTypesToUpdate.UpdatedBy = _currentUser.UserId;
-            accessoriesTypesToUpdate.UpdatedDate = DateTime.Now;
-            accessoriesTypesToUpdate.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateAccessoriesType(accessoriesTypesToUpdate);
             var data = await _unitOfWorkDA.AccessoriesTypesDA.UpdateAccessoriesTypes(Id, accessoriesTypesToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<AccessoriesTypesRequestDto>(data);
             return _mappedUser;
+        }
+
+        public void UpdateAccessoriesType(AccessoriesTypes oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
         #region otherMethod
