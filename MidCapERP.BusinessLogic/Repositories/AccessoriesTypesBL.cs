@@ -59,7 +59,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        }).ToList();
             var companyData = new PagedList<AccessoriesTypesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             //var companyResponseData = _mapper.Map<List<CompanyResponseDto>>(companyData);
-            return new JsonRepsonse<AccessoriesTypesResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyResponseData);
+            return new JsonRepsonse<AccessoriesTypesResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }
 
         public async Task<AccessoriesTypesRequestDto> GetById(int Id, CancellationToken cancellationToken)
