@@ -44,7 +44,7 @@
                 .Union(GeneratePermissionsForModule("Company"))
                 .Union(GeneratePermissionsForModule("Unit"))
                 .Union(GeneratePermissionsForModule("WoodType"))
-                .Union(GeneratePermissionsForModule("AccessoriesTypes"))
+                .Union(GeneratePermissionsForModule("AccessoriesType"))
                 .ToList();
             }
 

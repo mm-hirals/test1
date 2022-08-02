@@ -84,13 +84,18 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<AccessoriesTypesRequestDto> UpdateAccessoriesTypes(int Id, AccessoriesTypesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = AccessoriesTypesGetById(Id, cancellationToken).Result;
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateAccessoriesType(oldData, _currentUser);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.AccessoriesTypesDA.UpdateAccessoriesTypes(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<AccessoriesTypesRequestDto>(data);
             return _mappedUser;
+        }
+
+        public static void UpdateAccessoriesType(AccessoriesTypes oldData, CurrentUser currentUser)
+        {
+            oldData.UpdatedBy = currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
        
 
