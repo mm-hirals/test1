@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.RawMaterial
 {
@@ -8,11 +9,16 @@ namespace MidCapERP.Dto.RawMaterial
 
         [DisplayName("Title")]
         public string Title { get; set; }
-        [DisplayName("Unit Id")]
+
+        [DisplayName("Unit Name")]
         public int UnitId { get; set; }
+
         [DisplayName("Unit Price")]
-        public double UnitPrice { get; set; }
-        public string ImagePath { get; set; }
+        public decimal UnitPrice { get; set; }
+
+        [DisplayName("Photo Upload")]
+        [DataType(DataType.Upload)]
+        public string? ImagePath { get; set; }
 
         public int TenantId { get; set; }
 
@@ -27,4 +33,3 @@ namespace MidCapERP.Dto.RawMaterial
         public DateTime? UpdatedUTCDate { get; set; }
     }
 }
-

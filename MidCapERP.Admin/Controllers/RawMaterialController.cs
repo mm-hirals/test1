@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.RawMaterial;
@@ -29,14 +30,22 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.View)]
         public async Task<IActionResult> GetRawMaterialData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            //var data = await _unitOfWorkBL.RawMaterialBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
-            return Ok();
+            var data = await _unitOfWorkBL.RawMaterialBL.GetFilterRawMaterialData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
         }
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var data = unitData.Select(a => new SelectListItem
+            {
+                Value = Convert.ToString(a.LookupValueId),
+                Text = a.LookupValueName
+            }).ToList();
+            ViewBag.UnitSelectItemList = data;
+
             return PartialView("_RawMaterialPartial");
         }
 
@@ -53,6 +62,14 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var data = unitData.Select(a => new SelectListItem
+            {
+                Value = Convert.ToString(a.LookupValueId),
+                Text = a.LookupValueName
+            }).ToList();
+            ViewBag.UnitSelectItemList = data;
+
             var lookups = await _unitOfWorkBL.RawMaterialBL.GetById(Id, cancellationToken);
             return PartialView("_RawMaterialPartial", lookups);
         }

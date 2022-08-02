@@ -8,12 +8,16 @@ namespace MidCapERP.Dto.RawMaterial
 
         [DisplayName("Title")]
         public string Title { get; set; }
+
         [DisplayName("Unit Id")]
         public int UnitId { get; set; }
+
         public string UnitName { get; set; }
+
         [DisplayName("Unit Price")]
-        public double UnitPrice { get; set; }
-        public string ImagePath { get; set; }
+        public decimal UnitPrice { get; set; }
+
+        public string? ImagePath { get; set; }
 
         public int TenantId { get; set; }
 

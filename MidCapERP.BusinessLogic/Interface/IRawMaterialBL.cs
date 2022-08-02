@@ -3,11 +3,11 @@ using MidCapERP.Dto.RawMaterial;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
-    public  interface  IRawMaterialBL
+    public interface IRawMaterialBL
     {
         public Task<IEnumerable<RawMaterialResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+        public Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterRawMaterialData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<RawMaterialResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 

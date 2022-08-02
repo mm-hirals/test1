@@ -15,7 +15,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IQueryable<RawMaterial>> GetAll(CancellationToken cancellationToken)
         {
-            return await _RawMaterial.GetAsync(cancellationToken);
+            return await _RawMaterial.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
 
         public async Task<RawMaterial> GetById(int Id, CancellationToken cancellationToken)

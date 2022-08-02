@@ -3,7 +3,6 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.RawMaterial;
@@ -25,24 +24,24 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<RawMaterialResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var data = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
             var dataToReturn = _mapper.Map<List<RawMaterialResponseDto>>(data.ToList());
             return dataToReturn;
         }
 
         public async Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterRawMaterialData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var RawMaterialAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var RawMaterialAllData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
             var RawMaterialResponseData = (from x in RawMaterialAllData
-                                        join y in _unitOfWorkDA.LookupsDA.GetAll(cancellationToken).Result
-                                             on new { x.LookupId } equals new { y.LookupId }
-                                        select new RawMaterialResponseDto()
-                                        {
-                                           
-                                            UnitName = y.LookupName,
-                                            IsDeleted = x.IsDeleted,
-
-                                        }).ToList();
+                                           join y in _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result
+                                                on new { LookupId = x.UnitId } equals new { LookupId = y.LookupValueId }
+                                           select new RawMaterialResponseDto()
+                                           {
+                                               RawMaterialId = x.RawMaterialId,
+                                               Title = x.Title,
+                                               UnitName = y.LookupValueName,
+                                               UnitPrice = x.UnitPrice
+                                           }).ToList();
             var RawMaterialData = new PagedList<RawMaterialResponseDto>(RawMaterialResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, RawMaterialData.TotalCount, RawMaterialData.TotalCount, RawMaterialData);
         }
@@ -61,12 +60,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<RawMaterialRequestDto> CreateRawMaterial(RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
-            var RawMaterialToInsert = _mapper.Map<LookupValues>(model);
+            var RawMaterialToInsert = _mapper.Map<RawMaterial>(model);
             RawMaterialToInsert.IsDeleted = false;
+            RawMaterialToInsert.TenantId = _currentUser.TenantId;
             RawMaterialToInsert.CreatedBy = _currentUser.UserId;
             RawMaterialToInsert.CreatedDate = DateTime.Now;
             RawMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.LookupValuesDA.CreateLookupValue(RawMaterialToInsert, cancellationToken);
+            var data = await _unitOfWorkDA.RawMaterialDA.CreateRawMaterial(RawMaterialToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
             return _mappedUser;
         }
@@ -78,15 +78,17 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
+            var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
             return _mappedUser;
         }
 
-        private static void MapToDbObject(RawMaterialRequestDto model, LookupValues oldData)
+        private static void MapToDbObject(RawMaterialRequestDto model, RawMaterial oldData)
         {
-            //oldData.LookupValueName = model.LookupValueName;
-            //oldData.LookupValueId = model.LookupValueId;
+            oldData.Title = model.Title;
+            oldData.UnitId = model.UnitId;
+            oldData.UnitPrice = model.UnitPrice;
+            oldData.ImagePath = model.ImagePath;
         }
 
         public async Task<RawMaterialRequestDto> DeleteRawMaterial(int Id, CancellationToken cancellationToken)
@@ -96,26 +98,21 @@ namespace MidCapERP.BusinessLogic.Repositories
             RawMaterialToUpdate.UpdatedBy = _currentUser.UserId;
             RawMaterialToUpdate.UpdatedDate = DateTime.Now;
             RawMaterialToUpdate.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, RawMaterialToUpdate, cancellationToken);
+            var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, RawMaterialToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
             return _mappedUser;
         }
 
         #region PrivateMethods
 
-        private async Task<LookupValues> GetRawMaterialById(int Id, CancellationToken cancellationToken)
+        private async Task<RawMaterial> GetRawMaterialById(int Id, CancellationToken cancellationToken)
         {
-            var RawMaterialDataById = await _unitOfWorkDA.LookupValuesDA.GetById(Id, cancellationToken);
+            var RawMaterialDataById = await _unitOfWorkDA.RawMaterialDA.GetById(Id, cancellationToken);
             if (RawMaterialDataById == null)
             {
-                throw new Exception("LookupValues not found");
+                throw new Exception("RawMaterial not found");
             }
             return RawMaterialDataById;
-        }
-
-        public Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion PrivateMethods

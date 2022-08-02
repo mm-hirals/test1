@@ -5,11 +5,11 @@
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="divRawMaterialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divRawMaterialModal" tabindex="-1" aria-labelledby="rawMaterialModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">RawMaterial</h5>
+                <h5 class="modal-title" id="rawMaterialModalLabel">RawMaterial</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>f
@@ -28,6 +28,32 @@
                                 <input asp-for="Title" class="form-control" />
                                 <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="UnitId" class="form-label"></label>
+                                <select asp-for="UnitId" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
+                                            <option value="" hidden disabled selected>Select Unit</option>
+                                </select>
+                                <span asp-validation-for="UnitId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="UnitPrice" class="form-label"></label>
+                                <input asp-for="UnitPrice" class="form-control" />
+                                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="ImagePath" class="form-label"></label>
+                                <input asp-for="ImagePath" class="form-control" type="file"/>
+                                <span asp-validation-for="ImagePath" class="text-danger"></span>
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>

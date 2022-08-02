@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
+    [Table("RawMaterials")]
     public class RawMaterial : BaseEntity
     {
         [Key]
@@ -9,8 +11,8 @@ namespace MidCapERP.DataEntities.Models
 
         public string Title { get; set; }
         public int UnitId { get; set; }
-        public double UnitPrice { get; set; }
-        public string ImagePath { get; set; }
+        public decimal UnitPrice { get; set; }
+        public string? ImagePath { get; set; }
         public int TenantId { get; set; }
     }
 }

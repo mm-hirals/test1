@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<MidCapERP.Dto.RawMaterial.RawMaterialResponseDto>
 
 @{
-    ViewData["Title"] = "RawMaterial";
+    ViewData["Title"] = "Raw Material";
 }
 
 <div class="c-card--wrapper">
     <div class="c-card--header">
-        <h4 class="c-card--header-title">RawMaterial</h4>
+        <h4 class="c-card--header-title">Raw Material</h4>
         <div class="c-card--header-action">
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkRawMaterialFilter"><i class='bx bx-plus me-1'></i>Filters</a>
             <a asp-controller="RawMaterial" asp-action="Create"
@@ -19,8 +19,8 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label">unitId</label>
-                        <input type="text" class="form-control" placeholder="unitId" />
+                        <label class="form-label">Unit Name</label>
+                        <input type="text" class="form-control" placeholder="UnitName" />
                     </div>
                 </div>
             </div>
