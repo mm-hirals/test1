@@ -33,7 +33,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
-            var data = categoryData.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList().Select(a =>
+            var data = categoryData.ToList().Select(a =>
                                   new SelectListItem
                                   {
                                       Value = Convert.ToString(a.LookupValueId),
