@@ -12,12 +12,12 @@
                 <h5 class="modal-title" id="rawMaterialModalLabel">RawMaterial</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
-                </button>f
+                </button>
             </div>
-            <form asp-action="@action" method="post" class="modal-form--wrapper"
-                data-ajax="true" data-ajax-method="post" 
-                data-ajax-complete="RawMaterialModel.onSuccess" 
-                data-ajax-failure="RawMaterialModel.onFailed">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="RawMaterialModel.onSuccess"
+                  data-ajax-failure="RawMaterialModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="RawMaterialId" hidden class="form-control" />
@@ -34,7 +34,7 @@
                                 <label asp-for="UnitId" class="form-label"></label>
                                 <select asp-for="UnitId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
-                                            <option value="" hidden disabled selected>Select Unit</option>
+                                    <option value="" hidden disabled selected>Select Unit</option>
                                 </select>
                                 <span asp-validation-for="UnitId" class="text-danger"></span>
                             </div>
@@ -47,13 +47,18 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="ImagePath" class="form-label"></label>
-                                <input asp-for="ImagePath" class="form-control" type="file"/>
-                                <span asp-validation-for="ImagePath" class="text-danger"></span>
+                                <label asp-for="ImagePath_File" class="form-label"></label>
+                                <input asp-for="ImagePath_File" class="form-control" type="file" />
+                                @if (action == "Update")
+                                {
+                                    <input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
+                                    <div>
+                                        <img src="@Model.ImagePath" width="150" height="150">
+                                    </div>
+                                }
+                                <span asp-validation-for="ImagePath_File" class="text-danger"></span>
                             </div>
-                        </div>
                         </div>
                     </div>
                 </div>

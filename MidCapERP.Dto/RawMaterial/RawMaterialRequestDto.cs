@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace MidCapERP.Dto.RawMaterial
 {
@@ -16,9 +17,11 @@ namespace MidCapERP.Dto.RawMaterial
         [DisplayName("Unit Price")]
         public decimal UnitPrice { get; set; }
 
+        public string? ImagePath { get; set; }
+
         [DisplayName("Photo Upload")]
         [DataType(DataType.Upload)]
-        public string? ImagePath { get; set; }
+        public IFormFile? ImagePath_File { get; set; }
 
         public int TenantId { get; set; }
 

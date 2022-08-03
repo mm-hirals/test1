@@ -13,11 +13,13 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public RawMaterialController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public RawMaterialController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IWebHostEnvironment hostingEnvironment)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.View)]
@@ -51,9 +53,10 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Create)]
-        public async Task<IActionResult> Create(RawMaterialRequestDto RawMaterialRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.RawMaterialBL.CreateRawMaterial(RawMaterialRequestDto, cancellationToken);
+            rawMaterialRequestDto.ImagePath = StoreFile(rawMaterialRequestDto.ImagePath_File, cancellationToken);
+            await _unitOfWorkBL.RawMaterialBL.CreateRawMaterial(rawMaterialRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
@@ -71,14 +74,17 @@ namespace MidCapERP.Admin.Controllers
             ViewBag.UnitSelectItemList = data;
 
             var lookups = await _unitOfWorkBL.RawMaterialBL.GetById(Id, cancellationToken);
+            lookups.ImagePath = lookups.ImagePath;
             return PartialView("_RawMaterialPartial", lookups);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Update)]
-        public async Task<IActionResult> Update(int Id, RawMaterialRequestDto RawMaterialRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.RawMaterialBL.UpdateRawMaterial(Id, RawMaterialRequestDto, cancellationToken);
+            if (rawMaterialRequestDto.ImagePath_File != null)
+                rawMaterialRequestDto.ImagePath = StoreFile(rawMaterialRequestDto.ImagePath_File, cancellationToken);
+            await _unitOfWorkBL.RawMaterialBL.UpdateRawMaterial(Id, rawMaterialRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
@@ -90,5 +96,26 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.RawMaterialBL.DeleteRawMaterial(Id, cancellationToken);
             return RedirectToAction("Index");
         }
+
+        #region Private Method
+
+        private string StoreFile(IFormFile file, CancellationToken cancellationToken)
+        {
+            string uploadedImagePath = string.Empty;
+            string path = _hostingEnvironment.WebRootPath + @"\Files\RawMaterials\";
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            using (var stream = new FileStream(path + fileName, FileMode.Create))
+            {
+                file.CopyTo(stream);
+                uploadedImagePath = @"\Files\RawMaterials\" + fileName;
+            }
+            return uploadedImagePath;
+        }
+
+        #endregion Private Method
     }
 }

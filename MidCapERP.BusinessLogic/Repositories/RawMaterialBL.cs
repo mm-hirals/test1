@@ -74,9 +74,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RawMaterialRequestDto> UpdateRawMaterial(int Id, RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await GetRawMaterialById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateData(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
@@ -95,9 +93,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var RawMaterialToUpdate = await GetRawMaterialById(Id, cancellationToken);
             RawMaterialToUpdate.IsDeleted = true;
-            RawMaterialToUpdate.UpdatedBy = _currentUser.UserId;
-            RawMaterialToUpdate.UpdatedDate = DateTime.Now;
-            RawMaterialToUpdate.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateData(RawMaterialToUpdate);
             var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, RawMaterialToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
             return _mappedUser;
@@ -113,6 +109,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("RawMaterial not found");
             }
             return RawMaterialDataById;
+        }
+
+        private void UpdateData(RawMaterial oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
         #endregion PrivateMethods
