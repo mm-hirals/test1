@@ -15,9 +15,10 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICompanyBL CompanyBL { get; }
         public IUnitBL UnitBL { get; }
         public IWoodTypeBL WoodTypeBL { get; }
+        public IAccessoriesTypesBL AccessoriesTypesBL { get; }
         public IRawMaterialBL RawMaterialBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IRawMaterialBL rawMaterialBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypesBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -29,6 +30,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.CompanyBL = companyBL;
             this.UnitBL = unitBL;
             this.WoodTypeBL = woodTypeBL;
+            this.AccessoriesTypesBL = accessoriesTypesBL;
             this.RawMaterialBL = rawMaterialBL;
         }
 
