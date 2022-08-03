@@ -12,5 +12,6 @@ namespace MidCapERP.DataAccess.UnitOfWork
         ICustomersDA CustomersDA { get; }
         IErrorLogsDA ErrorLogsDA { get; }
         IAccessoriesTypesDA AccessoriesTypesDA { get; }
+        IAccessoriesDA AccessoriesDA { get; }
     }
 }

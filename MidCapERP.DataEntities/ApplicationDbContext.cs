@@ -36,5 +36,6 @@ namespace MidCapERP.DataEntities
         public DbSet<Customers> Customers { get; set; }
         public DbSet<ErrorLogs> ErrorLogs { get; set; }
         public DbSet<AccessoriesTypes> AccessoriesTypes { get; set; }
+        public DbSet<Accessories> Accessories { get; set; }
     }
 }
