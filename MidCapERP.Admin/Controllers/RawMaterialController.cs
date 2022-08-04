@@ -40,14 +40,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var data = unitData.Select(a => new SelectListItem
-            {
-                Value = Convert.ToString(a.LookupValueId),
-                Text = a.LookupValueName
-            }).ToList();
-            ViewBag.UnitSelectItemList = data;
-
+            await FillUnitNameDropDown(cancellationToken);
             return PartialView("_RawMaterialPartial");
         }
 
@@ -65,14 +58,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var data = unitData.Select(a => new SelectListItem
-            {
-                Value = Convert.ToString(a.LookupValueId),
-                Text = a.LookupValueName
-            }).ToList();
-            ViewBag.UnitSelectItemList = data;
-
+            await FillUnitNameDropDown(cancellationToken);
             var lookups = await _unitOfWorkBL.RawMaterialBL.GetById(Id, cancellationToken);
             lookups.ImagePath = lookups.ImagePath;
             return PartialView("_RawMaterialPartial", lookups);
@@ -98,6 +84,17 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region Private Method
+
+        private async Task FillUnitNameDropDown(CancellationToken cancellationToken)
+        {
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var data = unitData.Select(a => new SelectListItem
+            {
+                Value = Convert.ToString(a.LookupValueId),
+                Text = a.LookupValueName
+            }).ToList();
+            ViewBag.UnitSelectItemList = data;
+        }
 
         private string StoreFile(IFormFile file, CancellationToken cancellationToken)
         {
