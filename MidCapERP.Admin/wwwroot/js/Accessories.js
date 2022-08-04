@@ -23,8 +23,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<a data-ajax-complete="AccessoriesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateAccessories" href="/Accessories/Update/' + o.accessoriesId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '&nbsp<a data-ajax-complete="AccessoriesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Accessories/Delete/' + o.accessoriesId + '"><i class="bx bxs-trash"></i></a>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="AccessoriesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateAccessories" href="/Accessories/Update/' + o.accessoriesId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="AccessoriesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Accessories/Delete/' + o.accessoriesId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -41,15 +41,15 @@ AccessoriesModel.onComplete = function () {
 }
 
 AccessoriesModel.onDelete = function () {
-    tblAccessories.ajax.reload();
+    tblAccessories.ajax.reload(null, false);
 }
 
 AccessoriesModel.onSuccess = function (xhr) {
-    tblAccessories.ajax.reload();
+    tblAccessories.ajax.reload(null, false);
     $("#divAccessoriesModal").modal('hide');
 };
 
 AccessoriesModel.onFailed = function (xhr) {
-    tblAccessories.ajax.reload();
+    tblAccessories.ajax.reload(null, false);
     $("#divAccessoriesModal").modal('hide');
 };

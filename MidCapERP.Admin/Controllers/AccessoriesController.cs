@@ -34,34 +34,9 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
-            var categorySelectedList = categoryData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
-
-            var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypesBL.GetAll(cancellationToken);
-            var accessoriesTypesSelectedList = accessoriesTypesData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.AccessoriesTypeId),
-                                      Text = a.TypeName
-                                  }).ToList();
-
-            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var unitDataSelectedList = unitData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
-
-            ViewBag.CategorySelectItemList = categorySelectedList;
-            ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
-            ViewBag.unitDataSelectedList = unitDataSelectedList;
-
+            await FillCategoryDropDown(cancellationToken);
+            await FillAccessoriesTypesDropDown(cancellationToken);
+            await FillUnitTypesDropDown(cancellationToken);
             return PartialView("_AccessoriesPartial");
         }
 
@@ -73,7 +48,6 @@ namespace MidCapERP.Admin.Controllers
             var accessories = await _unitOfWorkBL.AccessoriesBL.CreateAccessories(accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Created Successfully!");
             return RedirectToAction("Index");
-
         }
 
         [HttpPost]
@@ -84,56 +58,26 @@ namespace MidCapERP.Admin.Controllers
             return Ok(data);
         }
 
-
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
-            var categorySelectedList = categoryData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
-
-            var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypesBL.GetAll(cancellationToken);
-            var accessoriesTypesSelectedList = accessoriesTypesData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.AccessoriesTypeId),
-                                      Text = a.TypeName
-                                  }).ToList();
-
-
-            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var unitDataSelectedList = unitData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
-
-            ViewBag.CategorySelectItemList = categorySelectedList;
-            ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
-            ViewBag.unitDataSelectedList = unitDataSelectedList;
-
+            await FillCategoryDropDown(cancellationToken);
+            await FillAccessoriesTypesDropDown(cancellationToken);
+            await FillUnitTypesDropDown(cancellationToken);
             var accessories = await _unitOfWorkBL.AccessoriesBL.GetById(Id, cancellationToken);
             return PartialView("_AccessoriesPartial", accessories);
         }
-
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Update)]
         public async Task<IActionResult> Update(int Id, AccessoriesRequestDto accessoriesRequestDto, CancellationToken cancellationToken)
         {
-
             if (accessoriesRequestDto.ImagePath_File != null)
                 accessoriesRequestDto.ImagePath = StoreFile(accessoriesRequestDto.ImagePath_File, cancellationToken);
             var accessories = await _unitOfWorkBL.AccessoriesBL.UpdateAccessories(Id, accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
-
         }
 
         [HttpGet]
@@ -145,9 +89,41 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region Private Method
+        private async Task FillCategoryDropDown(CancellationToken cancellationToken)
+        {
+            var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
+            var categorySelectedList = categoryData.ToList().Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = Convert.ToString(a.LookupValueId),
+                                      Text = a.LookupValueName
+                                  }).ToList();
+            ViewBag.CategorySelectItemList = categorySelectedList;
+        }
+        private async Task FillAccessoriesTypesDropDown(CancellationToken cancellationToken)
+        {
+            var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypesBL.GetAll(cancellationToken);
+            var accessoriesTypesSelectedList = accessoriesTypesData.ToList().Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = Convert.ToString(a.AccessoriesTypeId),
+                                      Text = a.TypeName
+                                  }).ToList();
+            ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
+        }
+        private async Task FillUnitTypesDropDown(CancellationToken cancellationToken)
+        {
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var unitDataSelectedList = unitData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList().Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.LookupValueId),
+                                     Text = a.LookupValueName
+                                 }).ToList();
+            ViewBag.unitDataSelectedList = unitDataSelectedList;
+        }
         private string StoreFile(IFormFile file, CancellationToken cancellationToken)
         {
-
             string uploadedImagePath = string.Empty;
             string path = _hostingEnvironment.WebRootPath + @"\Files\Accessories\";
 
@@ -161,7 +137,6 @@ namespace MidCapERP.Admin.Controllers
                 uploadedImagePath = @"\Files\Accessories\" + fileName;
             }
             return uploadedImagePath;
-
         }
         #endregion
     }
