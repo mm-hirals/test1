@@ -40,7 +40,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                RawMaterialId = x.RawMaterialId,
                                                Title = x.Title,
                                                UnitName = y.LookupValueName,
-                                               UnitPrice = x.UnitPrice
+                                               UnitPrice = x.UnitPrice,
+                                               ImagePath = x.ImagePath
                                            }).ToList();
             var RawMaterialData = new PagedList<RawMaterialResponseDto>(RawMaterialResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, RawMaterialData.TotalCount, RawMaterialData.TotalCount, RawMaterialData);

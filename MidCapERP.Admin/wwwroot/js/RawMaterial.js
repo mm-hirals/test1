@@ -21,8 +21,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<a data-ajax-complete="RawMaterialModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateRawMaterial" href="/RawMaterial/Update/' + o.rawMaterialId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="RawMaterialModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/RawMaterial/Delete/' + o.rawMaterialId + '"><i class="bx bxs-trash"></i></a>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="RawMaterialModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateRawMaterial" href="/RawMaterial/Update/' + o.rawMaterialId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="RawMaterialModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/RawMaterial/Delete/' + o.rawMaterialId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -39,15 +39,15 @@ RawMaterialModel.onComplete = function () {
 }
 
 RawMaterialModel.onDelete = function () {
-    tblRawMaterial.ajax.reload();
+    tblRawMaterial.ajax.reload(null, false);
 }
 
 RawMaterialModel.onSuccess = function (xhr) {
-    tblRawMaterial.ajax.reload();
+    tblRawMaterial.ajax.reload(null, false);
     $("#divRawMaterialModal").modal('hide');
 };
 
 RawMaterialModel.onFailed = function (xhr) {
-    tblRawMaterial.ajax.reload();
+    tblRawMaterial.ajax.reload(null, false);
     $("#divRawMaterialModal").modal('hide');
 };

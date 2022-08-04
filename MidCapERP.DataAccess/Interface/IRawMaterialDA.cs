@@ -1,6 +1,5 @@
 ﻿using MidCapERP.DataEntities.Models;
 
-
 namespace MidCapERP.DataAccess.Interface
 {
     public interface IRawMaterialDA
