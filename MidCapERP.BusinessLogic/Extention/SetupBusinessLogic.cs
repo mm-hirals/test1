@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Repositories;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.UnitOfWork;
 
 namespace MidCapERP.BusinessLogic.Extention
@@ -20,6 +21,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IWoodTypeBL, WoodTypeBL>();
             services.AddScoped<IAccessoriesTypesBL, AccessoriesTypesBL>();
             services.AddScoped<IRawMaterialBL, RawMaterialBL>();
+            services.AddScoped<IFileStorageService, FileStorageService>();
 
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();

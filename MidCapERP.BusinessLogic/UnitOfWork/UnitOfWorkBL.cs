@@ -1,4 +1,5 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataEntities;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
@@ -17,8 +18,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IWoodTypeBL WoodTypeBL { get; }
         public IAccessoriesTypesBL AccessoriesTypesBL { get; }
         public IRawMaterialBL RawMaterialBL { get; }
+        public IFileStorageService FileStorageService { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypesBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypesBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IFileStorageService fileStorageService)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -32,6 +34,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.WoodTypeBL = woodTypeBL;
             this.AccessoriesTypesBL = accessoriesTypesBL;
             this.RawMaterialBL = rawMaterialBL;
+            this.FileStorageService = fileStorageService;
         }
 
         #region DisposeMethod
