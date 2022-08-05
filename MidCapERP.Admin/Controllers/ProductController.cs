@@ -2,14 +2,14 @@
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : BaseController
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return View();
         }

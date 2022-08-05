@@ -35,7 +35,7 @@ namespace MidCapERP.DataEntities
         public DbSet<ContractorCategoryMapping> ContractorCategoryMapping { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<ErrorLogs> ErrorLogs { get; set; }
-        public DbSet<AccessoriesTypes> AccessoriesTypes { get; set; }
+        public DbSet<AccessoriesType> AccessoriesType { get; set; }
         public DbSet<RawMaterial> RawMaterial { get; set; }
     }
 }

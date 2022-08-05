@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.AccessoriesTypes;
+using MidCapERP.Dto.AccessoriesType;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
@@ -10,12 +10,12 @@ using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class AccessoriesTypesController : BaseController
+    public class AccessoriesTypeController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
 
-        public AccessoriesTypesController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public AccessoriesTypeController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;
@@ -42,24 +42,24 @@ namespace MidCapERP.Admin.Controllers
 
             ViewBag.CategorySelectItemList = data;
 
-            return PartialView("_AccessoriesTypesPartial");
+            return PartialView("_AccessoriesTypePartial");
         }
 
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
-        public async Task<IActionResult> Create(AccessoriesTypesRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(AccessoriesTypeRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.AccessoriesTypesBL.CreateAccessoriesTypes(accessoriesTypesRequestDto, cancellationToken);
+            await _unitOfWorkBL.AccessoriesTypeBL.CreateAccessoriesType(accessoriesTypesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.View)]
-        public async Task<IActionResult> GetAccessoriesTypesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAccessoriesTypeData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.AccessoriesTypesBL.GetFilterAccessoriesTypesData(dataTableFilterDto, cancellationToken);
+            var data = await _unitOfWorkBL.AccessoriesTypeBL.GetFilterAccessoriesTypeData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
 
@@ -77,16 +77,16 @@ namespace MidCapERP.Admin.Controllers
                                   }).ToList();
 
             ViewBag.CategorySelectItemList = data;
-            var accessoriesTypes = await _unitOfWorkBL.AccessoriesTypesBL.GetById(Id, cancellationToken);
-            return PartialView("_AccessoriesTypesPartial", accessoriesTypes);
+            var accessoriesTypes = await _unitOfWorkBL.AccessoriesTypeBL.GetById(Id, cancellationToken);
+            return PartialView("_AccessoriesTypePartial", accessoriesTypes);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]
-        public async Task<IActionResult> Update(int Id, AccessoriesTypesRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, AccessoriesTypeRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
         {
 
-            await _unitOfWorkBL.AccessoriesTypesBL.UpdateAccessoriesTypes(Id, accessoriesTypesRequestDto, cancellationToken);
+            await _unitOfWorkBL.AccessoriesTypeBL.UpdateAccessoriesType(Id, accessoriesTypesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data update Successfully!");
             return RedirectToAction("Index");
         }
@@ -95,7 +95,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.AccessoriesTypesBL.DeleteAccessoriesTypes(Id, cancellationToken);
+            await _unitOfWorkBL.AccessoriesTypeBL.DeleteAccessoriesType(Id, cancellationToken);
             return RedirectToAction("Index");
         }
     }

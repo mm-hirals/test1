@@ -17,7 +17,7 @@ namespace MidCapERP.Admin.Configuration
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Dashboard/Error");
                 app.UseHsts();
             }
             app.UseSerilogRequestLogging();
@@ -35,7 +35,7 @@ namespace MidCapERP.Admin.Configuration
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
             app.Run();
         }

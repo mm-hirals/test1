@@ -1,44 +1,36 @@
-﻿<div class="c-card--wrapper c-card-sm--wrapper">
+﻿@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="c-card--wrapper">
     <div class="c-card--header">
-        <h4 class="c-card--header-title">Product List</h4>
-        <a class="btn btn-primary" href="/Product/Create">
-            Add Product
-        </a>
+        <h4 class="c-card--header-title">Products</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkProductFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+            <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Create New</a>
+        </div>
     </div>
     <div class="c-card--body">
-        <table class="table c-table">
-            <thead>
-                <tr>
-                    <th>
-                        Product Name
-                    </th>
-                    <th>
-                        Product 1
-                    </th>
-                    <th>
-                        Product 2
-                    </th>
-                    <th>
-                        Product 3
-                    </th>
-                </tr>                
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Name
-                    </td>
-                    <td>
-                        First
-                    </td>
-                    <td>
-                        Second
-                    </td>
-                    <td>
-                        Third
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" class="form-control" placeholder="Product Name" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_ProductTable" />
+        <div id="divUpdateProduct"></div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Product.js" asp-append-version="true"></script>
+    }
+}

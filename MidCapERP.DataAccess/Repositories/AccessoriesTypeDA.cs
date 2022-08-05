@@ -4,36 +4,36 @@ using MidCapERP.DataEntities.Models;
 
 namespace MidCapERP.DataAccess.Repositories
 {
-    public class AccessoriesTypesDA : IAccessoriesTypesDA
+    public class AccessoriesTypeDA : IAccessoriesTypeDA
     {
-        private readonly ISqlRepository<AccessoriesTypes> _accessoriesTypes;
+        private readonly ISqlRepository<AccessoriesType> _accessoriesTypes;
 
-        public AccessoriesTypesDA(ISqlRepository<AccessoriesTypes> accessoriesTypes)
+        public AccessoriesTypeDA(ISqlRepository<AccessoriesType> accessoriesTypes)
         {
             _accessoriesTypes = accessoriesTypes;
         }
 
-        public async Task<IQueryable<AccessoriesTypes>> GetAll(CancellationToken cancellationToken)
+        public async Task<IQueryable<AccessoriesType>> GetAll(CancellationToken cancellationToken)
         {
             return await _accessoriesTypes.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
 
-        public async Task<AccessoriesTypes> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<AccessoriesType> GetById(int Id, CancellationToken cancellationToken)
         {
             return await _accessoriesTypes.GetByIdAsync(Id, cancellationToken);
         }
 
-        public async Task<AccessoriesTypes> CreateAccessoriesTypes(AccessoriesTypes model, CancellationToken cancellationToken)
+        public async Task<AccessoriesType> CreateAccessoriesType(AccessoriesType model, CancellationToken cancellationToken)
         {
             return await _accessoriesTypes.InsertAsync(model, cancellationToken);
         }
 
-        public async Task<AccessoriesTypes> UpdateAccessoriesTypes(int Id, AccessoriesTypes model, CancellationToken cancellationToken)
+        public async Task<AccessoriesType> UpdateAccessoriesType(int Id, AccessoriesType model, CancellationToken cancellationToken)
         {
             return await _accessoriesTypes.UpdateAsync(model, cancellationToken);
         }
 
-        public async Task<AccessoriesTypes> DeleteAccessoriesTypes(int Id, CancellationToken cancellationToken)
+        public async Task<AccessoriesType> DeleteAccessoriesType(int Id, CancellationToken cancellationToken)
         {
             var entity = await _accessoriesTypes.GetByIdAsync(Id, cancellationToken);
             if (entity != null)

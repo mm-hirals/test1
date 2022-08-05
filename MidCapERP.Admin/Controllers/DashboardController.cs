@@ -8,13 +8,13 @@ using System.Diagnostics;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class HomeController : BaseController
+    public class DashboardController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<DashboardController> _logger;
         private readonly CurrentUser _currentUser;
         private readonly IToastNotification _toastNotification;
 
-        public HomeController(ILogger<HomeController> logger, CurrentUser currentUser, IToastNotification toastNotification)
+        public DashboardController(ILogger<DashboardController> logger, CurrentUser currentUser, IToastNotification toastNotification)
         {
             _currentUser = currentUser;
             _logger = logger;

@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, true);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         /// <summary>
@@ -63,6 +63,12 @@ namespace MidCapERP.Admin.Controllers
 
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, false);
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile(CancellationToken cancellationToken)
+        {
             return View();
         }
     }
