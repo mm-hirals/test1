@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
 
 namespace MidCapERP.Dto.RawMaterial
 {
@@ -21,7 +21,7 @@ namespace MidCapERP.Dto.RawMaterial
 
         [DisplayName("Photo Upload")]
         [DataType(DataType.Upload)]
-        public IFormFile? ImagePath_File { get; set; }
+        public IFormFile? UploadImage { get; set; }
 
         public int TenantId { get; set; }
 

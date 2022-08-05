@@ -48,8 +48,8 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="ImagePath_File" class="form-label"></label>
-                                <input asp-for="ImagePath_File" class="form-control" type="file" />
+                                <label asp-for="UploadImage" class="form-label"></label>
+                                <input asp-for="UploadImage" class="form-control" type="file" />
                                 @if (action == "Update")
                                 {
                                     <input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
@@ -57,7 +57,7 @@
                                         <img src="@Model.ImagePath" width="150" height="150">
                                     </div>
                                 }
-                                <span asp-validation-for="ImagePath_File" class="text-danger"></span>
+                                <span asp-validation-for="UploadImage" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

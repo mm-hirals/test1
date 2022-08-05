@@ -65,7 +65,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RawMaterialRequestDto> CreateRawMaterial(RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
             var RawMaterialToInsert = _mapper.Map<RawMaterial>(model);
-            RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.ImagePath_File, @"\Files\RawMaterials\");
+            if (model.UploadImage != null)
+                RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\RawMaterials\");
             RawMaterialToInsert.IsDeleted = false;
             RawMaterialToInsert.TenantId = _currentUser.TenantId;
             RawMaterialToInsert.CreatedBy = _currentUser.UserId;
@@ -79,8 +80,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RawMaterialRequestDto> UpdateRawMaterial(int Id, RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await GetRawMaterialById(Id, cancellationToken);
-            if (model.ImagePath_File != null)
-                model.ImagePath = await _fileStorageService.StoreFile(model.ImagePath_File, @"\Files\RawMaterials\");
+            if (model.UploadImage != null)
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\RawMaterials\");
             UpdateData(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, oldData, cancellationToken);
