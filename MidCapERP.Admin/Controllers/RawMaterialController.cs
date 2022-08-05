@@ -48,7 +48,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Create)]
         public async Task<IActionResult> Create(RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
         {
-            rawMaterialRequestDto.ImagePath = StoreFile(rawMaterialRequestDto.ImagePath_File, cancellationToken);
             await _unitOfWorkBL.RawMaterialBL.CreateRawMaterial(rawMaterialRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
@@ -60,7 +59,6 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillUnitNameDropDown(cancellationToken);
             var lookups = await _unitOfWorkBL.RawMaterialBL.GetById(Id, cancellationToken);
-            lookups.ImagePath = lookups.ImagePath;
             return PartialView("_RawMaterialPartial", lookups);
         }
 
@@ -68,8 +66,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Update)]
         public async Task<IActionResult> Update(int Id, RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
         {
-            if (rawMaterialRequestDto.ImagePath_File != null)
-                rawMaterialRequestDto.ImagePath = StoreFile(rawMaterialRequestDto.ImagePath_File, cancellationToken);
             await _unitOfWorkBL.RawMaterialBL.UpdateRawMaterial(Id, rawMaterialRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
@@ -94,23 +90,6 @@ namespace MidCapERP.Admin.Controllers
                 Text = a.LookupValueName
             }).ToList();
             ViewBag.UnitSelectItemList = data;
-        }
-
-        private string StoreFile(IFormFile file, CancellationToken cancellationToken)
-        {
-            string uploadedImagePath = string.Empty;
-            string path = _hostingEnvironment.WebRootPath + @"\Files\RawMaterials\";
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-            using (var stream = new FileStream(path + fileName, FileMode.Create))
-            {
-                file.CopyTo(stream);
-                uploadedImagePath = @"\Files\RawMaterials\" + fileName;
-            }
-            return uploadedImagePath;
         }
 
         #endregion Private Method

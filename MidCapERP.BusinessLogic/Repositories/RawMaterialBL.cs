@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -14,12 +15,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IFileStorageService _fileStorageService;
 
-        public RawMaterialBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public RawMaterialBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<RawMaterialResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -62,6 +65,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RawMaterialRequestDto> CreateRawMaterial(RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
             var RawMaterialToInsert = _mapper.Map<RawMaterial>(model);
+            RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.ImagePath_File, @"\Files\RawMaterials\");
             RawMaterialToInsert.IsDeleted = false;
             RawMaterialToInsert.TenantId = _currentUser.TenantId;
             RawMaterialToInsert.CreatedBy = _currentUser.UserId;
@@ -75,6 +79,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RawMaterialRequestDto> UpdateRawMaterial(int Id, RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await GetRawMaterialById(Id, cancellationToken);
+            if (model.ImagePath_File != null)
+                model.ImagePath = await _fileStorageService.StoreFile(model.ImagePath_File, @"\Files\RawMaterials\");
             UpdateData(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, oldData, cancellationToken);
