@@ -1,4 +1,5 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
 {
@@ -14,5 +15,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IUnitBL UnitBL { get; }
         IWoodTypeBL WoodTypeBL { get; }
         IAccessoriesTypesBL AccessoriesTypesBL { get; }
+        IRawMaterialBL RawMaterialBL { get; }
+        IFileStorageService FileStorageService { get; }
     }
 }
