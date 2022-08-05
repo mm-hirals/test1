@@ -10,7 +10,7 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Customer Name")]
         public string CustomerName { get; set; }
 
-        [DisplayName("Email Id")]
+        [DisplayName("Email Address")]
         [EmailAddress(ErrorMessage = "Please enter valid email address")]
         public string? EmailId { get; set; }
 

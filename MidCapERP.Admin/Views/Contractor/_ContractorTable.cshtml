@@ -1,34 +1,13 @@
 ﻿@model IEnumerable<MidCapERP.Dto.Contractors.ContractorsResponseDto>
 
-<table class="table" id="tblContractor">
+<table class="table c-table" id="tblContractor">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.ContractorName)</th>
             <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
             <th>@Html.DisplayNameFor(model => model.IMEI)</th>
             <th>@Html.DisplayNameFor(model => model.EmailId)</th>
-            <th>@Html.DisplayNameFor(model => model.IsDeleted)</th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.ContractorName)</td>
-                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.IMEI)</td>
-                <td>@Html.DisplayFor(modelItem => item.EmailId)</td>
-                <td>@Html.DisplayFor(modelItem => item.IsDeleted)</td>
-                <td>
-                    <a asp-controller="Contractor" asp-action="Update" asp-route-id="@item.ContractorId"
-                   data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
-                   data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Update</a>
-                    <a asp-controller="Contractor" asp-action="Delete" asp-route-id="@item.ContractorId"
-                   data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
-                   data-ajax-mode="replace">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
 </table>
