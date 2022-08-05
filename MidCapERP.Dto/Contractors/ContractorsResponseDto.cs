@@ -9,9 +9,14 @@ namespace MidCapERP.Dto.Contractors
         [DisplayName("Contractor Name")]
         public string ContractorName { get; set; }
 
+        [DisplayName("Phone Number")]
         public string PhoneNumber { get; set; }
+
         public string IMEI { get; set; }
+
+        [DisplayName("Email Address")]
         public string EmailId { get; set; }
+
         public int? TenantId { get; set; }
 
         [DisplayName("Deleted")]

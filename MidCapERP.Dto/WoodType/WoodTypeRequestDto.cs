@@ -8,7 +8,7 @@ namespace MidCapERP.Dto.WoodType
         public int LookupValueId { get; set; }
         public int LookupId { get; set; } = (int)MasterPagesEnum.WoodType;
 
-        [DisplayName("WoodType Name")]
+        [DisplayName("Wood Type Name")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }

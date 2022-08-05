@@ -19,7 +19,7 @@ namespace MidCapERP.Dto.Customers
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; }
 
-        [DisplayName("AltPhone Number")]
+        [DisplayName("Alt Phone Number")]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string? AltPhoneNumber { get; set; }
