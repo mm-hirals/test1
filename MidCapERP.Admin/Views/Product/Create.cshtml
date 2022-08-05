@@ -4,11 +4,11 @@
 @{
 }
 <div class="">
-    <div class="card-product--wrapper">
+    <div class="card-product--wrapper mb-3">
         <div class="card-product--image">
             <input type="file" hidden />
             <div class="product--image">
-                <img src="images/round-chair.jpg" alt="Product Name" />
+                <img src="~/images/round-chair.jpg" alt="Product Name" />
                 <div class="edit--image">
                     <i class="bx bx-pencil"></i>
                 </div>
@@ -97,31 +97,70 @@
             </div>
             @* <div class="product-info--wrapper">
             </div>*@
-            <div class="row">
-                <div class="col-12">
-                    <div class="product-info--item">
-                        <div class="form-group">
-                            <label class="form-label">
-                                Comments
-                            </label>
-                            <textarea class="form-control" placeholder="Comments"></textarea>
-                        </div>
-                    </div>
-                    @*<div class="product-info--wrapper">
-                    </div>*@
-                </div>
-            </div>
         </div>
     </div>
-    <nav class="mt-4">
+    <nav class="product-nav-tab--sticky">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            @*<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>*@
-            <button class="nav-link active" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
+            <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
+            <button class="nav-link" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
             <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Materials</button>
+            <button class="nav-link disabled" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Workflow</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
+        <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--header">
+                    <h4 class="c-card--header-title">Product Detail</h4>
+                </div>
+                <div class="c-card--body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Fabric
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="Fabric">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Polish
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="Polish">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="custom-control custom-switch">
+                                    <label class="form-label">
+                                        For Wholesalers
+                                    </label>
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                    <label class="custom-control-label" for="customSwitch1">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="product-info--item">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            Comments
+                                        </label>
+                                        <textarea class="form-control" placeholder="Comments"></textarea>
+                                    </div>
+                                </div>
+                                @*<div class="product-info--wrapper">
+                                </div>*@
+                            </div>                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade show" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
             <div class="c-card--wrapper c-card-sm--wrapper">
                 <div class="c-card--header">
                     <h4 class="c-card--header-title">Product Images</h4>
@@ -156,14 +195,14 @@
                                         <th>
                                             Material
                                         </th>
-                                        <th>
+                                        <th class="c-width-140">
                                             Unit Price
                                         </th>
-                                        <th>
-                                            Product Quantity
+                                        <th class="c-width-140">
+                                            Quantity
                                         </th>
-                                        <th>
-                                            Current Price
+                                        <th class="c-width-140">
+                                            Cost Price
                                         </th>
                                         <th></th>
                                     </tr>
@@ -173,27 +212,21 @@
                                         <td>
                                             <select class="form-select">
                                                 <option selected>
-                                                    Akasa Wood
-                                                </option>
-                                                <option>
                                                     Ash Wood
                                                 </option>
                                                 <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Teak Wood
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="3300">
                                         </td>
                                         <td>
                                             <div class="add-icon">
@@ -203,61 +236,23 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
-                                                <option selected>
-                                                    Akasa Wood
-                                                </option>
+                                            <select class="form-select" disabled>
                                                 <option>
                                                     Ash Wood
                                                 </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                <option selected>
+                                                    Teak Wood
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
-                                        </td>
-                                        <td>
-                                            <div class="minus-icon">
-                                                <i class="bx bx-minus"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <select class="form-select">
-                                                <option selected>
-                                                    Akasa Wood
-                                                </option>
-                                                <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="4400" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -280,14 +275,14 @@
                                         <th>
                                             Material
                                         </th>
-                                        <th>
+                                        <th class="c-width-140">
                                             Unit Price
                                         </th>
-                                        <th>
-                                            Product Quantity
+                                        <th class="c-width-140">
+                                            Quantity
                                         </th>
-                                        <th>
-                                            Current Price
+                                        <th class="c-width-140">
+                                            Cost Price
                                         </th>
                                         <th></th>
                                     </tr>
@@ -297,27 +292,30 @@
                                         <td>
                                             <select class="form-select">
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Plywood 6mm
                                                 </option>
                                                 <option>
-                                                    Ash Wood
+                                                    Plywood 3mm
                                                 </option>
                                                 <option>
-                                                    Bamboo Wood
+                                                    Fevicol
                                                 </option>
                                                 <option>
-                                                    Beech Wood
+                                                    Gum
+                                                </option>
+                                                <option>
+                                                    Screws 0.5mm
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="3500">
                                         </td>
                                         <td>
                                             <div class="add-icon">
@@ -327,29 +325,32 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            <select class="form-select" disabled>
+                                                <option>
+                                                    Plywood 6mm
+                                                </option>
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Plywood 3mm
                                                 </option>
                                                 <option>
-                                                    Ash Wood
+                                                    Fevicol
                                                 </option>
                                                 <option>
-                                                    Bamboo Wood
+                                                    Gum
                                                 </option>
                                                 <option>
-                                                    Beech Wood
+                                                    Screws 0.5mm
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="2" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="2" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="7000" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -359,29 +360,32 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            <select class="form-select" disabled>
+                                                <option>
+                                                    Plywood 6mm
+                                                </option>
+                                                <option>
+                                                    Plywood 3mm
+                                                </option>
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Fevicol
                                                 </option>
                                                 <option>
-                                                    Ash Wood
+                                                    Gum
                                                 </option>
                                                 <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Screws 0.5mm
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="3500" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -404,14 +408,14 @@
                                         <th>
                                             Material
                                         </th>
-                                        <th>
+                                        <th class="c-width-140">
                                             Unit Price
                                         </th>
-                                        <th>
-                                            Product Quantity
+                                        <th class="c-width-140">
+                                            Quantity
                                         </th>
-                                        <th>
-                                            Current Price
+                                        <th class="c-width-140">
+                                            Cost Price
                                         </th>
                                         <th></th>
                                     </tr>
@@ -421,27 +425,24 @@
                                         <td>
                                             <select class="form-select">
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Dining Chair
                                                 </option>
                                                 <option>
-                                                    Ash Wood
+                                                    Tabel Base
                                                 </option>
                                                 <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Sofa Chair
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="4500">
                                         </td>
                                         <td>
                                             <div class="add-icon">
@@ -451,29 +452,26 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            <select class="form-select" disabled>
+                                                <option>
+                                                    Dining Chair
+                                                </option>
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Tabel Base
                                                 </option>
                                                 <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Sofa Chair
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="4200" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -483,29 +481,26 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            <select class="form-select" disabled>
+                                                <option>
+                                                    Dining Chair
+                                                </option>
+                                                <option>
+                                                    Tabel Base
+                                                </option>
                                                 <option selected>
-                                                    Akasa Wood
-                                                </option>
-                                                <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Sofa Chair
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="3" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="3" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="9500" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -528,14 +523,14 @@
                                         <th>
                                             Material
                                         </th>
-                                        <th>
+                                        <th class="c-width-140">
                                             Unit Price
                                         </th>
-                                        <th>
-                                            Product Quantity
+                                        <th class="c-width-140">
+                                            Quantity
                                         </th>
-                                        <th>
-                                            Current Price
+                                        <th class="c-width-140">
+                                            Cost Price
                                         </th>
                                         <th></th>
                                     </tr>
@@ -545,27 +540,21 @@
                                         <td>
                                             <select class="form-select">
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Asian Fur Polish
                                                 </option>
                                                 <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Mast Polish
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="3200">
                                         </td>
                                         <td>
                                             <div class="add-icon">
@@ -575,61 +564,23 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            <select class="form-select" disabled>
+                                                <option>
+                                                    Asian Fur Polish
+                                                </option>
                                                 <option selected>
-                                                    Akasa Wood
-                                                </option>
-                                                <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Mast Polish
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
-                                        </td>
-                                        <td>
-                                            <div class="minus-icon">
-                                                <i class="bx bx-minus"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <select class="form-select">
-                                                <option selected>
-                                                    Akasa Wood
-                                                </option>
-                                                <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="4100" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -641,7 +592,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="c-card--wrapper c-card-sm--wrapper">
+                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
                         <div class="c-card--header">
                             <h4 class="c-card--header-title">Cushion</h4>
                         </div>
@@ -652,14 +603,14 @@
                                         <th>
                                             Material
                                         </th>
-                                        <th>
+                                        <th class="c-width-140">
                                             Unit Price
                                         </th>
-                                        <th>
-                                            Product Quantity
+                                        <th class="c-width-140">
+                                            Quantity
                                         </th>
-                                        <th>
-                                            Current Price
+                                        <th class="c-width-140">
+                                            Cost Price
                                         </th>
                                         <th></th>
                                     </tr>
@@ -669,16 +620,13 @@
                                         <td>
                                             <select class="form-select">
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Cushion Type 1
                                                 </option>
                                                 <option>
-                                                    Ash Wood
+                                                    Cushion Type 2
                                                 </option>
                                                 <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Cushion Type 3
                                                 </option>
                                             </select>
                                         </td>
@@ -686,10 +634,10 @@
                                             <input type="text" class="form-control" placeholder="Unit Price">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price">
                                         </td>
                                         <td>
                                             <div class="add-icon">
@@ -700,60 +648,25 @@
                                     <tr>
                                         <td>
                                             <select class="form-select">
+                                                <option>
+                                                    Cushion Type 1
+                                                </option>
                                                 <option selected>
-                                                    Akasa Wood
+                                                    Cushion Type 2
                                                 </option>
                                                 <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
+                                                    Cushion Type 3
                                                 </option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
+                                            <input type="text" class="form-control" placeholder="Unit Price" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
+                                            <input type="text" class="form-control" placeholder="Quantity" value="1" disabled>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
-                                        </td>
-                                        <td>
-                                            <div class="minus-icon">
-                                                <i class="bx bx-minus"></i>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <select class="form-select">
-                                                <option selected>
-                                                    Akasa Wood
-                                                </option>
-                                                <option>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Bamboo Wood
-                                                </option>
-                                                <option>
-                                                    Beech Wood
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Unit Price">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Product Quantity">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" placeholder="Current Price">
+                                            <input type="text" class="form-control" placeholder="Cost Price" value="2100" disabled>
                                         </td>
                                         <td>
                                             <div class="minus-icon">
@@ -778,7 +691,7 @@
                                         Total Price
                                     </span>
                                     <div class="price-list--value">
-                                        ₹142250
+                                        ₹1,42,250
                                     </div>
                                 </li>
                                 <li class="price-list--item">
@@ -804,6 +717,20 @@
                                     </div>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row c-card-footer--btn">
+                <div class="col-12">
+                    <div class="c-card--wrapper c-card-sm--wrapper">
+                        <div class="c-card--footer">
+                            <a class="btn btn-danger" href="">
+                                Cancle
+                            </a>
+                            <a class="btn btn-primary ms-2" href="">
+                                Save
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -10,13 +10,9 @@
     align-items: $vAlign;
 }
 
-//width
-@mixin CustomWidth($width) {
-    @for $i from 1 through $classCount {
-        .c-width-#{$i} {
-            width: #{$i}px;
-        }
+//Custom Width
+@for $i from 1 through 200 {
+    .c-width-#{$i} {
+        width: $i * 1px;
     }
 }
-
-// @include CustomWidth(width)

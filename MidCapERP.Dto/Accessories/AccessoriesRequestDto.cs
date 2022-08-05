@@ -39,7 +39,7 @@ namespace MidCapERP.Dto.Accessories
 
         [Display(Name = "Photo Upload")]
         [DataType(DataType.Upload)]
-        public IFormFile? ImagePath_File { get; set; }
+        public IFormFile? UploadImage { get; set; }
         public int TenantId { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsDeleted { get; set; }

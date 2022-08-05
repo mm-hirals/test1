@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         // Validate that all variables exist
         if (toggle && nav && bodypd && headerpd) {
             toggle.addEventListener('click', () => {
+                // Hide navbar
+                nav.classList.toggle('collapsed')
                 // show navbar
                 nav.classList.toggle('navbar-show')
                 // change icon
@@ -34,4 +36,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     linkColor.forEach(l => l.addEventListener('click', colorLink))
 
     // Your code to run since DOM is loaded and ready
+});
+
+$(".submenu-link").click(function () {
+    $(".sub-menu").toggle().animate({}, 500);
 });
