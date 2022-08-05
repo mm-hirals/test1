@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Infrastructure.Constants;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomerController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IToastNotification _toastNotification;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -33,6 +36,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -49,6 +53,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
