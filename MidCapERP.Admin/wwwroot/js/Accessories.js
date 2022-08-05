@@ -10,7 +10,7 @@ $(function () {
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "/Accessories/GetAccessories",
+            "url": "/Accessories/GetAccessoriesData",
             "type": "POST",
             "datatype": "json"
         },

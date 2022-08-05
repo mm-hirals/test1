@@ -51,7 +51,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.View)]
-        public async Task<IActionResult> GetAccessories([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAccessoriesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.AccessoriesBL.GetFilterAccessoriesData(dataTableFilterDto, cancellationToken);
             return Ok(data);
@@ -86,6 +86,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         #region Private Method
+
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
         {
             var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
@@ -97,6 +98,7 @@ namespace MidCapERP.Admin.Controllers
                                   }).ToList();
             ViewBag.CategorySelectItemList = categorySelectedList;
         }
+
         private async Task FillAccessoriesTypesDropDown(CancellationToken cancellationToken)
         {
             var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypeBL.GetAll(cancellationToken);
@@ -108,6 +110,7 @@ namespace MidCapERP.Admin.Controllers
                                   }).ToList();
             ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
         }
+
         private async Task FillUnitTypesDropDown(CancellationToken cancellationToken)
         {
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
@@ -119,6 +122,7 @@ namespace MidCapERP.Admin.Controllers
                                  }).ToList();
             ViewBag.unitDataSelectedList = unitDataSelectedList;
         }
-        #endregion
+
+        #endregion Private Method
     }
 }

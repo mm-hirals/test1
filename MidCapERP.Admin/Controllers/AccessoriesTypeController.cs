@@ -27,7 +27,6 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
-
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
@@ -45,7 +44,6 @@ namespace MidCapERP.Admin.Controllers
             return PartialView("_AccessoriesTypePartial");
         }
 
-
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
         public async Task<IActionResult> Create(AccessoriesTypeRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
@@ -62,7 +60,6 @@ namespace MidCapERP.Admin.Controllers
             var data = await _unitOfWorkBL.AccessoriesTypeBL.GetFilterAccessoriesTypeData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
-
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]

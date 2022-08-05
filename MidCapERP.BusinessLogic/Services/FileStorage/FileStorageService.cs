@@ -11,7 +11,7 @@ namespace MidCapERP.BusinessLogic.Services.FileStorage
         {
             this._hostingEnvironment = hostingEnvironment;
         }
-        
+
         public async Task<string> StoreFile(IFormFile file, string fileSavingPath)
         {
             string uploadedImagePath = string.Empty;

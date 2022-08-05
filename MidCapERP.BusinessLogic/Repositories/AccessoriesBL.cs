@@ -8,7 +8,6 @@ using MidCapERP.Dto.Accessories;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 
-
 namespace MidCapERP.BusinessLogic.Repositories
 {
     public class AccessoriesBL : IAccessoriesBL
@@ -70,7 +69,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedUTCDate = x.UpdatedUTCDate
                                        }).ToList();
             var companyData = new PagedList<AccessoriesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
-            //var companyResponseData = _mapper.Map<List<CompanyResponseDto>>(companyData);
             return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }
 
@@ -94,7 +92,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             var _mappedUser = _mapper.Map<AccessoriesRequestDto>(data);
             return _mappedUser;
-
         }
 
         private async Task<Accessories> AccessoriesGetById(int Id, CancellationToken cancellationToken)
@@ -140,11 +137,15 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        public void UpdateAccessories(Accessories oldData)
+        #region Private Method
+
+        private void UpdateAccessories(Accessories oldData)
         {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
+
+        #endregion Private Method
     }
 }

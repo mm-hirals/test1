@@ -11,11 +11,12 @@ namespace MidCapERP.Dto.Accessories
 
         [DisplayName("CategoryId")]
         public int CategoryId { get; set; }
+
         public string CategoryName { get; set; }
 
         [DisplayName("Type Name")]
         public string TypeName { get; set; }
-        
+
         public int AccessoriesTypeId { get; set; }
 
         [DisplayName("AccessoriesType Name")]
@@ -32,11 +33,13 @@ namespace MidCapERP.Dto.Accessories
 
         [DisplayName("Unit Price")]
         public int UnitPrice { get; set; }
+
         public string? ImagePath { get; set; }
 
         [Display(Name = "Photo Upload")]
         [DataType(DataType.Upload)]
         public IFormFile? UploadImage { get; set; }
+
         public int TenantId { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsDeleted { get; set; }

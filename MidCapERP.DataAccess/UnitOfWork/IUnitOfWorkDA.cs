@@ -1,5 +1,4 @@
 ﻿using MidCapERP.DataAccess.Interface;
-using MidCapERP.DataAccess.Repositories;
 
 namespace MidCapERP.DataAccess.UnitOfWork
 {
