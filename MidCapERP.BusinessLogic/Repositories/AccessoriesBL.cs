@@ -42,7 +42,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<AccessoriesResponseDto>> GetFilterAccessoriesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var accessoriesAllData = await _unitOfWorkDA.AccessoriesDA.GetAll(cancellationToken);
-            var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypesDA.GetAll(cancellationToken);
+            var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
             var cateagoryData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var unitData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
 

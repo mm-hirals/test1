@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MidCapERP.Dto.AccessoriesTypes
+namespace MidCapERP.Dto.AccessoriesType
 {
-    public class AccessoriesTypesResponseDto
+    public class AccessoriesTypeResponseDto
     {
         [Required]
         public int AccessoriesTypeId { get; set; }

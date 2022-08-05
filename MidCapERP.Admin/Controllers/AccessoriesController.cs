@@ -99,7 +99,7 @@ namespace MidCapERP.Admin.Controllers
         }
         private async Task FillAccessoriesTypesDropDown(CancellationToken cancellationToken)
         {
-            var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypesBL.GetAll(cancellationToken);
+            var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypeBL.GetAll(cancellationToken);
             var accessoriesTypesSelectedList = accessoriesTypesData.ToList().Select(a =>
                                   new SelectListItem
                                   {

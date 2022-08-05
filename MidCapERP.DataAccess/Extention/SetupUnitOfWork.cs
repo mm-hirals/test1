@@ -18,7 +18,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IContractorCategoryMappingDA, ContractorCategoryMappingDA>();
             services.AddScoped<ICustomersDA, CustomersDA>();
             services.AddScoped<IErrorLogsDA, ErrorLogsDA>();
-            services.AddScoped<IAccessoriesTypesDA, AccessoriesTypesDA>();
+            services.AddScoped<IAccessoriesTypeDA, AccessoriesTypeDA>();
             services.AddScoped<IRawMaterialDA, RawMaterialDA>();
             services.AddScoped<IAccessoriesDA, AccessoriesDA>();
             // KEEP THIS LINE AT THE END.

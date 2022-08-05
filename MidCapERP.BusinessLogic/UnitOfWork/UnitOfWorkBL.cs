@@ -16,12 +16,12 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICompanyBL CompanyBL { get; }
         public IUnitBL UnitBL { get; }
         public IWoodTypeBL WoodTypeBL { get; }
-        public IAccessoriesTypesBL AccessoriesTypesBL { get; }
+        public IAccessoriesTypeBL AccessoriesTypeBL { get; }
         public IRawMaterialBL RawMaterialBL { get; }
         public IFileStorageService FileStorageService { get; }
         public IAccessoriesBL AccessoriesBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypesBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IFileStorageService fileStorageService, IAccessoriesBL accessoriesBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -33,7 +33,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.CompanyBL = companyBL;
             this.UnitBL = unitBL;
             this.WoodTypeBL = woodTypeBL;
-            this.AccessoriesTypesBL = accessoriesTypesBL;
+            this.AccessoriesTypeBL = accessoriesTypesBL;
             this.RawMaterialBL = rawMaterialBL;
             this.FileStorageService = fileStorageService;
             this.AccessoriesBL = accessoriesBL;

@@ -12,7 +12,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
         ICustomersDA CustomersDA { get; }
         IErrorLogsDA ErrorLogsDA { get; }
-        IAccessoriesTypesDA AccessoriesTypesDA { get; }
+        IAccessoriesTypeDA AccessoriesTypeDA { get; }
         IRawMaterialDA RawMaterialDA { get; }
         IAccessoriesDA AccessoriesDA { get; }
     }

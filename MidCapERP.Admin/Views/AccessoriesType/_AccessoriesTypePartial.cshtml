@@ -1,10 +1,10 @@
-﻿@model MidCapERP.Dto.AccessoriesTypes.AccessoriesTypesRequestDto
+﻿@model MidCapERP.Dto.AccessoriesType.AccessoriesTypeRequestDto
 @{
     string action = (Model != null && Model.AccessoriesTypeId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="divAccessoriesTypesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divAccessoriesTypeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,8 +15,8 @@
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                   data-ajax="true" data-ajax-method="post"
-                  data-ajax-complete="AccessoriesTypesModel.onSuccess"
-                  data-ajax-failure="AccessoriesTypesModel.onFailed">
+                  data-ajax-complete="AccessoriesTypeModel.onSuccess"
+                  data-ajax-failure="AccessoriesTypeModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="AccessoriesTypeId" hidden class="form-control" />
