@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -15,12 +16,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IFileStorageService _fileStorageService;
 
-        public AccessoriesBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public AccessoriesBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<AccessoriesResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -80,6 +83,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<AccessoriesRequestDto> CreateAccessories(AccessoriesRequestDto model, CancellationToken cancellationToken)
         {
             var AccessoriesToInsert = _mapper.Map<Accessories>(model);
+            if (model.UploadImage != null)
+                AccessoriesToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\Accessories\");
             AccessoriesToInsert.IsDeleted = false;
             AccessoriesToInsert.TenantId = _currentUser.TenantId;
             AccessoriesToInsert.CreatedBy = _currentUser.UserId;
@@ -105,6 +110,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<AccessoriesRequestDto> UpdateAccessories(int Id, AccessoriesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = AccessoriesGetById(Id, cancellationToken).Result;
+            if (model.UploadImage != null)
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\Accessories\");
             UpdateAccessories(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.AccessoriesDA.UpdateAccessories(Id, oldData, cancellationToken);

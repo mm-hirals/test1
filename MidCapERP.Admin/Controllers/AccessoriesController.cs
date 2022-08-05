@@ -44,7 +44,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Create)]
         public async Task<IActionResult> Create(AccessoriesRequestDto accessoriesRequestDto, CancellationToken cancellationToken)
         {
-            accessoriesRequestDto.ImagePath = StoreFile(accessoriesRequestDto.ImagePath_File, cancellationToken);
             var accessories = await _unitOfWorkBL.AccessoriesBL.CreateAccessories(accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Created Successfully!");
             return RedirectToAction("Index");
@@ -73,8 +72,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Update)]
         public async Task<IActionResult> Update(int Id, AccessoriesRequestDto accessoriesRequestDto, CancellationToken cancellationToken)
         {
-            if (accessoriesRequestDto.ImagePath_File != null)
-                accessoriesRequestDto.ImagePath = StoreFile(accessoriesRequestDto.ImagePath_File, cancellationToken);
             var accessories = await _unitOfWorkBL.AccessoriesBL.UpdateAccessories(Id, accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
@@ -121,22 +118,6 @@ namespace MidCapERP.Admin.Controllers
                                      Text = a.LookupValueName
                                  }).ToList();
             ViewBag.unitDataSelectedList = unitDataSelectedList;
-        }
-        private string StoreFile(IFormFile file, CancellationToken cancellationToken)
-        {
-            string uploadedImagePath = string.Empty;
-            string path = _hostingEnvironment.WebRootPath + @"\Files\Accessories\";
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-            using (var stream = new FileStream(path + fileName, FileMode.Create))
-            {
-                file.CopyTo(stream);
-                uploadedImagePath = @"\Files\Accessories\" + fileName;
-            }
-            return uploadedImagePath;
         }
         #endregion
     }

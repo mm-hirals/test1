@@ -11,8 +11,8 @@
         position: relative;
         .product--image {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             box-shadow: $defaulShaodw;
             border-radius: 10px;
             overflow: hidden;
@@ -26,8 +26,8 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             background-color: $primary;
             color: $white;
@@ -35,6 +35,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            font-size: 13px;
         }
     }
     .card-prpoduct-cotent--wrapper {
@@ -79,7 +80,7 @@
 
 .price-card--wrapper {
     position: sticky;
-    top: 0;
+    top: 40px;
     .price-list--wrapper {
         padding: 0;
         margin: 0;
@@ -102,6 +103,7 @@
             display: flex;
             align-items: center;
             .form-control {
+                text-align: right;
                 margin-left: 8px;
             }
         }
@@ -111,4 +113,16 @@
             font-weight: 600;
         }
     }
+}
+
+.product-nav-tab--sticky {
+    position: sticky;
+    top: -25px;
+    background-color: $layoutBgColor;
+    z-index: 1;
+}
+
+.c-card-footer--btn {
+    position: sticky;
+    bottom: -25px;
 }
