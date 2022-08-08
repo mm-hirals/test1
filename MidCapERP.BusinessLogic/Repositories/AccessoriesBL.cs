@@ -48,7 +48,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var cateagoryData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
             var unitData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
 
-            var companyResponseData = (from x in accessoriesAllData
+            var accessoriesResponseData = (from x in accessoriesAllData
                                        join y in accessoriesTypesAllData on new { AccessoriesTypeId = x.AccessoriesTypeId } equals new { AccessoriesTypeId = y.AccessoriesTypeId }
                                        join z in cateagoryData on new { CategoryId = x.CategoryId } equals new { CategoryId = z.LookupValueId }
                                        join a in unitData on new { UnitId = x.UnitId } equals new { UnitId = a.LookupValueId }
@@ -71,7 +71,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
                                        }).ToList();
-            var accessoriesData = new PagedList<AccessoriesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var accessoriesData = new PagedList<AccessoriesResponseDto>(accessoriesResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, accessoriesData.TotalCount, accessoriesData.TotalCount, accessoriesData);
         }
 
