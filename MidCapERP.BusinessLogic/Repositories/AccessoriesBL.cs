@@ -44,7 +44,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var accessoriesAllData = await _unitOfWorkDA.AccessoriesDA.GetAll(cancellationToken);
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
             var lookupValueAll = _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result;
-            var cateagoryData = lookupValueAll.Where(x=>x.LookupId == (int)MasterPagesEnum.Category);
+            var cateagoryData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
             var unitData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
 
             var companyResponseData = (from x in accessoriesAllData
@@ -96,16 +96,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        private async Task<Accessories> AccessoriesGetById(int Id, CancellationToken cancellationToken)
-        {
-            var accessoriesDataById = await _unitOfWorkDA.AccessoriesDA.GetById(Id, cancellationToken);
-            if (accessoriesDataById == null)
-            {
-                throw new Exception("Accessories not found");
-            }
-            return accessoriesDataById;
-        }
-
         public async Task<AccessoriesRequestDto> UpdateAccessories(int Id, AccessoriesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = AccessoriesGetById(Id, cancellationToken).Result;
@@ -116,17 +106,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.AccessoriesDA.UpdateAccessories(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<AccessoriesRequestDto>(data);
             return _mappedUser;
-        }
-
-        private static void MapToDbObject(AccessoriesRequestDto model, Accessories oldData)
-        {
-            oldData.AccessoriesId = model.AccessoriesId;
-            oldData.AccessoriesTypeId = model.AccessoriesTypeId;
-            oldData.CategoryId = model.CategoryId;
-            oldData.Title = model.Title;
-            oldData.UnitId = model.UnitId;
-            oldData.UnitPrice = model.UnitPrice;
-            oldData.ImagePath = model.ImagePath;
         }
 
         public async Task<AccessoriesRequestDto> DeleteAccessories(int Id, CancellationToken cancellationToken)
@@ -146,6 +125,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
+        }
+
+        private static void MapToDbObject(AccessoriesRequestDto model, Accessories oldData)
+        {
+            oldData.AccessoriesId = model.AccessoriesId;
+            oldData.AccessoriesTypeId = model.AccessoriesTypeId;
+            oldData.CategoryId = model.CategoryId;
+            oldData.Title = model.Title;
+            oldData.UnitId = model.UnitId;
+            oldData.UnitPrice = model.UnitPrice;
+            oldData.ImagePath = model.ImagePath;
+        }
+
+        private async Task<Accessories> AccessoriesGetById(int Id, CancellationToken cancellationToken)
+        {
+            var accessoriesDataById = await _unitOfWorkDA.AccessoriesDA.GetById(Id, cancellationToken);
+            if (accessoriesDataById == null)
+            {
+                throw new Exception("Accessories not found");
+            }
+            return accessoriesDataById;
         }
 
         #endregion Private Method
