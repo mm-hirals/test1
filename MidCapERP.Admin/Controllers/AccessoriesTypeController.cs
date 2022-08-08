@@ -38,9 +38,7 @@ namespace MidCapERP.Admin.Controllers
                                       Value = Convert.ToString(a.LookupValueId),
                                       Text = a.LookupValueName
                                   }).ToList();
-
             ViewBag.CategorySelectItemList = data;
-
             return PartialView("_AccessoriesTypePartial");
         }
 
@@ -72,7 +70,6 @@ namespace MidCapERP.Admin.Controllers
                                       Value = Convert.ToString(a.LookupValueId),
                                       Text = a.LookupValueName
                                   }).ToList();
-
             ViewBag.CategorySelectItemList = data;
             var accessoriesTypes = await _unitOfWorkBL.AccessoriesTypeBL.GetById(Id, cancellationToken);
             return PartialView("_AccessoriesTypePartial", accessoriesTypes);
@@ -82,7 +79,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]
         public async Task<IActionResult> Update(int Id, AccessoriesTypeRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
         {
-
             await _unitOfWorkBL.AccessoriesTypeBL.UpdateAccessoriesType(Id, accessoriesTypesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data update Successfully!");
             return RedirectToAction("Index");

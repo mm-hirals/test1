@@ -29,7 +29,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return dataToReturn;
         }
 
-
         public async Task<AccessoriesTypeResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
             var data = await AccessoriesTypeGetById(Id, cancellationToken);
@@ -40,26 +39,24 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
             var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var companyResponseData = (from x in accessoriesTypesAllData
-                                       join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupValueId }
-                                       select new AccessoriesTypeResponseDto()
-                                       {
-                                           AccessoriesTypeId = x.AccessoriesTypeId,
-                                           CategoryId = x.CategoryId,
-                                           CategoryName = y.LookupValueName,
-                                           TypeName = x.TypeName,   
-                                           IsDeleted = x.IsDeleted,
-                                           CreatedBy = x.CreatedBy,
-                                           CreatedDate = x.CreatedDate,
-                                           CreatedUTCDate = x.CreatedUTCDate,
-                                           UpdatedBy = x.UpdatedBy,
-                                           UpdatedDate = x.UpdatedDate,
-                                           UpdatedUTCDate = x.UpdatedUTCDate
-
-                                       }).ToList();
-            var companyData = new PagedList<AccessoriesTypeResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
-            //var companyResponseData = _mapper.Map<List<CompanyResponseDto>>(companyData);
-            return new JsonRepsonse<AccessoriesTypeResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
+            var accessoriesTypeResponseData = (from x in accessoriesTypesAllData
+                                               join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupValueId }
+                                               select new AccessoriesTypeResponseDto()
+                                               {
+                                                   AccessoriesTypeId = x.AccessoriesTypeId,
+                                                   CategoryId = x.CategoryId,
+                                                   CategoryName = y.LookupValueName,
+                                                   TypeName = x.TypeName,
+                                                   IsDeleted = x.IsDeleted,
+                                                   CreatedBy = x.CreatedBy,
+                                                   CreatedDate = x.CreatedDate,
+                                                   CreatedUTCDate = x.CreatedUTCDate,
+                                                   UpdatedBy = x.UpdatedBy,
+                                                   UpdatedDate = x.UpdatedDate,
+                                                   UpdatedUTCDate = x.UpdatedUTCDate
+                                               }).ToList();
+            var accessoriesTypeData = new PagedList<AccessoriesTypeResponseDto>(accessoriesTypeResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            return new JsonRepsonse<AccessoriesTypeResponseDto>(dataTableFilterDto.Draw, accessoriesTypeData.TotalCount, accessoriesTypeData.TotalCount, accessoriesTypeData);
         }
 
         public async Task<AccessoriesTypeRequestDto> GetById(int Id, CancellationToken cancellationToken)
@@ -70,13 +67,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<AccessoriesTypeRequestDto> CreateAccessoriesType(AccessoriesTypeRequestDto model, CancellationToken cancellationToken)
         {
-            var AccessoriesTypeToInsert = _mapper.Map<AccessoriesType>(model);
-            AccessoriesTypeToInsert.IsDeleted = false;
-            AccessoriesTypeToInsert.TenantId = _currentUser.TenantId;
-            AccessoriesTypeToInsert.CreatedBy = _currentUser.UserId;
-            AccessoriesTypeToInsert.CreatedDate = DateTime.Now;
-            AccessoriesTypeToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.AccessoriesTypeDA.CreateAccessoriesType(AccessoriesTypeToInsert, cancellationToken);
+            var accessoriesTypeToInsert = _mapper.Map<AccessoriesType>(model);
+            accessoriesTypeToInsert.IsDeleted = false;
+            accessoriesTypeToInsert.TenantId = _currentUser.TenantId;
+            accessoriesTypeToInsert.CreatedBy = _currentUser.UserId;
+            accessoriesTypeToInsert.CreatedDate = DateTime.Now;
+            accessoriesTypeToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.AccessoriesTypeDA.CreateAccessoriesType(accessoriesTypeToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<AccessoriesTypeRequestDto>(data);
             return _mappedUser;
         }
@@ -91,13 +88,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        private static void MapToDbObject(AccessoriesTypeRequestDto model, AccessoriesType oldData)
-        {
-            oldData.CategoryId = model.CategoryId;
-            oldData.TypeName = model.TypeName;
-            oldData.TenantId = model.TenantId;
-        }
-
         public async Task<AccessoriesTypeRequestDto> DeleteAccessoriesType(int Id, CancellationToken cancellationToken)
         {
             var accessoriesTypesToUpdate = AccessoriesTypeGetById(Id, cancellationToken).Result;
@@ -108,14 +98,21 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        public void UpdateAccessoriesType(AccessoriesType oldData)
+        #region PrivateMethod
+
+        private void UpdateAccessoriesType(AccessoriesType oldData)
         {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
-        #region otherMethod
+        private static void MapToDbObject(AccessoriesTypeRequestDto model, AccessoriesType oldData)
+        {
+            oldData.CategoryId = model.CategoryId;
+            oldData.TypeName = model.TypeName;
+            oldData.TenantId = model.TenantId;
+        }
 
         private async Task<AccessoriesType> AccessoriesTypeGetById(int Id, CancellationToken cancellationToken)
         {
@@ -127,6 +124,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return accessoriesTypesDataById;
         }
 
-        #endregion otherMethod
+        #endregion PrivateMethod
     }
 }
