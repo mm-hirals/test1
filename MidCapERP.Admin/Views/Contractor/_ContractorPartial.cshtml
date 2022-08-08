@@ -13,17 +13,19 @@
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divContractorModal" tabindex="-1" aria-labelledby="contractorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Contractor</h5>
+                <h5 class="modal-title" id="contractorModalLabel">Contractor</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
-
-            <form asp-action="@action" class="modal-form--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="ContractorModel.onSuccess"
+                  data-ajax-failure="ContractorModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="ContractorId" hidden class="form-control" />
@@ -38,7 +40,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="PhoneNumber" class="form-label"></label>
-                                <input asp-for="PhoneNumber" class="form-control" />
+                                <input asp-for="PhoneNumber" class="form-control" type="number" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
@@ -56,13 +58,6 @@
                                 <span asp-validation-for="EmailId" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -75,5 +70,5 @@
 </div>
 
 @{
-    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }

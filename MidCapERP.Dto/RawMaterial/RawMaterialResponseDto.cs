@@ -12,6 +12,7 @@ namespace MidCapERP.Dto.RawMaterial
         [DisplayName("Unit Id")]
         public int UnitId { get; set; }
 
+        [DisplayName("Unit Name")]
         public string UnitName { get; set; }
 
         [DisplayName("Unit Price")]

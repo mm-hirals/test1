@@ -10,7 +10,7 @@ namespace MidCapERP.Dto.WoodType
         [DisplayName("Lookup Name")]
         public string LookupName { get; set; }
 
-        [DisplayName("WoodType Name")]
+        [DisplayName("Wood Type Name")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
@@ -21,7 +22,15 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            return base.View(await GetAllCustomers(cancellationToken));
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        public async Task<IActionResult> GetCustomersData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.GetFilterCustomersData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
         }
 
         [HttpGet]

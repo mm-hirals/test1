@@ -8,16 +8,25 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Contractors</h4>
         <div class="c-card--header-action">
-            <a class="c-card--header-action-btn btn btn-outline-primary"><i class='bx bx-plus me-2'></i>Filters</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkContractorFilter"><i class='bx bx-plus me-2'></i>Filters</a>
             <a asp-controller="Contractor" asp-action="Create"
-               data-ajax-complete="onComplete" data-ajax="true" class="btn btn-primary"
-               data-ajax-mode="replace" data-ajax-update="#UpdateContentDiv">Create New</a>
+               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="ContractorModel.onComplete" data-ajax-update="#divUpdateContractor">Create New</a>
         </div>
     </div>
-    <div class="c-card--body" id="UpdateContentDiv1">
-        <partial name="_ContractorTable" model="@Model" />
-        <div id="UpdateContentDiv">
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Contractor Name</label>
+                        <input type="text" class="form-control" placeholder="ContractorName" />
+                    </div>
+                </div>
+            </div>
         </div>
+        <partial name="_ContractorTable" model="@Model" />
+        <div id="divUpdateContractor"></div>
     </div>
 </div>
 
@@ -25,17 +34,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Contractor.js" asp-append-version="true"></script>
     }
-
-    <script>
-        $(function() {
-            $("#tblContractor").DataTable({
-                "searching": false
-            });
-        });
-
-        function onComplete() {
-            $("#exampleModal").modal('show');
-        }
-    </script>
 }

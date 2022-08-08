@@ -4,6 +4,8 @@ using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Contractors;
+using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -25,6 +27,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.ContractorsDA.GetAllContractor(cancellationToken);
             var DataToReturn = _mapper.Map<List<ContractorsResponseDto>>(data.ToList());
             return DataToReturn;
+        }
+
+        public async Task<JsonRepsonse<ContractorsResponseDto>> GetFilterContractorData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var contractorAllData = await _unitOfWorkDA.ContractorsDA.GetAllContractor(cancellationToken);
+            var contractorData = new PagedList<ContractorsResponseDto>(_mapper.Map<List<ContractorsResponseDto>>(contractorAllData.ToList()), dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            return new JsonRepsonse<ContractorsResponseDto>(dataTableFilterDto.Draw, contractorData.TotalCount, contractorData.TotalCount, contractorData);
         }
 
         public async Task<ContractorsResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
