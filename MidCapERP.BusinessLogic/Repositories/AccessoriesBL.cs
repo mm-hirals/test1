@@ -46,31 +46,30 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupValueAll = _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result;
             var cateagoryData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
             var unitData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
-
-            var companyResponseData = (from x in accessoriesAllData
-                                       join y in accessoriesTypesAllData on new { AccessoriesTypeId = x.AccessoriesTypeId } equals new { AccessoriesTypeId = y.AccessoriesTypeId }
-                                       join z in cateagoryData on new { CategoryId = x.CategoryId } equals new { CategoryId = z.LookupValueId }
-                                       join a in unitData on new { UnitId = x.UnitId } equals new { UnitId = a.LookupValueId }
-                                       select new AccessoriesResponseDto()
-                                       {
-                                           AccessoriesId = x.AccessoriesId,
-                                           CategoryId = x.CategoryId,
-                                           CategoryName = z.LookupValueName,
-                                           TypeName = y.TypeName,
-                                           AccessoriesTypeName = y.TypeName,
-                                           Title = x.Title,
-                                           UnitId = x.UnitId,
-                                           UnitName = a.LookupValueName,
-                                           UnitPrice = Convert.ToInt32(x.UnitPrice),
-                                           IsDeleted = x.IsDeleted,
-                                           CreatedBy = x.CreatedBy,
-                                           CreatedDate = x.CreatedDate,
-                                           CreatedUTCDate = x.CreatedUTCDate,
-                                           UpdatedBy = x.UpdatedBy,
-                                           UpdatedDate = x.UpdatedDate,
-                                           UpdatedUTCDate = x.UpdatedUTCDate
-                                       }).AsQueryable();
-            var accessoriesData = new PagedList<AccessoriesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var accessoriesResponseData = (from x in accessoriesAllData
+                                           join y in accessoriesTypesAllData on new { AccessoriesTypeId = x.AccessoriesTypeId } equals new { AccessoriesTypeId = y.AccessoriesTypeId }
+                                           join z in cateagoryData on new { CategoryId = x.CategoryId } equals new { CategoryId = z.LookupValueId }
+                                           join a in unitData on new { UnitId = x.UnitId } equals new { UnitId = a.LookupValueId }
+                                           select new AccessoriesResponseDto()
+                                           {
+                                               AccessoriesId = x.AccessoriesId,
+                                               CategoryId = x.CategoryId,
+                                               CategoryName = z.LookupValueName,
+                                               TypeName = y.TypeName,
+                                               AccessoriesTypeName = y.TypeName,
+                                               Title = x.Title,
+                                               UnitId = x.UnitId,
+                                               UnitName = a.LookupValueName,
+                                               UnitPrice = Convert.ToInt32(x.UnitPrice),
+                                               IsDeleted = x.IsDeleted,
+                                               CreatedBy = x.CreatedBy,
+                                               CreatedDate = x.CreatedDate,
+                                               CreatedUTCDate = x.CreatedUTCDate,
+                                               UpdatedBy = x.UpdatedBy,
+                                               UpdatedDate = x.UpdatedDate,
+                                               UpdatedUTCDate = x.UpdatedUTCDate
+                                           }).AsQueryable();
+            var accessoriesData = new PagedList<AccessoriesResponseDto>(accessoriesResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, accessoriesData.TotalCount, accessoriesData.TotalCount, accessoriesData);
         }
 
@@ -91,7 +90,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             AccessoriesToInsert.CreatedDate = DateTime.Now;
             AccessoriesToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.AccessoriesDA.CreateAccessories(AccessoriesToInsert, cancellationToken);
-
             var _mappedUser = _mapper.Map<AccessoriesRequestDto>(data);
             return _mappedUser;
         }
