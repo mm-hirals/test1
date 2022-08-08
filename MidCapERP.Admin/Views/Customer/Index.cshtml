@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<MidCapERP.Dto.Customers.CustomersResponseDto>
 
 @{
-    ViewData["Title"] = "Customer";
+    ViewData["Title"] = "Customers";
 }
 
 <div class="c-card--wrapper">
     <div class="c-card--header">
-        <h4 class="c-card--header-title">Customer</h4>
+        <h4 class="c-card--header-title">Customers</h4>
         <div class="c-card--header-action">
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerFilter"><i class='bx bx-plus me-2'></i>Filters</a>
             <a asp-controller="Customer" asp-action="Create"
@@ -20,7 +20,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label">Customer Name</label>
-                        <input type="text" class="form-control" placeholder="CustomerName" />
+                        <input type="text" class="form-control" placeholder="Customer Name" />
                     </div>
                 </div>
             </div>
