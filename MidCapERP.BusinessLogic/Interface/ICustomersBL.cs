@@ -1,10 +1,13 @@
 ﻿using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.DataGrid;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
     public interface ICustomersBL
     {
         public Task<IEnumerable<CustomersResponseDto>> GetAllCustomers(CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<CustomersResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 

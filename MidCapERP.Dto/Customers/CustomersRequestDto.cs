@@ -10,7 +10,7 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Customer Name")]
         public string CustomerName { get; set; }
 
-        [DisplayName("Email Id")]
+        [DisplayName("Email Address")]
         [EmailAddress(ErrorMessage = "Please enter valid email address")]
         public string? EmailId { get; set; }
 
@@ -19,7 +19,7 @@ namespace MidCapERP.Dto.Customers
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; }
 
-        [DisplayName("AltPhone Number")]
+        [DisplayName("Alt Phone Number")]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string? AltPhoneNumber { get; set; }

@@ -13,7 +13,7 @@
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="customerModal" tabindex="-1" aria-labelledby="CustomerModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divCustomerModal" tabindex="-1" aria-labelledby="CustomerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,7 +23,10 @@
                 </button>
             </div>
 
-            <form asp-action="@action" class="modal-form--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="CustomerModel.onSuccess"
+                  data-ajax-failure="CustomerModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerId" hidden class="form-control" />
@@ -45,7 +48,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="PhoneNumber" class="form-label"></label>
-                                <input asp-for="PhoneNumber" class="form-control" />
+                                <input asp-for="PhoneNumber" class="form-control" type="number" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>

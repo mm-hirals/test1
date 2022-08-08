@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Contractors;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
@@ -22,6 +23,14 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return base.View(await GetAllContractors(cancellationToken));
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.View)]
+        public async Task<IActionResult> GetContractorData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ContractorsBL.GetFilterContractorData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
         }
 
         [HttpGet]

@@ -1,10 +1,13 @@
 ﻿using MidCapERP.Dto.Contractors;
+using MidCapERP.Dto.DataGrid;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IContractorsBL
     {
         public Task<IEnumerable<ContractorsResponseDto>> GetAllContractor(CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<ContractorsResponseDto>> GetFilterContractorData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<ContractorsResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 
