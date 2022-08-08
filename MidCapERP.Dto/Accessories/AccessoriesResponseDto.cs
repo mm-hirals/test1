@@ -17,9 +17,7 @@ namespace MidCapERP.Dto.Accessories
         [DisplayName("Type Name")]
         public string TypeName { get; set; }
 
-        public int AccessoriesTypeId { get; set; }
-
-        [DisplayName("AccessoriesType Name")]
+        [DisplayName("Accessories Type")]
         public string AccessoriesTypeName { get; set; }
 
         [DisplayName("Title")]

@@ -15,7 +15,3 @@ namespace MidCapERP.DataAccess.Interface
         public Task<Accessories> DeleteAccessories(int Id, CancellationToken cancellationToken);
     }
 }
-
-
-
-

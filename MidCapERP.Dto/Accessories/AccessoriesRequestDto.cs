@@ -12,24 +12,16 @@ namespace MidCapERP.Dto.Accessories
         [DisplayName("Type Name")]
         public string TypeName { get; set; }
 
-        public string CategoryName { get; set; }
-
-        [DisplayName("CategoryId")]
+        [DisplayName("Category")]
         public int CategoryId { get; set; }
 
-        [DisplayName("AccessoriesTypeId")]
+        [DisplayName("Accessories Type")]
         public int AccessoriesTypeId { get; set; }
-
-        [DisplayName("AccessoriesType Name")]
-        public string AccessoriesTypeName { get; set; }
 
         [DisplayName("Title")]
         public string Title { get; set; }
 
-        [DisplayName("Unit Name")]
-        public string UnitName { get; set; }
-
-        [DisplayName("Unit Id")]
+        [DisplayName("Unit")]
         public int UnitId { get; set; }
 
         [DisplayName("Unit Price")]
