@@ -30,6 +30,14 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Accessories.View)]
+        public async Task<IActionResult> GetAccessoriesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.AccessoriesBL.GetFilterAccessoriesData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
@@ -47,14 +55,6 @@ namespace MidCapERP.Admin.Controllers
             var accessories = await _unitOfWorkBL.AccessoriesBL.CreateAccessories(accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Created Successfully!");
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Accessories.View)]
-        public async Task<IActionResult> GetAccessoriesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.AccessoriesBL.GetFilterAccessoriesData(dataTableFilterDto, cancellationToken);
-            return Ok(data);
         }
 
         [HttpGet]
