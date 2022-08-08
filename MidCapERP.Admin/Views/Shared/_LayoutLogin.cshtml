@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using MidCapERP.Admin
+@using MidCapERP.Dto;
+@using MidCapERP.Admin.Models
+@inject CurrentUser _currentUser;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -9,13 +14,8 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <!-- End CSS -->
 </head>
-<body id="body-pd">
-    <partial name="_LayoutSideMenu" />
-    <!-- Start Container Main -->
-    <div class="c-main-content--wrapper">
-        @RenderBody()
-    </div>
-    <!-- Start Container Main -->
+<body>
+    @RenderBody()
     <!-- Start Footer -->
     <footer class="footer-page--wrapper">
         <div class="container-fluid">
