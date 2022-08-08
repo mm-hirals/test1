@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -68,8 +69,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
                                        }).ToList();
-            var companyData = new PagedList<AccessoriesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
-            return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
+            var accessoriesData = new PagedList<AccessoriesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, accessoriesData.TotalCount, accessoriesData.TotalCount, accessoriesData);
         }
 
         public async Task<AccessoriesRequestDto> GetById(int Id, CancellationToken cancellationToken)
@@ -82,7 +83,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var AccessoriesToInsert = _mapper.Map<Accessories>(model);
             if (model.UploadImage != null)
-                AccessoriesToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\Accessories\");
+                AccessoriesToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.AccessoriesFilePath);
             AccessoriesToInsert.IsDeleted = false;
             AccessoriesToInsert.TenantId = _currentUser.TenantId;
             AccessoriesToInsert.CreatedBy = _currentUser.UserId;
@@ -108,7 +109,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = AccessoriesGetById(Id, cancellationToken).Result;
             if (model.UploadImage != null)
-                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\Accessories\");
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.AccessoriesFilePath);
             UpdateAccessories(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.AccessoriesDA.UpdateAccessories(Id, oldData, cancellationToken);
