@@ -42,24 +42,17 @@ namespace MidCapERP.Infrastructure.Identity.Seed
             var administratorRole = await roleManager.FindByNameAsync(ApplicationIdentityConstants.Roles.Administrator);
 
             //GIVE ALL PERMISSIONS TO THE ADMINISTRATOR USER
-            await AddPermissionClaim(roleManager, administratorRole, "Users");
-            await AddPermissionClaim(roleManager, administratorRole, "Role");
-            await AddPermissionClaim(roleManager, administratorRole, "Dashboard");
-            await AddPermissionClaim(roleManager, administratorRole, "Lookup");
-            await AddPermissionClaim(roleManager, administratorRole, "Status");
-            await AddPermissionClaim(roleManager, administratorRole, "Contractor");
-            await AddPermissionClaim(roleManager, administratorRole, "SubjectType");
-            await AddPermissionClaim(roleManager, administratorRole, "LookupValues");
-            await AddPermissionClaim(roleManager, administratorRole, "ContractorCategoryMapping");
-            await AddPermissionClaim(roleManager, administratorRole, "Customer");
-            await AddPermissionClaim(roleManager, administratorRole, "ErrorLogs");
-            await AddPermissionClaim(roleManager, administratorRole, "Category");
-            await AddPermissionClaim(roleManager, administratorRole, "Company");
-            await AddPermissionClaim(roleManager, administratorRole, "Unit");
-            await AddPermissionClaim(roleManager, administratorRole, "WoodType");
-            await AddPermissionClaim(roleManager, administratorRole, "AccessoriesType");
-            await AddPermissionClaim(roleManager, administratorRole, "RawMaterial");
-            await AddPermissionClaim(roleManager, administratorRole, "Accessories");
+            await GrantPermissionToAdminUser(roleManager, administratorRole);
+        }
+
+        private static async Task GrantPermissionToAdminUser(RoleManager<ApplicationRole> roleManager, ApplicationRole administratorRole)
+        {
+            var collection = new List<string>() { "Users", "Role", "Dashboard", "Lookup", "Status", "Contractor", "SubjectType", "LookupValues", "ContractorCategoryMapping", "Customer", "ErrorLogs", "Category", "Company", "Unit", "WoodType", "AccessoriesType", "RawMaterial", "Accessories"
+                };
+            foreach (var item in collection)
+            {
+                await AddPermissionClaim(roleManager, administratorRole, item);
+            }
         }
 
         /// <summary>

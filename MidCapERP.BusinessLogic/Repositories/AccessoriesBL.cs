@@ -30,8 +30,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<AccessoriesResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.AccessoriesDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<AccessoriesResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<AccessoriesResponseDto>>(data.ToList());
         }
 
         public async Task<AccessoriesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
@@ -70,7 +69,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedBy = x.UpdatedBy,
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
-                                       }).ToList();
+                                       }).AsQueryable();
             var accessoriesData = new PagedList<AccessoriesResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, accessoriesData.TotalCount, accessoriesData.TotalCount, accessoriesData);
         }

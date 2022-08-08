@@ -25,10 +25,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<AccessoriesTypeResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<AccessoriesTypeResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<AccessoriesTypeResponseDto>>(data.ToList());
         }
-
 
         public async Task<AccessoriesTypeResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
@@ -47,7 +45,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            AccessoriesTypeId = x.AccessoriesTypeId,
                                            CategoryId = x.CategoryId,
                                            CategoryName = y.LookupValueName,
-                                           TypeName = x.TypeName,   
+                                           TypeName = x.TypeName,
                                            IsDeleted = x.IsDeleted,
                                            CreatedBy = x.CreatedBy,
                                            CreatedDate = x.CreatedDate,
@@ -55,8 +53,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedBy = x.UpdatedBy,
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
-
-                                       }).ToList();
+                                       }).AsQueryable();
             var companyData = new PagedList<AccessoriesTypeResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             //var companyResponseData = _mapper.Map<List<CompanyResponseDto>>(companyData);
             return new JsonRepsonse<AccessoriesTypeResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);

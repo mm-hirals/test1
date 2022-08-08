@@ -26,15 +26,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CategoryResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList());
-            return dataToReturn;
+            return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList());
         }
 
         public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var categoryAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var categoryResponseData = (from x in categoryAllData
-                                        join y in _unitOfWorkDA.LookupsDA.GetAll(cancellationToken).Result
+                                        join y in lookupsAllData
                                              on new { x.LookupId } equals new { y.LookupId }
                                         where x.LookupId == (int)MasterPagesEnum.Category
                                         select new CategoryResponseDto()
@@ -50,7 +50,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                             UpdatedBy = x.UpdatedBy,
                                             UpdatedDate = x.UpdatedDate,
                                             UpdatedUTCDate = x.UpdatedUTCDate
-                                        }).ToList();
+                                        }).AsQueryable();
             var categoryData = new PagedList<CategoryResponseDto>(categoryResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<CategoryResponseDto>(dataTableFilterDto.Draw, categoryData.TotalCount, categoryData.TotalCount, categoryData);
         }

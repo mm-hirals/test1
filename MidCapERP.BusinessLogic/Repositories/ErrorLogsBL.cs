@@ -19,8 +19,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<ErrorLogsResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.ErrorLogsDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<ErrorLogsResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<ErrorLogsResponseDto>>(data.ToList());
         }
 
         public async Task<ErrorLogsResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)

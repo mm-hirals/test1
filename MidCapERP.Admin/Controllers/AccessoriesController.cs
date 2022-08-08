@@ -90,36 +90,36 @@ namespace MidCapERP.Admin.Controllers
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
         {
             var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
-            var categorySelectedList = categoryData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
+            var categorySelectedList = categoryData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.LookupValueId),
+                                     Text = a.LookupValueName
+                                 }).ToList();
             ViewBag.CategorySelectItemList = categorySelectedList;
         }
 
         private async Task FillAccessoriesTypesDropDown(CancellationToken cancellationToken)
         {
             var accessoriesTypesData = await _unitOfWorkBL.AccessoriesTypeBL.GetAll(cancellationToken);
-            var accessoriesTypesSelectedList = accessoriesTypesData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.AccessoriesTypeId),
-                                      Text = a.TypeName
-                                  }).ToList();
+            var accessoriesTypesSelectedList = accessoriesTypesData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.AccessoriesTypeId),
+                                     Text = a.TypeName
+                                 }).ToList();
             ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
         }
 
         private async Task FillUnitTypesDropDown(CancellationToken cancellationToken)
         {
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var unitDataSelectedList = unitData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList().Select(a =>
-                                 new SelectListItem
-                                 {
-                                     Value = Convert.ToString(a.LookupValueId),
-                                     Text = a.LookupValueName
-                                 }).ToList();
+            var unitDataSelectedList = unitData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).Select(a =>
+                                new SelectListItem
+                                {
+                                    Value = Convert.ToString(a.LookupValueId),
+                                    Text = a.LookupValueName
+                                }).ToList();
             ViewBag.unitDataSelectedList = unitDataSelectedList;
         }
 
