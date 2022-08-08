@@ -8,7 +8,7 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Accessories Type</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Accessory Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
@@ -23,17 +23,17 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="CategoryName" class="form-label"></label>
+                                <label asp-for="CategoryId" class="form-label"></label>
                                 <select asp-for="CategoryId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectItemList, "Value", "Text"))">
-                                             <option value="" hidden disabled selected>Select a Category</option>
+                                             <option value="" hidden disabled selected>Select Category</option>
                                 </select>
                                  <span asp-validation-for="CategoryId" class="text-danger"></span>                             
                             </div>
                             <div class="form-group">
-                                <label asp-for="TypeName" class="form-label"></label>
-                                <input asp-for="TypeName" class="form-control" />
-                                <span asp-validation-for="TypeName" class="text-danger"></span>
+                                <label asp-for="AccessoryTypeName" class="form-label"></label>
+                                <input asp-for="AccessoryTypeName" class="form-control" />
+                                <span asp-validation-for="AccessoryTypeName" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

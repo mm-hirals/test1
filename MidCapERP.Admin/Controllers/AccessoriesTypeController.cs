@@ -26,6 +26,14 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.View)]
+        public async Task<IActionResult> GetAccessoriesTypeData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.AccessoriesTypeBL.GetFilterAccessoriesTypeData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
@@ -41,14 +49,6 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.AccessoriesTypeBL.CreateAccessoriesType(accessoriesTypesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.View)]
-        public async Task<IActionResult> GetAccessoriesTypeData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.AccessoriesTypeBL.GetFilterAccessoriesTypeData(dataTableFilterDto, cancellationToken);
-            return Ok(data);
         }
 
         [HttpGet]
@@ -77,7 +77,7 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        #region Private Method
+        #region Private Methods
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
         {
@@ -91,6 +91,6 @@ namespace MidCapERP.Admin.Controllers
             ViewBag.CategorySelectItemList = categorySelectedList;
         }
 
-        #endregion Private Method
+        #endregion Private Methods
     }
 }

@@ -9,13 +9,7 @@ namespace MidCapERP.Dto.Accessories
         [DisplayName("AccessoriesId")]
         public int AccessoriesId { get; set; }
 
-        [DisplayName("CategoryId")]
-        public int CategoryId { get; set; }
-
         public string CategoryName { get; set; }
-
-        [DisplayName("Type Name")]
-        public string TypeName { get; set; }
 
         [DisplayName("Accessories Type")]
         public string AccessoriesTypeName { get; set; }
@@ -25,9 +19,6 @@ namespace MidCapERP.Dto.Accessories
 
         [DisplayName("Unit Name")]
         public string UnitName { get; set; }
-
-        [DisplayName("Unit Id")]
-        public int UnitId { get; set; }
 
         [DisplayName("Unit Price")]
         public int UnitPrice { get; set; }

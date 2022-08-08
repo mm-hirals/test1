@@ -27,7 +27,7 @@
                                 <label asp-for="CategoryId" class="form-label"></label>
                                 <select asp-for="CategoryId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectItemList, "Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select a Category</option>
+                                    <option value="" hidden disabled selected>Select Category</option>
                                 </select>
                                 <span asp-validation-for="CategoryId" class="text-danger"></span>
                             </div>
@@ -36,7 +36,7 @@
                                 <label asp-for="AccessoriesTypeId" class="form-label"></label>
                                 <select asp-for="AccessoriesTypeId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.AccessoriesSelectItemList, "Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select a Accessories</option>
+                                    <option value="" hidden disabled selected>Select Accessory</option>
                                 </select>
                                 <span asp-validation-for="AccessoriesTypeId" class="text-danger"></span>
                             </div>
@@ -45,7 +45,7 @@
                                 <label asp-for="UnitId" class="form-label"></label>
                                 <select asp-for="UnitId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.unitDataSelectedList, "Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select a Unit Name</option>
+                                    <option value="" hidden disabled selected>Select Unit</option>
                                 </select>
                                 <span asp-validation-for="UnitId" class="text-danger"></span>
                             </div>

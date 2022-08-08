@@ -15,8 +15,8 @@ $(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
-            { "data": "typeName", "name": "TypeName", "autoWidth": true },   
+            { "data": "categoryName", "name": "Category Name", "autoWidth": true },
+            { "data": "accessoryTypeName", "name": "Accessory Type Name", "autoWidth": true },   
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

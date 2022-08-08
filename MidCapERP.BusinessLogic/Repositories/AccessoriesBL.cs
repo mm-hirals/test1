@@ -53,12 +53,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            select new AccessoriesResponseDto()
                                            {
                                                AccessoriesId = x.AccessoriesId,
-                                               CategoryId = x.CategoryId,
                                                CategoryName = z.LookupValueName,
-                                               TypeName = y.TypeName,
                                                AccessoriesTypeName = y.TypeName,
                                                Title = x.Title,
-                                               UnitId = x.UnitId,
                                                UnitName = a.LookupValueName,
                                                UnitPrice = Convert.ToInt32(x.UnitPrice),
                                                IsDeleted = x.IsDeleted,
