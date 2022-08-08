@@ -26,15 +26,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<WoodTypeResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<WoodTypeResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<WoodTypeResponseDto>>(data.ToList());
         }
 
         public async Task<JsonRepsonse<WoodTypeResponseDto>> GetFilterWoodTypeData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var woodTypeAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var woodTypeResponseData = (from x in woodTypeAllData
-                                        join y in _unitOfWorkDA.LookupsDA.GetAll(cancellationToken).Result
+                                        join y in lookupsAllData
                                              on new { x.LookupId } equals new { y.LookupId }
                                         where x.LookupId == (int)MasterPagesEnum.WoodType
                                         select new WoodTypeResponseDto()
@@ -50,7 +50,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                             UpdatedBy = x.UpdatedBy,
                                             UpdatedDate = x.UpdatedDate,
                                             UpdatedUTCDate = x.UpdatedUTCDate
-                                        }).ToList();
+                                        }).AsQueryable();
             var woodTypeData = new PagedList<WoodTypeResponseDto>(woodTypeResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<WoodTypeResponseDto>(dataTableFilterDto.Draw, woodTypeData.TotalCount, woodTypeData.TotalCount, woodTypeData);
         }
@@ -121,6 +121,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return woodTypeDataById;
         }
 
-        #endregion
+        #endregion PrivateMethods
     }
 }

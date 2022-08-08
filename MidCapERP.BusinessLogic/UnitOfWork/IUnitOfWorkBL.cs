@@ -16,6 +16,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IWoodTypeBL WoodTypeBL { get; }
         IAccessoriesTypeBL AccessoriesTypeBL { get; }
         IRawMaterialBL RawMaterialBL { get; }
+        IAccessoriesBL AccessoriesBL { get; }
         IFileStorageService FileStorageService { get; }
     }
 }

@@ -23,8 +23,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<SubjectTypesResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<SubjectTypesResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<SubjectTypesResponseDto>>(data.ToList());
         }
 
         public async Task<SubjectTypesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)

@@ -20,8 +20,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<a data-ajax-complete="AccessoriesTypeModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateAccessoriesType" href="/AccessoriesType/Update/' + o.accessoriesTypeId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '&nbsp<a data-ajax-complete="AccessoriesTypeModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/AccessoriesType/Delete/' + o.accessoriesTypeId + '"><i class="bx bxs-trash"></i></a>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="AccessoriesTypeModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateAccessoriesType" href="/AccessoriesType/Update/' + o.accessoriesTypeId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '&nbsp<a data-ajax-complete="AccessoriesTypeModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/AccessoriesType/Delete/' + o.accessoriesTypeId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]

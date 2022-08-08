@@ -11,7 +11,7 @@ namespace MidCapERP.BusinessLogic.Services.FileStorage
         {
             this._hostingEnvironment = hostingEnvironment;
         }
-        
+
         public async Task<string> StoreFile(IFormFile file, string fileSavingPath)
         {
             string uploadedImagePath = string.Empty;
@@ -23,7 +23,7 @@ namespace MidCapERP.BusinessLogic.Services.FileStorage
             string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
             using (var stream = new FileStream(path + fileName, FileMode.Create))
             {
-                file.CopyToAsync(stream);
+                await file.CopyToAsync(stream);
                 uploadedImagePath = fileSavingPath + fileName;
             }
             return uploadedImagePath;

@@ -25,14 +25,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CustomersResponseDto>> GetAllCustomers(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomersDA.GetAllCustomers(cancellationToken);
-            var DataToReturn = _mapper.Map<List<CustomersResponseDto>>(data.ToList());
-            return DataToReturn;
+            return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
         }
 
         public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAllCustomers(cancellationToken);
-            var customerData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerAllData.ToList()), dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var customerData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerAllData), dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerData.TotalCount, customerData.TotalCount, customerData);
         }
 

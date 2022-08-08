@@ -26,15 +26,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CompanyResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<CompanyResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<CompanyResponseDto>>(data.ToList());
         }
 
         public async Task<JsonRepsonse<CompanyResponseDto>> GetFilterCompanyData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var companyAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var companyResponseData = (from x in companyAllData
-                                       join y in _unitOfWorkDA.LookupsDA.GetAll(cancellationToken).Result
+                                       join y in lookupsAllData
                                             on new { x.LookupId } equals new { y.LookupId }
                                        where x.LookupId == (int)MasterPagesEnum.Company
                                        select new CompanyResponseDto()
@@ -50,7 +50,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedBy = x.UpdatedBy,
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
-                                       }).ToList();
+                                       }).AsQueryable();
             var companyData = new PagedList<CompanyResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<CompanyResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }

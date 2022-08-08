@@ -26,15 +26,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<UnitResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<UnitResponseDto>>(lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList());
-            return dataToReturn;
+            return _mapper.Map<List<UnitResponseDto>>(lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList());
         }
 
         public async Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var unitAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var unitResponseData = (from x in unitAllData
-                                    join y in _unitOfWorkDA.LookupsDA.GetAll(cancellationToken).Result
+                                    join y in lookupsAllData
                                          on new { x.LookupId } equals new { y.LookupId }
                                     where x.LookupId == (int)MasterPagesEnum.Unit
                                     select new UnitResponseDto()
@@ -50,7 +50,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                         UpdatedBy = x.UpdatedBy,
                                         UpdatedDate = x.UpdatedDate,
                                         UpdatedUTCDate = x.UpdatedUTCDate
-                                    }).ToList();
+                                    }).AsQueryable();
             var unitData = new PagedList<UnitResponseDto>(unitResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<UnitResponseDto>(dataTableFilterDto.Draw, unitData.TotalCount, unitData.TotalCount, unitData);
         }

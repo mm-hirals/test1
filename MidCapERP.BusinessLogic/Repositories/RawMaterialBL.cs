@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -28,15 +29,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<RawMaterialResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
-            var dataToReturn = _mapper.Map<List<RawMaterialResponseDto>>(data.ToList());
-            return dataToReturn;
+            return _mapper.Map<List<RawMaterialResponseDto>>(data.ToList());
         }
 
         public async Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterRawMaterialData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var RawMaterialAllData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
-            var RawMaterialResponseData = (from x in RawMaterialAllData
-                                           join y in _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result
+            var rawMaterialAllData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+            var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var rawMaterialResponseData = (from x in rawMaterialAllData
+                                           join y in lookupValuesAllData
                                                 on new { LookupId = x.UnitId } equals new { LookupId = y.LookupValueId }
                                            select new RawMaterialResponseDto()
                                            {
@@ -45,8 +46,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                UnitName = y.LookupValueName,
                                                UnitPrice = x.UnitPrice,
                                                ImagePath = x.ImagePath
-                                           }).ToList();
-            var RawMaterialData = new PagedList<RawMaterialResponseDto>(RawMaterialResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+                                           }).AsQueryable();
+            var RawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
             return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, RawMaterialData.TotalCount, RawMaterialData.TotalCount, RawMaterialData);
         }
 
@@ -66,7 +67,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var RawMaterialToInsert = _mapper.Map<RawMaterial>(model);
             if (model.UploadImage != null)
-                RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\RawMaterials\");
+                RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.RawMaterials);
             RawMaterialToInsert.IsDeleted = false;
             RawMaterialToInsert.TenantId = _currentUser.TenantId;
             RawMaterialToInsert.CreatedBy = _currentUser.UserId;
@@ -81,7 +82,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = await GetRawMaterialById(Id, cancellationToken);
             if (model.UploadImage != null)
-                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\RawMaterials\");
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.RawMaterials);
             UpdateData(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, oldData, cancellationToken);

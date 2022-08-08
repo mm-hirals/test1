@@ -20,7 +20,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IErrorLogsDA, ErrorLogsDA>();
             services.AddScoped<IAccessoriesTypeDA, AccessoriesTypeDA>();
             services.AddScoped<IRawMaterialDA, RawMaterialDA>();
-
+            services.AddScoped<IAccessoriesDA, AccessoriesDA>();
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }

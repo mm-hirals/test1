@@ -1,5 +1,4 @@
 ﻿using MidCapERP.DataAccess.Interface;
-using MidCapERP.DataAccess.Repositories;
 
 namespace MidCapERP.DataAccess.UnitOfWork
 {
@@ -14,5 +13,6 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IErrorLogsDA ErrorLogsDA { get; }
         IAccessoriesTypeDA AccessoriesTypeDA { get; }
         IRawMaterialDA RawMaterialDA { get; }
+        IAccessoriesDA AccessoriesDA { get; }
     }
 }

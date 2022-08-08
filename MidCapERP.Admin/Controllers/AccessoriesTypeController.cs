@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.AccessoriesType;
-using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
@@ -27,24 +26,13 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
-
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
-            var data = categoryData.ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
-
-            ViewBag.CategorySelectItemList = data;
-
+            await FillCategoryDropDown(cancellationToken);
             return PartialView("_AccessoriesTypePartial");
         }
-
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Create)]
@@ -63,20 +51,11 @@ namespace MidCapERP.Admin.Controllers
             return Ok(data);
         }
 
-
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
-            var data = categoryData.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList().Select(a =>
-                                  new SelectListItem
-                                  {
-                                      Value = Convert.ToString(a.LookupValueId),
-                                      Text = a.LookupValueName
-                                  }).ToList();
-
-            ViewBag.CategorySelectItemList = data;
+            await FillCategoryDropDown(cancellationToken);
             var accessoriesTypes = await _unitOfWorkBL.AccessoriesTypeBL.GetById(Id, cancellationToken);
             return PartialView("_AccessoriesTypePartial", accessoriesTypes);
         }
@@ -85,7 +64,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AccessoriesType.Update)]
         public async Task<IActionResult> Update(int Id, AccessoriesTypeRequestDto accessoriesTypesRequestDto, CancellationToken cancellationToken)
         {
-
             await _unitOfWorkBL.AccessoriesTypeBL.UpdateAccessoriesType(Id, accessoriesTypesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data update Successfully!");
             return RedirectToAction("Index");
@@ -98,5 +76,21 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.AccessoriesTypeBL.DeleteAccessoriesType(Id, cancellationToken);
             return RedirectToAction("Index");
         }
+
+        #region Private Method
+
+        private async Task FillCategoryDropDown(CancellationToken cancellationToken)
+        {
+            var categoryData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
+            var categorySelectedList = categoryData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.LookupValueId),
+                                     Text = a.LookupValueName
+                                 }).ToList();
+            ViewBag.CategorySelectItemList = categorySelectedList;
+        }
+
+        #endregion Private Method
     }
 }

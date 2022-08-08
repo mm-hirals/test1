@@ -10,6 +10,9 @@ namespace MidCapERP.Dto.AccessoriesType
 
         public int CategoryId { get; set; }
 
+        [DisplayName("Category Name")]
+        public string CategoryName { get; set; }
+
         [DisplayName("Type Name")]
         public string TypeName { get; set; }
         public int TenantId { get; set; }
