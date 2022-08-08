@@ -2,6 +2,11 @@
 {
     public static class ApplicationFileStorageConstants
     {
-        public static readonly string AccessoriesFilePath = @"\Files\Accessories\";
+        public static class FilePaths
+        {
+            public static readonly string Accessories = @"\Files\Accessories\";
+            public static readonly string RawMaterials = @"\Files\RawMaterials\";
+        }
+
     }
 }

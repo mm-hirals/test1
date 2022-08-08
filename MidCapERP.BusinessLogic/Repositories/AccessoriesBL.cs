@@ -83,7 +83,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var AccessoriesToInsert = _mapper.Map<Accessories>(model);
             if (model.UploadImage != null)
-                AccessoriesToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.AccessoriesFilePath);
+                AccessoriesToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Accessories);
             AccessoriesToInsert.IsDeleted = false;
             AccessoriesToInsert.TenantId = _currentUser.TenantId;
             AccessoriesToInsert.CreatedBy = _currentUser.UserId;
@@ -98,7 +98,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = AccessoriesGetById(Id, cancellationToken).Result;
             if (model.UploadImage != null)
-                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.AccessoriesFilePath);
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Accessories);
             UpdateAccessories(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.AccessoriesDA.UpdateAccessories(Id, oldData, cancellationToken);

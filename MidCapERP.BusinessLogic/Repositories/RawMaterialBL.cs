@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -66,7 +67,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var RawMaterialToInsert = _mapper.Map<RawMaterial>(model);
             if (model.UploadImage != null)
-                RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\RawMaterials\");
+                RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.RawMaterials);
             RawMaterialToInsert.IsDeleted = false;
             RawMaterialToInsert.TenantId = _currentUser.TenantId;
             RawMaterialToInsert.CreatedBy = _currentUser.UserId;
@@ -81,7 +82,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = await GetRawMaterialById(Id, cancellationToken);
             if (model.UploadImage != null)
-                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, @"\Files\RawMaterials\");
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.RawMaterials);
             UpdateData(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, oldData, cancellationToken);
