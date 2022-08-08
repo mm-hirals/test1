@@ -5,6 +5,7 @@ using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Accessories;
+using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 
@@ -42,8 +43,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var accessoriesAllData = await _unitOfWorkDA.AccessoriesDA.GetAll(cancellationToken);
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
-            var cateagoryData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var unitData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            var lookupValueAll = _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result;
+            var cateagoryData = lookupValueAll.Where(x=>x.LookupId == (int)MasterPagesEnum.Category);
+            var unitData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
 
             var companyResponseData = (from x in accessoriesAllData
                                        join y in accessoriesTypesAllData on new { AccessoriesTypeId = x.AccessoriesTypeId } equals new { AccessoriesTypeId = y.AccessoriesTypeId }
