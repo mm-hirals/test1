@@ -1,15 +1,20 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.RawMaterial
+namespace MidCapERP.Dto.Fabric
 {
-    public class RawMaterialResponseDto
+    public class FabricResponseDto
     {
-        public int RawMaterialId { get; set; }
-
-        [DisplayName("Title")]
+        public int FabricId { get; set; }
         public string Title { get; set; }
 
-        [DisplayName("Unit Id")]
+        [DisplayName("Model No")]
+        public string ModelNo { get; set; }
+
+        public int CompanyId { get; set; }
+
+        [DisplayName("Company Name")]
+        public string CompanyName { get; set; }
+
         public int UnitId { get; set; }
 
         [DisplayName("Unit Name")]
@@ -22,10 +27,7 @@ namespace MidCapERP.Dto.RawMaterial
         public string? ImagePath { get; set; }
 
         public int TenantId { get; set; }
-
-        [DisplayName("IsDeleted")]
         public bool IsDeleted { get; set; }
-
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

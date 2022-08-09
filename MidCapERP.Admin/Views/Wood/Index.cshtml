@@ -1,5 +1,39 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<MidCapERP.Dto.Wood.WoodResponseDto>
 @{
+    ViewData["Title"] = "Woods";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Woods</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkWoodFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+            <a asp-controller="Wood" asp-action="Create"
+               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="WoodModel.onComplete" data-ajax-update="#divUpdateWood">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Wood Name</label>
+                        <input type="text" class="form-control" placeholder="Wood Name" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_WoodTable" model="@Model" />
+        <div id="divUpdateWood"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Wood.js" asp-append-version="true"></script>
+    }
 }

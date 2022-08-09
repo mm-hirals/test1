@@ -37,7 +37,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var accessoriesAllData = await _unitOfWorkDA.AccessoriesDA.GetAll(cancellationToken);
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
-            var lookupValueAll = _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result;
+            var lookupValueAll = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var cateagoryData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
             var unitData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
             var accessoriesResponseData = (from x in accessoriesAllData
@@ -93,7 +93,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<AccessoriesRequestDto> UpdateAccessories(int Id, AccessoriesRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = AccessoriesGetById(Id, cancellationToken).Result;
+            var oldData = await AccessoriesGetById(Id, cancellationToken);
             if (model.UploadImage != null)
                 model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Accessories);
             UpdateAccessories(oldData);
@@ -105,7 +105,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<AccessoriesRequestDto> DeleteAccessories(int Id, CancellationToken cancellationToken)
         {
-            var accessoriesToUpdate = AccessoriesGetById(Id, cancellationToken).Result;
+            var accessoriesToUpdate = await AccessoriesGetById(Id, cancellationToken);
             accessoriesToUpdate.IsDeleted = true;
             UpdateAccessories(accessoriesToUpdate);
             var data = await _unitOfWorkDA.AccessoriesDA.UpdateAccessories(Id, accessoriesToUpdate, cancellationToken);
@@ -113,7 +113,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        #region Private Method
+        #region Private Methods
 
         private void UpdateAccessories(Accessories oldData)
         {
@@ -143,6 +143,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return accessoriesDataById;
         }
 
-        #endregion Private Method
+        #endregion Private Methods
     }
 }
