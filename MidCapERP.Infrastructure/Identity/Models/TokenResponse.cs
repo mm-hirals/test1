@@ -14,7 +14,6 @@ namespace MidCapERP.Infrastructure.Identity.Models
                             )
         {
             this.Id = user.Id;
-            this.Id = user.Id;
             this.FullName = user.FullName;
             this.EmailAddress = user.Email;
             this.Token = token;
