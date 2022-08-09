@@ -23,29 +23,18 @@ namespace MidCapERP.Dto.DataGrid
         public List<DtOrder> Order { get; set; } = new List<DtOrder>();
 
         /// <summary>
-        ///  FOR PAGINATION
+        /// FOR PAGINATION
         /// </summary>
-
         [JsonProperty("pageSize")]
         public int PageSize
-        {
-            get
-            {
-                return Length != null ? Convert.ToInt32(this.Length) : 0;
-            }
-        }
+        { get { return Length != null ? Convert.ToInt32(this.Length) : 0; } }
 
         /// <summary>
-        ///  FOR PAGINATION
+        /// FOR PAGINATION
         /// </summary>
         [JsonProperty("skip")]
         public int Skip
-        {
-            get
-            {
-                return Start;
-            }
-        }
+        { get { return Start; } }
 
         [JsonProperty("recordsTotal")]
         public int RecordsTotal { get; set; } = 0;
@@ -54,36 +43,36 @@ namespace MidCapERP.Dto.DataGrid
     public class DtColumn
     {
         [JsonProperty("data")]
-        public string Data { get; set; } = String.Empty;
+        public string data { get; set; } = String.Empty;
 
         [JsonProperty("name")]
-        public string Name { get; set; } = String.Empty;
+        public string name { get; set; } = String.Empty;
 
         [JsonProperty("searchable")]
-        public bool Searchable { get; set; }
+        public bool searchable { get; set; }
 
         [JsonProperty("orderable")]
-        public bool Orderable { get; set; }
+        public bool orderable { get; set; }
 
         [JsonProperty("search")]
-        public DtSearch Search { get; set; } = new DtSearch();
+        public DtSearch search { get; set; } = new DtSearch();
     }
 
     public class DtSearch
     {
         [JsonProperty("value")]
-        public string Value { get; set; } = String.Empty;
+        public string value { get; set; } = String.Empty;
 
         [JsonProperty("regex")]
-        public string Regex { get; set; } = String.Empty;
+        public string regex { get; set; } = String.Empty;
     }
 
     public class DtOrder
     {
         [JsonProperty("column")]
-        public int ColumnPosition { get; set; }
+        public int column { get; set; }
 
         [JsonProperty("dir")]
-        public string Direction { get; set; } = String.Empty;
+        public string dir { get; set; } = String.Empty;
     }
 }
