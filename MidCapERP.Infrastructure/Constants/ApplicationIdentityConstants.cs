@@ -47,6 +47,7 @@
                 .Union(GeneratePermissionsForModule("AccessoriesType"))
                 .Union(GeneratePermissionsForModule("RawMaterial"))
                 .Union(GeneratePermissionsForModule("Accessories"))
+                .Union(GeneratePermissionsForModule("Fabric"))
                 .ToList();
             }
 
@@ -192,12 +193,21 @@
                 public const string Update = "Permissions.RawMaterial.Update";
                 public const string Delete = "Permissions.RawMaterial.Delete";
             }
+
             public static class Accessories
             {
                 public const string View = "Permissions.Accessories.View";
                 public const string Create = "Permissions.Accessories.Create";
                 public const string Update = "Permissions.Accessories.Update";
                 public const string Delete = "Permissions.Accessories.Delete";
+            }
+
+            public static class Fabric
+            {
+                public const string View = "Permissions.Fabric.View";
+                public const string Create = "Permissions.Fabric.Create";
+                public const string Update = "Permissions.Fabric.Update";
+                public const string Delete = "Permissions.Fabric.Delete";
             }
         }
     }

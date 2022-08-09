@@ -21,6 +21,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IAccessoriesTypeDA, AccessoriesTypeDA>();
             services.AddScoped<IRawMaterialDA, RawMaterialDA>();
             services.AddScoped<IAccessoriesDA, AccessoriesDA>();
+            services.AddScoped<IFabricDA, FabricDA>();
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }
