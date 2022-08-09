@@ -13,13 +13,11 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
-        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public RawMaterialController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IWebHostEnvironment hostingEnvironment)
+        public RawMaterialController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.View)]

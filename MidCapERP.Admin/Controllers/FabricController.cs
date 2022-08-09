@@ -11,12 +11,10 @@ namespace MidCapERP.Admin.Controllers
     public class FabricController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public FabricController(IUnitOfWorkBL unitOfWorkBL, IWebHostEnvironment hostingEnvironment)
+        public FabricController(IUnitOfWorkBL unitOfWorkBL)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
