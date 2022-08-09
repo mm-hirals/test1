@@ -18,8 +18,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IAccessoriesDA AccessoriesDA { get; }
         public IFabricDA FabricDA { get; }
         public IWoodDA WoodDA { get; }
+        public IPolishDA PolishDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IWoodDA woodDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IWoodDA woodDA, IPolishDA polishDA)
         {
             {
                 this._context = context;
@@ -35,6 +36,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
                 this.AccessoriesDA = accessoriesDA;
                 this.FabricDA = fabricDA;
                 this.WoodDA = woodDA;
+                this.PolishDA = polishDA;
             }
         }
 

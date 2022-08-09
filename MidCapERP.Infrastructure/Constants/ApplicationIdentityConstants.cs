@@ -49,6 +49,7 @@
                 .Union(GeneratePermissionsForModule("Accessories"))
                 .Union(GeneratePermissionsForModule("Fabric"))
                 .Union(GeneratePermissionsForModule("Wood"))
+                .Union(GeneratePermissionsForModule("Polish"))
                 .ToList();
             }
 
@@ -217,6 +218,14 @@
                 public const string Create = "Permissions.Wood.Create";
                 public const string Update = "Permissions.Wood.Update";
                 public const string Delete = "Permissions.Wood.Delete";
+            }
+
+            public static class Polish
+            {
+                public const string View = "Permissions.Polish.View";
+                public const string Create = "Permissions.Polish.Create";
+                public const string Update = "Permissions.Polish.Update";
+                public const string Delete = "Permissions.Polish.Delete";
             }
         }
     }

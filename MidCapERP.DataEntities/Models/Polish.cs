@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
-    [Table("Fabrics")]
-    public class Fabrics : BaseEntity
+    [Table("Polish")]
+    public class Polish : BaseEntity
     {
         [Key]
-        public int FabricId { get; set; }
+        public int PolishId { get; set; }
 
         public string Title { get; set; }
         public string ModelNo { get; set; }

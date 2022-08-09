@@ -25,6 +25,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IAccessoriesBL, AccessoriesBL>();
             services.AddScoped<IFabricBL, FabricBL>();
             services.AddScoped<IWoodBL, WoodBL>();
+            services.AddScoped<IPolishBL, PolishBL>();
 
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();

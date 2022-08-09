@@ -8,6 +8,7 @@
             public static readonly string RawMaterials = @"\Files\RawMaterials\";
             public static readonly string Fabrics = @"\Files\Fabrics\";
             public static readonly string Woods = @"\Files\Woods\";
+            public static readonly string Polish = @"\Files\Polish\";
         }
     }
 }

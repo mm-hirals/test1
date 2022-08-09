@@ -27,6 +27,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             _fileStorageService = fileStorageService;
         }
 
+        public async Task<IEnumerable<FabricResponseDto>> GetAll(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            return _mapper.Map<List<FabricResponseDto>>(data.ToList());
+        }
+
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var fabricAllData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
@@ -48,6 +54,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                                       }).AsQueryable();
             var fabricData = new PagedList<FabricResponseDto>(fabricResponseData, dataTableFilterDto);
             return new JsonRepsonse<FabricResponseDto>(dataTableFilterDto.Draw, fabricData.TotalCount, fabricData.TotalCount, fabricData);
+        }
+
+        public async Task<FabricResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await GetFabricById(Id, cancellationToken);
+            return _mapper.Map<FabricResponseDto>(data);
         }
 
         public async Task<FabricRequestDto> GetById(int Id, CancellationToken cancellationToken)
