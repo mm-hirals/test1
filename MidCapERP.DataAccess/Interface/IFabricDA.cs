@@ -4,14 +4,14 @@ namespace MidCapERP.DataAccess.Interface
 {
     public interface IFabricDA
     {
-        public Task<IQueryable<Fabric>> GetAll(CancellationToken cancellationToken);
+        public Task<IQueryable<Fabrics>> GetAll(CancellationToken cancellationToken);
 
-        public Task<Fabric> GetById(int Id, CancellationToken cancellationToken);
+        public Task<Fabrics> GetById(int Id, CancellationToken cancellationToken);
 
-        public Task<Fabric> CreateFabric(Fabric model, CancellationToken cancellationToken);
+        public Task<Fabrics> CreateFabric(Fabrics model, CancellationToken cancellationToken);
 
-        public Task<Fabric> UpdateFabric(int Id, Fabric model, CancellationToken cancellationToken);
+        public Task<Fabrics> UpdateFabric(int Id, Fabrics model, CancellationToken cancellationToken);
 
-        public Task<Fabric> DeleteFabric(int Id, CancellationToken cancellationToken);
+        public Task<Fabrics> DeleteFabric(int Id, CancellationToken cancellationToken);
     }
 }

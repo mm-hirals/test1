@@ -8,8 +8,8 @@ namespace MidCapERP.BusinessLogic.MapperDto
     {
         public MapFabric()
         {
-            CreateMap<Fabric, FabricRequestDto>().ReverseMap();
-            CreateMap<Fabric, FabricResponseDto>().ReverseMap();
+            CreateMap<Fabrics, FabricRequestDto>().ReverseMap();
+            CreateMap<Fabrics, FabricResponseDto>().ReverseMap();
         }
     }
 }

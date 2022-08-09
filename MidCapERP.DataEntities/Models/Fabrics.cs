@@ -3,7 +3,7 @@
 namespace MidCapERP.DataEntities.Models
 {
     [Table("Fabrics")]
-    public class Fabric : BaseEntity
+    public class Fabrics : BaseEntity
     {
         public int FabricId { get; set; }
         public string Title { get; set; }

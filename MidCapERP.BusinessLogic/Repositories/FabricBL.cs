@@ -58,7 +58,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<FabricRequestDto> CreateFabric(FabricRequestDto model, CancellationToken cancellationToken)
         {
-            var FabricToInsert = _mapper.Map<Fabric>(model);
+            var FabricToInsert = _mapper.Map<Fabrics>(model);
             if (model.UploadImage != null)
                 FabricToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Fabrics);
             FabricToInsert.IsDeleted = false;
@@ -95,7 +95,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #region Private Method
 
-        private async Task<Fabric> GetFabricById(int Id, CancellationToken cancellationToken)
+        private async Task<Fabrics> GetFabricById(int Id, CancellationToken cancellationToken)
         {
             var fabricDataById = await _unitOfWorkDA.FabricDA.GetById(Id, cancellationToken);
             if (fabricDataById == null)
@@ -105,14 +105,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return fabricDataById;
         }
 
-        private void UpdateData(Fabric oldData)
+        private void UpdateData(Fabrics oldData)
         {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
-        private static void MapToDbObject(FabricRequestDto model, Fabric oldData)
+        private static void MapToDbObject(FabricRequestDto model, Fabrics oldData)
         {
             oldData.Title = model.Title;
             oldData.ModelNo = model.ModelNo;
