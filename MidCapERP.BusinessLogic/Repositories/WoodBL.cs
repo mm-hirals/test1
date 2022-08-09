@@ -36,7 +36,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<WoodResponseDto>> GetFilterWoodData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var woodAllData = await _unitOfWorkDA.WoodDA.GetAll(cancellationToken);
-            var lookupValueAll = _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken).Result;
+            var lookupValueAll = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var woodTypeData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.WoodType);
             var companyData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Company);
             var unitData = lookupValueAll.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
@@ -94,7 +94,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<WoodRequestDto> UpdateWood(int Id, WoodRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = WoodGetById(Id, cancellationToken).Result;
+            var oldData = await WoodGetById(Id, cancellationToken);
             if (model.UploadImage != null)
                 model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Woods);
             UpdateWood(oldData);
@@ -106,7 +106,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<WoodRequestDto> DeleteWood(int Id, CancellationToken cancellationToken)
         {
-            var woodToUpdate = WoodGetById(Id, cancellationToken).Result;
+            var woodToUpdate = await WoodGetById(Id, cancellationToken);
             woodToUpdate.IsDeleted = true;
             UpdateWood(woodToUpdate);
             var data = await _unitOfWorkDA.WoodDA.UpdateWood(Id, woodToUpdate, cancellationToken);
