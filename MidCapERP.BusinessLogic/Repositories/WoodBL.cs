@@ -79,7 +79,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<WoodRequestDto> CreateWood(WoodRequestDto model, CancellationToken cancellationToken)
         {
-            var woodToInsert = _mapper.Map<Wood>(model);
+            var woodToInsert = _mapper.Map<Woods>(model);
             if (model.UploadImage != null)
                 woodToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Woods);
             woodToInsert.IsDeleted = false;
@@ -116,14 +116,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #region Private Method
 
-        private void UpdateWood(Wood oldData)
+        private void UpdateWood(Woods oldData)
         {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
-        private static void MapToDbObject(WoodRequestDto model, Wood oldData)
+        private static void MapToDbObject(WoodRequestDto model, Woods oldData)
         {
             oldData.WoodTypeId = model.WoodTypeId;
             oldData.Title = model.Title;
@@ -134,7 +134,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.ImagePath = model.ImagePath;
         }
 
-        private async Task<Wood> WoodGetById(int Id, CancellationToken cancellationToken)
+        private async Task<Woods> WoodGetById(int Id, CancellationToken cancellationToken)
         {
             var woodDataById = await _unitOfWorkDA.WoodDA.GetById(Id, cancellationToken);
             if (woodDataById == null)

@@ -8,8 +8,8 @@ namespace MidCapERP.BusinessLogic.MapperDto
     {
         public MapWood()
         {
-            CreateMap<Wood, WoodRequestDto>().ReverseMap();
-            CreateMap<Wood, WoodResponseDto>().ReverseMap();
+            CreateMap<Woods, WoodRequestDto>().ReverseMap();
+            CreateMap<Woods, WoodResponseDto>().ReverseMap();
         }
     }
 }
