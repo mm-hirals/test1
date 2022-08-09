@@ -47,6 +47,7 @@
                 .Union(GeneratePermissionsForModule("AccessoriesType"))
                 .Union(GeneratePermissionsForModule("RawMaterial"))
                 .Union(GeneratePermissionsForModule("Accessories"))
+                .Union(GeneratePermissionsForModule("Wood"))
                 .ToList();
             }
 
@@ -198,6 +199,13 @@
                 public const string Create = "Permissions.Accessories.Create";
                 public const string Update = "Permissions.Accessories.Update";
                 public const string Delete = "Permissions.Accessories.Delete";
+            }
+            public static class Wood
+            {
+                public const string View = "Permissions.Wood.View";
+                public const string Create = "Permissions.Wood.Create";
+                public const string Update = "Permissions.Wood.Update";
+                public const string Delete = "Permissions.Wood.Delete";
             }
         }
     }
