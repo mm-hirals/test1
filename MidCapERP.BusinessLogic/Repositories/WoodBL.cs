@@ -81,7 +81,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var woodToInsert = _mapper.Map<Wood>(model);
             if (model.UploadImage != null)
-                woodToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Wood);
+                woodToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Woods);
             woodToInsert.IsDeleted = false;
             woodToInsert.TenantId = _currentUser.TenantId;
             woodToInsert.CreatedBy = _currentUser.UserId;
@@ -96,7 +96,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = WoodGetById(Id, cancellationToken).Result;
             if (model.UploadImage != null)
-                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Wood);
+                model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Woods);
             UpdateWood(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.WoodDA.UpdateWood(Id, oldData, cancellationToken);

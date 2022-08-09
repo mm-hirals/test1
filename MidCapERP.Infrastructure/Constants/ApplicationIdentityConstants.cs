@@ -193,6 +193,7 @@
                 public const string Update = "Permissions.RawMaterial.Update";
                 public const string Delete = "Permissions.RawMaterial.Delete";
             }
+
             public static class Accessories
             {
                 public const string View = "Permissions.Accessories.View";
@@ -200,6 +201,7 @@
                 public const string Update = "Permissions.Accessories.Update";
                 public const string Delete = "Permissions.Accessories.Delete";
             }
+
             public static class Wood
             {
                 public const string View = "Permissions.Wood.View";

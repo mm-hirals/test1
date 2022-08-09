@@ -9,7 +9,7 @@ namespace MidCapERP.Dto.Wood
         [DisplayName("Wood Id")]
         public int WoodId { get; set; }
 
-        [DisplayName("WoodType Name")]
+        [DisplayName("Wood Type Name")]
         public int WoodTypeId { get; set; }
 
         [Required]

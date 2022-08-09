@@ -14,14 +14,11 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
-        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public WoodController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IWebHostEnvironment hostingEnvironment)
+        public WoodController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;
-            _toastNotification = toastNotification;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Wood.View)]
@@ -90,7 +87,7 @@ namespace MidCapERP.Admin.Controllers
         private async Task FillWoodTypeDropDown(CancellationToken cancellationToken)
         {
             var woodTypeData = await _unitOfWorkBL.WoodTypeBL.GetAll(cancellationToken);
-            var woodSelectedList = woodTypeData.Where(x => x.LookupId == (int)MasterPagesEnum.WoodType).Select(a =>
+            var woodSelectedList = woodTypeData.Select(a =>
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.LookupValueId),
@@ -102,7 +99,7 @@ namespace MidCapERP.Admin.Controllers
         private async Task FillCompanyDropDown(CancellationToken cancellationToken)
         {
             var companyData = await _unitOfWorkBL.CompanyBL.GetAll(cancellationToken);
-            var companySelectedList = companyData.Where(x => x.LookupId == (int)MasterPagesEnum.Company).Select(a =>
+            var companySelectedList = companyData.Select(a =>
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.LookupValueId),
@@ -114,7 +111,7 @@ namespace MidCapERP.Admin.Controllers
         private async Task FillUnitDropDown(CancellationToken cancellationToken)
         {
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var unitSelectedList = unitData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).Select(a =>
+            var unitSelectedList = unitData.Select(a =>
                                 new SelectListItem
                                 {
                                     Value = Convert.ToString(a.LookupValueId),

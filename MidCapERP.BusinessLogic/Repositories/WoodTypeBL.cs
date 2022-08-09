@@ -26,7 +26,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<WoodTypeResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<WoodTypeResponseDto>>(data.ToList());
+            return _mapper.Map<List<WoodTypeResponseDto>>(data.Where(x => x.LookupId == (int)MasterPagesEnum.WoodType).ToList());
         }
 
         public async Task<JsonRepsonse<WoodTypeResponseDto>> GetFilterWoodTypeData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
