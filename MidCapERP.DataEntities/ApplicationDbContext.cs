@@ -38,8 +38,8 @@ namespace MidCapERP.DataEntities
         public DbSet<AccessoriesType> AccessoriesTypes { get; set; }
         public DbSet<Accessories> Accessories { get; set; }
         public DbSet<RawMaterial> RawMaterial { get; set; }
-        public DbSet<Woods> Wood { get; set; }
         public DbSet<Fabrics> Fabric { get; set; }
+        public DbSet<Woods> Wood { get; set; }
         public DbSet<Polish> Polish { get; set; }
     }
 }

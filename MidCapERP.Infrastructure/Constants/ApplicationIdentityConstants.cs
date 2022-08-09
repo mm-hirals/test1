@@ -3,6 +3,8 @@
     public static class ApplicationIdentityConstants
     {
         public static readonly string DefaultPassword = "Password@1";
+        public static readonly string TenantCookieName= "TenantId";
+        public static readonly string EncryptionSecret= "MAGNUSMINDS_SAB_KA_BAAP";
 
         public static class Roles
         {

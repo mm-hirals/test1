@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Middleware
 {
@@ -41,10 +42,13 @@ namespace MidCapERP.Admin.Middleware
                         _currentUser.EmailAddress = user.Email;
                         _currentUser.RoleId = userRoles?.Id;
                         _currentUser.Role = userRoles?.Name;
-                        _currentUser.TenantId = 1;
                         _currentUser.TenantName = "MagnusMinds";
                     }
                 }
+            }
+            if (context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName] != null)
+            {
+                _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName],true, ApplicationIdentityConstants.EncryptionSecret));
             }
         }
     }
