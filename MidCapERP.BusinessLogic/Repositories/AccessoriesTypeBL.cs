@@ -33,7 +33,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
             var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var companyResponseData = (from x in accessoriesTypesAllData
+            var accessoriesTypeResponseData = (from x in accessoriesTypesAllData
                                        join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupValueId }
                                        select new AccessoriesTypeResponseDto()
                                        {
@@ -49,7 +49,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
                                        }).AsQueryable();
-            var companyData = new PagedList<AccessoriesTypeResponseDto>(companyResponseData, dataTableFilterDto);
+            var companyData = new PagedList<AccessoriesTypeResponseDto>(accessoriesTypeResponseData, dataTableFilterDto);
             return new JsonRepsonse<AccessoriesTypeResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }
 
@@ -80,7 +80,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<AccessoriesTypeRequestDto> UpdateAccessoriesType(int Id, AccessoriesTypeRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = AccessoriesTypeGetById(Id, cancellationToken).Result;
+            var oldData = await AccessoriesTypeGetById(Id, cancellationToken);
             UpdateAccessoriesType(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.AccessoriesTypeDA.UpdateAccessoriesType(Id, oldData, cancellationToken);
@@ -97,7 +97,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<AccessoriesTypeRequestDto> DeleteAccessoriesType(int Id, CancellationToken cancellationToken)
         {
-            var accessoriesTypesToUpdate = AccessoriesTypeGetById(Id, cancellationToken).Result;
+            var accessoriesTypesToUpdate = await AccessoriesTypeGetById(Id, cancellationToken);
             accessoriesTypesToUpdate.IsDeleted = true;
             UpdateAccessoriesType(accessoriesTypesToUpdate);
             var data = await _unitOfWorkDA.AccessoriesTypeDA.UpdateAccessoriesType(Id, accessoriesTypesToUpdate, cancellationToken);
@@ -112,7 +112,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
-        #region otherMethod
+        #region PrivateMethods
 
         private async Task<AccessoriesType> AccessoriesTypeGetById(int Id, CancellationToken cancellationToken)
         {
@@ -124,6 +124,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return accessoriesTypesDataById;
         }
 
-        #endregion otherMethod
+        #endregion PrivateMethods
     }
 }
