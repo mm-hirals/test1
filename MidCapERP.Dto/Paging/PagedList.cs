@@ -1,4 +1,7 @@
-﻿namespace MidCapERP.Dto.Paging
+﻿using MidCapERP.Dto.DataGrid;
+using System.Linq.Dynamic.Core;
+
+namespace MidCapERP.Dto.Paging
 {
     /// <summary>
     /// Paged list
@@ -10,21 +13,27 @@
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="source">source</param>
-        /// <param name="recordsToSkip">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        public PagedList(IEnumerable<T> source, int recordsToSkip, int pageSize)
+        /// <param name="source"></param>
+        /// <param name="dataTableFilterDto"></param>
+        public PagedList(IQueryable<T> source, DataTableFilterDto dataTableFilterDto)
         {
             TotalCount = source.Count();
-            TotalPages = TotalCount / pageSize;
+            TotalPages = TotalCount / dataTableFilterDto.PageSize;
 
-            if (TotalCount % pageSize > 0)
+            if (TotalCount % dataTableFilterDto.PageSize > 0)
                 TotalPages++;
 
-            Length = pageSize;
-            RecordsToSkip = recordsToSkip;
-            
-            AddRange(source.Skip(recordsToSkip).Take(pageSize).ToList());
+            Length = dataTableFilterDto.PageSize;
+            RecordsToSkip = dataTableFilterDto.Start;
+
+            if (dataTableFilterDto.Order != null && dataTableFilterDto.Order.Any())
+            {
+                string sortBy = dataTableFilterDto.Columns[dataTableFilterDto.Order[0].ColumnPosition].Data;
+                string sortDirection = dataTableFilterDto.Order[0].Direction.ToLower();
+                source = source.OrderBy(sortBy + " " + sortDirection);
+            }
+
+            AddRange(source.Skip(dataTableFilterDto.Start).Take(dataTableFilterDto.PageSize).ToList());
         }
 
         /// <summary>

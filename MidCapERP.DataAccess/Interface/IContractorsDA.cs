@@ -4,7 +4,7 @@ namespace MidCapERP.DataAccess.Interface
 {
     public interface IContractorsDA
     {
-        public Task<IQueryable<Contractors>> GetAllContractor(CancellationToken cancellationToken);
+        public Task<IQueryable<Contractors>> GetAll(CancellationToken cancellationToken);
 
         public Task<Contractors> GetById(int Id, CancellationToken cancellationToken);
 

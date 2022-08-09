@@ -78,7 +78,7 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task<IEnumerable<ContractorsResponseDto>> GetAllContractors(CancellationToken cancellationToken)
         {
-            return await _unitOfWorkBL.ContractorsBL.GetAllContractor(cancellationToken);
+            return await _unitOfWorkBL.ContractorsBL.GetAll(cancellationToken);
         }
 
         #endregion PrivateMethods

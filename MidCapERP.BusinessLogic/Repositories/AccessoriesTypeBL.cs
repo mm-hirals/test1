@@ -29,13 +29,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return dataToReturn;
         }
 
-
-        public async Task<AccessoriesTypeResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
-        {
-            var data = await AccessoriesTypeGetById(Id, cancellationToken);
-            return _mapper.Map<AccessoriesTypeResponseDto>(data);
-        }
-
         public async Task<JsonRepsonse<AccessoriesTypeResponseDto>> GetFilterAccessoriesTypeData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
@@ -47,7 +40,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            AccessoriesTypeId = x.AccessoriesTypeId,
                                            CategoryId = x.CategoryId,
                                            CategoryName = y.LookupValueName,
-                                           AccessoryTypeName = x.TypeName,   
+                                           AccessoryTypeName = x.TypeName,
                                            IsDeleted = x.IsDeleted,
                                            CreatedBy = x.CreatedBy,
                                            CreatedDate = x.CreatedDate,
@@ -55,11 +48,15 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedBy = x.UpdatedBy,
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
-
-                                       }).ToList();
-            var companyData = new PagedList<AccessoriesTypeResponseDto>(companyResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
-            //var companyResponseData = _mapper.Map<List<CompanyResponseDto>>(companyData);
+                                       }).AsQueryable();
+            var companyData = new PagedList<AccessoriesTypeResponseDto>(companyResponseData, dataTableFilterDto);
             return new JsonRepsonse<AccessoriesTypeResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
+        }
+
+        public async Task<AccessoriesTypeResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await AccessoriesTypeGetById(Id, cancellationToken);
+            return _mapper.Map<AccessoriesTypeResponseDto>(data);
         }
 
         public async Task<AccessoriesTypeRequestDto> GetById(int Id, CancellationToken cancellationToken)

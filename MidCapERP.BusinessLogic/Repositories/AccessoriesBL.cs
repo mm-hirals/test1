@@ -33,12 +33,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<AccessoriesResponseDto>>(data.ToList());
         }
 
-        public async Task<AccessoriesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
-        {
-            var data = await AccessoriesGetById(Id, cancellationToken);
-            return _mapper.Map<AccessoriesResponseDto>(data);
-        }
-
         public async Task<JsonRepsonse<AccessoriesResponseDto>> GetFilterAccessoriesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var accessoriesAllData = await _unitOfWorkDA.AccessoriesDA.GetAll(cancellationToken);
@@ -66,8 +60,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                UpdatedDate = x.UpdatedDate,
                                                UpdatedUTCDate = x.UpdatedUTCDate
                                            }).AsQueryable();
-            var accessoriesData = new PagedList<AccessoriesResponseDto>(accessoriesResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var accessoriesData = new PagedList<AccessoriesResponseDto>(accessoriesResponseData, dataTableFilterDto);
             return new JsonRepsonse<AccessoriesResponseDto>(dataTableFilterDto.Draw, accessoriesData.TotalCount, accessoriesData.TotalCount, accessoriesData);
+        }
+
+        public async Task<AccessoriesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await AccessoriesGetById(Id, cancellationToken);
+            return _mapper.Map<AccessoriesResponseDto>(data);
         }
 
         public async Task<AccessoriesRequestDto> GetById(int Id, CancellationToken cancellationToken)

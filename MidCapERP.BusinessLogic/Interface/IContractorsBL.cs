@@ -5,7 +5,7 @@ namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IContractorsBL
     {
-        public Task<IEnumerable<ContractorsResponseDto>> GetAllContractor(CancellationToken cancellationToken);
+        public Task<IEnumerable<ContractorsResponseDto>> GetAll(CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<ContractorsResponseDto>> GetFilterContractorData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 

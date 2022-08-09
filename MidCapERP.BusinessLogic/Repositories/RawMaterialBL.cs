@@ -47,7 +47,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                UnitPrice = x.UnitPrice,
                                                ImagePath = x.ImagePath
                                            }).AsQueryable();
-            var RawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var RawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialResponseData, dataTableFilterDto);
             return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, RawMaterialData.TotalCount, RawMaterialData.TotalCount, RawMaterialData);
         }
 

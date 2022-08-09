@@ -51,7 +51,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                             UpdatedDate = x.UpdatedDate,
                                             UpdatedUTCDate = x.UpdatedUTCDate
                                         }).AsQueryable();
-            var woodTypeData = new PagedList<WoodTypeResponseDto>(woodTypeResponseData, dataTableFilterDto.Start, dataTableFilterDto.PageSize);
+            var woodTypeData = new PagedList<WoodTypeResponseDto>(woodTypeResponseData, dataTableFilterDto);
             return new JsonRepsonse<WoodTypeResponseDto>(dataTableFilterDto.Draw, woodTypeData.TotalCount, woodTypeData.TotalCount, woodTypeData);
         }
 

@@ -4,7 +4,7 @@ namespace MidCapERP.DataAccess.Interface
 {
     public interface ICustomersDA
     {
-        public Task<IQueryable<Customers>> GetAllCustomers(CancellationToken cancellationToken);
+        public Task<IQueryable<Customers>> GetAll(CancellationToken cancellationToken);
 
         public Task<Customers> GetById(int Id, CancellationToken cancellationToken);
 
