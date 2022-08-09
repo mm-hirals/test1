@@ -29,8 +29,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<WoodResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.WoodDA.GetAll(cancellationToken);
-            return _mapper.Map<List<WoodResponseDto>>(data.ToList());
+            var woodData = await _unitOfWorkDA.WoodDA.GetAll(cancellationToken);
+            return _mapper.Map<List<WoodResponseDto>>(woodData.ToList());
         }
 
         public async Task<JsonRepsonse<WoodResponseDto>> GetFilterWoodData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -67,14 +67,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<WoodResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
-            var data = await WoodGetById(Id, cancellationToken);
-            return _mapper.Map<WoodResponseDto>(data);
+            var woodData = await WoodGetById(Id, cancellationToken);
+            return _mapper.Map<WoodResponseDto>(woodData);
         }
 
         public async Task<WoodRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await WoodGetById(Id, cancellationToken);
-            return _mapper.Map<WoodRequestDto>(data);
+            var woodData = await WoodGetById(Id, cancellationToken);
+            return _mapper.Map<WoodRequestDto>(woodData);
         }
 
         public async Task<WoodRequestDto> CreateWood(WoodRequestDto model, CancellationToken cancellationToken)
@@ -87,8 +87,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             woodToInsert.CreatedBy = _currentUser.UserId;
             woodToInsert.CreatedDate = DateTime.Now;
             woodToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.WoodDA.CreateWood(woodToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<WoodRequestDto>(data);
+            var woodData = await _unitOfWorkDA.WoodDA.CreateWood(woodToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<WoodRequestDto>(woodData);
             return _mappedUser;
         }
 
@@ -99,8 +99,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 model.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Woods);
             UpdateWood(oldData);
             MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.WoodDA.UpdateWood(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<WoodRequestDto>(data);
+            var woodData = await _unitOfWorkDA.WoodDA.UpdateWood(Id, oldData, cancellationToken);
+            var _mappedUser = _mapper.Map<WoodRequestDto>(woodData);
             return _mappedUser;
         }
 
@@ -109,8 +109,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var woodToUpdate = await WoodGetById(Id, cancellationToken);
             woodToUpdate.IsDeleted = true;
             UpdateWood(woodToUpdate);
-            var data = await _unitOfWorkDA.WoodDA.UpdateWood(Id, woodToUpdate, cancellationToken);
-            var _mapped = _mapper.Map<WoodRequestDto>(data);
+            var woodData = await _unitOfWorkDA.WoodDA.UpdateWood(Id, woodToUpdate, cancellationToken);
+            var _mapped = _mapper.Map<WoodRequestDto>(woodData);
             return _mapped;
         }
 

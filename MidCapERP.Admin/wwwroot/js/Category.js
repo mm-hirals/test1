@@ -37,15 +37,15 @@ CategoryModel.onComplete = function () {
 }
 
 CategoryModel.onDelete = function () {
-    tblCategory.ajax.reload();
+    tblCategory.ajax.reload(null, false);
 }
 
 CategoryModel.onSuccess = function (xhr) {
-    tblCategory.ajax.reload();
+    tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
 };
 
 CategoryModel.onFailed = function (xhr) {
-    tblCategory.ajax.reload();
+    tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
 };
