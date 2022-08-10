@@ -12,10 +12,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="TenantId" class="control-label"></label>
-                <select asp-for="TenantId" class="form-control" >
-                    <option value="1">Tenant 1</option>
-                    <option value="2">Tenant 2</option>
-                </select>
+                <select asp-for="TenantId" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.FillUserDropDown, "Value", "Text"))">
+                                    <option value="" hidden disabled selected>Select Unit</option>
+                                </select>
                 <span asp-validation-for="TenantId" class="text-danger"></span>
             </div>
             <div class="form-group">

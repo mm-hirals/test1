@@ -41,5 +41,7 @@ namespace MidCapERP.DataEntities
         public DbSet<Fabrics> Fabric { get; set; }
         public DbSet<Woods> Wood { get; set; }
         public DbSet<Polish> Polish { get; set; }
+        public DbSet<Tenant> Tenant { get; set; }
+        public DbSet<UserTenantMapping> UserTenantMapping { get; set; }
     }
 }
