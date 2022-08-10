@@ -25,8 +25,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<WoodTypeResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var lookUpValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<WoodTypeResponseDto>>(lookUpValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.WoodType).ToList());
+            var woodTypeAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            return _mapper.Map<List<WoodTypeResponseDto>>(woodTypeAllData.Where(x => x.LookupId == (int)MasterPagesEnum.WoodType).ToList());
         }
 
         public async Task<JsonRepsonse<WoodTypeResponseDto>> GetFilterWoodTypeData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var woodTypeResponseData = (from x in woodTypeAllData
                                         join y in lookupsAllData
-                                             on new { x.LookupId } equals new { y.LookupId }
+                                        on new { x.LookupId } equals new { y.LookupId }
                                         where x.LookupId == (int)MasterPagesEnum.WoodType
                                         select new WoodTypeResponseDto()
                                         {
@@ -57,14 +57,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<WoodTypeResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
-            var data = await GetWoodTypeById(Id, cancellationToken);
-            return _mapper.Map<WoodTypeResponseDto>(data);
+            var woodTypedata = await GetWoodTypeById(Id, cancellationToken);
+            return _mapper.Map<WoodTypeResponseDto>(woodTypedata);
         }
 
         public async Task<WoodTypeRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await GetWoodTypeById(Id, cancellationToken);
-            return _mapper.Map<WoodTypeRequestDto>(data);
+            var woodTypedata = await GetWoodTypeById(Id, cancellationToken);
+            return _mapper.Map<WoodTypeRequestDto>(woodTypedata);
         }
 
         public async Task<WoodTypeRequestDto> CreateWoodType(WoodTypeRequestDto model, CancellationToken cancellationToken)
@@ -74,21 +74,38 @@ namespace MidCapERP.BusinessLogic.Repositories
             woodTypeToInsert.CreatedBy = _currentUser.UserId;
             woodTypeToInsert.CreatedDate = DateTime.Now;
             woodTypeToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.LookupValuesDA.CreateLookupValue(woodTypeToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<WoodTypeRequestDto>(data);
+            var woodTypedata = await _unitOfWorkDA.LookupValuesDA.CreateLookupValue(woodTypeToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<WoodTypeRequestDto>(woodTypedata);
             return _mappedUser;
         }
 
         public async Task<WoodTypeRequestDto> UpdateWoodType(int Id, WoodTypeRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await GetWoodTypeById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateWoodType(oldData);
             MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<WoodTypeRequestDto>(data);
+            var woodTypedata = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
+            var _mappedUser = _mapper.Map<WoodTypeRequestDto>(woodTypedata);
             return _mappedUser;
+        }
+
+        public async Task<WoodTypeRequestDto> DeleteWoodType(int Id, CancellationToken cancellationToken)
+        {
+            var woodTypeToUpdate = await GetWoodTypeById(Id, cancellationToken);
+            woodTypeToUpdate.IsDeleted = true;
+            UpdateWoodType(woodTypeToUpdate);
+            var woodTypedata = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, woodTypeToUpdate, cancellationToken);
+            var _mappedUser = _mapper.Map<WoodTypeRequestDto>(woodTypedata);
+            return _mappedUser;
+        }
+
+        #region PrivateMethods
+
+        private void UpdateWoodType(LookupValues data)
+        {
+            data.UpdatedBy = _currentUser.UserId;
+            data.UpdatedDate = DateTime.Now;
+            data.UpdatedUTCDate = DateTime.UtcNow;
         }
 
         private static void MapToDbObject(WoodTypeRequestDto model, LookupValues oldData)
@@ -97,26 +114,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.LookupValueId = model.LookupValueId;
         }
 
-        public async Task<WoodTypeRequestDto> DeleteWoodType(int Id, CancellationToken cancellationToken)
-        {
-            var woodTypeToUpdate = await GetWoodTypeById(Id, cancellationToken);
-            woodTypeToUpdate.IsDeleted = true;
-            woodTypeToUpdate.UpdatedBy = _currentUser.UserId;
-            woodTypeToUpdate.UpdatedDate = DateTime.Now;
-            woodTypeToUpdate.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, woodTypeToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<WoodTypeRequestDto>(data);
-            return _mappedUser;
-        }
-
-        #region PrivateMethods
-
         private async Task<LookupValues> GetWoodTypeById(int Id, CancellationToken cancellationToken)
         {
             var woodTypeDataById = await _unitOfWorkDA.LookupValuesDA.GetById(Id, cancellationToken);
             if (woodTypeDataById == null)
             {
-                throw new Exception("LookupValues not found");
+                throw new Exception("WoodType not found");
             }
             return woodTypeDataById;
         }

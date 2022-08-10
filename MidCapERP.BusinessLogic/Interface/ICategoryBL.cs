@@ -1,5 +1,5 @@
-﻿using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.Category;
+﻿using MidCapERP.Dto.Category;
+using MidCapERP.Dto.DataGrid;
 
 namespace MidCapERP.BusinessLogic.Interface
 {

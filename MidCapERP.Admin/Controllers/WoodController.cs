@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Wood.Create)]
         public async Task<IActionResult> Create(WoodRequestDto woodRequestDto, CancellationToken cancellationToken)
         {
-            var wood = await _unitOfWorkBL.WoodBL.CreateWood(woodRequestDto, cancellationToken);
+            await _unitOfWorkBL.WoodBL.CreateWood(woodRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Created Successfully!");
             return RedirectToAction("Index");
         }
@@ -69,7 +69,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Wood.Update)]
         public async Task<IActionResult> Update(int Id, WoodRequestDto woodRequestDto, CancellationToken cancellationToken)
         {
-            var wood = await _unitOfWorkBL.WoodBL.UpdateWood(Id, woodRequestDto, cancellationToken);
+            await _unitOfWorkBL.WoodBL.UpdateWood(Id, woodRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
@@ -79,6 +79,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.WoodBL.DeleteWood(Id, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
 
