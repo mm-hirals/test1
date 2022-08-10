@@ -18,7 +18,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Polish.View)]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
