@@ -23,8 +23,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IFabricBL FabricBL { get; }
         public IWoodBL WoodBL { get; }
         public IPolishBL PolishBL { get; }
+        public IUserTenantMappingBL UserTenantMappingBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IWoodBL woodBL, IPolishBL polishBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IWoodBL woodBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -43,6 +44,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.FabricBL = fabricBL;
             this.WoodBL = woodBL;
             this.PolishBL = polishBL;
+            this.UserTenantMappingBL = userTenantMappingBL;
         }
 
         #region DisposeMethod
