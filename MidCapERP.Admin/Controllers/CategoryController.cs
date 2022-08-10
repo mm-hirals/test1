@@ -71,6 +71,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
     }
