@@ -55,6 +55,28 @@ namespace MidCapERP.Admin.Controllers
         /// <summary>
         ///
         /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> ForgotPassword(CancellationToken cancellationToken)
+        {
+            return View();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(CancellationToken cancellationToken)
+        {
+            return View();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> CreateToken(TokenRequest request, CancellationToken cancellationToken)
         {
