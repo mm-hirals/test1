@@ -12,8 +12,7 @@ namespace MidCapERP.Admin.Configuration
         /// </summary>
         /// <param name="services"></param>
         public static void SetupControllers(this IServiceCollection services)
-        {
-            services.AddControllersWithViews();
+        { 
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<CurrentUserActionFilter>();

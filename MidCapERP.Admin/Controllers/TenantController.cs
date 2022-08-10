@@ -25,6 +25,11 @@ namespace MidCapERP.Admin.Controllers
                 Text = a.TenantName
             }).ToList();
             ViewBag.FillUserDropDown = data;
+            if (data.Count == 1)
+            {
+                SetTenantCookie(MagnusMinds.Utility.Encryption.Encrypt(data?.FirstOrDefault()?.Value, true, ApplicationIdentityConstants.EncryptionSecret));
+                return RedirectToAction("Index", "Dashboard");
+            }
             return View();
         }
 
@@ -32,8 +37,13 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Index([FromForm] SelectTenant selectTenant, CancellationToken cancellationToken)
         {
             var encValue = MagnusMinds.Utility.Encryption.Encrypt(selectTenant.TenantId, true, ApplicationIdentityConstants.EncryptionSecret);
-            Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
+            SetTenantCookie(encValue);
             return RedirectToAction("Index", "Dashboard");
+        }
+
+        private void SetTenantCookie(string encValue)
+        {
+            Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
         }
     }
 }
