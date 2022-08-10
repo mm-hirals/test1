@@ -22,6 +22,9 @@ namespace MidCapERP.Dto.Contractors
         [EmailAddress(ErrorMessage = "Please enter valid email address")]
         public string EmailId { get; set; }
 
+        [DisplayName("Category Name")]
+        public int CategoryId { get; set; }
+
         public int? TenantId { get; set; }
 
         [DisplayName("Deleted")]
