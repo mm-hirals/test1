@@ -47,7 +47,7 @@ namespace MidCapERP.Infrastructure.Identity.Seed
 
         private static async Task GrantPermissionToAdminUser(RoleManager<ApplicationRole> roleManager, ApplicationRole administratorRole)
         {
-            var collection = new List<string>() { "Users", "Role", "Dashboard", "Lookup", "Status", "Contractor", "SubjectType", "LookupValues", "ContractorCategoryMapping", "Customer", "ErrorLogs", "Category", "Company", "Unit", "WoodType", "AccessoriesType", "RawMaterial", "Accessories", "Fabric", "Wood"
+            var collection = new List<string>() { "Users", "Role", "Dashboard", "Lookup", "Status", "Contractor", "SubjectType", "LookupValues", "ContractorCategoryMapping", "Customer", "ErrorLogs", "Category", "Company", "Unit", "WoodType", "AccessoriesType", "RawMaterial", "Accessories", "Fabric", "Wood", "Polish"
                 };
             foreach (var item in collection)
             {
