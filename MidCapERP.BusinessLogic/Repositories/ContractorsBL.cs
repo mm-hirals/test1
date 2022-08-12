@@ -71,12 +71,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorsRequestDto> GetContractorCategoryMappingById(int Id, CancellationToken cancellationToken)
         {
-            var data = await GetContractorById(Id, cancellationToken);
-            //var contractorCategoryMapping = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(, cancellationToken);
-            //var contractorCategoryMappingData = _mapper.Map<ContractorsRequestDto>(data);
-            //contractorCategoryMappingData.CategoryId = contractorCategoryMapping.CategoryId;
-            //return contractorCategoryMappingData;
-            return null;
+            var contractorData = await GetContractorById(Id, cancellationToken);
+            var contractCatAllData = await _unitOfWorkDA.ContractorCategoryMappingDA.GetAll(cancellationToken);
+            var contractCatData = contractCatAllData.Where(x => x.ContractorId == Id).FirstOrDefault();
+            var contractCatMappData = _mapper.Map<ContractorsRequestDto>(contractorData);
+            contractCatMappData.CategoryId = contractCatData.CategoryId;
+            return contractCatMappData;
         }
 
         public async Task<ContractorsRequestDto> CreateContractor(ContractorsRequestDto model, CancellationToken cancellationToken)
@@ -105,26 +105,25 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorsRequestDto> UpdateContractor(int Id, ContractorsRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await GetContractorById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
-            UpdateContractor(oldData);
-            MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<ContractorsRequestDto>(data);
-            /*
-           //update CategoryId
-           ContractorCategoryMappingRequestDto catDto = new ContractorCategoryMappingRequestDto();
-           var oldData1 = await ContractorCategoryMappingGetById(Id, cancellationToken);
-           if (catDto.ContractorId == model.ContractorId)
-           {
-               var contracterCategoryMapping = await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, oldData1, cancellationToken);
-               MapToDbObject(catDto, oldData1);
-               UpdateContractorCategory(oldData1);
-               var _mappedUser1 = _mapper.Map<ContractorsRequestDto>(contracterCategoryMapping);
-               return _mappedUser1;
-           }*/
+            var oldContractorData = await GetContractorById(Id, cancellationToken);
+            UpdateContractor(oldContractorData);
+            MapToDbObject(model, oldContractorData);
+            var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, oldContractorData, cancellationToken);
+            var _mappedUser = _mapper.Map<ContractorsRequestDto>(contractorData);
+
+            //update CategoryId
+            ContractorCategoryMappingRequestDto catDto = new ContractorCategoryMappingRequestDto();
+            var categoryOldData = await ContractorCategoryMappingGetById(Id, cancellationToken);
+            if (categoryOldData.ContractorId == model.ContractorId)
+            {
+                catDto.CategoryId = model.CategoryId;
+                catDto.ContractorId = contractorData.ContractorId;
+                UpdateContractorCategory(categoryOldData);
+                MapToDbObjectCategoryId(catDto, categoryOldData);
+                var contracterCategoryMapping = await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, categoryOldData, cancellationToken);
+                var _mappedUser1 = _mapper.Map<ContractorsRequestDto>(contracterCategoryMapping);
+                return _mappedUser1;
+            }
             return _mappedUser;
         }
 
@@ -133,15 +132,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             var contractorToUpdate = await GetContractorById(Id, cancellationToken);
             contractorToUpdate.IsDeleted = true;
             UpdateContractor(contractorToUpdate);
-            var data = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, contractorToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<ContractorsRequestDto>(data);
+            var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, contractorToUpdate, cancellationToken);
+            var _mappedUser = _mapper.Map<ContractorsRequestDto>(contractorData);
             return _mappedUser;
         }
 
         #region PrivateMethods
 
-        private static void MapToDbObject(ContractorCategoryMappingRequestDto model, ContractorCategoryMapping oldData)
+        private static void MapToDbObjectCategoryId(ContractorCategoryMappingRequestDto model, ContractorCategoryMapping oldData)
         {
+            oldData.ContractorId = model.ContractorId;
             oldData.CategoryId = model.CategoryId;
         }
 
@@ -179,7 +179,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private async Task<ContractorCategoryMapping> ContractorCategoryMappingGetById(int Id, CancellationToken cancellationToken)
         {
-            var contractorCategoryMappingDataById = await _unitOfWorkDA.ContractorCategoryMappingDA.GetById(Id, cancellationToken);
+            var contractCatAllData = await _unitOfWorkDA.ContractorCategoryMappingDA.GetAll(cancellationToken);
+            var contractorCategoryMappingDataById = contractCatAllData.Where(x => x.ContractorId == Id).FirstOrDefault();
             if (contractorCategoryMappingDataById == null)
             {
                 throw new Exception("ContractorCategoryMapping not found");

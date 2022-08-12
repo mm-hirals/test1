@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.ContractorCategoryMapping;
 using MidCapERP.Dto.Contractors;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
@@ -47,7 +46,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Create)]
         public async Task<IActionResult> Create(ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
-            //ContractorCategoryMappingRequestDto contractorscategoryMappingRequestDto = new ContractorCategoryMappingRequestDto();
             await _unitOfWorkBL.ContractorsBL.CreateContractor(contractorsRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
@@ -57,7 +55,8 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var contractors = await _unitOfWorkBL.ContractorsBL.GetById(Id, cancellationToken);
+            var contractors = await _unitOfWorkBL.ContractorsBL.GetContractorCategoryMappingById(Id, cancellationToken);
+            await FillCategoryDropDown(cancellationToken);
             return PartialView("_ContractorPartial", contractors);
         }
 
@@ -65,7 +64,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
         public async Task<IActionResult> Update(int Id, ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
-            //ContractorCategoryMappingRequestDto contractorscategoryMappingRequestDto = new ContractorCategoryMappingRequestDto();
             await _unitOfWorkBL.ContractorsBL.UpdateContractor(Id, contractorsRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
