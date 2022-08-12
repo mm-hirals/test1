@@ -1,8 +1,5 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model MidCapERP.Dto.Product.ProductRequestDto
+
 <div class="">
     <div class="card-product--wrapper mb-3">
         <div class="card-product--image">
@@ -19,35 +16,14 @@
                 <div class="col-md-3">
                     <div class="product-info--item">
                         <div class="form-group">
-                            <label class="form-label">
+                            <label asp-for="CategoryId" class="form-label" >
                                 Product Category <span class="required">*</span>
                             </label>
-                            <select class="form-select">
-                                <option selected>
-                                    Dining Chair
-                                </option>
-                                <option>
-                                    Table Base
-                                </option>
-                                <option>
-                                    Sofa Chair
-                                </option>
-                                <option>
-                                    Sofa / Corner / Lounger
-                                </option>
-                                <option>
-                                    Recliner CHair
-                                </option>
-                                <option>
-                                    Barstools
-                                </option>
-                                <option>
-                                    Puffy
-                                </option>
-                                <option>
-                                    Imported (Marble / Ceramic)
-                                </option>
-                            </select>
+                            <select asp-for="CategoryId" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                                    <option value="" hidden disabled selected>Select Category</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

@@ -22,5 +22,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IPolishBL PolishBL { get; }
         IUserTenantMappingBL UserTenantMappingBL { get; }
         IFileStorageService FileStorageService { get; }
+        IProductBL ProductBL { get; }
     }
 }
