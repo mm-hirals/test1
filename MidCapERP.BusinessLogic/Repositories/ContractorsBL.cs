@@ -89,8 +89,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             contractorToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.ContractorsDA.CreateContractor(contractorToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ContractorsRequestDto>(data);
-
-            //data.ContractorID
             ContractorCategoryMappingRequestDto catDto = new ContractorCategoryMappingRequestDto();
             catDto.CategoryId = model.CategoryId;
             catDto.ContractorId = data.ContractorId;
@@ -110,8 +108,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             MapToDbObject(model, oldContractorData);
             var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, oldContractorData, cancellationToken);
             var _mappedUser = _mapper.Map<ContractorsRequestDto>(contractorData);
-
-            //update CategoryId
             ContractorCategoryMappingRequestDto catDto = new ContractorCategoryMappingRequestDto();
             var categoryOldData = await ContractorCategoryMappingGetById(Id, cancellationToken);
             if (categoryOldData.ContractorId == model.ContractorId)
@@ -134,6 +130,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             UpdateContractor(contractorToUpdate);
             var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, contractorToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<ContractorsRequestDto>(contractorData);
+            ContractorCategoryMappingRequestDto catDto = new ContractorCategoryMappingRequestDto();
+            var contracterCategoryMapping = await ContractorCategoryMappingGetById(Id,cancellationToken);
+            if(contracterCategoryMapping.ContractorId == contractorToUpdate.ContractorId)
+            {
+                contracterCategoryMapping.IsDeleted = true;
+                UpdateContractorCategory(contracterCategoryMapping);
+                var updateData = await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, contracterCategoryMapping, cancellationToken);
+            }
             return _mappedUser;
         }
 
@@ -183,7 +187,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var contractorCategoryMappingDataById = contractCatAllData.Where(x => x.ContractorId == Id).FirstOrDefault();
             if (contractorCategoryMappingDataById == null)
             {
-                throw new Exception("ContractorCategoryMapping not found");
+                throw new Exception("Contractor Category Mapping not found");
             }
             return contractorCategoryMappingDataById;
         }

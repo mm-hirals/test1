@@ -19,7 +19,6 @@ $(function () {
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
             { "data": "imei", "name": "imei", "autoWidth": true },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
-            { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
