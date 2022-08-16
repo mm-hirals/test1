@@ -27,6 +27,10 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
+            await FillWoodDropDown(cancellationToken);
+            await FillRawMaterialDropDown(cancellationToken);
+            await FillAccessoriesDropDown(cancellationToken);
+            await FillPolishDropDown(cancellationToken);
             return View("Create");
         }
 
@@ -50,6 +54,54 @@ namespace MidCapERP.Admin.Controllers
                                      Text = a.LookupValueName
                                  }).ToList();
             ViewBag.CategorySelectedList = categorySelectedList;
+        }
+
+        private async Task FillWoodDropDown(CancellationToken cancellationToken)
+        {
+            var woodTypeData = await _unitOfWorkBL.WoodBL.GetAll(cancellationToken);
+            var woodSelectedList = woodTypeData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.WoodId),
+                                     Text = a.Title
+                                 }).ToList();
+            ViewBag.WoodSelectedList = woodSelectedList;
+        }
+
+        private async Task FillRawMaterialDropDown(CancellationToken cancellationToken)
+        {
+            var rawMaterialTypeData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
+            var rawMaterialSelectedList = rawMaterialTypeData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.RawMaterialId),
+                                     Text = a.Title
+                                 }).ToList();
+            ViewBag.RawMaterialSelectedList = rawMaterialSelectedList;
+        }
+
+        private async Task FillAccessoriesDropDown(CancellationToken cancellationToken)
+        {
+            var accessoriesTypeData = await _unitOfWorkBL.AccessoriesBL.GetAll(cancellationToken);
+            var accessoriesSelectedList = accessoriesTypeData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.AccessoriesId),
+                                     Text = a.Title
+                                 }).ToList();
+            ViewBag.AccessoriesSelectedList = accessoriesSelectedList;
+        }
+
+        private async Task FillPolishDropDown(CancellationToken cancellationToken)
+        {
+            var polishTypeData = await _unitOfWorkBL.PolishBL.GetAll(cancellationToken);
+            var polishSelectedList = polishTypeData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.PolishId),
+                                     Text = a.Title
+                                 }).ToList();
+            ViewBag.PolishSelectedList = polishSelectedList;
         }
 
         #endregion Private Method

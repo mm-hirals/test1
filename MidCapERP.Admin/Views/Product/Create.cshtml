@@ -22,8 +22,8 @@
                             <select asp-for="CategoryId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Category</option>
-                                </select>
-                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                             <label class="form-label">
                                 Product Title <span class="required">*</span>
                             </label>
-                            <input type="text" class="form-control" placeholder="Product Title">
+                            <input asp-for="ProductTitle" type="text" class="form-control" placeholder="Product Title">
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                             <label class="form-label">
                                 Product Code <span class="required">*</span>
                             </label>
-                            <input type="text" class="form-control" placeholder="Product Code">
+                            <input asp-for="ProductCode" type="text" class="form-control" placeholder="Product Code">
                         </div>
                     </div>
                 </div>
@@ -55,15 +55,15 @@
                             </label>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" placeholder="Width">
+                                    <input asp-for="Width" type="text" class="form-control" placeholder="Width">
                                     @*<label class="form-label">Width</label>*@
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" placeholder="Height">
+                                    <input asp-for="Height" type="text" class="form-control" placeholder="Height">
                                     @*<label class="form-label">Height</label>*@
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" placeholder="Depth">
+                                    <input asp-for="Depth" type="text" class="form-control" placeholder="Depth">
                                     @*<label class="form-label">Depth</label>*@
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                                     <label class="form-label">
                                         For Wholesalers
                                     </label>
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                    <input asp-for="IsVisibleToWholesalers" type="checkbox" class="custom-control-input" id="customSwitch1">
                                     <label class="custom-control-label" for="customSwitch1">Active</label>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                                         <label class="form-label">
                                             Comments
                                         </label>
-                                        <textarea class="form-control" placeholder="Comments"></textarea>
+                                        <textarea asp-for="Comments" class="form-control" placeholder="Comments"></textarea>
                                     </div>
                                 </div>
                                 @*<div class="product-info--wrapper">
@@ -186,14 +186,10 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
-                                                <option selected>
-                                                    Ash Wood
-                                                </option>
-                                                <option>
-                                                    Teak Wood
-                                                </option>
-                                            </select>
+                                        <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.WoodSelectedList, "Value", "Text"))">
+                                            <option value="" hidden disabled selected>Select Wood</option>
+                                        </select>
+                                        @*<span asp-validation-for="CategoryId" class="text-danger"></span>*@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" placeholder="Unit Price" value="1">
@@ -266,7 +262,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            @*<select class="form-select">
                                                 <option selected>
                                                     Plywood 6mm
                                                 </option>
@@ -282,7 +278,11 @@
                                                 <option>
                                                     Screws 0.5mm
                                                 </option>
+                                            </select>*@
+                                            <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.RawMaterialSelectedList, "Value", "Text"))">
+                                                <option value="" hidden disabled selected>Select Raw Material</option>
                                             </select>
+                                            @*<span asp-validation-for="CategoryId" class="text-danger"></span>*@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" placeholder="Unit Price" value="1">
@@ -399,7 +399,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            @*<select class="form-select">
                                                 <option selected>
                                                     Dining Chair
                                                 </option>
@@ -409,7 +409,11 @@
                                                 <option>
                                                     Sofa Chair
                                                 </option>
+                                            </select>*@
+                                            <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.AccessoriesSelectedList, "Value", "Text"))">
+                                                <option value="" hidden disabled selected>Select Accessories</option>
                                             </select>
+                                            @*<span asp-validation-for="CategoryId" class="text-danger"></span>*@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" placeholder="Unit Price" value="1">
@@ -514,14 +518,18 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select class="form-select">
+                                            @*<select class="form-select">
                                                 <option selected>
                                                     Asian Fur Polish
                                                 </option>
                                                 <option>
                                                     Mast Polish
                                                 </option>
+                                            </select>*@
+                                            <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.PolishSelectedList, "Value", "Text"))">
+                                                <option value="" hidden disabled selected>Select Polish</option>
                                             </select>
+                                            @*<span asp-validation-for="CategoryId" class="text-danger"></span>*@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" placeholder="Unit Price" value="1">

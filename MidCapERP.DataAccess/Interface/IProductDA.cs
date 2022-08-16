@@ -6,6 +6,6 @@ namespace MidCapERP.DataAccess.Interface
     {
         public Task<IQueryable<Products>> GetAll(CancellationToken cancellationToken);
 
-        public Task<Products> CreateProduct(Woods model, CancellationToken cancellationToken);
+        public Task<Products> CreateProduct(Products model, CancellationToken cancellationToken);
     }
 }
