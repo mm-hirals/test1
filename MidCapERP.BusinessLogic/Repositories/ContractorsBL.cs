@@ -90,6 +90,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             contractorToInsert.CreatedDate = DateTime.Now;
             contractorToInsert.CreatedUTCDate = DateTime.UtcNow;
             var contractor = await _unitOfWorkDA.ContractorsDA.CreateContractor(contractorToInsert, cancellationToken);
+            
             //Add ContractorCateagoryMapping based on Contractor
             ContractorCategoryMapping catDto = new ContractorCategoryMapping();
             catDto.CategoryId = model.CategoryId;
@@ -97,6 +98,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             catDto.CreatedDate = DateTime.Now;
             catDto.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ContractorCategoryMappingDA.CreateContractorCategoryMapping(catDto, cancellationToken);
+            
             return _mapper.Map<ContractorsRequestDto>(contractor);
         }
 
@@ -107,7 +109,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             UpdateContractor(oldContractorData);
             MapToDbObject(model, oldContractorData);
             var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, oldContractorData, cancellationToken);
+
             //Find ContractorCateagoryMapping if cateagory is changed then update ContractorCateagoryMapping 
+            
             var categoryOldData = await ContractorCategoryMappingGetById(Id, cancellationToken);
             if (model.CategoryId != categoryOldData.CategoryId)
             {
@@ -115,6 +119,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 UpdateContractorCategory(categoryOldData);
                 await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, categoryOldData, cancellationToken);
             }
+
             return _mapper.Map<ContractorsRequestDto>(contractorData);
         }
 
@@ -125,11 +130,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             contractorToUpdate.IsDeleted = true;
             UpdateContractor(contractorToUpdate);
             var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, contractorToUpdate, cancellationToken);
+
             //Delete ContractorCategoryMapping Base on Contractor
             var contractorCategoryMapping = await ContractorCategoryMappingGetById(Id, cancellationToken);
             contractorCategoryMapping.IsDeleted = true;
             UpdateContractorCategory(contractorCategoryMapping);
-            await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, contractorCategoryMapping, cancellationToken);
+            await _unitOfWorkDA.ContractorCategoryMappingDA.DeleteContractorCategoryMapping(Id, cancellationToken);
+            
             return _mapper.Map<ContractorsRequestDto>(contractorData);
         }
 
