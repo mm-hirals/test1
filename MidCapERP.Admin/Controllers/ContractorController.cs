@@ -88,7 +88,7 @@ namespace MidCapERP.Admin.Controllers
                                      Value = Convert.ToString(a.LookupValueId),
                                      Text = a.LookupValueName
                                  }).ToList();
-            ViewBag.ContracterSelectedListSelectItemList = categorySelectedList;
+            ViewBag.ContractorSelectedListSelectItemList = categorySelectedList;
         }
 
         private async Task<IEnumerable<ContractorsResponseDto>> GetAllContractors(CancellationToken cancellationToken)
