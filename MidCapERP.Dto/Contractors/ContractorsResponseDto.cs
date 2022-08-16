@@ -17,6 +17,9 @@ namespace MidCapERP.Dto.Contractors
         [DisplayName("Email Address")]
         public string EmailId { get; set; }
 
+        [DisplayName("Category Name")]
+        public string CategoryName { get; set; }
+
         public int? TenantId { get; set; }
 
         [DisplayName("Deleted")]
