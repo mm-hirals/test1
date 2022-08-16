@@ -34,9 +34,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             var contractorAllData = await _unitOfWorkDA.ContractorsDA.GetAll(cancellationToken);
             var lookupValueAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var categoryAllData = lookupValueAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
-            var contracterCategoryMapping = await _unitOfWorkDA.ContractorCategoryMappingDA.GetAll(cancellationToken);
-            var contracterResponseData = (from x in contractorAllData
-                                          join y in contracterCategoryMapping on new { ContractorId = x.ContractorId } equals new { ContractorId = y.ContractorId }
+            var contractorCategoryMapping = await _unitOfWorkDA.ContractorCategoryMappingDA.GetAll(cancellationToken);
+            var contractorResponseData = (from x in contractorAllData
+                                          join y in contractorCategoryMapping on new { ContractorId = x.ContractorId } equals new { ContractorId = y.ContractorId }
                                           join z in categoryAllData on new { CategoryId = y.CategoryId } equals new { CategoryId = z.LookupValueId }
                                           select new ContractorsResponseDto()
                                           {
@@ -54,7 +54,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                               UpdatedDate = x.UpdatedDate,
                                               UpdatedUTCDate = x.UpdatedUTCDate
                                           }).AsQueryable();
-            var contractorData = new PagedList<ContractorsResponseDto>(_mapper.Map<List<ContractorsResponseDto>>(contracterResponseData).AsQueryable(), dataTableFilterDto);
+            var contractorData = new PagedList<ContractorsResponseDto>(_mapper.Map<List<ContractorsResponseDto>>(contractorResponseData).AsQueryable(), dataTableFilterDto);
             return new JsonRepsonse<ContractorsResponseDto>(dataTableFilterDto.Draw, contractorData.TotalCount, contractorData.TotalCount, contractorData);
         }
 
@@ -120,16 +120,16 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ContractorsRequestDto> DeleteContractor(int Id, CancellationToken cancellationToken)
         {
-            //Delete Contracter
+            //Delete Contractor
             var contractorToUpdate = await GetContractorById(Id, cancellationToken);
             contractorToUpdate.IsDeleted = true;
             UpdateContractor(contractorToUpdate);
             var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, contractorToUpdate, cancellationToken);
-            //Delete ContracterCategoryMapping Base on Contracter
-            var contracterCategoryMapping = await ContractorCategoryMappingGetById(Id, cancellationToken);
-            contracterCategoryMapping.IsDeleted = true;
-            UpdateContractorCategory(contracterCategoryMapping);
-            await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, contracterCategoryMapping, cancellationToken);
+            //Delete ContractorCategoryMapping Base on Contractor
+            var contractorCategoryMapping = await ContractorCategoryMappingGetById(Id, cancellationToken);
+            contractorCategoryMapping.IsDeleted = true;
+            UpdateContractorCategory(contractorCategoryMapping);
+            await _unitOfWorkDA.ContractorCategoryMappingDA.UpdateContractorCategoryMapping(Id, contractorCategoryMapping, cancellationToken);
             return _mapper.Map<ContractorsRequestDto>(contractorData);
         }
 
