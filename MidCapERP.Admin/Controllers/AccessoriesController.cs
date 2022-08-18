@@ -106,7 +106,7 @@ namespace MidCapERP.Admin.Controllers
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.AccessoriesTypeId),
-                                     Text = a.AccessoryTypeName
+                                     Text = a.TypeName
                                  }).ToList();
             ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
         }

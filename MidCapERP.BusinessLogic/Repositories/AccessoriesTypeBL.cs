@@ -34,21 +34,21 @@ namespace MidCapERP.BusinessLogic.Repositories
             var accessoriesTypesAllData = await _unitOfWorkDA.AccessoriesTypeDA.GetAll(cancellationToken);
             var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var accessoriesTypeResponseData = (from x in accessoriesTypesAllData
-                                       join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupValueId }
-                                       select new AccessoriesTypeResponseDto()
-                                       {
-                                           AccessoriesTypeId = x.AccessoriesTypeId,
-                                           CategoryId = x.CategoryId,
-                                           CategoryName = y.LookupValueName,
-                                           AccessoryTypeName = x.TypeName,
-                                           IsDeleted = x.IsDeleted,
-                                           CreatedBy = x.CreatedBy,
-                                           CreatedDate = x.CreatedDate,
-                                           CreatedUTCDate = x.CreatedUTCDate,
-                                           UpdatedBy = x.UpdatedBy,
-                                           UpdatedDate = x.UpdatedDate,
-                                           UpdatedUTCDate = x.UpdatedUTCDate
-                                       }).AsQueryable();
+                                               join y in lookupValueData on new { CategoryId = x.CategoryId } equals new { CategoryId = y.LookupValueId }
+                                               select new AccessoriesTypeResponseDto()
+                                               {
+                                                   AccessoriesTypeId = x.AccessoriesTypeId,
+                                                   CategoryId = x.CategoryId,
+                                                   CategoryName = y.LookupValueName,
+                                                   TypeName = x.TypeName,
+                                                   IsDeleted = x.IsDeleted,
+                                                   CreatedBy = x.CreatedBy,
+                                                   CreatedDate = x.CreatedDate,
+                                                   CreatedUTCDate = x.CreatedUTCDate,
+                                                   UpdatedBy = x.UpdatedBy,
+                                                   UpdatedDate = x.UpdatedDate,
+                                                   UpdatedUTCDate = x.UpdatedUTCDate
+                                               }).AsQueryable();
             var companyData = new PagedList<AccessoriesTypeResponseDto>(accessoriesTypeResponseData, dataTableFilterDto);
             return new JsonRepsonse<AccessoriesTypeResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }
@@ -91,7 +91,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         private static void MapToDbObject(AccessoriesTypeRequestDto model, AccessoriesType oldData)
         {
             oldData.CategoryId = model.CategoryId;
-            oldData.TypeName = model.AccessoryTypeName;
+            oldData.TypeName = model.TypeName;
             oldData.TenantId = model.TenantId;
         }
 
