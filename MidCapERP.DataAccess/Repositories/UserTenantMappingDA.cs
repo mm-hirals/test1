@@ -17,5 +17,20 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _UserTenantMapping.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
+
+        public async Task<UserTenantMapping> GetById(int Id, CancellationToken cancellationToken)
+        {
+            return await _UserTenantMapping.GetByIdAsync(Id, cancellationToken);
+        }
+
+        public async Task<UserTenantMapping> CreateUserTenant(UserTenantMapping model, CancellationToken cancellationToken)
+        {
+            return await _UserTenantMapping.InsertAsync(model, cancellationToken);
+        }
+
+        public async Task<UserTenantMapping> UpdateUserTenant(int Id, UserTenantMapping model, CancellationToken cancellationToken)
+        {
+            return await _UserTenantMapping.UpdateAsync(model, cancellationToken);
+        }
     }
 }

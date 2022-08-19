@@ -26,6 +26,8 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IPolishDA, PolishDA>();
             services.AddScoped<ITenantDA, TenantDA>();
             services.AddScoped<IUserTenantMappingDA, UserTenantMappingDA>();
+            services.AddScoped<IUserDA, UserDA>();
+            services.AddScoped<IAspNetRoleDA, AspNetRoleDA>();
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }
