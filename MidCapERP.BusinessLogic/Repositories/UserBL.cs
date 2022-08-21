@@ -101,11 +101,21 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             var rolesData = _unitOfWorkDA.UserDA.GetByIdentityUserRoleData(oldId, cancellationToken).Result.FirstOrDefault();
 
+            //Remove old UserRole
+            var updatedUser = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
+            await _userManager.RemoveFromRoleAsync(updatedUser, rolesData.RoleId);
+            
+            //Added Updated UserRole
+            _userManager.AddToRoleAsync(updatedUser, model.AspNetRole); 
+
             return _mapper.Map<UserRequestDto>(oldApplicationUserData);
+
         }
 
         public Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
         {
+            //please add code here For delete
+            //we have one column name isActive you can set false for that.
             throw new NotImplementedException();
         }
 
