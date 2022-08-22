@@ -7,9 +7,11 @@ namespace MidCapERP.DataAccess.Interface
     {
         public Task<IQueryable<ApplicationUser>> GetUsers(CancellationToken cancellationToken);
 
-        public Task<string> GetByIdentityUserRoleId(string Id, CancellationToken cancellationToken);
+        public Task<IQueryable<ApplicationRole>> GetRoles(CancellationToken cancellationToken);
 
-        public Task<IQueryable<IdentityUserRole<string>>> GetByIdentityUserRoleData(string Id, CancellationToken cancellationToken);
+        public Task<string> GetUserRoleId(string Id, CancellationToken cancellationToken);
+
+        public Task<IQueryable<IdentityUserRole<string>>> GetUserRoleData(string Id, CancellationToken cancellationToken);
 
         public Task<IdentityResult> CreateUser(ApplicationUser model, string password);
 

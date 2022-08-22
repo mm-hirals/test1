@@ -30,10 +30,17 @@ namespace MidCapERP.BusinessLogic.Repositories
             _userTenantMappingBL = userTenantMappingBL;
         }
 
-        public async Task<IQueryable<ApplicationUser>> GetAll(CancellationToken cancellationToken)
+        public async Task<IQueryable<ApplicationUser>> GetAllUsers(CancellationToken cancellationToken)
         {
             var getUser = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             return getUser;
+        }
+
+        public async Task<IList<ApplicationRole>> GetAllRoles(CancellationToken cancellationToken)
+        {
+            var getUser = await _unitOfWorkDA.UserDA.GetRoles(cancellationToken);
+            var rolesByTenant = getUser.Where(x => x.TenantId == _currentUser.TenantId).ToList();
+            return rolesByTenant;
         }
 
         public async Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -56,75 +63,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<UserRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var applicationUserById = await GetApplicationUserById(Id, cancellationToken);
-            return applicationUserById;
-        }
-
-        public async Task<UserRequestDto> CreateUser(UserRequestDto model, CancellationToken cancellationToken)
-        {
-            // Add User into AspNetUser
-            ApplicationUser applicationUser = new ApplicationUser();
-            applicationUser.FirstName = model.FirstName;
-            applicationUser.LastName = model.LastName;
-            applicationUser.UserName = model.UserName;
-            applicationUser.Email = model.Email;
-            applicationUser.PhoneNumber = model.PhoneNumber;
-            applicationUser.IsActive = true;
-            await _unitOfWorkDA.UserDA.CreateUser(applicationUser, model.Password);
-
-            // Add UserId and TenantId into UserTenantMapping
-            UserTenantMappingRequestDto userTenantData = new UserTenantMappingRequestDto();
-            userTenantData.TenantId = _currentUser.TenantId;
-            userTenantData.UserId = applicationUser.UserId;
-            await _userTenantMappingBL.CreateUserTenant(userTenantData, cancellationToken);
-
-            // Add into AspNetRole
-            await _userManager.AddToRoleAsync(applicationUser, model.AspNetRole);
-
-            return _mapper.Map<UserRequestDto>(applicationUser);
-        }
-
-        public async Task<UserRequestDto> UpdateUser(int Id, UserRequestDto model, CancellationToken cancellationToken)
-        {
-            // Update AspNetUser
-            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
-            var oldApplicationUserData = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
-            oldApplicationUserData.FirstName = model.FirstName;
-            oldApplicationUserData.LastName = model.LastName;
-            oldApplicationUserData.PhoneNumber = model.PhoneNumber;
-            var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(oldApplicationUserData));
-
-            // Get selected role details
-            var roleNameData = await _roleManager.FindByNameAsync(model.AspNetRole);
-            string oldId = Convert.ToString(oldApplicationUserData.Id);
-
-            var rolesData = _unitOfWorkDA.UserDA.GetByIdentityUserRoleData(oldId, cancellationToken).Result.FirstOrDefault();
-
-            //Remove old UserRole
-            var updatedUser = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
-            var data = await _userManager.RemoveFromRoleAsync(updatedUser, rolesData.RoleId);
-
-            //Added Updated UserRole
-            await _userManager.AddToRoleAsync(updatedUser, model.AspNetRole);
-
-            return _mapper.Map<UserRequestDto>(oldApplicationUserData);
-
-        }
-
-        public async Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
-        {
-            // InActive AspNetUser
-            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
-            var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
-            userById.IsActive = false;
-            var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
-            return _mapper.Map<UserRequestDto>(userById);
-        }
-
-        #region Private Method
-
-        private async Task<UserRequestDto> GetApplicationUserById(int Id, CancellationToken cancellationToken)
-        {
             // Get ApplicationUser by Id
             var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var applicationUser = (from x in userAllData
@@ -144,14 +82,69 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        UserTenantMappingId = y.UserTenantMappingId
                                    }).FirstOrDefault();
 
-            // Get User Role
-            var roleId = _unitOfWorkDA.UserDA.GetByIdentityUserRoleId(applicationUser.Id, cancellationToken);
-            var roleById = _unitOfWorkDA.AspNetRoleDA.GetAll(cancellationToken).Result.Where(x => x.Id == roleId.Result).FirstOrDefault();
-            if(roleById != null)
-                applicationUser.AspNetRole = roleById.NormalizedName;
+            // Get User Role by roleId
+            var roleId = _unitOfWorkDA.UserDA.GetUserRoleId(applicationUser.Id, cancellationToken);
+            var roleDataById = await _roleManager.FindByIdAsync(roleId.Result);
+            if (roleDataById != null)
+                applicationUser.AspNetRole = roleDataById.NormalizedName;
             return applicationUser;
         }
 
-        #endregion Private Method
+        public async Task<UserRequestDto> CreateUser(UserRequestDto model, CancellationToken cancellationToken)
+        {
+            // Add User into AspNetUser
+            ApplicationUser applicationUser = new ApplicationUser();
+            applicationUser.FirstName = model.FirstName;
+            applicationUser.LastName = model.LastName;
+            applicationUser.UserName = model.UserName;
+            applicationUser.Email = model.Email;
+            applicationUser.PhoneNumber = model.PhoneNumber;
+            applicationUser.IsActive = true;
+            var createUser = await _unitOfWorkDA.UserDA.CreateUser(applicationUser, model.Password);
+
+            // Add UserId and TenantId into UserTenantMapping
+            UserTenantMappingRequestDto userTenantData = new UserTenantMappingRequestDto();
+            userTenantData.TenantId = _currentUser.TenantId;
+            userTenantData.UserId = applicationUser.UserId;
+            var createUserTenant = await _userTenantMappingBL.CreateUserTenant(userTenantData, cancellationToken);
+
+            // Add into AspNetRole
+            var addRole = await _userManager.AddToRoleAsync(applicationUser, model.AspNetRole);
+
+            return _mapper.Map<UserRequestDto>(applicationUser);
+        }
+
+        public async Task<UserRequestDto> UpdateUser(int Id, UserRequestDto model, CancellationToken cancellationToken)
+        {
+            // Update AspNetUser
+            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var oldApplicationUserData = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
+            oldApplicationUserData.FirstName = model.FirstName;
+            oldApplicationUserData.LastName = model.LastName;
+            oldApplicationUserData.PhoneNumber = model.PhoneNumber;
+            var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(oldApplicationUserData));
+
+            // Get selected role details from AspNetUserRoles and AspNetRoles
+            var rolesData = _unitOfWorkDA.UserDA.GetUserRoleData(Convert.ToString(oldApplicationUserData.Id), cancellationToken).Result.FirstOrDefault();
+            var oldRoleNameData = await _roleManager.FindByIdAsync(rolesData.RoleId);
+
+            //Remove old UserRole
+            var removeRole = await _userManager.RemoveFromRoleAsync(oldApplicationUserData, oldRoleNameData.Name);
+
+            //Add Updated UserRole
+            var addUpdatedRole = await _userManager.AddToRoleAsync(oldApplicationUserData, model.AspNetRole);
+
+            return _mapper.Map<UserRequestDto>(oldApplicationUserData);
+        }
+
+        public async Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
+        {
+            // InActive AspNetUser
+            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
+            userById.IsActive = false;
+            var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
+            return _mapper.Map<UserRequestDto>(userById);
+        }
     }
 }

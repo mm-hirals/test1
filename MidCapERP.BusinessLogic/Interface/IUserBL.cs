@@ -6,7 +6,9 @@ namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IUserBL
     {
-        public Task<IQueryable<ApplicationUser>> GetAll(CancellationToken cancellationToken);
+        public Task<IQueryable<ApplicationUser>> GetAllUsers(CancellationToken cancellationToken);
+
+        public Task<IList<ApplicationRole>> GetAllRoles(CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 

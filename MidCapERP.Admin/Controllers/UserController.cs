@@ -82,7 +82,7 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task FillAspNetRoleDropDown(CancellationToken cancellationToken)
         {
-            var aspNetRoleData = await _unitOfWorkBL.AspNetRolesBL.GetAll(cancellationToken);
+            var aspNetRoleData = await _unitOfWorkBL.UserBL.GetAllRoles(cancellationToken);
             var aspNetRoleDataSelectedList = aspNetRoleData.Select(x => new SelectListItem
             {
                 Value = x.NormalizedName,
