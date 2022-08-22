@@ -17,6 +17,7 @@ namespace MidCapERP.DataEntities.Models
         public int UserId { get; set; }
 
         [IgnoreDataMember]
+        [DisplayName("User Name")]
         public string FullName
         {
             get
