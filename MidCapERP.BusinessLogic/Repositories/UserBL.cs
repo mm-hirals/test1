@@ -69,6 +69,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             applicationUser.UserName = model.UserName;
             applicationUser.Email = model.Email;
             applicationUser.PhoneNumber = model.PhoneNumber;
+            applicationUser.IsActive = true;
             await _unitOfWorkDA.UserDA.CreateUser(applicationUser, model.Password);
 
             // Add UserId and TenantId into UserTenantMapping
@@ -85,8 +86,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<UserRequestDto> UpdateUser(int Id, UserRequestDto model, CancellationToken cancellationToken)
         {
-            #region UpdateUser
-
+            // Update AspNetUser
             var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var oldApplicationUserData = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
             oldApplicationUserData.FirstName = model.FirstName;
@@ -94,19 +94,30 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldApplicationUserData.PhoneNumber = model.PhoneNumber;
             var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(oldApplicationUserData));
 
-            #endregion UpdateUser
-
+            // Get selected role details
             var roleNameData = await _roleManager.FindByNameAsync(model.AspNetRole);
             string oldId = Convert.ToString(oldApplicationUserData.Id);
 
             var rolesData = _unitOfWorkDA.UserDA.GetByIdentityUserRoleData(oldId, cancellationToken).Result.FirstOrDefault();
 
+            //Remove old UserRole
+            var updatedUser = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
+            var data = await _userManager.RemoveFromRoleAsync(updatedUser, rolesData.RoleId);
+
+            //Added Updated UserRole
+            await _userManager.AddToRoleAsync(updatedUser, model.AspNetRole);
+
             return _mapper.Map<UserRequestDto>(oldApplicationUserData);
         }
 
-        public Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
+        public async Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            // InActive AspNetUser
+            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
+            userById.IsActive = false;
+            var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
+            return _mapper.Map<UserRequestDto>(userById);
         }
 
         #region Private Method
@@ -133,9 +144,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                    }).FirstOrDefault();
 
             // Get User Role
-            var roleId = _unitOfWorkDA.UserDA.GetByIdentityUserRole(applicationUser.Id, cancellationToken);
+            var roleId = _unitOfWorkDA.UserDA.GetByIdentityUserRoleId(applicationUser.Id, cancellationToken);
             var roleById = _unitOfWorkDA.AspNetRoleDA.GetAll(cancellationToken).Result.Where(x => x.Id == roleId.Result).FirstOrDefault();
-            applicationUser.AspNetRole = roleById.NormalizedName;
+            if(roleById != null)
+                applicationUser.AspNetRole = roleById.NormalizedName;
             return applicationUser;
         }
 

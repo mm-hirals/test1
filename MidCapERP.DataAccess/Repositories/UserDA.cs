@@ -22,25 +22,10 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IQueryable<ApplicationUser>> GetUsers(CancellationToken cancellationToken)
         {
-            return await _users.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _users.GetAsync(cancellationToken, x => x.IsActive == true);
         }
 
-        //public async Task<IQueryable<ApplicationRole>> GetRoles(CancellationToken cancellationToken)
-        //{
-        //    return await _roles.GetAsync(cancellationToken);
-        //}
-
-        public async Task<ApplicationUser> GetById(string Id, CancellationToken cancellationToken)
-        {
-            return await _userManager.FindByIdAsync(Id);
-        }
-
-        //public async Task<IQueryable<IdentityUserRole<string>>> GetUserRoles(CancellationToken cancellationToken)
-        //{
-        //    return await _userRole.GetAsync(cancellationToken);
-        //}
-
-        public async Task<string> GetByIdentityUserRole(string Id, CancellationToken cancellationToken)
+        public async Task<string> GetByIdentityUserRoleId(string Id, CancellationToken cancellationToken)
         {
             var data = await _userRole.GetAsync(cancellationToken);
             var roleId = data.Where(x => x.UserId == Id).Select(x => x.RoleId).FirstOrDefault();

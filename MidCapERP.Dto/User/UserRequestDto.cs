@@ -23,6 +23,8 @@ namespace MidCapERP.Dto.User
         public string? Password { get; set; } = string.Empty;
 
         [DisplayName("Phone Number")]
+        [MaxLength(10)]
+        [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; } = string.Empty;
 
         public int UserTenantMappingId { get; set; }

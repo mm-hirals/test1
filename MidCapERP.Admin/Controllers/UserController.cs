@@ -23,7 +23,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.User.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            //await _unitOfWorkBL.UserBL.GetById(cancellationToken);
             return View();
         }
 
@@ -67,6 +66,15 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.UserBL.UpdateUser(Id, userRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.User.Delete)]
+        public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.UserBL.DeleteUser(Id, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
 
