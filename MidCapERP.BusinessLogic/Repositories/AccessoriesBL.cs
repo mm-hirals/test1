@@ -48,7 +48,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            {
                                                AccessoriesId = x.AccessoriesId,
                                                CategoryName = z.LookupValueName,
-                                               AccessoriesTypeName = y.TypeName,
+                                               TypeName = y.TypeName,
                                                Title = x.Title,
                                                UnitName = a.LookupValueName,
                                                UnitPrice = Convert.ToInt32(x.UnitPrice),
