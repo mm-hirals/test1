@@ -108,6 +108,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _userManager.AddToRoleAsync(updatedUser, model.AspNetRole);
 
             return _mapper.Map<UserRequestDto>(oldApplicationUserData);
+
         }
 
         public async Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
