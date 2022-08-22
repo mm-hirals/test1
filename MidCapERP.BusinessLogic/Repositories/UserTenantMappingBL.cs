@@ -38,12 +38,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<UserTenantMappingResponseDto>>(userTenantMappingData);
         }
 
-        public async Task<UserTenantMappingRequestDto> GetById(int Id, CancellationToken cancellationToken)
-        {
-            var woodData = await UserTenantGetById(Id, cancellationToken);
-            return _mapper.Map<UserTenantMappingRequestDto>(woodData);
-        }
-
         public async Task<UserTenantMappingRequestDto> CreateUserTenant(UserTenantMappingRequestDto model, CancellationToken cancellationToken)
         {
             var userTenantToInsert = _mapper.Map<UserTenantMapping>(model);
@@ -55,31 +49,5 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<UserTenantMappingRequestDto>(userTenantData);
             return _mappedUser;
         }
-
-        public async Task<UserTenantMappingRequestDto> UpdateUserTenant(int Id, UserTenantMappingRequestDto model, CancellationToken cancellationToken)
-        {
-            var userTenantToInsert = _mapper.Map<UserTenantMapping>(model);
-            userTenantToInsert.IsDeleted = false;
-            userTenantToInsert.CreatedBy = _currentUser.UserId;
-            userTenantToInsert.CreatedDate = DateTime.Now;
-            userTenantToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var userTenantData = await _unitOfWorkDA.UserTenantMappingDA.UpdateUserTenant(Id, userTenantToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<UserTenantMappingRequestDto>(userTenantData);
-            return _mappedUser;
-        }
-
-        #region Private Method
-
-        private async Task<UserTenantMapping> UserTenantGetById(int Id, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkDA.UserTenantMappingDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("User Tenant not found");
-            }
-            return data;
-        }
-
-        #endregion Private Method
     }
 }

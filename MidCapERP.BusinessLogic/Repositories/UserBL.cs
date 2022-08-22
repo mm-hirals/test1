@@ -32,7 +32,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IQueryable<ApplicationUser>> GetAllUsers(CancellationToken cancellationToken)
         {
-            var getUser = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var getUser = await GetAllUsersData(cancellationToken);
             return getUser;
         }
 
@@ -45,7 +45,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var userAllData = await GetAllUsersData(cancellationToken);
             var users = from x in userAllData
                         orderby x.UserId ascending
                         select new UserResponseDto
@@ -64,7 +64,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<UserRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             // Get ApplicationUser by Id
-            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var userAllData = await GetAllUsersData(cancellationToken);
             var applicationUser = (from x in userAllData
                                    join y in await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken)
                                    on new { x.UserId } equals new { y.UserId }
@@ -117,7 +117,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<UserRequestDto> UpdateUser(int Id, UserRequestDto model, CancellationToken cancellationToken)
         {
             // Update AspNetUser
-            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var userAllData = await GetAllUsersData(cancellationToken);
             var oldApplicationUserData = userAllData.Where(p => p.UserId == Id).FirstOrDefault();
             oldApplicationUserData.FirstName = model.FirstName;
             oldApplicationUserData.LastName = model.LastName;
@@ -140,11 +140,25 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken)
         {
             // InActive AspNetUser
-            var userAllData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var userAllData = await GetAllUsersData(cancellationToken);
             var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
             userById.IsActive = false;
             var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
             return _mapper.Map<UserRequestDto>(userById);
         }
+
+        #region Private Method
+
+        private async Task<IQueryable<ApplicationUser>> GetAllUsersData(CancellationToken cancellationToken)
+        {
+            var getAllUser = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            if (getAllUser == null)
+            {
+                throw new Exception("Users data not found");
+            }
+            return getAllUser;
+        }
+
+        #endregion Private Method
     }
 }

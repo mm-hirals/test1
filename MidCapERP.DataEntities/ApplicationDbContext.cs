@@ -21,12 +21,6 @@ namespace MidCapERP.DataEntities
                 b.Property(x => x.UserId).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
-            //builder.Entity<IdentityRole>(b =>
-            //{
-            //    b.HasIndex(x => x.Name).IsUnique(false);
-            //    b.HasIndex(x => x.NormalizedName).IsUnique(false);
-            //});
-
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
