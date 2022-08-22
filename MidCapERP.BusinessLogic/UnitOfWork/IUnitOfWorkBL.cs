@@ -23,6 +23,5 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IUserTenantMappingBL UserTenantMappingBL { get; }
         IUserBL UserBL { get; }
         IFileStorageService FileStorageService { get; }
-        IAspNetRolesBL AspNetRolesBL { get; }
     }
 }

@@ -22,9 +22,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public ITenantDA TenantDA { get; }
         public IUserTenantMappingDA UserTenantMappingDA { get; }
         public IUserDA UserDA { get; }
-        public IAspNetRoleDA AspNetRoleDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IWoodDA woodDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, IAspNetRoleDA aspNetRoleDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IWoodDA woodDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA)
         {
             {
                 this._context = context;
@@ -44,7 +43,6 @@ namespace MidCapERP.DataAccess.UnitOfWork
                 this.UserTenantMappingDA = userTenantMappingDA;
                 this.TenantDA = tenantDA;
                 this.UserDA = userDA;
-                this.AspNetRoleDA = aspNetRoleDA;
             }
         }
 

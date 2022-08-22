@@ -20,6 +20,5 @@ namespace MidCapERP.DataAccess.UnitOfWork
         ITenantDA TenantDA { get; }
         IUserTenantMappingDA UserTenantMappingDA { get; }
         IUserDA UserDA { get; }
-        IAspNetRoleDA AspNetRoleDA { get; }
     }
 }
