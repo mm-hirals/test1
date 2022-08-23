@@ -90,8 +90,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             contractorToInsert.CreatedDate = DateTime.Now;
             contractorToInsert.CreatedUTCDate = DateTime.UtcNow;
             var contractor = await _unitOfWorkDA.ContractorsDA.CreateContractor(contractorToInsert, cancellationToken);
-            
-            //Add ContractorCateagoryMapping based on Contractor
+            //Add ContractorCategoryMapping based on Contractor
             ContractorCategoryMapping catDto = new ContractorCategoryMapping();
             catDto.CategoryId = model.CategoryId;
             catDto.ContractorId = contractor.ContractorId;
@@ -109,9 +108,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             UpdateContractor(oldContractorData);
             MapToDbObject(model, oldContractorData);
             var contractorData = await _unitOfWorkDA.ContractorsDA.UpdateContractor(Id, oldContractorData, cancellationToken);
-
-            //Find ContractorCateagoryMapping if cateagory is changed then update ContractorCateagoryMapping 
-            
+            //Find ContractorCategoryMapping if category is changed then update ContractorCateagoryMapping
             var categoryOldData = await ContractorCategoryMappingGetById(Id, cancellationToken);
             if (model.CategoryId != categoryOldData.CategoryId)
             {
