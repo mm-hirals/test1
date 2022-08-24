@@ -20,5 +20,6 @@ namespace MidCapERP.DataAccess.UnitOfWork
         ITenantDA TenantDA { get; }
         IUserTenantMappingDA UserTenantMappingDA { get; }
         IUserDA UserDA { get; }
+        IRolePermissionDA RolePermissionDA { get; }
     }
 }
