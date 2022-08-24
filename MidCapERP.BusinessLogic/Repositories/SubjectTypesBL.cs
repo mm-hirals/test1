@@ -40,15 +40,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<SubjectTypesRequestDto> CreateSubjectTypes(SubjectTypesRequestDto model, CancellationToken cancellationToken)
         {
-            var SubjectTypesToInsert = _mapper.Map<SubjectTypes>(model);
-            SubjectTypesToInsert.IsDeleted = true;
-            SubjectTypesToInsert.TenantId = _currentUser.TenantId;
-            SubjectTypesToInsert.CreatedBy = _currentUser.UserId;
-            SubjectTypesToInsert.CreatedDate = DateTime.Now;
-            SubjectTypesToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.SubjectTypesDA.CreateSubjectTypes(SubjectTypesToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<SubjectTypesRequestDto>(data);
-            return _mappedUser;
+            var subjectTypesToInsert = _mapper.Map<SubjectTypes>(model);
+            subjectTypesToInsert.IsDeleted = true;
+            subjectTypesToInsert.TenantId = _currentUser.TenantId;
+            subjectTypesToInsert.CreatedBy = _currentUser.UserId;
+            subjectTypesToInsert.CreatedDate = DateTime.Now;
+            subjectTypesToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.SubjectTypesDA.CreateSubjectTypes(subjectTypesToInsert, cancellationToken);
+            return _mapper.Map<SubjectTypesRequestDto>(data);
         }
 
         public async Task<SubjectTypesRequestDto> UpdateSubjectTypes(int Id, SubjectTypesRequestDto model, CancellationToken cancellationToken)
@@ -60,36 +59,37 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.SubjectTypesDA.UpdateSubjectTypes(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<SubjectTypesRequestDto>(data);
-            return _mappedUser;
+            return _mapper.Map<SubjectTypesRequestDto>(data);
         }
+
+        public async Task<SubjectTypesRequestDto> DeleteSubjectTypes(int Id, CancellationToken cancellationToken)
+        {
+            var subjectTypesToUpdate = await GetSubjectTypeById(Id, cancellationToken);
+            subjectTypesToUpdate.IsDeleted = true;
+            subjectTypesToUpdate.UpdatedBy = _currentUser.UserId;
+            subjectTypesToUpdate.UpdatedDate = DateTime.Now;
+            subjectTypesToUpdate.UpdatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.SubjectTypesDA.UpdateSubjectTypes(Id, subjectTypesToUpdate, cancellationToken);
+            return _mapper.Map<SubjectTypesRequestDto>(data);
+        }
+
+        #region Private Methods
 
         private static void MapToDbObject(SubjectTypesRequestDto model, SubjectTypes oldData)
         {
             oldData.SubjectTypeName = model.SubjectTypeName;
         }
 
-        public async Task<SubjectTypesRequestDto> DeleteSubjectTypes(int Id, CancellationToken cancellationToken)
-        {
-            var SubjectTypesToUpdate = await GetSubjectTypeById(Id, cancellationToken);
-            SubjectTypesToUpdate.IsDeleted = true;
-            SubjectTypesToUpdate.UpdatedBy = _currentUser.UserId;
-            SubjectTypesToUpdate.UpdatedDate = DateTime.Now;
-            SubjectTypesToUpdate.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.SubjectTypesDA.UpdateSubjectTypes(Id, SubjectTypesToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<SubjectTypesRequestDto>(data);
-            return _mappedUser;
-        }
-
         private async Task<SubjectTypes> GetSubjectTypeById(int Id, CancellationToken cancellationToken)
         {
-            var SubjectTypesToUpdate = await _unitOfWorkDA.SubjectTypesDA.GetById(Id, cancellationToken);
-            if (SubjectTypesToUpdate == null)
+            var subjectTypesToUpdate = await _unitOfWorkDA.SubjectTypesDA.GetById(Id, cancellationToken);
+            if (subjectTypesToUpdate == null)
             {
                 throw new Exception("SubjectType not found");
             }
-
-            return SubjectTypesToUpdate;
+            return subjectTypesToUpdate;
         }
+
+        #endregion Private Methods
     }
 }
