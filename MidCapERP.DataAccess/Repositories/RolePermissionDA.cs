@@ -14,9 +14,19 @@ namespace MidCapERP.DataAccess.Repositories
             _roleManager = roleManager;
         }
 
+        public async Task<IList<Claim>> GetRoleClaimsByRole(ApplicationRole applicationRole, CancellationToken cancellationToken)
+        {
+            return await _roleManager.GetClaimsAsync(applicationRole);
+        }
+
         public async Task<IdentityResult> CreateRolePermission(ApplicationRole applicationRole, string claimValue, CancellationToken cancellationToken)
         {
             return await _roleManager.AddClaimAsync(applicationRole, new Claim("Permission", claimValue));
+        }
+
+        public async Task<IdentityResult> DeleteRolePermission(ApplicationRole applicationRole, string claimValue, CancellationToken cancellationToken)
+        {
+            return await _roleManager.RemoveClaimAsync(applicationRole, new Claim("Permission", claimValue));
         }
     }
 }

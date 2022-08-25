@@ -54,6 +54,7 @@
                 .Union(GeneratePermissionsForModule("Polish"))
                 .Union(GeneratePermissionsForModule("User"))
                 .Union(GeneratePermissionsForModule("RolePermission"))
+                .Union(GeneratePermissionsForModule("Product"))
                 .ToList();
             }
 

@@ -1,13 +1,16 @@
 ﻿using MidCapERP.DataEntities.Models;
-using System.ComponentModel;
 
 namespace MidCapERP.Dto.RolePermission
 {
     public class RolePermissionRequestDto : ApplicationRole
     {
-        [DisplayName("Claim Value")]
-        public string claimValue { get; set; } = string.Empty;
+        public string RoleId { get; set; }
+        public string Permission { get; set; }
+        public string Module { get; set; }
+        public string PermissionType { get; set; }
+        public string IsChecked { get; set; }
+        public string AspNetRoleName { get; set; }
 
-        public string AspNetRole { get; set; } = string.Empty;
+        public List<RolePermissionRequestDto> ModulePermissionList { get; set; }
     }
 }
