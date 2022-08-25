@@ -41,9 +41,13 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        #region PrivateMethod
+
         private void SetTenantCookie(string encValue)
         {
             Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
         }
+
+        #endregion PrivateMethod
     }
 }
