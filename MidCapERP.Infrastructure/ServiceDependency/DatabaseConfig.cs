@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.DataEntities;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Infrastructure.ServiceDependency
 {
@@ -46,8 +47,8 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.Configure<IdentityOptions>(
                 options =>
                 {
-                    //options.ClaimsIdentity.UserIdClaimType = TokenEnum.UserId.ToString();
-                    //options.ClaimsIdentity.UserNameClaimType = TokenEnum.Name.ToString();
+                    options.ClaimsIdentity.UserIdClaimType = TokenEnum.UserId.ToString();
+                    options.ClaimsIdentity.UserNameClaimType = TokenEnum.Name.ToString();
                     options.SignIn.RequireConfirmedEmail = true;
                     options.User.RequireUniqueEmail = true;
                     options.User.AllowedUserNameCharacters =

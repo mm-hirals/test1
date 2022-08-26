@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,13 +34,11 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 
-
             TokenConfiguration tokenConfiguration = new TokenConfiguration();
             (configuration.GetSection("token")).Bind(tokenConfiguration);
             byte[] secret = Encoding.ASCII.GetBytes(tokenConfiguration.Secret);
 
-
-            //if (AuthenticationScheme == "Cookies")
+            if (AuthenticationScheme == "Cookies")
             {
                 services.AddAuthentication()
                     .AddCookie(options =>
@@ -61,28 +58,29 @@ namespace MidCapERP.Infrastructure.ServiceDependency
                             ValidateIssuer = false,
                             ValidateAudience = false
                         };
-
                     });
             }
             if (AuthenticationScheme == "Bearer")
             {
-                //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme,options =>
-                //{
-                //    options.AddPolicy(JwtBearerDefaults.AuthenticationScheme,
-                //        new AuthorizationPolicyBuilder()
-                //        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                //        .RequireAuthenticatedUser()
-                //        .Build());
-                //});
-                //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                //    .AddCookie(options =>
-                //    {
-                //        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                //        options.SlidingExpiration = true;
-                //        options.AccessDeniedPath = "/Forbidden/";
-                //        options.LoginPath = "/Authorize/Login";
-                //    });
+                services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                            .AddJwtBearer(x =>
+                            {
+                                x.RequireHttpsMetadata = false;
+                                x.SaveToken = true;
+                                x.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuerSigningKey = true,
+                                    IssuerSigningKey = new SymmetricSecurityKey(secret),
+                                    ValidateIssuer = false,
+                                    ValidateAudience = false
+                                };
+                            });
             }
+
             services.AddAuthorization(
                 options =>
                 {
