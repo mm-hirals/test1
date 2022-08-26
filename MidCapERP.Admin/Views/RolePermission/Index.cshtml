@@ -1,27 +1,73 @@
 ﻿@using MidCapERP.Dto.RolePermission
-@model IEnumerable<MidCapERP.Dto.RolePermission.RolePermissionRequestDto>
+@model MidCapERP.Dto.Role.RoleRequestDto
+@{
+    string action = (Model != null && Model.Id != null) ? "Update" : "CreateRole";
+}
 
-<div>
-    <input hidden value="@ViewBag.RoleName" id="RoleName" />
-</div>
-@foreach (RolePermissionRequestDto modulePermissionList in Model)
-{
-    <div>@modulePermissionList.Module</div>
-    <div class="row">
-        @foreach (RolePermissionRequestDto rolePermissionModel in modulePermissionList.ModulePermissionList)
-        {
-            <div class="col-md-1">
-                <div class="custom-control custom-switch">
-                    <label class="form-label">
-                        @rolePermissionModel.PermissionType
-                    </label>
-                    <input type="checkbox" class="custom-control-input" id="@rolePermissionModel.Id" value="@rolePermissionModel.Permission" @rolePermissionModel.IsChecked>
-                    <label class="custom-control-label" for="@rolePermissionModel.Id">Active</label>
+<div class="">
+    <div class="card-product--wrapper mb-3" id="divRoleModal">
+        <div class="card-prpoduct-cotent--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <input type="hidden" asp-for="Id" />
+                                <label class="form-label">
+                                    Role Name
+                                </label>
+                                <input asp-for="Name" type="text" class="form-control" placeholder="Role Name" id="RoleName" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary" />
+                                <input type="button" value="Back" class="btn btn-primary" id="lnkToRoleIndex" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <nav class="product-nav-tab--sticky">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Role Claims</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--body">
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model.ModulePermissionList)
+                        {
+                            <div>@item.Module</div>
+                            <div class="row">
+                                @foreach (var permission in item.ModulePermissionList)
+                                {
+                                    <div class="col-md-1">
+                                        <div class="custom-control custom-switch">
+                                            <label class="form-label">
+                                                @permission.PermissionType
+                                            </label>
+                                            <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
+                                            <label class="custom-control-label" for="@permission.Id">Active</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+
                 </div>
             </div>
-        }
+        </div>
     </div>
-}
+</div>
+
+<script src="~/lib/dropzone/dropzone.js"></script>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

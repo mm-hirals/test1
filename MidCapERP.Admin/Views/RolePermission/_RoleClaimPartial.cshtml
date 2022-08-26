@@ -1,0 +1,36 @@
+﻿@using MidCapERP.Dto.RolePermission
+@model IEnumerable<MidCapERP.Dto.RolePermission.RolePermissionRequestDto>
+
+<div class="">
+    <nav class="product-nav-tab--sticky">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Role Claims</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--body">
+                    @foreach (RolePermissionRequestDto modulePermissionList in Model)
+                    {
+                        <div>@modulePermissionList.Module</div>
+                        <div class="row">
+                            @foreach (RolePermissionRequestDto rolePermissionModel in modulePermissionList.ModulePermissionList)
+                            {
+                                <div class="col-md-1">
+                                    <div class="custom-control custom-switch">
+                                        <label class="form-label">
+                                            @rolePermissionModel.PermissionType
+                                        </label>
+                                        <input type="checkbox" class="custom-control-input" id="@rolePermissionModel.Id" value="@rolePermissionModel.Permission" @rolePermissionModel.IsChecked>
+                                        <label class="custom-control-label" for="@rolePermissionModel.Id">Active</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
