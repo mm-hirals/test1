@@ -25,6 +25,9 @@ body {
         height: $headerHeight;
         padding: 0 2rem 0 calc(#{$navWidth} + 2rem);
     }
+    .exchange-icon{
+        font-size: 20px;
+    }
 }
 
 .header_toggle {
@@ -61,6 +64,7 @@ body {
     left: -30%;
     width: $navWidth;
     height: 100vh;
+    // overflow-y: auto;
     background-color: $primary;
     // padding: 0.5rem 1rem 0 0;
     padding: 0.5rem 0;
@@ -85,7 +89,10 @@ body {
         }
     }
     &.collapsed {
+        // overflow-y: auto;
+        // overflow-x: hidden;
         .nav-item {
+            position: relative;
             .nav_link {
                 .nav_name {
                     display: none;
@@ -96,12 +103,20 @@ body {
                 }
                 .sub-menu {
                     display: none;
+                    
                 }
             }
             &.submenu-item{
+                position: relative;
                 .sub-menu{
                     margin-left: $navWidth;
                     display: none !important;
+                    position: fixed;
+                    left: 68px;
+                    margin: 0px;
+                    visibility: visible;
+                    overflow-y: auto;
+                    max-height: 222px;
                     .nav_link{
                         width: 220px;
                         padding: spacing(0.5) spacing(0.5) spacing(0.5) spacing(1);
@@ -186,6 +201,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
+    flex-wrap: nowrap;
 }
 
 .nav_logo,
@@ -227,9 +243,11 @@ body {
 
 .navbar-show {
     left: 0;
+    overflow-y: auto;
     @include media(">md") {
         width: calc(#{$navWidth} + 156px);
     }
+    
 }
 
 .active {
@@ -254,3 +272,8 @@ body {
         padding-left: calc(#{$navWidth} + 158px);
     }
 }
+
+
+
+
+
