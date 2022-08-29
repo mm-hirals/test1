@@ -48,6 +48,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<RoleResponseDto>(dataTableFilterDto.Draw, roleData.TotalCount, roleData.TotalCount, roleData);
         }
 
+        public async Task<RoleRequestDto> GetById(string Id, CancellationToken cancellationToken)
+        {
+            var data = await GetAllRoleData(cancellationToken);
+            var roleDataById = data.Where(x => x.Id == Id);
+            return _mapper.Map<RoleRequestDto>(roleDataById.ToList());
+        }
+
         public async Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             ApplicationRole addRoleData = new ApplicationRole();
