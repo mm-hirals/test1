@@ -18,20 +18,9 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Alternate Phone Number")]
         public string AltPhoneNumber { get; set; }
 
-        public string BillingStreet1 { get; set; }
-        public string BillingStreet2 { get; set; }
-        public string BillingLandmark { get; set; }
-        public string BillingArea { get; set; }
-        public string BillingCity { get; set; }
-        public string BillingState { get; set; }
-        public string BillingZipCode { get; set; }
-        public string ShippingStreet1 { get; set; }
-        public string ShippingStreet2 { get; set; }
-        public string ShippingLandmark { get; set; }
-        public string ShippingArea { get; set; }
-        public string ShippingCity { get; set; }
-        public string ShippingState { get; set; }
-        public string ShippingZipCode { get; set; }
+        public string? GSTNo { get; set; }
+        public string? RefferedBy { get; set; }
+        public string? RefferedContactNo { get; set; }
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

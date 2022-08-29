@@ -1,15 +1,6 @@
 ﻿@model MidCapERP.Dto.Customers.CustomersRequestDto
-
 @{
-    string action = "";
-    if (Model != null && Model.CustomerId != 0)
-    {
-        action = "Update";
-    }
-    else
-    {
-        action = "Create";
-    }
+    string action = (Model != null && Model.CustomerId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
@@ -61,103 +52,25 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="BillingStreet1" class="form-label"></label>
-                                <input asp-for="BillingStreet1" class="form-control" />
-                                <span asp-validation-for="BillingStreet1" class="text-danger"></span>
+                                <label asp-for="GSTNo" class="form-label"></label>
+                                <input asp-for="GSTNo" class="form-control" />
+                                <span asp-validation-for="GSTNo" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="BillingStreet2" class="form-label"></label>
-                                <input asp-for="BillingStreet2" class="form-control" />
-                                <span asp-validation-for="BillingStreet2" class="text-danger"></span>
+                                <label asp-for="RefferedBy" class="form-label"></label>
+                                <input asp-for="RefferedBy" class="form-control" />
+                                <span asp-validation-for="RefferedBy" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="BillingLandmark" class="form-label"></label>
-                                <input asp-for="BillingLandmark" class="form-control" />
-                                <span asp-validation-for="BillingLandmark" class="text-danger"></span>
+                                <label asp-for="RefferedContactNo" class="form-label"></label>
+                                <input asp-for="RefferedContactNo" class="form-control" />
+                                <span asp-validation-for="RefferedContactNo" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="BillingArea" class="form-label"></label>
-                                <input asp-for="BillingArea" class="form-control" />
-                                <span asp-validation-for="BillingArea" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="BillingCity" class="form-label"></label>
-                                <input asp-for="BillingCity" class="form-control" />
-                                <span asp-validation-for="BillingCity" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="BillingState" class="form-label"></label>
-                                <input asp-for="BillingState" class="form-control" />
-                                <span asp-validation-for="BillingState" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="BillingZipCode" class="form-label"></label>
-                                <input asp-for="BillingZipCode" class="form-control" />
-                                <span asp-validation-for="BillingZipCode" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingStreet1" class="form-label"></label>
-                                <input asp-for="ShippingStreet1" class="form-control" />
-                                <span asp-validation-for="ShippingStreet1" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingStreet2" class="form-label"></label>
-                                <input asp-for="ShippingStreet2" class="form-control" />
-                                <span asp-validation-for="ShippingStreet2" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingLandmark" class="form-label"></label>
-                                <input asp-for="ShippingLandmark" class="form-control" />
-                                <span asp-validation-for="ShippingLandmark" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingArea" class="form-label"></label>
-                                <input asp-for="ShippingArea" class="form-control" />
-                                <span asp-validation-for="ShippingArea" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingCity" class="form-label"></label>
-                                <input asp-for="ShippingCity" class="form-control" />
-                                <span asp-validation-for="ShippingCity" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingState" class="form-label"></label>
-                                <input asp-for="ShippingState" class="form-control" />
-                                <span asp-validation-for="ShippingState" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ShippingZipCode" class="form-label"></label>
-                                <input asp-for="ShippingZipCode" class="form-control" />
-                                <span asp-validation-for="ShippingZipCode" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <input type="submit" value="Save" class="btn btn-primary" />

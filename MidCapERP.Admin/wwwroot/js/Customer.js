@@ -19,6 +19,7 @@ $(function () {
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
             { "data": "altPhoneNumber", "name": "altPhoneNumber", "autoWidth": true },
+            { "data": "gstNo", "name": "GSTNo", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

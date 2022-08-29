@@ -56,16 +56,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             customerToInsert.CreatedDate = DateTime.Now;
             customerToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
-            return _mappedUser;
+            return _mapper.Map<CustomersRequestDto>(data);
         }
 
         public async Task<CustomersRequestDto> UpdateCustomers(int Id, CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerGetById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateContractor(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
@@ -76,15 +73,20 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerToInsert = await CustomerGetById(Id, cancellationToken);
             customerToInsert.IsDeleted = true;
-            customerToInsert.UpdatedBy = _currentUser.UserId;
-            customerToInsert.UpdatedDate = DateTime.Now;
-            customerToInsert.UpdatedUTCDate = DateTime.UtcNow;
+            UpdateContractor(customerToInsert);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, customerToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
             return _mappedUser;
         }
 
         #region PrivateMethods
+
+        private void UpdateContractor(Customers oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
+        }
 
         private async Task<Customers> CustomerGetById(int Id, CancellationToken cancellationToken)
         {
@@ -102,20 +104,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.EmailId = model.EmailId;
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
-            oldData.BillingStreet1 = model.BillingStreet1;
-            oldData.BillingStreet2 = model.BillingStreet2;
-            oldData.BillingLandmark = model.BillingLandmark;
-            oldData.BillingArea = model.BillingArea;
-            oldData.BillingCity = model.BillingCity;
-            oldData.BillingState = model.BillingState;
-            oldData.BillingZipCode = model.BillingZipCode;
-            oldData.ShippingStreet1 = model.ShippingStreet1;
-            oldData.ShippingStreet2 = model.ShippingStreet2;
-            oldData.ShippingLandmark = model.ShippingLandmark;
-            oldData.ShippingArea = model.ShippingArea;
-            oldData.ShippingCity = model.ShippingCity;
-            oldData.ShippingState = model.ShippingState;
-            oldData.ShippingZipCode = model.ShippingZipCode;
+            oldData.GSTNo = model.GSTNo;
+            oldData.RefferedBy = model.RefferedBy;
+            oldData.RefferedContactNo = model.RefferedContactNo;
         }
 
         #endregion PrivateMethods

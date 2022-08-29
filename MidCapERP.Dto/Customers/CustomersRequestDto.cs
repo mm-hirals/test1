@@ -24,47 +24,14 @@ namespace MidCapERP.Dto.Customers
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string? AltPhoneNumber { get; set; }
 
-        [DisplayName("Billing Street1")]
-        public string BillingStreet1 { get; set; }
+        [DisplayName("GST No")]
+        public string?  GSTNo { get; set; }
 
-        [DisplayName("Billing Street2")]
-        public string? BillingStreet2 { get; set; }
+        [DisplayName("Reffered By")]
+        public string? RefferedBy { get; set; }
 
-        [DisplayName("Billing Landmark")]
-        public string? BillingLandmark { get; set; }
-
-        [DisplayName("Billing Area")]
-        public string BillingArea { get; set; }
-
-        [DisplayName("Billing City")]
-        public string BillingCity { get; set; }
-
-        [DisplayName("Billing State")]
-        public string BillingState { get; set; }
-
-        [DisplayName("Billing Zip Code")]
-        public string BillingZipCode { get; set; }
-
-        [DisplayName("Shipping Street1")]
-        public string ShippingStreet1 { get; set; }
-
-        [DisplayName("Shipping Street2")]
-        public string? ShippingStreet2 { get; set; }
-
-        [DisplayName("Shipping Landmark")]
-        public string? ShippingLandmark { get; set; }
-
-        [DisplayName("Shipping Area")]
-        public string ShippingArea { get; set; }
-
-        [DisplayName("Shipping City")]
-        public string ShippingCity { get; set; }
-
-        [DisplayName("Shipping State")]
-        public string ShippingState { get; set; }
-
-        [DisplayName("Shipping Zip Code")]
-        public string ShippingZipCode { get; set; }
+        [DisplayName("Reffered Contact No")]
+        public string? RefferedContactNo { get; set; }
 
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
