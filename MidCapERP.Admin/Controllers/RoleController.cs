@@ -34,11 +34,13 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Create)]
         public async Task<IActionResult> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
-            var insertedRole = await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
-            var roleAllData = await _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken);
-            var existData = roleAllData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
+            RoleRequestDto insertedRole = new RoleRequestDto();
 
-            return RedirectToAction("Index", "RolePermission", new { id = existData.Id });
+            insertedRole = await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
+            var roleData = await _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken);
+            var insertedRoleData = roleData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
+
+            return RedirectToAction("Index", "RolePermission", new { id = insertedRoleData.Id });
         }
 
         [HttpPost]
@@ -47,6 +49,15 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.RoleBL.UpdateRole(roleRequestDto, cancellationToken);
             return RedirectToAction("Index", "Role");
+        }
+
+        public bool DuplicateRoleName(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
+        {
+            var existData = _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken).Result.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
+            if (existData == null)
+                return true;
+            else
+                return false;
         }
     }
 }

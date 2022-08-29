@@ -51,38 +51,18 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             ApplicationRole addRoleData = new ApplicationRole();
-            var insertedRole = new IdentityResult();
 
-            var roleAllData = await _unitOfWorkDA.RoleDA.GetRoles(cancellationToken);
-            var existData = roleAllData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
-
-            if (existData == null)
-            {
-                addRoleData.Name = roleRequestDto.Name;
-                addRoleData.TenantId = _currentUser.TenantId;
-                insertedRole = await _unitOfWorkDA.RoleDA.CreateRole(addRoleData);
-            }
+            addRoleData.Name = roleRequestDto.Name;
+            addRoleData.TenantId = _currentUser.TenantId;
+            var insertedRole = await _unitOfWorkDA.RoleDA.CreateRole(addRoleData);
             return _mapper.Map<RoleRequestDto>(insertedRole);
         }
 
         public async Task<RoleRequestDto> UpdateRole(RoleRequestDto model, CancellationToken cancellationToken)
         {
-            var updateRole = new IdentityResult();
             var data = await _roleManager.FindByIdAsync(model.Id);
-
-            var roleAllData = await _unitOfWorkDA.RoleDA.GetRoles(cancellationToken);
-            var existData = roleAllData.Where(x => x.Name == model.Name).FirstOrDefault();
-
-            if (existData == null)
-            {
-                data.Name = model.Name;
-                updateRole = await _unitOfWorkDA.RoleDA.UpdateRole(data);
-            }
-            else
-            {
-                throw new Exception("Please enter different name");
-            }
-
+            data.Name = model.Name;
+            var updateRole = await _unitOfWorkDA.RoleDA.UpdateRole(data);
             return _mapper.Map<RoleRequestDto>(updateRole);
         }
 

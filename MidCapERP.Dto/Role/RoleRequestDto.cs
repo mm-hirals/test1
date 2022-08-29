@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.RolePermission;
+﻿using Microsoft.AspNetCore.Mvc;
+using MidCapERP.Dto.RolePermission;
 using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Role
@@ -13,6 +14,7 @@ namespace MidCapERP.Dto.Role
         public string Id { get; set; }
 
         [Required]
+        [Remote("DuplicateRoleName", "Role", ErrorMessage = "Name already exist. Please enter a different name.")]
         public string Name { get; set; }
 
         public string NormalizedName { get; set; }
