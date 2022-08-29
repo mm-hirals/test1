@@ -47,24 +47,5 @@ namespace MidCapERP.Admin.Controllers
                 await _unitOfWorkBL.RolePermissionBL.DeleteRoleClaim(rolePermissionRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Create)]
-        public async Task<IActionResult> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
-        {
-            var insertedRole = await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
-            var roleAllData = await _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken);
-            var existData = roleAllData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
-
-            return RedirectToAction("Index", "RolePermission", new { id = existData.Id });
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Update)]
-        public async Task<IActionResult> Update(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.RoleBL.UpdateRole(roleRequestDto, cancellationToken);
-            return RedirectToAction("Index", "Role");
-        }
     }
 }
