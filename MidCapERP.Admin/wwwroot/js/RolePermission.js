@@ -6,9 +6,8 @@ $("input[type='checkbox']").click(function () {
         IsChecked: this.checked,
         AspNetRoleName: $("#RoleName").val()
     };
-    console.log(data);
     $.ajax({
-        url: "/RolePermission/Create",
+        url: "/Role/CreateRolePermission",
         type: "POST",
         data: data
     });

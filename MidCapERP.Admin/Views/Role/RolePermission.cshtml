@@ -1,7 +1,7 @@
 ﻿@using MidCapERP.Dto.RolePermission
 @model MidCapERP.Dto.Role.RoleRequestDto
 @{
-    string action = (Model != null && Model.Id != null) ? "Update" : "CreateRole";
+    string action = (Model != null && Model.Id != null) ? "UpdateRole" : "CreateRole";
 }
 
 <div class="">
@@ -29,7 +29,7 @@
             </form>
         </div>
     </div>
-    @if (@action == "Update")
+    @if (@action == "UpdateRole")
     {
         <nav class="product-nav-tab--sticky">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
