@@ -14,7 +14,7 @@ namespace MidCapERP.Dto.Role
         public string Id { get; set; }
 
         [Required]
-        [Remote("DuplicateRoleName", "Role", ErrorMessage = "Name already exist. Please enter a different name.")]
+        [Remote("DuplicateRoleName", "Role", AdditionalFields = nameof(Id), ErrorMessage = "Name already exist. Please enter a different name.")]
         public string Name { get; set; }
 
         public string NormalizedName { get; set; }

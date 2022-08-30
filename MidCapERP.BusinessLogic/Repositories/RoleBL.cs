@@ -48,13 +48,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<RoleResponseDto>(dataTableFilterDto.Draw, roleData.TotalCount, roleData.TotalCount, roleData);
         }
 
-        public async Task<RoleRequestDto> GetById(string Id, CancellationToken cancellationToken)
-        {
-            var data = await GetAllRoleData(cancellationToken);
-            var roleDataById = data.Where(x => x.Id == Id);
-            return _mapper.Map<RoleRequestDto>(roleDataById.ToList());
-        }
-
         public async Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             ApplicationRole addRoleData = new ApplicationRole();
@@ -71,6 +64,29 @@ namespace MidCapERP.BusinessLogic.Repositories
             data.Name = model.Name;
             var updateRole = await _unitOfWorkDA.RoleDA.UpdateRole(data);
             return _mapper.Map<RoleRequestDto>(updateRole);
+        }
+
+        // Role Name Validation
+        public async Task<bool> ValidateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllRole = await _unitOfWorkDA.RoleDA.GetRoles(cancellationToken);
+
+            if (roleRequestDto.Id != null)
+            {
+                var getRoleById = getAllRole.First(p => p.Id == roleRequestDto.Id);
+                if (getRoleById.Name == roleRequestDto.Name)
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllRole.Any(p => p.Name == roleRequestDto.Name && p.Id != roleRequestDto.Id);
+                }
+            }
+            else
+            {
+                return !getAllRole.Any(p => p.Name == roleRequestDto.Name);
+            }
         }
 
         #region Private Method

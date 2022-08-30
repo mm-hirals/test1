@@ -19,7 +19,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a href="/RolePermission/Index/' + o.id + '"><i class="bx bxs-pencil"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a class="btn btn-icon btn-outline-primary" href="/RolePermission/Index/' + o.id + '"><i class="bx bxs-pencil"></i></a></div>';
                 }
             }
         ]

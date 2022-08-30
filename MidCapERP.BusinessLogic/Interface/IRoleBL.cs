@@ -10,10 +10,10 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<JsonRepsonse<RoleResponseDto>> GetFilterRoleData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
-        public Task<RoleRequestDto> GetById(string Id, CancellationToken cancellationToken);
-
         public Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken);
 
         public Task<RoleRequestDto> UpdateRole(RoleRequestDto model, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken);
     }
 }

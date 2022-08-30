@@ -47,32 +47,14 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Update)]
         public async Task<IActionResult> Update(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
-            var roleNameExist = DuplicateRoleName(roleRequestDto, cancellationToken);
-            if (roleNameExist == true)
-            {
-                var dataById = _unitOfWorkBL.RoleBL.GetById(roleRequestDto.Id, cancellationToken);
-                if (dataById.Result.Name == roleRequestDto.Name)
-                {
-                    await _unitOfWorkBL.RoleBL.UpdateRole(roleRequestDto, cancellationToken);
-                    return RedirectToAction("Index", "Role");
-                }
-            }
-
-            return RedirectToAction("Index", "RolePermission");
+            await _unitOfWorkBL.RoleBL.UpdateRole(roleRequestDto, cancellationToken);
+            return RedirectToAction("Index", "Role");
         }
 
         // Role Name Validation
-        public bool DuplicateRoleName(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
+        public async Task<bool> DuplicateRoleName(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
-            var existData = _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken).Result.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
-            var 
-            if (existData == null)
-            {
-
-                return true;
-            }
-            else
-                return false;
+            return await _unitOfWorkBL.RoleBL.ValidateRole(roleRequestDto, cancellationToken);
         }
     }
 }
