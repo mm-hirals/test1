@@ -23,8 +23,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="CustomerModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCustomer" href="/Customer/Update/' + o.customerId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CustomerModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/Delete/' + o.customerId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="CustomerModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/Delete/' + o.customerId + '"><i class="bx bxs-trash"></i></a></div>' ;
                 }
             }
         ]
@@ -36,9 +36,13 @@ $("#lnkCustomerFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-CustomerModel.onComplete = function () {
-    $("#divCustomerModal").modal('show');
-}
+$("#lnkRoleFilter").click(function () {
+    window.location.href = "/Customer/Index";
+});
+
+$("#Created").click(function () {
+    window.location.href = "/Customer/Create";
+});
 
 CustomerModel.onDelete = function () {
     tblCustomer.ajax.reload(null, false);

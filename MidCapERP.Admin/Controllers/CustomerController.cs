@@ -37,7 +37,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            return PartialView("_CustomerPartial");
+            return PartialView("CustomerEdit");
         }
 
         [HttpPost]
@@ -54,7 +54,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
-            return PartialView("_CustomerPartial", customers);
+            return View("CustomerEdit", customers);
         }
 
         [HttpPost]
