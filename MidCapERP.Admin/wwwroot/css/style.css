@@ -11241,7 +11241,7 @@ body {
   margin: 0px;
   visibility: visible;
   overflow-y: auto;
-  max-height: 222px;
+  max-height: 400px;
 }
 .l-navbar.collapsed .nav-item.submenu-item .sub-menu .nav_link {
   width: 220px;
