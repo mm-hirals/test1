@@ -53,6 +53,7 @@
                 .Union(GeneratePermissionsForModule("Wood"))
                 .Union(GeneratePermissionsForModule("Polish"))
                 .Union(GeneratePermissionsForModule("User"))
+                .Union(GeneratePermissionsForModule("CustomerAddresses"))
                 .ToList();
             }
 
@@ -237,6 +238,10 @@
                 public const string Create = "Permissions.User.Create";
                 public const string Update = "Permissions.User.Update";
                 public const string Delete = "Permissions.User.Delete";
+            }
+            public static class CustomerAddresses
+            {
+                public const string View = "Permissions.CustomerAddresses.View";
             }
         }
     }

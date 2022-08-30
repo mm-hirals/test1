@@ -33,6 +33,14 @@ namespace MidCapERP.Admin.Controllers
             return Ok(data);
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        public async Task<IActionResult> GetCustomerAddressesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
@@ -46,7 +54,7 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
-            return RedirectToAction("Index");
+            return View("CustomerEdit");
         }
 
         [HttpGet]

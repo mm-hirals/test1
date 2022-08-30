@@ -62,7 +62,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomersRequestDto> UpdateCustomers(int Id, CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerGetById(Id, cancellationToken);
-            UpdateContractor(oldData);
+            UpdateCustomers(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
@@ -73,7 +73,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerToInsert = await CustomerGetById(Id, cancellationToken);
             customerToInsert.IsDeleted = true;
-            UpdateContractor(customerToInsert);
+            UpdateCustomers(customerToInsert);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, customerToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
             return _mappedUser;
@@ -81,7 +81,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #region PrivateMethods
 
-        private void UpdateContractor(Customers oldData)
+        private void UpdateCustomers(Customers oldData)
         {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
