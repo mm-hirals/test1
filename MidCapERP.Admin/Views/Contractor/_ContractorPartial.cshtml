@@ -1,15 +1,6 @@
 ﻿@model MidCapERP.Dto.Contractors.ContractorsRequestDto
-
 @{
-    string action = "";
-    if (Model != null && Model.ContractorId != 0)
-    {
-        action = "Update";
-    }
-    else
-    {
-        action = "Create";
-    }
+    string action = (Model != null && Model.ContractorId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
@@ -57,6 +48,14 @@
                                 <input asp-for="EmailId" class="form-control" />
                                 <span asp-validation-for="EmailId" class="text-danger"></span>
                             </div>
+                        </div>
+                        <div class="form-group">
+                                <label asp-for="CategoryId" class="form-label"></label>
+                                <select asp-for="CategoryId" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ContractorSelectedListSelectItemList, "Value", "Text"))">
+                                    <option value="" hidden disabled selected>Select Category</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

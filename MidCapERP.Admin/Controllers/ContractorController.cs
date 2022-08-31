@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Contractors;
 using MidCapERP.Dto.DataGrid;
@@ -37,23 +38,8 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            await FillCategoryDropDown(cancellationToken);
             return PartialView("_ContractorPartial");
-        }
-
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
-        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
-        {
-            var contractors = await _unitOfWorkBL.ContractorsBL.GetById(Id, cancellationToken);
-            return PartialView("_ContractorPartial", contractors);
-        }
-
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Delete)]
-        public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.ContractorsBL.DeleteContractor(Id, cancellationToken);
-            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -65,6 +51,15 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
+        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
+        {
+            var contractors = await _unitOfWorkBL.ContractorsBL.GetContractorCategoryMappingById(Id, cancellationToken);
+            await FillCategoryDropDown(cancellationToken);
+            return PartialView("_ContractorPartial", contractors);
+        }
+
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
         public async Task<IActionResult> Update(int Id, ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
@@ -74,7 +69,27 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Delete)]
+        public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.ContractorsBL.DeleteContractor(Id, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
         #region PrivateMethods
+
+        private async Task FillCategoryDropDown(CancellationToken cancellationToken)
+        {
+            var categoryTypeData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
+            var categorySelectedList = categoryTypeData.Select(a =>
+                                 new SelectListItem
+                                 {
+                                     Value = Convert.ToString(a.LookupValueId),
+                                     Text = a.LookupValueName
+                                 }).ToList();
+            ViewBag.ContractorSelectedListSelectItemList = categorySelectedList;
+        }
 
         private async Task<IEnumerable<ContractorsResponseDto>> GetAllContractors(CancellationToken cancellationToken)
         {

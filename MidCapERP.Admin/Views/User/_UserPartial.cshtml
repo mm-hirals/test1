@@ -1,0 +1,90 @@
+﻿@model MidCapERP.Dto.User.UserRequestDto
+@{
+    string action = (Model != null && Model.Id != null) ? "Update" : "Create";
+}
+
+<!-- Modal -->
+<div class="modal right fade" id="divUserModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <form asp-action="@action" method="post" class="modal-form--wrapper"
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="UserModel.onSuccess"
+                  data-ajax-failure="UserModel.onFailed">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="Id" hidden class="form-control" />
+                    <input asp-for="UserId" hidden class="form-control" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="FirstName" class="form-label"></label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="LastName" class="form-label"></label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+
+                            @if (@action == "Create")
+                            {
+                                <div class="form-group">
+                                    <label asp-for="UserName" class="form-label"></label>
+                                    <input asp-for="UserName" class="form-control" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="Password" class="form-label"></label>
+                                    <input asp-for="Password" class="form-control" type="password" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber" class="form-label"></label>
+                                <input asp-for="PhoneNumber" class="form-control" type="number" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="AspNetRole" class="form-label"></label>
+                                    <select asp-for="AspNetRole" data-val="true" class="form-control"
+                                            asp-items="@(new SelectList((List<SelectListItem>)ViewBag.AspNetRoleSelectItemList, "Value", "Text"))">
+                                        <option value="" hidden disabled selected>Select Role</option>
+                                    </select>
+                                    <span asp-validation-for="AspNetRole" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}

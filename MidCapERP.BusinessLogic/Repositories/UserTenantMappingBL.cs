@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
+using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.UserTenantMapping;
 
@@ -35,6 +36,18 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              TenantName = y.TenantName
                                          }).AsQueryable();
             return _mapper.Map<List<UserTenantMappingResponseDto>>(userTenantMappingData);
+        }
+
+        public async Task<UserTenantMappingRequestDto> CreateUserTenant(UserTenantMappingRequestDto model, CancellationToken cancellationToken)
+        {
+            var userTenantToInsert = _mapper.Map<UserTenantMapping>(model);
+            userTenantToInsert.IsDeleted = false;
+            userTenantToInsert.CreatedBy = _currentUser.UserId;
+            userTenantToInsert.CreatedDate = DateTime.Now;
+            userTenantToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var userTenantData = await _unitOfWorkDA.UserTenantMappingDA.CreateUserTenant(userTenantToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<UserTenantMappingRequestDto>(userTenantData);
+            return _mappedUser;
         }
     }
 }

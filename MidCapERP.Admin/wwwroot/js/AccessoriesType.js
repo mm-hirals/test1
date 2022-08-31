@@ -16,7 +16,7 @@ $(function () {
         },
         "columns": [
             { "data": "categoryName", "name": "Category Name", "autoWidth": true },
-            { "data": "accessoryTypeName", "name": "Accessory Type Name", "autoWidth": true },   
+            { "data": "typeName", "name": "Accessory Type Name", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

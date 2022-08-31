@@ -38,7 +38,7 @@ namespace MidCapERP.DataAccess.Repositories
             var entity = await _ContractorCategoryMapping.GetByIdAsync(Id, cancellationToken);
             if (entity != null)
             {
-                return await _ContractorCategoryMapping.UpdateAsync(entity, cancellationToken);
+                return await _ContractorCategoryMapping.DeleteAsync(entity, cancellationToken);
             }
             return entity;
         }

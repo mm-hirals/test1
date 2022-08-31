@@ -1,0 +1,55 @@
+.order-detail-page--wrapper{
+    .form-label{
+        font-size: 13px;
+    }
+    .form-value{
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .order-final-price{
+        font-size: 20px;
+    }
+}
+.accordion-button:not(.collapsed){
+    background-color: #fafafa;
+}
+.accordion-button:focus{
+    box-shadow: none;
+    border-bottom: 1px solid #a5d8dd;
+}.accordion-button::after{
+    content: "";
+    z-index: 1;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 5px;
+    transform: rotate(45deg);
+    position: absolute;
+    right: 18px;
+    top: 16px;
+    background-image: none !important;
+    width: 16px;
+    height: 16px;
+}
+.accordion-button:not(.collapsed)::after{
+    transform: rotate(223deg);
+    top: 24px;
+    position: absolute;
+}
+.accordion-button::before{
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 56px;
+    height: 100%;
+    background: #4b49ac;
+    position: absolute;
+    background-image: none!important;
+    border-radius: 0 3px 3px 0;
+    content: "";
+}
+.order-details-price-section{
+    .table.c-table tr:nth-child(even){
+        background-color: none !important;
+    }
+}
