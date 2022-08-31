@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
+using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
@@ -11,11 +13,13 @@ namespace MidCapERP.BusinessLogic.Repositories
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
+        private readonly CurrentUser _currentUser;
 
-        public CustomerAddressesBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper)
+        public CustomerAddressesBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<CustomerAddressesResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -50,5 +54,74 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await GetDetailsById(Id, cancellationToken);
             return _mapper.Map<CustomerAddressesResponseDto>(data);
         }
+
+        public async Task<CustomerAddressesRequestDto> GetById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await CustomerAddressesGetById(Id, cancellationToken);
+            return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
+        public async Task<CustomerAddressesRequestDto> CreateCustomerAddresses(CustomerAddressesRequestDto model, CancellationToken cancellationToken)
+        {
+            var customerAddresses = _mapper.Map<CustomerAddresses>(model);
+            customerAddresses.IsDeleted = false;
+            customerAddresses.CreatedBy = _currentUser.UserId;
+            customerAddresses.CreatedDate = DateTime.Now;
+            customerAddresses.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(customerAddresses, cancellationToken);
+            return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
+        public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(int Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
+        {
+            var oldData = await CustomerAddressesGetById(Id, cancellationToken);
+            UpdateCustomerAddresses(oldData);
+            MapToDbObject(model, oldData);
+            var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, oldData, cancellationToken);
+            return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
+        public async Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
+        {
+            var customerAddressToInsert = await CustomerAddressesGetById(Id, cancellationToken);
+            customerAddressToInsert.IsDeleted = true;
+            UpdateCustomerAddresses(customerAddressToInsert);
+            var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, customerAddressToInsert, cancellationToken);
+            return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
+        #region PrivateMethods
+
+        private void UpdateCustomerAddresses(CustomerAddresses oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
+        }
+
+        private async Task<CustomerAddresses> CustomerAddressesGetById(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CustomerAddressesDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Customer Address not found");
+            }
+            return data;
+        }
+
+        private static void MapToDbObject(CustomerAddressesRequestDto model, CustomerAddresses oldData)
+        {
+            oldData.AddressTypeId = model.AddressTypeId;
+            oldData.Street1 = model.Street1;
+            oldData.Street2 = model.Street2;
+            oldData.Landmark = model.Landmark;
+            oldData.Area = model.Area;
+            oldData.City = model.City;
+            oldData.State = model.State;
+            oldData.ZipCode = model.ZipCode;
+            oldData.IsDefault = model.IsDefault;
+        }
+
+        #endregion PrivateMethods
     }
 }

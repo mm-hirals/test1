@@ -22,5 +22,25 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _customerAddresses.GetByIdAsync(Id, cancellationToken);
         }
+
+        public async Task<CustomerAddresses> CreateCustomerAddress(CustomerAddresses model, CancellationToken cancellationToken)
+        {
+            return await _customerAddresses.InsertAsync(model, cancellationToken);
+        }
+
+        public async Task<CustomerAddresses> UpdateCustomerAddress(int Id, CustomerAddresses model, CancellationToken cancellationToken)
+        {
+            return await _customerAddresses.UpdateAsync(model, cancellationToken);
+        }
+
+        public async Task<CustomerAddresses> DeleteCustomerAddress(int Id, CancellationToken cancellationToken)
+        {
+            var entity = await _customerAddresses.GetByIdAsync(Id, cancellationToken);
+            if (entity != null)
+            {
+                return await _customerAddresses.UpdateAsync(entity, cancellationToken);
+            }
+            return entity;
+        }
     }
 }

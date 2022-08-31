@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
@@ -58,6 +59,23 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
+        public async Task<IActionResult> CreateCustomerAddress(CancellationToken cancellationToken)
+        {
+            return PartialView("_CustomerAddressPartial");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
+        public async Task<IActionResult> CreateCustomerAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
+            return View("CustomerEdit");
+        }
+
+        //Customer Update
+        [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
@@ -74,21 +92,38 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        //CustomerAddress Update
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
+        public async Task<IActionResult> UpdateCustomerAddresses(int Id, CancellationToken cancellationToken)
+        {
+            var customersAddress = await _unitOfWorkBL.CustomerAddressesBL.GetById(Id, cancellationToken);
+            return View("_CustomerAddressPartial", customersAddress);
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
+        public async Task<IActionResult> UpdateCustomerAddresses(int Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(Id, customersAddressRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
+            return RedirectToAction("CustomerEdit");
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var customers = await _unitOfWorkBL.CustomersBL.DeleteCustomers(Id, cancellationToken);
+            await _unitOfWorkBL.CustomersBL.DeleteCustomers(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
-        #region PrivateMethods
-
-        private async Task<IEnumerable<CustomersResponseDto>> GetAllCustomers(CancellationToken cancellationToken)
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Delete)]
+        public async Task<IActionResult> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
-            return await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+            await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);
+            return RedirectToAction("CustomerEdit");
         }
-
-        #endregion PrivateMethods
     }
 }
