@@ -6,7 +6,7 @@
     <div class="header-right-section d-flex align-items-center">
         <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
-                <span class="pe-2">@_currentUser.TenantName</span>
+                @*<span class="pe-2">@_currentUser.TenantName</span>*@
                 @if (_currentUser.IsMultipleTenant)
                 {
                     <a href="/Tenant" class="btn btn-primary d-flex align-items-center d-flex align-items-center"><i class='bx bx-transfer exchange-icon pe-3'></i> @_currentUser.TenantName </a>
