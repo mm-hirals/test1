@@ -45,12 +45,12 @@
                 .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Company"))
                 .Union(GeneratePermissionsForModule("Unit"))
-                .Union(GeneratePermissionsForModule("WoodType"))
+                .Union(GeneratePermissionsForModule("FrameType"))
                 .Union(GeneratePermissionsForModule("AccessoriesType"))
                 .Union(GeneratePermissionsForModule("RawMaterial"))
                 .Union(GeneratePermissionsForModule("Accessories"))
                 .Union(GeneratePermissionsForModule("Fabric"))
-                .Union(GeneratePermissionsForModule("Wood"))
+                .Union(GeneratePermissionsForModule("Frame"))
                 .Union(GeneratePermissionsForModule("Polish"))
                 .Union(GeneratePermissionsForModule("User"))
                 .Union(GeneratePermissionsForModule("Product"))
@@ -176,12 +176,12 @@
                 public const string Delete = "Permissions.Unit.Delete";
             }
 
-            public static class WoodType
+            public static class FrameType
             {
-                public const string View = "Permissions.WoodType.View";
-                public const string Create = "Permissions.WoodType.Create";
-                public const string Update = "Permissions.WoodType.Update";
-                public const string Delete = "Permissions.WoodType.Delete";
+                public const string View = "Permissions.FrameType.View";
+                public const string Create = "Permissions.FrameType.Create";
+                public const string Update = "Permissions.FrameType.Update";
+                public const string Delete = "Permissions.FrameType.Delete";
             }
 
             public static class AccessoriesType
@@ -216,12 +216,12 @@
                 public const string Delete = "Permissions.Fabric.Delete";
             }
 
-            public static class Wood
+            public static class Frame
             {
-                public const string View = "Permissions.Wood.View";
-                public const string Create = "Permissions.Wood.Create";
-                public const string Update = "Permissions.Wood.Update";
-                public const string Delete = "Permissions.Wood.Delete";
+                public const string View = "Permissions.Frame.View";
+                public const string Create = "Permissions.Frame.Create";
+                public const string Update = "Permissions.Frame.Update";
+                public const string Delete = "Permissions.Frame.Delete";
             }
 
             public static class Polish

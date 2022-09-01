@@ -39,7 +39,7 @@ namespace MidCapERP.DataEntities
         public DbSet<Accessories> Accessories { get; set; }
         public DbSet<RawMaterial> RawMaterial { get; set; }
         public DbSet<Fabrics> Fabric { get; set; }
-        public DbSet<Woods> Wood { get; set; }
+        public DbSet<Frames> Frame { get; set; }
         public DbSet<Polish> Polish { get; set; }
         public DbSet<Tenant> Tenant { get; set; }
         public DbSet<UserTenantMapping> UserTenantMapping { get; set; }

@@ -28,8 +28,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<RawMaterialResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
-            return _mapper.Map<List<RawMaterialResponseDto>>(data.ToList());
+            var rawMaterialAllData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+            return _mapper.Map<List<RawMaterialResponseDto>>(rawMaterialAllData.ToList());
         }
 
         public async Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterRawMaterialData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var rawMaterialResponseData = (from x in rawMaterialAllData
                                            join y in lookupValuesAllData
-                                                on new { LookupId = x.UnitId } equals new { LookupId = y.LookupValueId }
+                                           on new { LookupId = x.UnitId } equals new { LookupId = y.LookupValueId }
                                            select new RawMaterialResponseDto()
                                            {
                                                RawMaterialId = x.RawMaterialId,
@@ -47,8 +47,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                UnitPrice = x.UnitPrice,
                                                ImagePath = x.ImagePath
                                            }).AsQueryable();
-            var RawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialResponseData, dataTableFilterDto);
-            return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, RawMaterialData.TotalCount, RawMaterialData.TotalCount, RawMaterialData);
+            var rawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialResponseData, dataTableFilterDto);
+            return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, rawMaterialData.TotalCount, rawMaterialData.TotalCount, rawMaterialData);
         }
 
         public async Task<RawMaterialResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
@@ -65,15 +65,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<RawMaterialRequestDto> CreateRawMaterial(RawMaterialRequestDto model, CancellationToken cancellationToken)
         {
-            var RawMaterialToInsert = _mapper.Map<RawMaterial>(model);
+            var rawMaterialToInsert = _mapper.Map<RawMaterial>(model);
             if (model.UploadImage != null)
-                RawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.RawMaterials);
-            RawMaterialToInsert.IsDeleted = false;
-            RawMaterialToInsert.TenantId = _currentUser.TenantId;
-            RawMaterialToInsert.CreatedBy = _currentUser.UserId;
-            RawMaterialToInsert.CreatedDate = DateTime.Now;
-            RawMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.RawMaterialDA.CreateRawMaterial(RawMaterialToInsert, cancellationToken);
+                rawMaterialToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.RawMaterials);
+            rawMaterialToInsert.IsDeleted = false;
+            rawMaterialToInsert.TenantId = _currentUser.TenantId;
+            rawMaterialToInsert.CreatedBy = _currentUser.UserId;
+            rawMaterialToInsert.CreatedDate = DateTime.Now;
+            rawMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.RawMaterialDA.CreateRawMaterial(rawMaterialToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
             return _mappedUser;
         }
@@ -90,6 +90,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<RawMaterialRequestDto> DeleteRawMaterial(int Id, CancellationToken cancellationToken)
+        {
+            var rawMaterialToUpdate = await GetRawMaterialById(Id, cancellationToken);
+            rawMaterialToUpdate.IsDeleted = true;
+            UpdateData(rawMaterialToUpdate);
+            var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, rawMaterialToUpdate, cancellationToken);
+            var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
+            return _mappedUser;
+        }
+
+        #region PrivateMethods
+
         private static void MapToDbObject(RawMaterialRequestDto model, RawMaterial oldData)
         {
             oldData.Title = model.Title;
@@ -97,18 +109,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UnitPrice = model.UnitPrice;
             oldData.ImagePath = model.ImagePath;
         }
-
-        public async Task<RawMaterialRequestDto> DeleteRawMaterial(int Id, CancellationToken cancellationToken)
-        {
-            var RawMaterialToUpdate = await GetRawMaterialById(Id, cancellationToken);
-            RawMaterialToUpdate.IsDeleted = true;
-            UpdateData(RawMaterialToUpdate);
-            var data = await _unitOfWorkDA.RawMaterialDA.UpdateRawMaterial(Id, RawMaterialToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<RawMaterialRequestDto>(data);
-            return _mappedUser;
-        }
-
-        #region PrivateMethods
 
         private async Task<RawMaterial> GetRawMaterialById(int Id, CancellationToken cancellationToken)
         {
