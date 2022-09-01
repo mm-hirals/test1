@@ -1,35 +1,35 @@
-﻿@model MidCapERP.Dto.Wood.WoodRequestDto
+﻿@model MidCapERP.Dto.Frames.FrameRequestDto
 @{
-    string action = (Model != null && Model.WoodId != 0) ? "Update" : "Create";
+    string action = (Model != null && Model.FrameId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
-<div class="modal right fade" id="divWoodModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divFrameModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Wood</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Frame</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                   data-ajax="true" data-ajax-method="post"
-                  data-ajax-complete="WoodModel.onSuccess"
-                  data-ajax-failure="WoodModel.onFailed"
+                  data-ajax-complete="FrameModel.onSuccess"
+                  data-ajax-failure="FrameModel.onFailed"
                   enctype="multipart/form-data">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input asp-for="WoodId" hidden class="form-control" />
+                    <input asp-for="FrameId" hidden class="form-control" />
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="WoodTypeId" class="form-label"></label>
-                                <select asp-for="WoodTypeId" data-val="true" class="form-control"
-                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.WoodSelectItemList, "Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select WoodType</option>
+                                <label asp-for="FrameTypeId" class="form-label"></label>
+                                <select asp-for="FrameTypeId" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.FrameSelectItemList, "Value", "Text"))">
+                                    <option value="" hidden disabled selected>Select FrameType</option>
                                 </select>
-                                <span asp-validation-for="WoodTypeId" class="text-danger"></span>
+                                <span asp-validation-for="FrameTypeId" class="text-danger"></span>
                             </div>
 
                             <div class="form-group">

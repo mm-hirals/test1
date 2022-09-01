@@ -15,13 +15,13 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICategoryBL CategoryBL { get; }
         public ICompanyBL CompanyBL { get; }
         public IUnitBL UnitBL { get; }
-        public IWoodTypeBL WoodTypeBL { get; }
+        public IFrameTypeBL FrameTypeBL { get; }
         public IAccessoriesTypeBL AccessoriesTypeBL { get; }
         public IRawMaterialBL RawMaterialBL { get; }
         public IFileStorageService FileStorageService { get; }
         public IAccessoriesBL AccessoriesBL { get; }
         public IFabricBL FabricBL { get; }
-        public IWoodBL WoodBL { get; }
+        public IFrameBL FrameBL { get; }
         public IPolishBL PolishBL { get; }
         public IUserTenantMappingBL UserTenantMappingBL { get; }
         public IUserBL UserBL { get; }
@@ -29,7 +29,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IProductImageBL ProductImageBL { get; }
         public IProductMaterialBL ProductMaterialBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IWoodBL woodBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IProductImageBL productImageBL, IProductMaterialBL productMaterialBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IProductImageBL productImageBL, IProductMaterialBL productMaterialBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -40,13 +40,13 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.CategoryBL = categoryBL;
             this.CompanyBL = companyBL;
             this.UnitBL = unitBL;
-            this.WoodTypeBL = woodTypeBL;
+            this.FrameTypeBL = frameTypeBL;
             this.AccessoriesTypeBL = accessoriesTypesBL;
             this.RawMaterialBL = rawMaterialBL;
             this.FileStorageService = fileStorageService;
             this.AccessoriesBL = accessoriesBL;
             this.FabricBL = fabricBL;
-            this.WoodBL = woodBL;
+            this.FrameBL = frameBL;
             this.PolishBL = polishBL;
             this.UserTenantMappingBL = userTenantMappingBL;
             this.UserBL = userBL;

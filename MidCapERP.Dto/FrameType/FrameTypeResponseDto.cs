@@ -1,14 +1,16 @@
-﻿using MidCapERP.Dto.Constants;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.WoodType
+namespace MidCapERP.Dto.FrameType
 {
-    public class WoodTypeRequestDto
+    public class FrameTypeResponseDto
     {
         public int LookupValueId { get; set; }
-        public int LookupId { get; set; } = (int)MasterPagesEnum.WoodType;
+        public int LookupId { get; set; }
 
-        [DisplayName("Wood Type Name")]
+        [DisplayName("Lookup Name")]
+        public string LookupName { get; set; }
+
+        [DisplayName("Frame Type Name")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }
