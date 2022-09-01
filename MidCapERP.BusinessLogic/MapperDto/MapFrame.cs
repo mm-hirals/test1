@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Dto.Frame;
+using MidCapERP.Dto.Frames;
 
 namespace MidCapERP.BusinessLogic.MapperDto
 {

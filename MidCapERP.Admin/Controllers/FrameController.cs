@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.Frame;
+using MidCapERP.Dto.Frames;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
@@ -86,7 +86,7 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task FillFrameTypeDropDown(CancellationToken cancellationToken)
         {
-            var frameTypeData = await _unitOfWorkBL.WoodTypeBL.GetAll(cancellationToken);
+            var frameTypeData = await _unitOfWorkBL.FrameTypeBL.GetAll(cancellationToken);
             var frameSelectedList = frameTypeData.Select(a =>
                                  new SelectListItem
                                  {

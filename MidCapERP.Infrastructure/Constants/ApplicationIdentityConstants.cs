@@ -45,7 +45,7 @@
                 .Union(GeneratePermissionsForModule("Category"))
                 .Union(GeneratePermissionsForModule("Company"))
                 .Union(GeneratePermissionsForModule("Unit"))
-                .Union(GeneratePermissionsForModule("WoodType"))
+                .Union(GeneratePermissionsForModule("FrameType"))
                 .Union(GeneratePermissionsForModule("AccessoriesType"))
                 .Union(GeneratePermissionsForModule("RawMaterial"))
                 .Union(GeneratePermissionsForModule("Accessories"))
@@ -175,12 +175,12 @@
                 public const string Delete = "Permissions.Unit.Delete";
             }
 
-            public static class WoodType
+            public static class FrameType
             {
-                public const string View = "Permissions.WoodType.View";
-                public const string Create = "Permissions.WoodType.Create";
-                public const string Update = "Permissions.WoodType.Update";
-                public const string Delete = "Permissions.WoodType.Delete";
+                public const string View = "Permissions.FrameType.View";
+                public const string Create = "Permissions.FrameType.Create";
+                public const string Update = "Permissions.FrameType.Update";
+                public const string Delete = "Permissions.FrameType.Delete";
             }
 
             public static class AccessoriesType

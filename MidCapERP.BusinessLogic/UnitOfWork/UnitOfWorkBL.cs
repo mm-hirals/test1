@@ -15,7 +15,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ICategoryBL CategoryBL { get; }
         public ICompanyBL CompanyBL { get; }
         public IUnitBL UnitBL { get; }
-        public IWoodTypeBL WoodTypeBL { get; }
+        public IFrameTypeBL FrameTypeBL { get; }
         public IAccessoriesTypeBL AccessoriesTypeBL { get; }
         public IRawMaterialBL RawMaterialBL { get; }
         public IFileStorageService FileStorageService { get; }
@@ -26,7 +26,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IUserTenantMappingBL UserTenantMappingBL { get; }
         public IUserBL UserBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -37,7 +37,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.CategoryBL = categoryBL;
             this.CompanyBL = companyBL;
             this.UnitBL = unitBL;
-            this.WoodTypeBL = woodTypeBL;
+            this.FrameTypeBL = frameTypeBL;
             this.AccessoriesTypeBL = accessoriesTypesBL;
             this.RawMaterialBL = rawMaterialBL;
             this.FileStorageService = fileStorageService;

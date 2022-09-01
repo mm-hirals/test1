@@ -7,7 +7,7 @@ using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.Frame;
+using MidCapERP.Dto.Frames;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories

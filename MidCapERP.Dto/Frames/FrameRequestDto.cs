@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MidCapERP.Dto.Frame
+namespace MidCapERP.Dto.Frames
 {
     public class FrameRequestDto
     {

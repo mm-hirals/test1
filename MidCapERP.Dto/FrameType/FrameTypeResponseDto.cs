@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.WoodType
+namespace MidCapERP.Dto.FrameType
 {
-    public class WoodTypeResponseDto
+    public class FrameTypeResponseDto
     {
         public int LookupValueId { get; set; }
         public int LookupId { get; set; }
@@ -10,7 +10,7 @@ namespace MidCapERP.Dto.WoodType
         [DisplayName("Lookup Name")]
         public string LookupName { get; set; }
 
-        [DisplayName("Wood Type Name")]
+        [DisplayName("Frame Type Name")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }
