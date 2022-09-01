@@ -41,3 +41,54 @@ document.addEventListener("DOMContentLoaded", function (event) {
 $(".submenu-link").click(function () {
     $(".sub-menu").toggle().animate({}, 500);
 });
+
+//Chart JS For Dashboard page
+var xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+
+new Chart("myChart", {
+    type: "line",
+    data: {
+        labels: xValues,
+        datasets: [{
+            data: [860, 1140, 1060, 1060, 1070, 1110, 1330, 2210, 7830, 2478],
+            borderColor: "#98bdff",
+            fill: false
+        }, {
+            data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
+            borderColor: "#f3797e",
+            fill: false
+        }, {
+            data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
+            borderColor: "#4b49ac",
+            fill: false
+        }]
+    },
+    options: {
+        legend: { display: false }
+    }
+});
+
+
+//Chart JS For Dashboard page
+
+var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+var yValues = [55, 49, 44, 24, 20];
+var barColors = ["#4b49ac", "#606060", "#98bdff", "#f3797e", "brown"];
+
+new Chart("myCharts", {
+    type: "bar",
+    data: {
+        labels: xValues,
+        datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+        }]
+    },
+    options: {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: ""
+        }
+    }
+});
