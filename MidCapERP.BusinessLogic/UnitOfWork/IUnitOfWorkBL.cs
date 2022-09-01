@@ -13,12 +13,12 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         ICategoryBL CategoryBL { get; }
         ICompanyBL CompanyBL { get; }
         IUnitBL UnitBL { get; }
-        IWoodTypeBL WoodTypeBL { get; }
+        IFrameTypeBL FrameTypeBL { get; }
         IAccessoriesTypeBL AccessoriesTypeBL { get; }
         IRawMaterialBL RawMaterialBL { get; }
         IAccessoriesBL AccessoriesBL { get; }
         IFabricBL FabricBL { get; }
-        IWoodBL WoodBL { get; }
+        IFrameBL FrameBL { get; }
         IPolishBL PolishBL { get; }
         IUserTenantMappingBL UserTenantMappingBL { get; }
         IUserBL UserBL { get; }
