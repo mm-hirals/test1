@@ -35,7 +35,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var categoryResponseData = (from x in categoryAllData
                                         join y in lookupsAllData
-                                             on new { x.LookupId } equals new { y.LookupId }
+                                        on new { x.LookupId } equals new { y.LookupId }
                                         where x.LookupId == (int)MasterPagesEnum.Category
                                         select new CategoryResponseDto()
                                         {
@@ -57,14 +57,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CategoryResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
-            var data = await GetCategoryById(Id, cancellationToken);
-            return _mapper.Map<CategoryResponseDto>(data);
+            var categoryData = await GetCategoryById(Id, cancellationToken);
+            return _mapper.Map<CategoryResponseDto>(categoryData);
         }
 
         public async Task<CategoryRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await GetCategoryById(Id, cancellationToken);
-            return _mapper.Map<CategoryRequestDto>(data);
+            var categoryData = await GetCategoryById(Id, cancellationToken);
+            return _mapper.Map<CategoryRequestDto>(categoryData);
         }
 
         public async Task<CategoryRequestDto> CreateCategory(CategoryRequestDto model, CancellationToken cancellationToken)
@@ -82,13 +82,30 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CategoryRequestDto> UpdateCategory(int Id, CategoryRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await GetCategoryById(Id, cancellationToken);
+            UpdateCategory(oldData);
+            MapToDbObject(model, oldData);
+            var categoryUpdatedata = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
+            var _mappedUser = _mapper.Map<CategoryRequestDto>(categoryUpdatedata);
+            return _mappedUser;
+        }
+
+        public async Task<CategoryRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken)
+        {
+            var categoryToUpdate = await GetCategoryById(Id, cancellationToken);
+            categoryToUpdate.IsDeleted = true;
+            UpdateCategory(categoryToUpdate);
+            var categoryDeletedata = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, categoryToUpdate, cancellationToken);
+            var _mappedUser = _mapper.Map<CategoryRequestDto>(categoryDeletedata);
+            return _mappedUser;
+        }
+
+        #region PrivateMethods
+
+        private void UpdateCategory(LookupValues oldData)
+        {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<CategoryRequestDto>(data);
-            return _mappedUser;
         }
 
         private static void MapToDbObject(CategoryRequestDto model, LookupValues oldData)
@@ -97,26 +114,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.LookupValueId = model.LookupValueId;
         }
 
-        public async Task<CategoryRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken)
-        {
-            var categoryToUpdate = await GetCategoryById(Id, cancellationToken);
-            categoryToUpdate.IsDeleted = true;
-            categoryToUpdate.UpdatedBy = _currentUser.UserId;
-            categoryToUpdate.UpdatedDate = DateTime.Now;
-            categoryToUpdate.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, categoryToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<CategoryRequestDto>(data);
-            return _mappedUser;
-        }
-
-        #region PrivateMethods
-
         private async Task<LookupValues> GetCategoryById(int Id, CancellationToken cancellationToken)
         {
             var categoryDataById = await _unitOfWorkDA.LookupValuesDA.GetById(Id, cancellationToken);
             if (categoryDataById == null)
             {
-                throw new Exception("LookupValues not found");
+                throw new Exception("Category not found");
             }
             return categoryDataById;
         }

@@ -3,6 +3,8 @@
     public static class ApplicationIdentityConstants
     {
         public static readonly string DefaultPassword = "Password@1";
+        public static readonly string TenantCookieName = "TenantId";
+        public static readonly string EncryptionSecret = "MAGNUSMINDS_SAB_KA_BAAP";
 
         public static class Roles
         {
@@ -49,6 +51,8 @@
                 .Union(GeneratePermissionsForModule("Accessories"))
                 .Union(GeneratePermissionsForModule("Fabric"))
                 .Union(GeneratePermissionsForModule("Wood"))
+                .Union(GeneratePermissionsForModule("Polish"))
+                .Union(GeneratePermissionsForModule("User"))
                 .ToList();
             }
 
@@ -217,6 +221,22 @@
                 public const string Create = "Permissions.Wood.Create";
                 public const string Update = "Permissions.Wood.Update";
                 public const string Delete = "Permissions.Wood.Delete";
+            }
+
+            public static class Polish
+            {
+                public const string View = "Permissions.Polish.View";
+                public const string Create = "Permissions.Polish.Create";
+                public const string Update = "Permissions.Polish.Update";
+                public const string Delete = "Permissions.Polish.Delete";
+            }
+
+            public static class User
+            {
+                public const string View = "Permissions.User.View";
+                public const string Create = "Permissions.User.Create";
+                public const string Update = "Permissions.User.Update";
+                public const string Delete = "Permissions.User.Delete";
             }
         }
     }

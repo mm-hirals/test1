@@ -37,15 +37,15 @@ WoodTypeModel.onComplete = function () {
 }
 
 WoodTypeModel.onDelete = function () {
-    tblWoodType.ajax.reload();
+    tblWoodType.ajax.reload(null, false);
 }
 
 WoodTypeModel.onSuccess = function (xhr) {
-    tblWoodType.ajax.reload();
+    tblWoodType.ajax.reload(null, false);
     $("#divWoodTypeModal").modal('hide');
 };
 
 WoodTypeModel.onFailed = function (xhr) {
-    tblWoodType.ajax.reload();
+    tblWoodType.ajax.reload(null, false);
     $("#divWoodTypeModal").modal('hide');
 };

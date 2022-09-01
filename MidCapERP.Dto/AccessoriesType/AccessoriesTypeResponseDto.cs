@@ -14,7 +14,7 @@ namespace MidCapERP.Dto.AccessoriesType
         public string CategoryName { get; set; }
 
         [DisplayName("Accessory Type Name")]
-        public string AccessoryTypeName { get; set; }
+        public string TypeName { get; set; }
 
         public bool IsDeleted { get; set; }
         public int? CreatedBy { get; set; }

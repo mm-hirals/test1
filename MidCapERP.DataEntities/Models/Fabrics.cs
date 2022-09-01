@@ -8,6 +8,7 @@ namespace MidCapERP.DataEntities.Models
     {
         [Key]
         public int FabricId { get; set; }
+
         public string Title { get; set; }
         public string ModelNo { get; set; }
         public int CompanyId { get; set; }

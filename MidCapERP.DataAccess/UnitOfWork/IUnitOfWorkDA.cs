@@ -16,5 +16,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IAccessoriesDA AccessoriesDA { get; }
         IFabricDA FabricDA { get; }
         IWoodDA WoodDA { get; }
+        IPolishDA PolishDA { get; }
+        ITenantDA TenantDA { get; }
+        IUserTenantMappingDA UserTenantMappingDA { get; }
+        IUserDA UserDA { get; }
     }
 }

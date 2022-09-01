@@ -8,5 +8,10 @@ namespace MidCapERP.Admin.Controllers
         {
             return View();
         }
+
+        public IActionResult OrderDetail()
+        {
+            return View();
+        }
     }
 }

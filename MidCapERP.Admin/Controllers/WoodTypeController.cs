@@ -29,8 +29,8 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.WoodType.View)]
         public async Task<IActionResult> GetWoodTypeData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.WoodTypeBL.GetFilterWoodTypeData(dataTableFilterDto, cancellationToken);
-            return Ok(data);
+            var filterWoodTypedata = await _unitOfWorkBL.WoodTypeBL.GetFilterWoodTypeData(dataTableFilterDto, cancellationToken);
+            return Ok(filterWoodTypedata);
         }
 
         [HttpGet]
@@ -42,9 +42,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.WoodType.Create)]
-        public async Task<IActionResult> Create(WoodTypeRequestDto lookupsRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(WoodTypeRequestDto woodTypeRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.WoodTypeBL.CreateWoodType(lookupsRequestDto, cancellationToken);
+            await _unitOfWorkBL.WoodTypeBL.CreateWoodType(woodTypeRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
@@ -53,8 +53,8 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.WoodType.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var lookups = await _unitOfWorkBL.WoodTypeBL.GetById(Id, cancellationToken);
-            return PartialView("_WoodTypePartial", lookups);
+            var woodType = await _unitOfWorkBL.WoodTypeBL.GetById(Id, cancellationToken);
+            return PartialView("_WoodTypePartial", woodType);
         }
 
         [HttpPost]
@@ -62,7 +62,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, WoodTypeRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.WoodTypeBL.UpdateWoodType(Id, lookupsRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
+            _toastNotification.AddSuccessToastMessage("Data Updated Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -71,6 +71,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.WoodTypeBL.DeleteWoodType(Id, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
     }

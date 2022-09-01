@@ -29,8 +29,8 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
         public async Task<IActionResult> GetCategoryData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
-            return Ok(data);
+            var categoryfilterdata = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
+            return Ok(categoryfilterdata);
         }
 
         [HttpGet]
@@ -42,9 +42,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
-        public async Task<IActionResult> Create(CategoryRequestDto lookupsRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.CategoryBL.CreateCategory(lookupsRequestDto, cancellationToken);
+            await _unitOfWorkBL.CategoryBL.CreateCategory(categoryRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
@@ -53,16 +53,16 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var lookups = await _unitOfWorkBL.CategoryBL.GetById(Id, cancellationToken);
-            return PartialView("_CategoryPartial", lookups);
+            var category = await _unitOfWorkBL.CategoryBL.GetById(Id, cancellationToken);
+            return PartialView("_CategoryPartial", category);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CategoryRequestDto lookupsRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.CategoryBL.UpdateCategory(Id, lookupsRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
+            await _unitOfWorkBL.CategoryBL.UpdateCategory(Id, categoryRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data updated Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -71,6 +71,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
     }

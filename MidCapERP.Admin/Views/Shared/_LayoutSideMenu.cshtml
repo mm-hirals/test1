@@ -3,11 +3,35 @@
     <div class="header_toggle">
         <i class="bx bx-menu" id="header-toggle"></i>
     </div>
-    <div class="header_img">
-        <a class="header_profile_img" href="/Account/Profile">
-            <img src="https://picsum.photos/200/300?random=1" alt="User Profile" />
-        </a>
+    <div class="header-right-section d-flex align-items-center">
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="pe-2">@_currentUser.TenantName</span>
+                @if (_currentUser.IsMultipleTenant)
+                {
+                    <a href="/Tenant" class="btn btn-primary d-flex align-items-center d-flex align-items-center"><i class='bx bx-transfer exchange-icon pe-3'></i> @_currentUser.TenantName </a>
+                }
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="d-flex align-items-center">
+                    <img class="rounded-circle header-profile-user img-fluid" src="https://picsum.photos/200/300?random=1" alt="Header Avatar" style="width: 50px; height: 50px;">
+                    <span class="text-start ms-xl-2">
+                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@_currentUser.FullName</span>
+                        <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">@_currentUser.Role</span>
+                    </span>
+                </span>
+            </button>
+
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-user-dropdown" data-popper-placement="bottom-end">
+                <h6 class="dropdown-header">Welcome @_currentUser.Name!</h6>
+                <a class="dropdown-item" href="/Account/Profile"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
+                <a class="dropdown-item" href="/Account/Login"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
+            </div>
+        </div>
     </div>
+    
 </header>
 <!-- End Topbar -->
 <!-- Start Sidebar -->
@@ -65,21 +89,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav_link" href="/WoodType">
-                                Wood Types
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav_link" href="/AccessoriesType">
-                                Accessories Type
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav_link" href="/Accessories">
-                                Accessories
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav_link" href="/RawMaterial">
                                 Raw Materials
                             </a>
@@ -95,8 +104,31 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav_link" href="/WoodType">
+                                Frame Types
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav_link" href="/Wood">
-                                Woods
+                                Frames
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item submenu-item">
+                    <a href="javascipt:void(0)" class="nav_link submenu-link">
+                        <i class="bx bxs-user-account nav_icon"></i>
+                        <span class="nav_name">Users Management</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a class="nav_link" href="/User">
+                                Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/RolePermission">
+                                Roles &amp; Permissions
                             </a>
                         </li>
                     </ul>

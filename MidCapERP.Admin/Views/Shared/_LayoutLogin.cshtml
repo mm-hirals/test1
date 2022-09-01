@@ -14,8 +14,30 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <!-- End CSS -->
 </head>
-<body>
-    @RenderBody()
+<body class="login-body-page--wrapper">
+    <div class="login-main-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="cards">
+                        <div class="row main-cards">
+                            <div class="col-lg-6 form-card">
+                                <img src="https://themesbrand.com/velzon/html/default/assets/images/auth-one-bg.jpg" class="img-fluid">
+                                <div class="login-first-overlary"></div>
+                                <div class="login-logo-main">
+                                    <a href="/" class="login-logo">
+                                        <i class="bx bx-shape-square nav_logo-icon"></i>
+                                        <span class="nav_logo-name">MidCap-ERP</span>
+                                    </a>
+                                </div>
+                            </div>
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Start Footer -->
     <footer class="footer-page--wrapper">
         <div class="container-fluid">

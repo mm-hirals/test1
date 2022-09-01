@@ -16,7 +16,7 @@ $(function () {
         },
         "columns": [
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
-            { "data": "accessoriesTypeName", "name": "TypeName", "autoWidth": true },
+            { "data": "typeName", "name": "TypeName", "autoWidth": true },
             { "data": "title", "name": "Title", "autoWidth": true },
             { "data": "unitName", "name": "UnitName", "autoWidth": true },
             { "data": "unitPrice", "name": "UnitPrice", "autoWidth": true },

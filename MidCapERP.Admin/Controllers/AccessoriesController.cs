@@ -15,7 +15,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
         private readonly IWebHostEnvironment _hostingEnvironment;
-
+       
         public AccessoriesController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IWebHostEnvironment hostingEnvironment)
         {
             _unitOfWorkBL = unitOfWorkBL;
@@ -52,7 +52,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Create)]
         public async Task<IActionResult> Create(AccessoriesRequestDto accessoriesRequestDto, CancellationToken cancellationToken)
         {
-            var accessories = await _unitOfWorkBL.AccessoriesBL.CreateAccessories(accessoriesRequestDto, cancellationToken);
+            await _unitOfWorkBL.AccessoriesBL.CreateAccessories(accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Created Successfully!");
             return RedirectToAction("Index");
         }
@@ -72,7 +72,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Accessories.Update)]
         public async Task<IActionResult> Update(int Id, AccessoriesRequestDto accessoriesRequestDto, CancellationToken cancellationToken)
         {
-            var accessories = await _unitOfWorkBL.AccessoriesBL.UpdateAccessories(Id, accessoriesRequestDto, cancellationToken);
+            await _unitOfWorkBL.AccessoriesBL.UpdateAccessories(Id, accessoriesRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
@@ -106,7 +106,7 @@ namespace MidCapERP.Admin.Controllers
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.AccessoriesTypeId),
-                                     Text = a.AccessoryTypeName
+                                     Text = a.TypeName
                                  }).ToList();
             ViewBag.AccessoriesSelectItemList = accessoriesTypesSelectedList;
         }
