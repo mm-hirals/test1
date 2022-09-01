@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
     [Table("Fabrics")]
     public class Fabrics : BaseEntity
     {
+        [Key]
         public int FabricId { get; set; }
         public string Title { get; set; }
         public string ModelNo { get; set; }
