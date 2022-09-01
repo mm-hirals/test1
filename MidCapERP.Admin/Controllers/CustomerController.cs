@@ -70,7 +70,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            var customers = await _unitOfWorkBL.CustomersBL.DeleteCustomers(Id, cancellationToken);
+            await _unitOfWorkBL.CustomersBL.DeleteCustomers(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 

@@ -67,15 +67,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<AccessoriesTypeRequestDto> CreateAccessoriesType(AccessoriesTypeRequestDto model, CancellationToken cancellationToken)
         {
-            var AccessoriesTypeToInsert = _mapper.Map<AccessoriesType>(model);
-            AccessoriesTypeToInsert.IsDeleted = false;
-            AccessoriesTypeToInsert.TenantId = _currentUser.TenantId;
-            AccessoriesTypeToInsert.CreatedBy = _currentUser.UserId;
-            AccessoriesTypeToInsert.CreatedDate = DateTime.Now;
-            AccessoriesTypeToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.AccessoriesTypeDA.CreateAccessoriesType(AccessoriesTypeToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<AccessoriesTypeRequestDto>(data);
-            return _mappedUser;
+            var accessoriesTypeToInsert = _mapper.Map<AccessoriesType>(model);
+            accessoriesTypeToInsert.IsDeleted = false;
+            accessoriesTypeToInsert.TenantId = _currentUser.TenantId;
+            accessoriesTypeToInsert.CreatedBy = _currentUser.UserId;
+            accessoriesTypeToInsert.CreatedDate = DateTime.Now;
+            accessoriesTypeToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.AccessoriesTypeDA.CreateAccessoriesType(accessoriesTypeToInsert, cancellationToken);
+            return _mapper.Map<AccessoriesTypeRequestDto>(data);
+
         }
 
         public async Task<AccessoriesTypeRequestDto> UpdateAccessoriesType(int Id, AccessoriesTypeRequestDto model, CancellationToken cancellationToken)
@@ -86,13 +86,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.AccessoriesTypeDA.UpdateAccessoriesType(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<AccessoriesTypeRequestDto>(data);
             return _mappedUser;
-        }
-
-        private static void MapToDbObject(AccessoriesTypeRequestDto model, AccessoriesType oldData)
-        {
-            oldData.CategoryId = model.CategoryId;
-            oldData.TypeName = model.TypeName;
-            oldData.TenantId = model.TenantId;
         }
 
         public async Task<AccessoriesTypeRequestDto> DeleteAccessoriesType(int Id, CancellationToken cancellationToken)
@@ -113,6 +106,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region PrivateMethods
+
+        private static void MapToDbObject(AccessoriesTypeRequestDto model, AccessoriesType oldData)
+        {
+            oldData.CategoryId = model.CategoryId;
+            oldData.TypeName = model.TypeName;
+            oldData.TenantId = model.TenantId;
+        }
 
         private async Task<AccessoriesType> AccessoriesTypeGetById(int Id, CancellationToken cancellationToken)
         {
