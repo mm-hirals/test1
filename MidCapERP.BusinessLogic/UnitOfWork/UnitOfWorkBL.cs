@@ -26,8 +26,10 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IUserTenantMappingBL UserTenantMappingBL { get; }
         public IUserBL UserBL { get; }
         public IProductBL ProductBL { get; }
+        public IProductImageBL ProductImageBL { get; }
+        public IProductMaterialBL ProductMaterialBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IWoodBL woodBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IWoodTypeBL woodTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IWoodBL woodBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IProductImageBL productImageBL, IProductMaterialBL productMaterialBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -49,6 +51,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.UserTenantMappingBL = userTenantMappingBL;
             this.UserBL = userBL;
             this.ProductBL = productBL;
+            this.ProductImageBL = productImageBL;
+            this.ProductMaterialBL = productMaterialBL;
         }
 
         #region DisposeMethod

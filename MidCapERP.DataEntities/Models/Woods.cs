@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
-    [Table("Woods")]
+    [Table("Frames")]
     public class Woods : BaseEntity
     {
         [Key]

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Product;
 using MidCapERP.Infrastructure.Constants;
 
@@ -22,23 +23,59 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        public async Task<IActionResult> GetProductData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetFilterProductData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
-            await FillWoodDropDown(cancellationToken);
-            await FillRawMaterialDropDown(cancellationToken);
-            await FillAccessoriesDropDown(cancellationToken);
-            await FillPolishDropDown(cancellationToken);
-            return View("Create");
+            await FillFrameDropDowns(cancellationToken);
+            await FillRawMaterialDropDowns(cancellationToken);
+            await FillPolishDropDowns(cancellationToken);
+            await FillCushionDropDowns(cancellationToken);
+            return View();
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
-        public async Task<IActionResult> Create(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.ProductBL.CreateProduct(productRequestDto, cancellationToken);
+            await _unitOfWorkBL.ProductBL.CreateProduct(productMainRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
+        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
+        {
+            await FillCategoryDropDown(cancellationToken);
+            await FillFrameDropDowns(cancellationToken);
+            await FillRawMaterialDropDowns(cancellationToken);
+            await FillPolishDropDowns(cancellationToken);
+            await FillCushionDropDowns(cancellationToken);
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
+        public async Task<IActionResult> Update(int Id, ProductMainRequestDto PolishRequestDto, CancellationToken cancellationToken)
+        {
+            //await _unitOfWorkBL.PolishBL.UpdatePolish(Id, PolishRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Delete)]
+        public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
+        {
+            //await _unitOfWorkBL.PolishBL.DeletePolish(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -56,52 +93,52 @@ namespace MidCapERP.Admin.Controllers
             ViewBag.CategorySelectedList = categorySelectedList;
         }
 
-        private async Task FillWoodDropDown(CancellationToken cancellationToken)
+        private async Task FillFrameDropDowns(CancellationToken cancellationToken)
         {
-            var woodTypeData = await _unitOfWorkBL.WoodBL.GetAll(cancellationToken);
-            var woodSelectedList = woodTypeData.Select(a =>
+            var frameTypeData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
+            var frameSelectedList = frameTypeData.Select(a =>
                                  new SelectListItem
                                  {
-                                     Value = Convert.ToString(a.WoodId),
-                                     Text = a.Title
+                                     Value = Convert.ToString(a.LookupValueId),
+                                     Text = a.LookupValueName
                                  }).ToList();
-            ViewBag.WoodSelectedList = woodSelectedList;
+            ViewBag.FrameSelectedList = frameSelectedList;
         }
 
-        private async Task FillRawMaterialDropDown(CancellationToken cancellationToken)
+        private async Task FillRawMaterialDropDowns(CancellationToken cancellationToken)
         {
-            var rawMaterialTypeData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
-            var rawMaterialSelectedList = rawMaterialTypeData.Select(a =>
+            var rawMaterialData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
+            var rawMaterialSelectedList = rawMaterialData.Select(a =>
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.RawMaterialId),
                                      Text = a.Title
                                  }).ToList();
-            ViewBag.RawMaterialSelectedList = rawMaterialSelectedList;
+            ViewBag.rawMaterialDropDownData = rawMaterialSelectedList;
         }
 
-        private async Task FillAccessoriesDropDown(CancellationToken cancellationToken)
+        private async Task FillPolishDropDowns(CancellationToken cancellationToken)
         {
-            var accessoriesTypeData = await _unitOfWorkBL.AccessoriesBL.GetAll(cancellationToken);
-            var accessoriesSelectedList = accessoriesTypeData.Select(a =>
-                                 new SelectListItem
-                                 {
-                                     Value = Convert.ToString(a.AccessoriesId),
-                                     Text = a.Title
-                                 }).ToList();
-            ViewBag.AccessoriesSelectedList = accessoriesSelectedList;
-        }
-
-        private async Task FillPolishDropDown(CancellationToken cancellationToken)
-        {
-            var polishTypeData = await _unitOfWorkBL.PolishBL.GetAll(cancellationToken);
-            var polishSelectedList = polishTypeData.Select(a =>
+            var polishData = await _unitOfWorkBL.PolishBL.GetAll(cancellationToken);
+            var polishSelectedList = polishData.Select(a =>
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.PolishId),
                                      Text = a.Title
                                  }).ToList();
-            ViewBag.PolishSelectedList = polishSelectedList;
+            ViewBag.polishDropDownData = polishSelectedList;
+        }
+
+        private async Task FillCushionDropDowns(CancellationToken cancellationToken)
+        {
+            var cushionData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
+            var cushionSelectedList = cushionData.Select(a =>
+                                new SelectListItem
+                                {
+                                    Value = Convert.ToString(a.RawMaterialId),
+                                    Text = a.Title
+                                }).ToList();
+            ViewBag.cushionDropDownData = cushionSelectedList;
         }
 
         #endregion Private Method
