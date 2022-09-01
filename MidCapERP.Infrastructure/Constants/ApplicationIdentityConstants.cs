@@ -50,7 +50,7 @@
                 .Union(GeneratePermissionsForModule("RawMaterial"))
                 .Union(GeneratePermissionsForModule("Accessories"))
                 .Union(GeneratePermissionsForModule("Fabric"))
-                .Union(GeneratePermissionsForModule("Wood"))
+                .Union(GeneratePermissionsForModule("Frame"))
                 .Union(GeneratePermissionsForModule("Polish"))
                 .Union(GeneratePermissionsForModule("User"))
                 .ToList();
@@ -215,12 +215,12 @@
                 public const string Delete = "Permissions.Fabric.Delete";
             }
 
-            public static class Wood
+            public static class Frame
             {
-                public const string View = "Permissions.Wood.View";
-                public const string Create = "Permissions.Wood.Create";
-                public const string Update = "Permissions.Wood.Update";
-                public const string Delete = "Permissions.Wood.Delete";
+                public const string View = "Permissions.Frame.View";
+                public const string Create = "Permissions.Frame.Create";
+                public const string Update = "Permissions.Frame.Update";
+                public const string Delete = "Permissions.Frame.Delete";
             }
 
             public static class Polish

@@ -2,99 +2,98 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.Wood;
+using MidCapERP.Dto.Frame;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class WoodController : BaseController
+    public class FrameController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
 
-        public WoodController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public FrameController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.View)]
-        public async Task<IActionResult> GetWoodData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.View)]
+        public async Task<IActionResult> GetFrameData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var filterWooddata = await _unitOfWorkBL.WoodBL.GetFilterWoodData(dataTableFilterDto, cancellationToken);
-            return Ok(filterWooddata);
+            var filterFramedata = await _unitOfWorkBL.FrameBL.GetFilterFrameData(dataTableFilterDto, cancellationToken);
+            return Ok(filterFramedata);
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillWoodTypeDropDown(cancellationToken);
+            await FillFrameTypeDropDown(cancellationToken);
             await FillCompanyDropDown(cancellationToken);
             await FillUnitDropDown(cancellationToken);
-            return PartialView("_WoodPartial");
+            return PartialView("_FramePartial");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.Create)]
-        public async Task<IActionResult> Create(WoodRequestDto woodRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.Create)]
+        public async Task<IActionResult> Create(FrameRequestDto frameRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.WoodBL.CreateWood(woodRequestDto, cancellationToken);
+            await _unitOfWorkBL.FrameBL.CreateFrame(frameRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Created Successfully!");
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            await FillWoodTypeDropDown(cancellationToken);
+            await FillFrameTypeDropDown(cancellationToken);
             await FillCompanyDropDown(cancellationToken);
             await FillUnitDropDown(cancellationToken);
-            var wood = await _unitOfWorkBL.WoodBL.GetById(Id, cancellationToken);
-            return PartialView("_WoodPartial", wood);
+            var frame = await _unitOfWorkBL.FrameBL.GetById(Id, cancellationToken);
+            return PartialView("_FramePartial", frame);
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.Update)]
-        public async Task<IActionResult> Update(int Id, WoodRequestDto woodRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.Update)]
+        public async Task<IActionResult> Update(int Id, FrameRequestDto frameRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.WoodBL.UpdateWood(Id, woodRequestDto, cancellationToken);
+            await _unitOfWorkBL.FrameBL.UpdateFrame(Id, frameRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Wood.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Frame.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.WoodBL.DeleteWood(Id, cancellationToken);
+            await _unitOfWorkBL.FrameBL.DeleteFrame(Id, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
 
         #region PrivateMethod
 
-        private async Task FillWoodTypeDropDown(CancellationToken cancellationToken)
+        private async Task FillFrameTypeDropDown(CancellationToken cancellationToken)
         {
-            var woodTypeData = await _unitOfWorkBL.WoodTypeBL.GetAll(cancellationToken);
-            var woodSelectedList = woodTypeData.Select(a =>
+            var frameTypeData = await _unitOfWorkBL.WoodTypeBL.GetAll(cancellationToken);
+            var frameSelectedList = frameTypeData.Select(a =>
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.LookupValueId),
                                      Text = a.LookupValueName
                                  }).ToList();
-            ViewBag.WoodSelectItemList = woodSelectedList;
+            ViewBag.FrameSelectItemList = frameSelectedList;
         }
 
         private async Task FillCompanyDropDown(CancellationToken cancellationToken)

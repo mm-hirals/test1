@@ -6,7 +6,7 @@ namespace MidCapERP.Dto.WoodType
     public class WoodTypeRequestDto
     {
         public int LookupValueId { get; set; }
-        public int LookupId { get; set; } = (int)MasterPagesEnum.WoodType;
+        public int LookupId { get; set; } = (int)MasterPagesEnum.FrameType;
 
         [DisplayName("Wood Type Name")]
         public string LookupValueName { get; set; }

@@ -24,7 +24,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IFileStorageService, FileStorageService>();
             services.AddScoped<IAccessoriesBL, AccessoriesBL>();
             services.AddScoped<IFabricBL, FabricBL>();
-            services.AddScoped<IWoodBL, WoodBL>();
+            services.AddScoped<IFrameBL, FrameBL>();
             services.AddScoped<IPolishBL, PolishBL>();
             services.AddScoped<IUserTenantMappingBL, UserTenantMappingBL>();
             services.AddScoped<IUserBL, UserBL>();

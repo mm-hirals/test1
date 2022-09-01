@@ -26,7 +26,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<WoodTypeResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var woodTypeAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<WoodTypeResponseDto>>(woodTypeAllData.Where(x => x.LookupId == (int)MasterPagesEnum.WoodType).ToList());
+            return _mapper.Map<List<WoodTypeResponseDto>>(woodTypeAllData.Where(x => x.LookupId == (int)MasterPagesEnum.FrameType).ToList());
         }
 
         public async Task<JsonRepsonse<WoodTypeResponseDto>> GetFilterWoodTypeData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var woodTypeResponseData = (from x in woodTypeAllData
                                         join y in lookupsAllData
                                         on new { x.LookupId } equals new { y.LookupId }
-                                        where x.LookupId == (int)MasterPagesEnum.WoodType
+                                        where x.LookupId == (int)MasterPagesEnum.FrameType
                                         select new WoodTypeResponseDto()
                                         {
                                             LookupValueId = x.LookupValueId,

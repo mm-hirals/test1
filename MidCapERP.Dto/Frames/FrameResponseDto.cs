@@ -2,31 +2,29 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MidCapERP.Dto.Wood
+namespace MidCapERP.Dto.Frame
 {
-    public class WoodRequestDto
+    public class FrameResponseDto
     {
-        [DisplayName("Wood Id")]
-        public int WoodId { get; set; }
+        [DisplayName("Frame Id")]
+        public int FrameId { get; set; }
 
-        [DisplayName("Wood Type Name")]
-        public int WoodTypeId { get; set; }
+        [Display(Name = "Frame Type Name")]
+        public string FrameTypeName { get; set; }
 
-        [Required]
-        [DisplayName("Title")]
+        [Display(Name = "Title")]
         public string Title { get; set; }
 
-        [Required]
-        [DisplayName("Model No")]
+        [Display(Name = "Model No")]
         public string ModelNo { get; set; }
 
-        [DisplayName("Company Name")]
-        public int CompanyId { get; set; }
+        [Display(Name = "Company Name")]
+        public string CompanyName { get; set; }
 
-        [DisplayName("Unit Name")]
-        public int UnitId { get; set; }
+        [Display(Name = "Unit Name")]
+        public string UnitName { get; set; }
 
-        [DisplayName("Unit Price")]
+        [Display(Name = "Unit Price")]
         public decimal UnitPrice { get; set; }
 
         public string? ImagePath { get; set; }

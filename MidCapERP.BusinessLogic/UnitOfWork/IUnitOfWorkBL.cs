@@ -18,7 +18,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IRawMaterialBL RawMaterialBL { get; }
         IAccessoriesBL AccessoriesBL { get; }
         IFabricBL FabricBL { get; }
-        IWoodBL WoodBL { get; }
+        IFrameBL FrameBL { get; }
         IPolishBL PolishBL { get; }
         IUserTenantMappingBL UserTenantMappingBL { get; }
         IUserBL UserBL { get; }
