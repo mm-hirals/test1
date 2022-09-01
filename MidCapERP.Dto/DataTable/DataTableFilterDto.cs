@@ -27,7 +27,7 @@ namespace MidCapERP.Dto.DataGrid
         /// </summary>
         [JsonProperty("pageSize")]
         public int PageSize
-        { get { return Length != null ? Convert.ToInt32(this.Length) : 0; } }
+        { get { return !string.IsNullOrEmpty(Length) ? Convert.ToInt32(this.Length) : 10; } }
 
         /// <summary>
         /// FOR PAGINATION

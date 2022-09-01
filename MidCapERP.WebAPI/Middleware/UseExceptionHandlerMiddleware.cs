@@ -1,4 +1,6 @@
-﻿using MidCapERP.Dto;
+﻿using AutoWrapper.Wrappers;
+using MidCapERP.Dto;
+using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Email;
 using System.Net;
 using System.Text.Json;
@@ -13,6 +15,7 @@ namespace MidCapERP.WebAPI.Middleware
         private readonly IConfiguration _configuration;
         private CurrentUser _currentUser;
         private IEmailHelper _emailHelper;
+        private ProjectSettings _settings;
 
         public UseExceptionHandlerMiddleware(RequestDelegate next, IConfiguration configuration)
         {
@@ -25,13 +28,14 @@ namespace MidCapERP.WebAPI.Middleware
             _logger = context.RequestServices.GetService<ILogger<UseExceptionHandlerMiddleware>>();
             _currentUser = context.RequestServices.GetService<CurrentUser>();
             _emailHelper = context.RequestServices.GetService<IEmailHelper>();
+            _settings = context.RequestServices.GetService<ProjectSettings>();
+
             try
             {
                 await _next(context);
             }
             catch (Exception error)
             {
-                throw error;
                 var response = context.Response;
                 response.ContentType = "application/json";
 
@@ -76,6 +80,15 @@ namespace MidCapERP.WebAPI.Middleware
                 var result = JsonSerializer.Serialize(new { errorMessage = Newtonsoft.Json.JsonConvert.SerializeObject(logEntry) });
                 _logger.LogError(result);
                 await SendEmailAsync(logEntry);
+
+                if (_settings.IsAPI)
+                {
+                    throw new ApiException(error.Message);
+                }
+                else
+                {
+                    throw error;
+                }
             }
         }
 

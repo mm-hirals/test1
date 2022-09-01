@@ -2,6 +2,7 @@
 using MidCapERP.Infrastructure.Extensions;
 using Serilog;
 using static System.Net.Mime.MediaTypeNames;
+using AutoWrapper;
 
 namespace MidCapERP.WebAPI.Configuration
 {
@@ -30,6 +31,9 @@ namespace MidCapERP.WebAPI.Configuration
             app.UseSwaggerUI();
 
             //app.UseNToastNotify();
+
+            //https://github.com/proudmonkey/AutoWrapper
+            app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions { IsApiOnly = false, ApiVersion = "1.0", ShowApiVersion = true });
 
             // using static System.Net.Mime.MediaTypeNames;
             app.UseStatusCodePages(Text.Plain, "Status Code Page: {0}");

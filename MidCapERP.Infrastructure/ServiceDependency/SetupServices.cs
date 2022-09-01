@@ -62,6 +62,12 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             }
             if (AuthenticationScheme == "Bearer")
             {
+                ProjectSettings settings = new ProjectSettings()
+                {
+                    IsAPI = true
+                };
+                services.AddSingleton<ProjectSettings>(settings);
+
                 services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

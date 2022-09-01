@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AutoWrapper.Core" Version="4.5.0" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.6" ExcludeAssets="All" />
 		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
