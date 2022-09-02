@@ -13,7 +13,7 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
-
+       
         public CustomerController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
         {
             _unitOfWorkBL = unitOfWorkBL;
@@ -36,8 +36,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
-        public async Task<IActionResult> GetCustomerAddressesData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCustomerAddressesData([FromForm] CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            TempData["CustomerId"] = dataTableFilterDto.customerId;
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
@@ -51,11 +52,11 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(int CustomerId,CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
+            var data =  await _unitOfWorkBL.CustomersBL.CreateCustomers(CustomerId,customersRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
-            return View("CustomerEdit");
+            return RedirectToAction("Update", "Customer", new { id = data.CustomerId });
         }
 
         [HttpGet]
@@ -69,9 +70,10 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
         public async Task<IActionResult> CreateCustomerAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
+            var data1 = await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
+            data1.CustomerId = Convert.ToInt64(TempData["CustomerId"]);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
-            return View("CustomerEdit");
+            return View("_CustomerAddressPartial");
         }
 
         //Customer Update
@@ -80,6 +82,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
+            TempData["CustomerId"] = customers.CustomerId;
             return View("CustomerEdit", customers);
         }
 
@@ -88,7 +91,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
+             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -98,12 +101,12 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
             var customersAddress = await _unitOfWorkBL.CustomerAddressesBL.GetById(Id, cancellationToken);
-            return View("_CustomerAddressPartial", customersAddress);
+             return View("_CustomerAddressPartial", customersAddress);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
-        public async Task<IActionResult> UpdateCustomerAddresses(int Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(Id, customersAddressRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");

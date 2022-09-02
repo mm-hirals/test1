@@ -12,9 +12,13 @@ $(function () {
         "ajax": {
             "url": "/Customer/GetCustomerAddressesData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.customerId = $('#customerId').val().trim()
+            }
         },
         "columns": [
+            { "data": "customerId", "name": "CustomerId", "autoWidth": true },
             { "data": "addressTypeId", "name": "AddressTypeId", "autoWidth": true },
             { "data": "street1", "name": "Street1", "autoWidth": true },
             { "data": "street2", "name": "Street2", "autoWidth": true },
@@ -27,8 +31,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCustomerAddresses" href="/Customer/UpdateCustomerAddresses/' + o.custAddressId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CustomerAddressesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/DeleteCustomerAddresses/' + o.custAddressId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCustomerAddresses" href="/Customer/UpdateCustomerAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="CustomerAddressesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/DeleteCustomerAddresses/' + o.customerAddressId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]

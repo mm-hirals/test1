@@ -1,8 +1,8 @@
 ﻿@model MidCapERP.Dto.CustomerAddresses.CustomerAddressesRequestDto
 @{
-    string action = (Model != null && Model.CustAddressId != 0) ? "UpdateCustomerAddresses" : "CreateCustomerAddress";
+    string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateCustomerAddresses" : "CreateCustomerAddress";
+    TempData.Keep("CustomerId");
 }
-
 <!-- Modal -->
 <div class="modal right fade" id="divContractorAddressModal" tabindex="-1" aria-labelledby="ContractorAddressModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
@@ -19,12 +19,24 @@
                   data-ajax-failure="CustomerAddressesModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input asp-for="CustAddressId" hidden class="form-control" />
+                    <input asp-for="CustomerAddressId" hidden class="form-control" />
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
+                                <label asp-for="CustomerId" class="form-label"></label>
+                                <input asp-for="CustomerId" class="form-control" data-val="true" value="@TempData["CustomerId"]" readonly/>
+                                <span asp-validation-for="CustomerId" class="text-danger" ></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
                                 <label asp-for="AddressTypeId" class="form-label"></label>
-                                <input asp-for="AddressTypeId" class="form-control" />
+                                <select  asp-for="AddressTypeId" id="AddressTypeId" data-val="true" class="form-control">   
+                                    <option value="" hidden disabled selected>Select Address Type</option>
+	                                <option value="1">Home</option>  
+	                                <option value="2">Office</option>  
+                                    <option value="3">Other</option>  
+                                </select>
                                 <span asp-validation-for="AddressTypeId" class="text-danger"></span>
                             </div>
                         </div>
@@ -101,6 +113,6 @@
 
 @section Scripts {
     @{
-         <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
+    <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
 } 

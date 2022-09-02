@@ -4,7 +4,8 @@ namespace MidCapERP.Dto.CustomerAddresses
 {
     public class CustomerAddressesResponseDto
     {
-        public int CustAddressId { get; set; }
+        public Int64 CustomerAddressId { get; set; }
+        public Int64 CustomerId { get; set; }
         public int AddressTypeId { get; set; }
 
         [DisplayName("Street1")]
@@ -24,11 +25,13 @@ namespace MidCapERP.Dto.CustomerAddresses
 
         [DisplayName("State")]
         public string State { get; set; }
+
         [DisplayName("ZipCode")]
         public string ZipCode { get; set; }
 
         [DisplayName("IsDefault")]
         public bool IsDefault { get; set; }
+
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
@@ -37,6 +40,5 @@ namespace MidCapERP.Dto.CustomerAddresses
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
-
     }
 }

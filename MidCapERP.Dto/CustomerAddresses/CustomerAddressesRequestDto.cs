@@ -5,7 +5,8 @@ namespace MidCapERP.Dto.CustomerAddresses
 {
     public class CustomerAddressesRequestDto
     {
-        public int CustAddressId { get; set; }
+        public Int64 CustomerAddressId { get; set; }
+        public Int64 CustomerId { get; set; }
         public int AddressTypeId { get; set; }
 
         [DisplayName("Street1")]

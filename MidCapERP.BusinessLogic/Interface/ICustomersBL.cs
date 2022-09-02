@@ -13,7 +13,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CustomersRequestDto> GetById(int Id, CancellationToken cancellationToken);
 
-        public Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken);
+        public Task<CustomersRequestDto> CreateCustomers(int CustomerId, CustomersRequestDto model, CancellationToken cancellationToken);
 
         public Task<CustomersRequestDto> UpdateCustomers(int Id, CustomersRequestDto model, CancellationToken cancellationToken);
 

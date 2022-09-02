@@ -10,7 +10,7 @@
                 <form asp-action="@action" method="post" class="modal-form--wrapper">
                     <div class="modal-body">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input asp-for="CustomerId" hidden class="form-control" />
+                        <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="product-info--item">
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer justify-content-between">
+                        <div>
                             <div class="" >
                                 <div class="">
                                     <input type="submit" value="Save" class="btn btn-primary" id="dataSave" />
@@ -103,23 +103,29 @@
             </div>
         </div>
     </div>
-<div class="">
-    <nav class="product-nav-tab--sticky">
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active col-md-2" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Customer Address</button>          
-                <div class="c-card--header col-md-10 text-right">
-                    <h4 class="c-card--header-title"></h4>
-                    <div class="c-card--header-action">
-                         <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerAddressesFilter"><i class='bx bx-plus me-1'></i>Filters</a>
-                         <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary" 
-                         data-ajax="true" data-ajax-mode="replace"
-                         data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax-update="#divUpdateCustomerAddresses">Create New</a>
-                    </div>
-                 </div>
-            </div>  
-    </nav>
-</div>
-<partial name="_CustomerAddressesTable" model="null"/>
+@if(Model != null)
+    {
+    @if(Model.CustomerId == Convert.ToInt64(TempData["CustomerId"]))
+    {
+        <div class="">
+        <nav class="product-nav-tab--sticky">
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active col-md-2" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Customer Address</button>          
+                    <div class="c-card--header col-md-10 text-right">
+                        <h4 class="c-card--header-title"></h4>
+                        <div class="c-card--header-action">
+                             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerAddressesFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+                             <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary" 
+                             data-ajax="true" data-ajax-mode="replace"
+                             data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax-update="#divUpdateCustomerAddresses" id="btnSave">Create New</a>
+                        </div>
+                     </div>
+                </div>  
+        </nav>
+    </div>
+    <partial name="_CustomerAddressesTable" model="null"/>
+    }
+}
 <div id="divUpdateCustomerAddresses"></div>
 
 <script src="~/lib/dropzone/dropzone.js"></script>
