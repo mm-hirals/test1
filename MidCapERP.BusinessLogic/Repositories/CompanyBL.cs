@@ -91,12 +91,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        private static void MapToDbObject(CompanyRequestDto model, LookupValues oldData)
-        {
-            oldData.LookupValueName = model.LookupValueName;
-            oldData.LookupValueId = model.LookupValueId;
-        }
-
         public async Task<CompanyRequestDto> DeleteCompany(int Id, CancellationToken cancellationToken)
         {
             var companyToUpdate = await GetCompanyById(Id, cancellationToken);
@@ -110,6 +104,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region PrivateMethods
+
+        private static void MapToDbObject(CompanyRequestDto model, LookupValues oldData)
+        {
+            oldData.LookupValueName = model.LookupValueName;
+            oldData.LookupValueId = model.LookupValueId;
+        }
 
         private async Task<LookupValues> GetCompanyById(int Id, CancellationToken cancellationToken)
         {

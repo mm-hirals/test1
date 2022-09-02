@@ -2,15 +2,15 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MidCapERP.Dto.Wood
+namespace MidCapERP.Dto.Frames
 {
-    public class WoodRequestDto
+    public class FrameRequestDto
     {
-        [DisplayName("Wood Id")]
-        public int WoodId { get; set; }
+        [DisplayName("Frame Id")]
+        public int FrameId { get; set; }
 
-        [DisplayName("Wood Type Name")]
-        public int WoodTypeId { get; set; }
+        [DisplayName("Frame Type Name")]
+        public int FrameTypeId { get; set; }
 
         [Required]
         [DisplayName("Title")]

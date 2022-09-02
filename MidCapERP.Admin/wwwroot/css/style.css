@@ -11767,6 +11767,54 @@ header .btn-check:focus + .btn, header .btn:focus {
   color: #fafafa;
 }
 
+.dashboard-card {
+  background-color: #4b49ac;
+  background-image: url("https://themesbrand.com/lexa/layouts/purple/assets/images/bg-1.png");
+  background-size: 550px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  box-shadow: 0px 0px 10px rgba(173, 173, 173, 0.85);
+  border-radius: 20px;
+}
+.dashboard-card .dashboard-icon {
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 15px;
+  color: #4b49ac;
+  font-size: 30px;
+}
+.dashboard-card h2, .dashboard-card .h2 {
+  font-size: 30px;
+}
+
+.Recent-order-box .recent-avtar {
+  background: rgba(75, 73, 172, 0.7);
+  border-radius: 7px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  color: #fafafa;
+}
+.Recent-order-box .dash-titles h6, .Recent-order-box .dash-titles .h6 {
+  font-size: 16px;
+  margin: 0;
+}
+.Recent-order-box .dash-titles {
+  font-size: 13px;
+}
+.Recent-order-box .recent-box-right {
+  font-size: 20px;
+  font-weight: 700;
+}
+.Recent-order-box .recent-avtar-danger {
+  background-color: #f3797e;
+  border-radius: 7px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  color: #fafafa;
+}
+
 .card-product--wrapper {
   padding: 15px;
   border-radius: 10px;
