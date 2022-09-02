@@ -11773,14 +11773,13 @@ header .btn-check:focus + .btn, header .btn:focus {
   background-size: 550px;
   background-position: bottom;
   background-repeat: no-repeat;
-  box-shadow: 0px 0px 10px rgba(173, 173, 173, 0.85);
-  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(152, 189, 255, 0.2);
 }
 .dashboard-card .dashboard-icon {
-  background: #fafafa;
+  background: rgba(152, 189, 255, 0.2);
   padding: 20px;
-  border-radius: 15px;
-  color: #4b49ac;
+  border-radius: 50px;
+  color: #fafafa;
   font-size: 30px;
 }
 .dashboard-card h2, .dashboard-card .h2 {
