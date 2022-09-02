@@ -12,8 +12,6 @@ namespace MidCapERP.Dto.Product
             ProductMaterialRequestDto = new List<ProductMaterialRequestDto>();
         }
 
-        public int SubjectId { get; set; }
-
         public ProductRequestDto ProductRequestDto { get; set; }
 
         public List<ProductImageRequestDto> ProductImageRequestDto { get; set; }

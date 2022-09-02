@@ -331,28 +331,27 @@
                                         <tr>
                                             <td>
                                                 @*<select class="form-select">
-                                                    <option selected>
-                                                        Plywood 6mm
-                                                    </option>
-                                                    <option>
-                                                        Plywood 3mm
-                                                    </option>
-                                                    <option>
-                                                        Fevicol
-                                                    </option>
-                                                    <option>
-                                                        Gum
-                                                    </option>
-                                                    <option>
-                                                        Screws 0.5mm
-                                                    </option>
+                                                <option selected>
+                                                Plywood 6mm
+                                                </option>
+                                                <option>
+                                                Plywood 3mm
+                                                </option>
+                                                <option>
+                                                Fevicol
+                                                </option>
+                                                <option>
+                                                Gum
+                                                </option>
+                                                <option>
+                                                Screws 0.5mm
+                                                </option>
                                                 </select>*@
-                                                @foreach (var item in Model.ProductMaterialRequestDto)
-                                                {
-                                                    <select asp-for="@item.SubjectId" data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.rawMaterialDropDownData, "Value", "Text"))">
-                                                <option value="" hidden disabled selected>Select Raw Material</option>
+
+                                                <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.rawMaterialDropDownData, "Value", "Text"))">
+                                                    <option value="" hidden disabled selected>Select Raw Material</option>
                                                 </select>
-                                                }
+
                                                 @*<select asp-for="" data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.rawMaterialDropDownData, "Value", "Text"))">
                                                 <option value="" hidden disabled selected>Select Raw Material</option>
                                                 </select>*@
@@ -474,18 +473,18 @@
                                         <tr>
                                             <td>
                                                 @*<select class="form-select">
-                                                    <option selected>
-                                                        Dining Chair
-                                                    </option>
-                                                    <option>
-                                                        Tabel Base
-                                                    </option>
-                                                    <option>
-                                                        Sofa Chair
-                                                    </option>
+                                                <option selected>
+                                                Dining Chair
+                                                </option>
+                                                <option>
+                                                Tabel Base
+                                                </option>
+                                                <option>
+                                                Sofa Chair
+                                                </option>
                                                 </select>*@
                                                 <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.polishDropDownData, "Value", "Text"))">
-                                                <option value="" hidden disabled selected>Select Polish</option>
+                                                    <option value="" hidden disabled selected>Select Polish</option>
                                                 </select>
                                             </td>
                                             <td>
@@ -699,7 +698,7 @@
                     <div class="col-12">
                         <div class="c-card--wrapper c-card-sm--wrapper">
                             <div class="c-card--footer">
-                                <input type="button" value="Close" class="btn btn-danger" id="lnkToRoleIndex" />
+                                <input type="button" value="Close" class="btn btn-danger" id="lnkToProductIndex" />
                                 <input type="submit" value="Save" class="btn btn-primary ms-2" />
                             </div>
                         </div>
@@ -711,3 +710,10 @@
 </div>
 
 <script src="~/lib/dropzone/dropzone.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+        <script src="~/js/Product.js" asp-append-version="true"></script>
+    }
+}

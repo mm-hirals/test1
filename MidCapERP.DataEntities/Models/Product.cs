@@ -7,7 +7,7 @@ namespace MidCapERP.DataEntities.Models
     public class Product : BaseEntity
     {
         [Key]
-        public long ProductId { get; set; }
+        public Int64 ProductId { get; set; }
 
         public int? CategoryId { get; set; }
         public string ProductTitle { get; set; }
@@ -24,8 +24,8 @@ namespace MidCapERP.DataEntities.Models
         public decimal CostPrice { get; set; }
         public decimal RetailerPrice { get; set; }
         public decimal WholesalerPrice { get; set; }
-        public string CoverImage { get; set; }
-        public string QRImage { get; set; }
+        public string? CoverImage { get; set; }
+        public string? QRImage { get; set; }
         public int TenantId { get; set; }
     }
 }

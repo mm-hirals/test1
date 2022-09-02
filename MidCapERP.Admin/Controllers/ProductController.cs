@@ -60,14 +60,14 @@ namespace MidCapERP.Admin.Controllers
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
             await FillCushionDropDowns(cancellationToken);
-            return View();
+            var getProductData = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
+            return View("Create", getProductData);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
         public async Task<IActionResult> Update(int Id, ProductMainRequestDto PolishRequestDto, CancellationToken cancellationToken)
         {
-            //await _unitOfWorkBL.PolishBL.UpdatePolish(Id, PolishRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -75,7 +75,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Polish.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
-            //await _unitOfWorkBL.PolishBL.DeletePolish(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -95,12 +94,12 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task FillFrameDropDowns(CancellationToken cancellationToken)
         {
-            var frameTypeData = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
+            var frameTypeData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
             var frameSelectedList = frameTypeData.Select(a =>
                                  new SelectListItem
                                  {
-                                     Value = Convert.ToString(a.LookupValueId),
-                                     Text = a.LookupValueName
+                                     Value = Convert.ToString(a.FrameId),
+                                     Text = a.Title
                                  }).ToList();
             ViewBag.FrameSelectedList = frameSelectedList;
         }
@@ -131,11 +130,11 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task FillCushionDropDowns(CancellationToken cancellationToken)
         {
-            var cushionData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
+            var cushionData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
             var cushionSelectedList = cushionData.Select(a =>
                                 new SelectListItem
                                 {
-                                    Value = Convert.ToString(a.RawMaterialId),
+                                    Value = Convert.ToString(a.FrameId),
                                     Text = a.Title
                                 }).ToList();
             ViewBag.cushionDropDownData = cushionSelectedList;

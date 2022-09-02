@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.Product
 {
     public class ProductRequestDto
     {
-        public long ProductId { get; set; }
+        public Int64 ProductId { get; set; }
 
         [DisplayName("Product Category")]
         public int? CategoryId { get; set; }
@@ -57,11 +57,11 @@ namespace MidCapERP.Dto.Product
         public decimal WholesalerPrice { get; set; }
 
         //[Required]
-        public string CoverImage { get; set; }
+        public string? CoverImage { get; set; }
 
         //[Required]
         [DisplayName("QR Image")]
-        public string QRImage { get; set; }
+        public string? QRImage { get; set; }
 
         public int TenantId { get; set; }
         public bool IsDeleted { get; set; }

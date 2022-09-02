@@ -35,6 +35,32 @@ namespace MidCapERP.BusinessLogic.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<ProductMainRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            ProductMainRequestDto productMainRequestDto = new ProductMainRequestDto();
+            var data = await GetProductById(Id, cancellationToken);
+            productMainRequestDto.ProductRequestDto.ProductId = data.ProductId;
+            productMainRequestDto.ProductRequestDto.CategoryId = data.CategoryId;
+            productMainRequestDto.ProductRequestDto.ProductTitle = data.ProductTitle;
+            productMainRequestDto.ProductRequestDto.ModelNo = data.ModelNo;
+            productMainRequestDto.ProductRequestDto.Width = data.Width;
+            productMainRequestDto.ProductRequestDto.Height = data.Height;
+            productMainRequestDto.ProductRequestDto.Depth = data.Depth;
+            productMainRequestDto.ProductRequestDto.UsedFabric = data.UsedFabric;
+            productMainRequestDto.ProductRequestDto.UsedPolish = data.UsedPolish;
+            productMainRequestDto.ProductRequestDto.IsVisibleToWholesalers = data.IsVisibleToWholesalers;
+            productMainRequestDto.ProductRequestDto.TotalDaysToPrepare = data.TotalDaysToPrepare;
+            productMainRequestDto.ProductRequestDto.Features = data.Features;
+            productMainRequestDto.ProductRequestDto.Comments = data.Comments;
+            productMainRequestDto.ProductRequestDto.CostPrice = data.CostPrice;
+            productMainRequestDto.ProductRequestDto.RetailerPrice = data.RetailerPrice;
+            productMainRequestDto.ProductRequestDto.WholesalerPrice = data.WholesalerPrice;
+            productMainRequestDto.ProductRequestDto.CoverImage = data.CoverImage;
+            productMainRequestDto.ProductRequestDto.QRImage = data.QRImage;
+            productMainRequestDto.ProductRequestDto.TenantId = data.TenantId;
+            return _mapper.Map<ProductMainRequestDto>(productMainRequestDto);
+        }
+
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
@@ -44,6 +70,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        join y in cateagoryData on x.CategoryId equals y.LookupValueId
                                        select new ProductResponseDto()
                                        {
+                                           ProductId = x.ProductId,
                                            CategoryName = y.LookupValueName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
@@ -57,10 +84,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
-            // Add Product
             var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
-            //if (model.UploadImage != null)
-            //    woodToInsert.ImagePath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Woods);
             productToInsert.IsDeleted = false;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
@@ -69,7 +93,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             return _mappedUser;
-            //_unitOfWorkBL.SubjectTypesBL.GetAll(cancellationToken);
         }
+
+        #region Private Method
+
+        private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var productDataById = await _unitOfWorkDA.ProductDA.GetById(Id, cancellationToken);
+            if (productDataById == null)
+            {
+                throw new Exception("Product not found");
+            }
+            return productDataById;
+        }
+
+        #endregion Private Method
     }
 }
