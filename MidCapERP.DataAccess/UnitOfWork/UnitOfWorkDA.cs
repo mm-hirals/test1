@@ -17,15 +17,14 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IRawMaterialDA RawMaterialDA { get; }
         public IAccessoriesDA AccessoriesDA { get; }
         public IFabricDA FabricDA { get; }
-        public IWoodDA WoodDA { get; }
+        public IFrameDA FrameDA { get; }
         public IPolishDA PolishDA { get; }
         public ITenantDA TenantDA { get; }
         public IUserTenantMappingDA UserTenantMappingDA { get; }
         public IUserDA UserDA { get; }
         public ICustomerAddressesDA CustomerAddressesDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IWoodDA woodDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA)
-        {
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA,IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA)        {
             {
                 this._context = context;
                 this.ContractorsDA = contractorsDA;
@@ -39,7 +38,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
                 this.RawMaterialDA = rawMaterialDA;
                 this.AccessoriesDA = accessoriesDA;
                 this.FabricDA = fabricDA;
-                this.WoodDA = woodDA;
+                this.FrameDA = frameDA;
                 this.PolishDA = polishDA;
                 this.UserTenantMappingDA = userTenantMappingDA;
                 this.TenantDA = tenantDA;

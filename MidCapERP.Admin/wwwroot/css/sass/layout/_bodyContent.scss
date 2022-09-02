@@ -5,5 +5,8 @@ body {
 .c-main-content--wrapper {
     padding: spacing(1.5);
     min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
-    overflow-y: auto;
+    // overflow-y: auto;
+}
+.c-width-820{
+    width: 820px;
 }

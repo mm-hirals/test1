@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
-    [Table("Woods")]
-    public class Woods : BaseEntity
+    [Table("Frames")]
+    public class Frames : BaseEntity
     {
         [Key]
-        public int WoodId { get; set; }
+        public int FrameId { get; set; }
 
-        public int WoodTypeId { get; set; }
+        public int FrameTypeId { get; set; }
         public string Title { get; set; }
         public string ModelNo { get; set; }
         public int CompanyId { get; set; }

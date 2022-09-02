@@ -22,7 +22,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IRawMaterialDA, RawMaterialDA>();
             services.AddScoped<IAccessoriesDA, AccessoriesDA>();
             services.AddScoped<IFabricDA, FabricDA>();
-            services.AddScoped<IWoodDA, WoodDA>();
+            services.AddScoped<IFrameDA, FrameDA>();
             services.AddScoped<IPolishDA, PolishDA>();
             services.AddScoped<ITenantDA, TenantDA>();
             services.AddScoped<IUserTenantMappingDA, UserTenantMappingDA>();
