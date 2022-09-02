@@ -10,6 +10,7 @@ namespace MidCapERP.WebAPI.Configuration
     {
         public static void ConfigureWebApplication(this WebApplication app)
         {
+            var configuration = app.Services.GetRequiredService<IConfiguration>();
             // seed the default data
             app.Services.SeedIdentityDataAsync().Wait();
 
@@ -26,10 +27,11 @@ namespace MidCapERP.WebAPI.Configuration
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
+            if (string.Equals(configuration["AppSettings:EnableSwagger"], "true", StringComparison.CurrentCultureIgnoreCase))
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
             //app.UseNToastNotify();
 
             //https://github.com/proudmonkey/AutoWrapper
