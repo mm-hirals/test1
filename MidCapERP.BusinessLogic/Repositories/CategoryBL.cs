@@ -111,7 +111,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         private static void MapToDbObject(CategoryRequestDto model, LookupValues oldData)
         {
             oldData.LookupValueName = model.LookupValueName;
-            oldData.LookupValueId = model.LookupValueId;
+            //oldData.LookupValueId = model.LookupValueId;
         }
 
         private async Task<LookupValues> GetCategoryById(int Id, CancellationToken cancellationToken)

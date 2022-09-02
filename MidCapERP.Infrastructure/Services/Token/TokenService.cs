@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -132,7 +133,7 @@ namespace MidCapERP.Infrastructure.Services.Token
                     new Claim(TokenEnum.NameIdentifier.ToString(), user.Email),
                     new Claim(TokenEnum.Role.ToString(), roleName),
                     new Claim(TokenEnum.RoleId.ToString(), roleDetails.Id)
-                }, isCookie ? CookieAuthenticationDefaults.AuthenticationScheme : null);
+                }, isCookie ? CookieAuthenticationDefaults.AuthenticationScheme : JwtBearerDefaults.AuthenticationScheme);
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
