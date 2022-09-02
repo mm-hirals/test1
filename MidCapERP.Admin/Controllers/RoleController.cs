@@ -62,11 +62,7 @@ namespace MidCapERP.Admin.Controllers
                 var allPermissions = ApplicationIdentityConstants.Permissions.GetAllPermissions();
                 var rolePermissionRequestDto = await _unitOfWorkBL.RolePermissionBL.GetRolePermissions(Id, allPermissions, cancellationToken);
 
-                var roleData = await _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken);
-                var roleName = roleData.Where(x => x.Id == Id).Select(n => n.Name).FirstOrDefault();
-                mRoleRequestDto.Id = Id;
-                mRoleRequestDto.Name = roleName;
-                mRoleRequestDto.ModulePermissionList.AddRange(rolePermissionRequestDto);
+                mRoleRequestDto = await _unitOfWorkBL.RoleBL.GetRoleNameID(Id, rolePermissionRequestDto, cancellationToken);
                 return View(mRoleRequestDto);
             }
             else

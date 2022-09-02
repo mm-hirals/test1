@@ -7,6 +7,7 @@ using MidCapERP.Dto;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Role;
+using MidCapERP.Dto.RolePermission;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -46,6 +47,17 @@ namespace MidCapERP.BusinessLogic.Repositories
                        };
             var roleData = new PagedList<RoleResponseDto>(role, dataTableFilterDto);
             return new JsonRepsonse<RoleResponseDto>(dataTableFilterDto.Draw, roleData.TotalCount, roleData.TotalCount, roleData);
+        }
+
+        public async Task<RoleRequestDto> GetRoleNameID(string Id, List<RolePermissionRequestDto> rolePermissionRequestDto, CancellationToken cancellationToken)
+        {
+            RoleRequestDto mRoleRequestDto = new RoleRequestDto();
+            var roleData = await GetAllRoles(cancellationToken);
+            var roleName = roleData.Where(x => x.Id == Id).Select(n => n.Name).FirstOrDefault();
+            mRoleRequestDto.Id = Id;
+            mRoleRequestDto.Name = roleName;
+            mRoleRequestDto.ModulePermissionList.AddRange(rolePermissionRequestDto);
+            return mRoleRequestDto;
         }
 
         public async Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)

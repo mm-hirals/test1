@@ -27,7 +27,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<List<RolePermissionRequestDto>> GetRolePermissions(string Id, List<string> allPermissions, CancellationToken cancellationToken)
         {
-            //var roleId = Id.Split(",")[0];
             var allClaimsByRole = await GetAllRoleClaimsByRole(Id, cancellationToken);
             List<RolePermissionRequestDto> rolePermissionRequestDto = new List<RolePermissionRequestDto>();
 

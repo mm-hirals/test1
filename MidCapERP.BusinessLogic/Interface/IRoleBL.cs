@@ -1,6 +1,7 @@
 ﻿using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Role;
+using MidCapERP.Dto.RolePermission;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -9,6 +10,8 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<IList<ApplicationRole>> GetAllRoles(CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<RoleResponseDto>> GetFilterRoleData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+
+        public Task<RoleRequestDto> GetRoleNameID(string Id, List<RolePermissionRequestDto> rolePermissionRequestDto, CancellationToken cancellationToken);
 
         public Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken);
 

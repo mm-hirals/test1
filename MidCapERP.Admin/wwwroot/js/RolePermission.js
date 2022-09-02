@@ -12,7 +12,3 @@ $("input[type='checkbox']").click(function () {
         data: data
     });
 });
-
-$("#lnkToRoleIndex").click(function () {
-    window.location.href = "/Role/Index"
-});
