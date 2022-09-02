@@ -87,14 +87,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<UnitRequestDto>(data);
-            return _mappedUser;
-        }
-
-        private static void MapToDbObject(UnitRequestDto model, LookupValues oldData)
-        {
-            oldData.LookupValueName = model.LookupValueName;
-            oldData.LookupValueId = model.LookupValueId;
+            return _mapper.Map<UnitRequestDto>(data);
+            
         }
 
         public async Task<UnitRequestDto> DeleteUnit(int Id, CancellationToken cancellationToken)
@@ -105,11 +99,15 @@ namespace MidCapERP.BusinessLogic.Repositories
             unitToUpdate.UpdatedDate = DateTime.Now;
             unitToUpdate.UpdatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, unitToUpdate, cancellationToken);
-            var _mappedUser = _mapper.Map<UnitRequestDto>(data);
-            return _mappedUser;
+            return _mapper.Map<UnitRequestDto>(data);        
         }
 
         #region PrivateMethods
+        private static void MapToDbObject(UnitRequestDto model, LookupValues oldData)
+        {
+            oldData.LookupValueName = model.LookupValueName;
+            oldData.LookupValueId = model.LookupValueId;
+        }
 
         private async Task<LookupValues> GetUnitById(int Id, CancellationToken cancellationToken)
         {
