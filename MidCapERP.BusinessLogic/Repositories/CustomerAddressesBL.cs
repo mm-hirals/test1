@@ -33,13 +33,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             var customerAddressesAllData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
             var customer = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerAddressesResponseData = (from x in customerAddressesAllData
-                                                 join y in customer on  x.CustomerId  equals y.CustomerID
+                                                 join y in customer on x.CustomerId equals y.CustomerId
                                                  where x.CustomerId == dataTableFilterDto.customerId
                                                  select new CustomerAddressesResponseDto()
                                                  {
                                                      CustomerAddressId = x.CustomerAddressId,
                                                      CustomerId = x.CustomerId,
-                                                     AddressTypeId = x.AddressTypeId,
+                                                     AddressType = x.AddressType,
                                                      Street1 = x.Street1,
                                                      Street2 = x.Street2,
                                                      Landmark = x.Landmark,
@@ -53,13 +53,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<CustomerAddressesResponseDto>(dataTableFilterDto.Draw, customerAddressesData.TotalCount, customerAddressesData.TotalCount, customerAddressesData);
         }
 
-        public async Task<CustomerAddressesResponseDto> GetDetailsById(Int64 Id, CancellationToken cancellationToken)
+        public async Task<CustomerAddressesResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
         {
             var data = await GetDetailsById(Id, cancellationToken);
             return _mapper.Map<CustomerAddressesResponseDto>(data);
         }
 
-        public async Task<CustomerAddressesRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        public async Task<CustomerAddressesRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await CustomerAddressesGetById(Id, cancellationToken);
             return _mapper.Map<CustomerAddressesRequestDto>(data);
@@ -76,7 +76,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomerAddressesRequestDto>(data);
         }
 
-        public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
+        public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(int Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerAddressesGetById(Id, cancellationToken);
             UpdateCustomerAddresses(oldData);
@@ -85,7 +85,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomerAddressesRequestDto>(data);
         }
 
-        public async Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
+        public async Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
             var customerAddressToInsert = await CustomerAddressesGetById(Id, cancellationToken);
             customerAddressToInsert.IsDeleted = true;
@@ -103,7 +103,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
-        private async Task<CustomerAddresses> CustomerAddressesGetById(Int64 Id, CancellationToken cancellationToken)
+        private async Task<CustomerAddresses> CustomerAddressesGetById(int Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomerAddressesDA.GetById(Id, cancellationToken);
             if (data == null)
@@ -115,8 +115,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private static void MapToDbObject(CustomerAddressesRequestDto model, CustomerAddresses oldData)
         {
-            oldData.CustomerId =model.CustomerId;
-            oldData.AddressTypeId = model.AddressTypeId;
+            oldData.CustomerId = model.CustomerId;
+            oldData.AddressType = model.AddressType;
             oldData.Street1 = model.Street1;
             oldData.Street2 = model.Street2;
             oldData.Landmark = model.Landmark;

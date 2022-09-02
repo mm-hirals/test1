@@ -7,10 +7,10 @@ namespace MidCapERP.DataEntities.Models
     public class CustomerAddresses : BaseEntity
     {
         [Key]
-        public Int64 CustomerAddressId { get; set; }
+        public long CustomerAddressId { get; set; }
 
-        public Int64 CustomerId { get; set; }
-        public int AddressTypeId { get; set; }
+        public long CustomerId { get; set; }
+        public string AddressType { get; set; }
         public string Street1 { get; set; }
         public string? Street2 { get; set; }
         public string? Landmark { get; set; }

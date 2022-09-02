@@ -27,6 +27,12 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        public IActionResult IndexNew(CancellationToken cancellationToken)
+        {
+            return View();
+        }
+
         public IActionResult Privacy(CancellationToken cancellationToken)
         {
             return View();

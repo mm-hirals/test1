@@ -4,9 +4,11 @@ namespace MidCapERP.Dto.CustomerAddresses
 {
     public class CustomerAddressesResponseDto
     {
-        public Int64 CustomerAddressId { get; set; }
-        public Int64 CustomerId { get; set; }
-        public int AddressTypeId { get; set; }
+        public long CustomerAddressId { get; set; }
+        public long CustomerId { get; set; }
+
+        [DisplayName("Address Type")]
+        public string AddressType { get; set; }
 
         [DisplayName("Street1")]
         public string Street1 { get; set; }
@@ -29,7 +31,7 @@ namespace MidCapERP.Dto.CustomerAddresses
         [DisplayName("ZipCode")]
         public string ZipCode { get; set; }
 
-        [DisplayName("IsDefault")]
+        [DisplayName("Default Address")]
         public bool IsDefault { get; set; }
 
         public int TenantID { get; set; }

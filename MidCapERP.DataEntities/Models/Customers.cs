@@ -7,14 +7,17 @@ namespace MidCapERP.DataEntities.Models
     public class Customers : BaseEntity
     {
         [Key]
-        public int CustomerID { get; set; }
-        public string CustomerName { get; set; }
+        public long CustomerId { get; set; }
+
+        public int CustomerTypeId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string? EmailId { get; set; }
         public string PhoneNumber { get; set; }
         public string? AltPhoneNumber { get; set; }
         public string? GSTNo { get; set; }
-        public string? RefferedBy { get; set; }
-        public string? RefferedContactNo { get; set; }
+        public long? RefferedBy { get; set; }
+        public decimal Discount { get; set; }
         public int TenantId { get; set; }
     }
 }

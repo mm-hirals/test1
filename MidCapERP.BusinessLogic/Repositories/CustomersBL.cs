@@ -47,10 +47,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomersRequestDto>(data);
         }
 
-        public async Task<CustomersRequestDto> CreateCustomers(int CustomerId,CustomersRequestDto model, CancellationToken cancellationToken)
+        public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerID = customerToInsert.CustomerID;
             customerToInsert.IsDeleted = false;
             customerToInsert.TenantId = _currentUser.TenantId;
             customerToInsert.CreatedBy = _currentUser.UserId;
@@ -101,13 +100,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
         {
-            oldData.CustomerName = model.CustomerName;
+            oldData.FirstName = model.FirstName;
+            oldData.LastName = model.LastName;
             oldData.EmailId = model.EmailId;
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.RefferedBy = model.RefferedBy;
-            oldData.RefferedContactNo = model.RefferedContactNo;
         }
 
         #endregion PrivateMethods

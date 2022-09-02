@@ -4,10 +4,16 @@ namespace MidCapERP.Dto.Customers
 {
     public class CustomersResponseDto
     {
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
+        
+        [DisplayName("Customer Type")]
+        public int CustomerTypeId { get; set; }
 
-        [DisplayName("Customer Name")]
-        public string CustomerName { get; set; }
+        [DisplayName("First Name")]
+        public string FirstName { get; set; }
+
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
 
         [DisplayName("Email Address")]
         public string EmailId { get; set; }
@@ -19,8 +25,8 @@ namespace MidCapERP.Dto.Customers
         public string AltPhoneNumber { get; set; }
 
         public string? GSTNo { get; set; }
-        public string? RefferedBy { get; set; }
-        public string? RefferedContactNo { get; set; }
+        public long? RefferedBy { get; set; }
+        public decimal Discount { get; set; }
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

@@ -5,10 +5,16 @@ namespace MidCapERP.Dto.Customers
 {
     public class CustomersRequestDto
     {
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
-        [DisplayName("Customer Name")]
-        public string CustomerName { get; set; }
+        [DisplayName("Customer Type")]
+        public int CustomerTypeId { get; set; }
+
+        [DisplayName("First Name")]
+        public string FirstName { get; set; }
+
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
 
         [DisplayName("Email Address")]
         [EmailAddress(ErrorMessage = "Please enter valid email address")]
@@ -25,14 +31,43 @@ namespace MidCapERP.Dto.Customers
         public string? AltPhoneNumber { get; set; }
 
         [DisplayName("GST No")]
-        public string?  GSTNo { get; set; }
+        public string? GSTNo { get; set; }
 
         [DisplayName("Reffered By")]
-        public string? RefferedBy { get; set; }
+        public long? RefferedBy { get; set; }
 
-        [DisplayName("Reffered Contact No")]
-        public string? RefferedContactNo { get; set; }
+        [DisplayName("Address Type")]
+        public string AddressType { get; set; }
 
+        [DisplayName("Street1")]
+        [MaxLength(200)]
+        [MinLength(0, ErrorMessage = "Please enter 6 digits")]
+        public string Street1 { get; set; }
+
+        [DisplayName("Street2")]
+        public string? Street2 { get; set; }
+
+        [DisplayName("Landmark")]
+        public string? Landmark { get; set; }
+
+        [DisplayName("Area")]
+        public string Area { get; set; }
+
+        [DisplayName("City")]
+        public string City { get; set; }
+
+        [DisplayName("State")]
+        public string State { get; set; }
+
+        [DisplayName("ZipCode")]
+        [MaxLength(6)]
+        [MinLength(6, ErrorMessage = "Please enter 6 digits")]
+        public string ZipCode { get; set; }
+
+        [DisplayName("IsDefault")]
+        public bool IsDefault { get; set; }
+
+        public decimal Discount { get; set; }
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

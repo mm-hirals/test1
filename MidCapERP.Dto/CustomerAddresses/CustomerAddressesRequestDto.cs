@@ -5,9 +5,11 @@ namespace MidCapERP.Dto.CustomerAddresses
 {
     public class CustomerAddressesRequestDto
     {
-        public Int64 CustomerAddressId { get; set; }
-        public Int64 CustomerId { get; set; }
-        public int AddressTypeId { get; set; }
+        public long CustomerAddressId { get; set; }
+        public long CustomerId { get; set; }
+
+        [DisplayName("Address Type")]
+        public string AddressType { get; set; }
 
         [DisplayName("Street1")]
         [MaxLength(200)]

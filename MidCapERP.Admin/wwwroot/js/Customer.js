@@ -15,7 +15,12 @@ $(function () {
             "datatype": "json"
         },
         "columns": [
-            { "data": "customerName", "name": "customerName", "autoWidth": true },
+            {
+                "autoWidth": true,
+                "mRender": function (o) {
+                    return "";
+                }
+            },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
             { "data": "altPhoneNumber", "name": "altPhoneNumber", "autoWidth": true },

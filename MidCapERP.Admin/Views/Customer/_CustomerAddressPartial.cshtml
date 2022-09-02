@@ -30,14 +30,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="AddressTypeId" class="form-label"></label>
-                                <select  asp-for="AddressTypeId" id="AddressTypeId" data-val="true" class="form-control">   
+                                <label asp-for="AddressType" class="form-label"></label>
+                                <select  asp-for="AddressType" id="AddressTypeId" data-val="true" class="form-control">
                                     <option value="" hidden disabled selected>Select Address Type</option>
-	                                <option value="1">Home</option>  
-	                                <option value="2">Office</option>  
-                                    <option value="3">Other</option>  
+	                                <option value="Home">Home</option>
+                                    <option value="Office">Office</option>
+                                    <option value="Other">Other</option>
                                 </select>
-                                <span asp-validation-for="AddressTypeId" class="text-danger"></span>
+                                <span asp-validation-for="AddressType" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
@@ -113,6 +113,6 @@
 
 @section Scripts {
     @{
-    <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
+        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
 } 

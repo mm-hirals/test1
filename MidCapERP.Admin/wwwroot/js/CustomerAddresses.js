@@ -18,8 +18,18 @@ $(function () {
             }
         },
         "columns": [
-            { "data": "customerId", "name": "CustomerId", "autoWidth": true },
-            { "data": "addressTypeId", "name": "AddressTypeId", "autoWidth": true },
+            {
+                "data": "addressTypeId", "name": "Address Type", "autoWidth": true,
+                "mRender": function (o) {
+                    var addressTypeName = "Other";
+                    if (o == 1) {
+                        addressTypeName = "Home";
+                    } else if (o == 2) {
+                        addressTypeName = "Office";
+                    }
+                    return addressTypeName;
+                }
+            },
             { "data": "street1", "name": "Street1", "autoWidth": true },
             { "data": "street2", "name": "Street2", "autoWidth": true },
             { "data": "landmark", "name": "Landmark", "autoWidth": true },
@@ -27,7 +37,16 @@ $(function () {
             { "data": "city", "name": "City", "autoWidth": true },
             { "data": "state", "name": "State", "autoWidth": true },
             { "data": "zipCode", "name": "ZipCode", "autoWidth": true },
-            { "data": "isDefault", "name": "IsDefault", "autoWidth": true },
+            {
+                "data": "isDefault", "name": "Default", "autoWidth": true,
+                "mRender": function (o) {
+                    var isDefaultAddress = "No";
+                    if (o) {
+                        isDefaultAddress = "Yes";
+                    }
+                    return isDefaultAddress;
+                }
+            },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

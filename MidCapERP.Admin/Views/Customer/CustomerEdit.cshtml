@@ -4,137 +4,172 @@
     Layout = "_Layout";
 }
 
-    <div class="">
-        <div class="card-product--wrapper mb-3">
-            <div class="card-prpoduct-cotent--wrapper">
-                <form asp-action="@action" method="post" class="modal-form--wrapper">
-                    <div class="modal-body">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="CustomerName" class="form-label"></label>
-                                        </label> 
-                                        <input asp-for="CustomerName" class="form-control" />
-                                        <span asp-validation-for="CustomerName" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="EmailId" class="form-label"></label>
-                                        </label>
-                                        <input asp-for="EmailId" class="form-control" />
-                                        <span asp-validation-for="EmailId" class="text-danger"></span>                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="PhoneNumber" class="form-label"></label>
-                                        </label>
-                                        <input asp-for="PhoneNumber" class="form-control" type="number" />
-                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="AltPhoneNumber" class="form-label"></label>
-                                        </label>     
-                                        <input asp-for="AltPhoneNumber" class="form-control" />
-                                        <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="GSTNo" class="form-label"></label>
-                                        </label>     
-                                        <input asp-for="GSTNo" class="form-control" />
-                                        <span asp-validation-for="GSTNo" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="RefferedBy" class="form-label"></label>
-                                        </label>     
-                                        <input asp-for="RefferedBy" class="form-control" />
-                                        <span asp-validation-for="RefferedBy" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="RefferedContactNo" class="form-label"></label>
-                                        </label>          
-                                        <input asp-for="RefferedContactNo" class="form-control" />
-                                        <span asp-validation-for="RefferedContactNo" class="text-danger"></span>
-                                    </div>
+<div class="">
+    <div class="card mb-3">
+        <div class="card-prpoduct-cotent--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="CustomerTypeId" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="CustomerTypeId" class="form-control" />
+                                    <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <div class="" >
-                                <div class="">
-                                    <input type="submit" value="Save" class="btn btn-primary" id="dataSave" />
-                                    <button type="button" class="btn btn-secondary ml-5" data-bs-dismiss="modal" id="lnkRoleFilter" >Close</button>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="FirstName" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="LastName" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="EmailId" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="EmailId" class="form-control" />
+                                    <span asp-validation-for="EmailId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="PhoneNumber" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="PhoneNumber" class="form-control" type="number" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="AltPhoneNumber" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="AltPhoneNumber" class="form-control" />
+                                    <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="GSTNo" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="GSTNo" class="form-control" />
+                                    <span asp-validation-for="GSTNo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="RefferedBy" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="RefferedBy" class="form-control" />
+                                    <span asp-validation-for="RefferedBy" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="Discount" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="Discount" class="form-control" />
+                                    <span asp-validation-for="Discount" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="row c-card-footer--btn">
+                        <div class="col-12">
+                            <div class="c-card--wrapper c-card-sm--wrapper">
+                                <div class="c-card--footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="lnkRoleFilter">Cancle</button>
+                                    <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-@if(Model != null)
+    @if (Model != null)
     {
-    @if(Model.CustomerId == Convert.ToInt64(TempData["CustomerId"]))
-    {
-        <div class="">
-        <nav class="product-nav-tab--sticky">
+        @if (Model.CustomerId == Convert.ToInt64(TempData["CustomerId"]))
+        {
+            <nav class="product-nav-tab--sticky">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active col-md-2" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Customer Address</button>          
-                    <div class="c-card--header col-md-10 text-right">
-                        <h4 class="c-card--header-title"></h4>
-                        <div class="c-card--header-action">
-                             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerAddressesFilter"><i class='bx bx-plus me-1'></i>Filters</a>
-                             <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary" 
-                             data-ajax="true" data-ajax-mode="replace"
-                             data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax-update="#divUpdateCustomerAddresses" id="btnSave">Create New</a>
+                    <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                        Addresses
+                    </button>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                        <div class="c-card--header">
+                            <h4 class="c-card--header-title">Address Details</h4>
+                            <div class="c-card--header-action">
+                                <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary" id="btnSave"
+                           data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax-update="#divUpdateCustomerAddresses"
+                           data-ajax="true" data-ajax-mode="replace">Create New</a>
+                            </div>
                         </div>
-                     </div>
-                </div>  
-        </nav>
-    </div>
-    <partial name="_CustomerAddressesTable" model="null"/>
+                        <div class="c-card--body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <partial name="_CustomerAddressesTable" model="null" />
+                                    <div id="divUpdateCustomerAddresses"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     }
-}
-<div id="divUpdateCustomerAddresses"></div>
+</div>
 
-<script src="~/lib/dropzone/dropzone.js"></script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");   
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
+        <script src="~/js/Customer.js" asp-append-version="true"></script>
         <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
 } 
