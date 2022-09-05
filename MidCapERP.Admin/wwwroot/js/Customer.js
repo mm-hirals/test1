@@ -16,9 +16,8 @@ $(function () {
         },
         "columns": [
             {
-                "autoWidth": true,
-                "mRender": function (o) {
-                    return "";
+                "render": (data, type, full) => {
+                    return full.firstName + " " + full.lastName;
                 }
             },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
@@ -29,7 +28,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' +
-                           '<a data-ajax-complete="CustomerModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/Delete/' + o.customerId + '"><i class="bx bxs-trash"></i></a></div>' ;
+                        '<a data-ajax-complete="CustomerModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/Delete/' + o.customerId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -39,10 +38,6 @@ $(function () {
 $("#lnkCustomerFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
-});
-
-$("#lnkRoleFilter").click(function () {
-    window.location.href = "/Customer/Index";
 });
 
 $("#Created").click(function () {

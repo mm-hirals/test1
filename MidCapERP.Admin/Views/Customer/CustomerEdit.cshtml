@@ -18,8 +18,10 @@
                                     <label class="form-label">
                                         <label asp-for="CustomerTypeId" class="form-label"></label>
                                     </label>
-                                    <input asp-for="CustomerTypeId" class="form-control" />
-                                    <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
+                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
+                                    <option value="" hidden disabled selected>Select Customer Type</option>
+                                </select>
                                 </div>
                             </div>
                         </div>
@@ -111,16 +113,91 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row c-card-footer--btn">
-                        <div class="col-12">
-                            <div class="c-card--wrapper c-card-sm--wrapper">
-                                <div class="c-card--footer">
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="lnkRoleFilter">Cancle</button>
-                                    <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
+                    @if(Model == null)
+                    {
+                            <div class="col-3">
+                                 <div class="form-group">
+                                    <label asp-for="AddressType" class="form-label"></label>                         
+                                     <select  asp-for="AddressType" id="AddressTypeId" data-val="true" class="form-control">
+                                        <option value="" hidden disabled selected>Select Address Type</option>
+	                                    <option value="Home">Home</option>
+                                        <option value="Office">Office</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span asp-validation-for="AddressType" class="text-danger"></span>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="Street1" class="form-label"></label>
+                                    <input asp-for="Street1" class="form-control" />
+                                    <span asp-validation-for="Street1" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="Street2" class="form-label"></label>
+                                    <input asp-for="Street2" class="form-control" />
+                                    <span asp-validation-for="Street2" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="Landmark" class="form-label"></label>
+                                    <input asp-for="Landmark" class="form-control" />
+                                    <span asp-validation-for="Landmark" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="Area" class="form-label"></label>
+                                    <input asp-for="Area" class="form-control" />
+                                    <span asp-validation-for="Area" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="City" class="form-label"></label>
+                                    <input asp-for="City" class="form-control" />
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="State" class="form-label"></label>
+                                    <input asp-for="State" class="form-control" />
+                                    <span asp-validation-for="State" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label asp-for="ZipCode" class="form-label"></label>
+                                    <input asp-for="ZipCode" class="form-control" />
+                                    <span asp-validation-for="ZipCode" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                      <div class="custom-control custom-switch">
+                                        <label class="form-label">
+                                            IsDefault 
+                                        </label>
+                                        <input asp-for="IsDefault" type="checkbox" class="custom-control-input" id="isDefualtCheck" data-val="true">
+                                        <label class="custom-control-label" for="isDefualtCheck">Active</label>    
+                                    </div>
+                                </div>
+                            </div>
+                    }
+                     </div>
+                    <div class="row c-card-footer--btn">
+                         <div class="col-12">
+                             <div class="c-card--wrapper c-card-sm--wrapper">
+                                    <div class="c-card--footer">
+                                        <a class="btn btn-danger" href="/Customer/Index">Cancle</a>
+                                        <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
+                                    </div>
+                             </div>
+                         </div>
                     </div>
                 </div>
             </form>
@@ -169,7 +246,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script src="~/js/Customer.js" asp-append-version="true"></script>
-        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
+    <script src="~/js/Customer.js" asp-append-version="true"></script>
+    <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
 } 

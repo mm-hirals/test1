@@ -1,4 +1,5 @@
 ﻿using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
 
 namespace MidCapERP.BusinessLogic.Interface
@@ -7,16 +8,22 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken);
 
+        public Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken);
+
         public Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
-        public Task<CustomersResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
+        public Task<JsonRepsonse<CustomersTypesResponseDto>> GetFilterCustomersTypesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
-        public Task<CustomersRequestDto> GetById(int Id, CancellationToken cancellationToken);
+        public Task<CustomersResponseDto> GetDetailsById(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<CustomersRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
 
         public Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken);
 
-        public Task<CustomersRequestDto> UpdateCustomers(int Id, CustomersRequestDto model, CancellationToken cancellationToken);
+        public Task<CustomersRequestDto> UpdateCustomers(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken);
 
-        public Task<CustomersRequestDto> DeleteCustomers(int Id, CancellationToken cancellationToken);
+        public Task<CustomersRequestDto> DeleteCustomers(Int64 Id, CancellationToken cancellationToken);
     }
 }

@@ -11,10 +11,10 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CustomerAddressesRequestDto> CreateCustomerAddresses(CustomerAddressesRequestDto model, CancellationToken cancellationToken);
 
-        public Task<CustomerAddressesRequestDto> GetById(int Id, CancellationToken cancellationToken);
+        public Task<CustomerAddressesRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
 
-        public Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(int Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken);
+        public Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken);
 
-        public Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken);
+        public Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(Int64 Id, CancellationToken cancellationToken);
     }
 }

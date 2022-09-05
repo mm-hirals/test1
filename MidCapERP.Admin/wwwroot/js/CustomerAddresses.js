@@ -19,7 +19,7 @@ $(function () {
         },
         "columns": [
             {
-                "data": "addressTypeId", "name": "Address Type", "autoWidth": true,
+                "data": "addressType", "name": "Address Type", "autoWidth": true,
                 "mRender": function (o) {
                     var addressTypeName = "Other";
                     if (o == 1) {

@@ -6,11 +6,15 @@ namespace MidCapERP.Dto.CustomerAddresses
     public class CustomerAddressesRequestDto
     {
         public long CustomerAddressId { get; set; }
+
+        [Required]
         public long CustomerId { get; set; }
 
+        [Required]
         [DisplayName("Address Type")]
         public string AddressType { get; set; }
 
+        [Required]
         [DisplayName("Street1")]
         [MaxLength(200)]
         [MinLength(0, ErrorMessage = "Please enter 6 digits")]
@@ -19,23 +23,29 @@ namespace MidCapERP.Dto.CustomerAddresses
         [DisplayName("Street2")]
         public string? Street2 { get; set; }
 
+        [Required]
         [DisplayName("Landmark")]
         public string? Landmark { get; set; }
 
+        [Required]
         [DisplayName("Area")]
         public string Area { get; set; }
 
+        [Required]
         [DisplayName("City")]
         public string City { get; set; }
 
+        [Required]
         [DisplayName("State")]
         public string State { get; set; }
 
+        [Required]
         [DisplayName("ZipCode")]
         [MaxLength(6)]
         [MinLength(6, ErrorMessage = "Please enter 6 digits")]
         public string ZipCode { get; set; }
 
+        [Required]
         [DisplayName("IsDefault")]
         public bool IsDefault { get; set; }
 

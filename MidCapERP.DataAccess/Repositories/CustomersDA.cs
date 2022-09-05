@@ -18,7 +18,7 @@ namespace MidCapERP.DataAccess.Repositories
             return await _customers.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
 
-        public async Task<Customers> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<Customers> GetById(Int64 Id, CancellationToken cancellationToken)
         {
             return await _customers.GetByIdAsync(Id, cancellationToken);
         }
@@ -28,12 +28,12 @@ namespace MidCapERP.DataAccess.Repositories
             return await _customers.InsertAsync(model, cancellationToken);
         }
 
-        public async Task<Customers> UpdateCustomers(int Id, Customers model, CancellationToken cancellationToken)
+        public async Task<Customers> UpdateCustomers(Int64 Id, Customers model, CancellationToken cancellationToken)
         {
             return await _customers.UpdateAsync(model, cancellationToken);
         }
 
-        public async Task<Customers> DeleteCustomers(int Id, CancellationToken cancellationToken)
+        public async Task<Customers> DeleteCustomers(Int64 Id, CancellationToken cancellationToken)
         {
             var entity = await _customers.GetByIdAsync(Id, cancellationToken);
             if (entity != null)
