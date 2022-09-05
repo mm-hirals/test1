@@ -45,8 +45,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
-        public async Task<IActionResult> Create(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
+            productMainRequestDto.ProductMaterialRequestDto = productMainRequestDto.ProductMaterialRequestDto.Where(x => x.IsDeleted != true).ToList();
             await _unitOfWorkBL.ProductBL.CreateProduct(productMainRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }

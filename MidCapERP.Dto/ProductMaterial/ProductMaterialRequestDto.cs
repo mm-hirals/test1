@@ -15,5 +15,6 @@
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
