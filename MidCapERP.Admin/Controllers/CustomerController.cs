@@ -133,14 +133,14 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
         {
-            var CustomerTypesData = await _unitOfWorkBL.CustomersBL.CustomersTypesGetAll(cancellationToken);
-            var CustomerTypesSelectedList = CustomerTypesData.Select(a =>
+            var customerTypesData = await _unitOfWorkBL.CustomersBL.CustomersTypesGetAll(cancellationToken);
+            var customerTypesSelectedList = customerTypesData.Select(a =>
                                  new SelectListItem
                                  {
                                      Value = Convert.ToString(a.CustomerTypeId),
                                      Text = a.Name
                                  }).ToList();
-            ViewBag.CustomerType = CustomerTypesSelectedList;
+            ViewBag.CustomerType = customerTypesSelectedList;
         }
 
         #endregion Private Method

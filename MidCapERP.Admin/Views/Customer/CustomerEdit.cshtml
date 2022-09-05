@@ -113,8 +113,8 @@
                                 </div>
                             </div>
                         </div>
-                    @if(Model == null)
-                    {
+                        @if(Model == null)
+                        {
                             <div class="col-3">
                                  <div class="form-group">
                                     <label asp-for="AddressType" class="form-label"></label>                         
@@ -187,8 +187,8 @@
                                     </div>
                                 </div>
                             </div>
-                    }
-                     </div>
+                        }
+                    </div>
                     <div class="row c-card-footer--btn">
                          <div class="col-12">
                              <div class="c-card--wrapper c-card-sm--wrapper">
@@ -246,7 +246,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-    <script src="~/js/Customer.js" asp-append-version="true"></script>
-    <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
+        <script src="~/js/Customer.js" asp-append-version="true"></script>
+        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
 } 
