@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -8,6 +9,7 @@ using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
+using MidCapERP.Dto.ProductImage;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -15,7 +17,6 @@ namespace MidCapERP.BusinessLogic.Repositories
     {
         private readonly IUnitOfWorkDA _unitOfWorkDA;
 
-        //private readonly IUnitOfWorkBL _unitOfWorkBL;
         public readonly IMapper _mapper;
 
         private readonly CurrentUser _currentUser;
@@ -24,7 +25,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
-            //_unitOfWorkBL = unitOfWorkBL;
             _mapper = mapper;
             _currentUser = currentUser;
             _fileStorageService = fileStorageService;
@@ -84,6 +84,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
+            // Add Product Details
             var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
             productToInsert.IsDeleted = false;
             productToInsert.TenantId = _currentUser.TenantId;
@@ -92,6 +93,24 @@ namespace MidCapERP.BusinessLogic.Repositories
             productToInsert.CreatedUTCDate = DateTime.UtcNow;
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+
+            // Add Product Images
+            foreach (var item in model.Files)
+            {
+                ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
+                productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
+                productImageRequestDto.ImageName = item.FileName;
+
+                var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
+                productImageToInsert.ProductId = productToInsert.ProductId;
+                productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
+                productImageToInsert.ImageName = productImageRequestDto.ImageName;
+                productImageToInsert.CreatedBy = _currentUser.UserId;
+                productImageToInsert.CreatedDate = DateTime.Now;
+                productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
+                await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+            }
+
             return _mappedUser;
         }
 

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MidCapERP.Dto.ProductImage;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IProductImageBL
     {
+        public Task<ProductImageRequestDto> CreateProductImage(List<ProductImageRequestDto> model, CancellationToken cancellationToken);
     }
 }

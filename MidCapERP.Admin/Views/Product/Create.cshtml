@@ -6,6 +6,8 @@
 
 <div class="">
     <form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper" enctype="multipart/form-data">
+
+        @*Product*@
         <div class="card-product--wrapper mb-3">
             <input type="hidden" asp-for="ProductRequestDto.ProductId" />
             <div class="card-product--image">
@@ -163,20 +165,20 @@
                         </div>
                     </div>
                 </div>
-                @*<div class="row c-card-footer--btn">
-                <div class="col-12">
-                <div class="c-card--wrapper c-card-sm--wrapper">
-                <div class="c-card--footer">
-                <a class="btn btn-danger" href="">
-                Cancle
-                </a>
-                <a class="btn btn-primary ms-2" href="">
-                Save
-                </a>
+                <div class="row c-card-footer--btn">
+                    <div class="col-12">
+                        <div class="c-card--wrapper c-card-sm--wrapper">
+                            <div class="c-card--footer">
+                                <a class="btn btn-danger" href="">
+                                    Cancle
+                                </a>
+                                <a class="btn btn-primary ms-2" href="">
+                                    Save
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                </div>
-                </div>
-                </div>*@
             </div>
 
             @*Image*@
@@ -186,34 +188,44 @@
                         <h4 class="c-card--header-title">Product Images</h4>
                     </div>
                     <div class="c-card--body">
-                        <div id="dropzone">
-                            <div class="dropzone needsclick" id="demo-upload" action="/upload">
-                                <div class="dz-message needsclick">
-                                    Drop files here or click to upload.
-                                    <br>
-                                    <span class="note needsclick">
-                                        (This is just a demo dropzone. Selected
-                                        files are <strong>not</strong> actually uploaded.)
-                                    </span>
+                        @*<div id="dropzone" id="dropzone-form" name="mainFileUploader">
+                        <div class="dropzone needsclick" action="/upload">
+                        <div class="dz-message needsclick">
+                        Drop files here or click to upload.
+                        <br>
+                        <span class="note needsclick">
+                        (This is just a demo dropzone. Selected
+                        files are <strong>not</strong> actually uploaded.)
+                        </span>
+                        </div>
+                        </div>
+                        </div>*@
+                        @*<div class="dropzone" id="dropzone-form" name="mainFileUploader">
+                        <div class="fallback">
+                        <input asp-for="File" type="file" multiple />
+                        </div>
+                        </div>*@
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    @*<label asp-for="ProductImageRequestDto" class="form-label"></label>*@
+                                    <input asp-for="Files" class="form-control" type="file" multiple />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @*<div class="row c-card-footer--btn">
-                <div class="col-12">
-                <div class="c-card--wrapper c-card-sm--wrapper">
-                <div class="c-card--footer">
-                <a class="btn btn-danger" href="">
-                Cancle
-                </a>
-                <a class="btn btn-primary ms-2" href="">
-                Save
-                </a>
+                <div class="row c-card-footer--btn">
+                    <div class="col-12">
+                        <div class="c-card--wrapper c-card-sm--wrapper">
+                            <div class="c-card--footer">
+                                <input type="button" value="Close" class="btn btn-danger" id="lnkToProductIndex" />
+                                <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                                @*<input asp-for="File" class="btn btn-primary ms-2" id="submit-all" type="button" value="Save" />*@
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                </div>
-                </div>
-                </div>*@
             </div>
 
             @*Material*@
@@ -715,5 +727,6 @@
     @{
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
         <script src="~/js/Product.js" asp-append-version="true"></script>
+        //<script src="~/js/ProductImage.js" asp-append-version="true"></script>
     }
-}
+    }
