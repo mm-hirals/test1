@@ -42,19 +42,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerData.TotalCount, customerData.TotalCount, customerData);
         }
 
-        public async Task<JsonRepsonse<CustomersTypesResponseDto>> GetFilterCustomersTypesData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            var customerTypesAllData = await _unitOfWorkDA.CustomerTypesDA.GetAll(cancellationToken);
-            var customerTypesData = new PagedList<CustomersTypesResponseDto>(_mapper.Map<List<CustomersTypesResponseDto>>(customerTypesAllData).AsQueryable(), dataTableFilterDto);
-            return new JsonRepsonse<CustomersTypesResponseDto>(dataTableFilterDto.Draw, customerTypesData.TotalCount, customerTypesData.TotalCount, customerTypesData);
-        }
-
-        public async Task<CustomersResponseDto> GetDetailsById(Int64 Id, CancellationToken cancellationToken)
-        {
-            var data = await CustomerGetById(Id, cancellationToken);
-            return _mapper.Map<CustomersResponseDto>(data);
-        }
-
         public async Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await CustomerTypesGetById(Id, cancellationToken);
