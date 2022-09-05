@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.ProductImage;
+﻿using Microsoft.AspNetCore.Http;
+using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 
 namespace MidCapERP.Dto.Product
@@ -17,5 +18,8 @@ namespace MidCapERP.Dto.Product
         public List<ProductImageRequestDto> ProductImageRequestDto { get; set; }
 
         public List<ProductMaterialRequestDto> ProductMaterialRequestDto { get; set; }
+
+        public IFormFile File { get; set; }
+        public List<IFormFile> Files { get; set; }
     }
 }
