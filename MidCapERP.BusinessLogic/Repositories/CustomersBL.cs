@@ -70,7 +70,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerId = model.CustomerId;
             customerToInsert.IsDeleted = false;
             customerToInsert.TenantId = _currentUser.TenantId;
             customerToInsert.CreatedBy = _currentUser.UserId;
@@ -91,8 +90,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             catDto.IsDefault = model.IsDefault;
             catDto.CreatedDate = DateTime.Now;
             catDto.CreatedUTCDate = DateTime.UtcNow;
-            var customerTypeToInsert = _mapper.Map<CustomerAddresses>(catDto);
-
             await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(catDto, cancellationToken);
             return _mapper.Map<CustomersRequestDto>(data);
         }
