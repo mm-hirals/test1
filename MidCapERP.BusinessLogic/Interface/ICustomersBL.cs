@@ -19,7 +19,5 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken);
 
         public Task<CustomersRequestDto> UpdateCustomers(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken);
-
-        public Task<CustomersRequestDto> DeleteCustomers(Int64 Id, CancellationToken cancellationToken);
     }
 }

@@ -27,8 +27,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CustomerModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/Delete/' + o.customerId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';         
                 }
             }
         ]
@@ -39,10 +38,6 @@ $("#lnkCustomerFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
-
-CustomerModel.onDelete = function () {
-    tblCustomer.ajax.reload(null, false);
-}
 
 CustomerModel.onSuccess = function (xhr) {
     tblCustomer.ajax.reload(null, false);

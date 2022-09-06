@@ -11,7 +11,5 @@ namespace MidCapERP.DataAccess.Interface
         public Task<CustomerAddresses> CreateCustomerAddress(CustomerAddresses model, CancellationToken cancellationToken);
 
         public Task<CustomerAddresses> UpdateCustomerAddress(Int64 Id, CustomerAddresses model, CancellationToken cancellationToken);
-
-        public Task<CustomerAddresses> DeleteCustomerAddress(Int64 Id, CancellationToken cancellationToken);
     }
 }

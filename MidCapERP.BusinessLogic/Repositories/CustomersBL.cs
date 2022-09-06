@@ -84,31 +84,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomersRequestDto> UpdateCustomers(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerGetById(Id, cancellationToken);
-            UpdateCustomers(oldData);
-            MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-            var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
-            return _mappedUser;
-        }
-
-        public async Task<CustomersRequestDto> DeleteCustomers(Int64 Id, CancellationToken cancellationToken)
-        {
-            var customerToInsert = await CustomerGetById(Id, cancellationToken);
-            customerToInsert.IsDeleted = true;
-            UpdateCustomers(customerToInsert);
-            var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, customerToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<CustomersRequestDto>(data);
-            return _mappedUser;
-        }
-
-        #region PrivateMethods
-
-        private void UpdateCustomers(Customers oldData)
-        {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
+            MapToDbObject(model, oldData);
+            var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
+            return _mapper.Map<CustomersRequestDto>(data);
         }
+
+        #region PrivateMethods
 
         private async Task<Customers> CustomerGetById(Int64 Id, CancellationToken cancellationToken)
         {
@@ -117,7 +101,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Customer not found");
             }
-            return data;
+            return data;  
         }
 
         private async Task<CustomerTypes> CustomerTypesGetById(Int64 Id, CancellationToken cancellationToken)
