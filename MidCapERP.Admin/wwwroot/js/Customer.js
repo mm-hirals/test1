@@ -40,10 +40,6 @@ $("#lnkCustomerFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-$("#Created").click(function () {
-    window.location.href = "/Customer/Create";
-});
-
 CustomerModel.onDelete = function () {
     tblCustomer.ajax.reload(null, false);
 }
