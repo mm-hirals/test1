@@ -5,10 +5,16 @@ namespace MidCapERP.Dto.Customers
 {
     public class CustomersRequestDto
     {
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
-        [DisplayName("Customer Name")]
-        public string CustomerName { get; set; }
+        [DisplayName("Customer Type")]
+        public int CustomerTypeId { get; set; }
+
+        [DisplayName("First Name")]
+        public string FirstName { get; set; }
+
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
 
         [DisplayName("Email Address")]
         [EmailAddress(ErrorMessage = "Please enter valid email address")]
@@ -24,48 +30,44 @@ namespace MidCapERP.Dto.Customers
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string? AltPhoneNumber { get; set; }
 
-        [DisplayName("Billing Street1")]
-        public string BillingStreet1 { get; set; }
+        [DisplayName("GST No")]
+        public string? GSTNo { get; set; }
 
-        [DisplayName("Billing Street2")]
-        public string? BillingStreet2 { get; set; }
+        [DisplayName("Reffered By")]
+        public long? RefferedBy { get; set; }
 
-        [DisplayName("Billing Landmark")]
-        public string? BillingLandmark { get; set; }
+        [DisplayName("Address Type")]
+        public string AddressType { get; set; }
 
-        [DisplayName("Billing Area")]
-        public string BillingArea { get; set; }
+        [DisplayName("Street1")]
+        [MaxLength(200)]
+        [MinLength(0, ErrorMessage = "Please enter 6 digits")]
+        public string Street1 { get; set; }
 
-        [DisplayName("Billing City")]
-        public string BillingCity { get; set; }
+        [DisplayName("Street2")]
+        public string? Street2 { get; set; }
 
-        [DisplayName("Billing State")]
-        public string BillingState { get; set; }
+        [DisplayName("Landmark")]
+        public string? Landmark { get; set; }
 
-        [DisplayName("Billing Zip Code")]
-        public string BillingZipCode { get; set; }
+        [DisplayName("Area")]
+        public string Area { get; set; }
 
-        [DisplayName("Shipping Street1")]
-        public string ShippingStreet1 { get; set; }
+        [DisplayName("City")]
+        public string City { get; set; }
 
-        [DisplayName("Shipping Street2")]
-        public string? ShippingStreet2 { get; set; }
+        [DisplayName("State")]
+        public string State { get; set; }
 
-        [DisplayName("Shipping Landmark")]
-        public string? ShippingLandmark { get; set; }
+        [DisplayName("ZipCode")]
+        [MaxLength(6)]
+        [MinLength(6, ErrorMessage = "Please enter 6 digits")]
+        public string ZipCode { get; set; }
 
-        [DisplayName("Shipping Area")]
-        public string ShippingArea { get; set; }
+        [DisplayName("IsDefault")]
+        public bool IsDefault { get; set; }
 
-        [DisplayName("Shipping City")]
-        public string ShippingCity { get; set; }
-
-        [DisplayName("Shipping State")]
-        public string ShippingState { get; set; }
-
-        [DisplayName("Shipping Zip Code")]
-        public string ShippingZipCode { get; set; }
-
+        public decimal Discount { get; set; }
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

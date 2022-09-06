@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Infrastructure.Constants;
 using System.Security.Claims;
