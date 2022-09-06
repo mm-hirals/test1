@@ -60,9 +60,9 @@ namespace MidCapERP.Admin.Controllers
             if (Id != null)
             {
                 var allPermissions = ApplicationIdentityConstants.Permissions.GetAllPermissions();
-                var rolePermissionRequestDto = await _unitOfWorkBL.RolePermissionBL.GetRolePermissions(Id, allPermissions, cancellationToken);
+                var rolePermissionResponseDto = await _unitOfWorkBL.RolePermissionBL.GetRolePermissions(Id, allPermissions, cancellationToken);
 
-                mRoleRequestDto = await _unitOfWorkBL.RoleBL.GetRoleNameID(Id, rolePermissionRequestDto, cancellationToken);
+                mRoleRequestDto = await _unitOfWorkBL.RoleBL.GetRoleNameID(Id, rolePermissionResponseDto, cancellationToken);
                 return View(mRoleRequestDto);
             }
             else
@@ -71,14 +71,14 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Create)]
-        public async Task<JsonResult> CreateRolePermission([FromForm] RolePermissionRequestDto rolePermissionRequestDto, CancellationToken cancellationToken)
+        public async Task<JsonResult> CreateRolePermission([FromForm] RolePermissionRequestDto rolePermissionResponseDto, CancellationToken cancellationToken)
         {
             try
             {
-                if (rolePermissionRequestDto.IsChecked == "true")
-                    await _unitOfWorkBL.RolePermissionBL.CreateRoleClaim(rolePermissionRequestDto, cancellationToken);
+                if (rolePermissionResponseDto.IsChecked == "true")
+                    await _unitOfWorkBL.RolePermissionBL.CreateRoleClaim(rolePermissionResponseDto, cancellationToken);
                 else
-                    await _unitOfWorkBL.RolePermissionBL.DeleteRoleClaim(rolePermissionRequestDto, cancellationToken);
+                    await _unitOfWorkBL.RolePermissionBL.DeleteRoleClaim(rolePermissionResponseDto, cancellationToken);
                 return Json("success");
             }
             catch (Exception ex)

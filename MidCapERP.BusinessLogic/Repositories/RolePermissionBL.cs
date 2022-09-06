@@ -25,41 +25,42 @@ namespace MidCapERP.BusinessLogic.Repositories
             return roleClaims;
         }
 
-        public async Task<List<RolePermissionRequestDto>> GetRolePermissions(string Id, List<string> allPermissions, CancellationToken cancellationToken)
+        public async Task<List<RolePermissionResponseDto>> GetRolePermissions(string Id, List<string> allPermissions, CancellationToken cancellationToken)
         {
             var allClaimsByRole = await GetAllRoleClaimsByRole(Id, cancellationToken);
-            List<RolePermissionRequestDto> rolePermissionRequestDto = new List<RolePermissionRequestDto>();
+            List<RolePermissionResponseDto> RolePermissionResponseDto = new List<RolePermissionResponseDto>();
 
             foreach (var item in allPermissions)
             {
-                RolePermissionRequestDto permissionRequestDto = new RolePermissionRequestDto();
+                RolePermissionResponseDto permissionRequestDto = new RolePermissionResponseDto();
                 permissionRequestDto.Module = item.Split(".")[1];
 
-                var rolePermission = rolePermissionRequestDto.FirstOrDefault(p => p.Module == permissionRequestDto.Module);
+                var rolePermission = RolePermissionResponseDto.FirstOrDefault(p => p.Module == permissionRequestDto.Module);
                 if (rolePermission == null)
                 {
-                    permissionRequestDto.ModulePermissionList = new List<RolePermissionRequestDto>();
-                    rolePermissionRequestDto.Add(permissionRequestDto);
-                    rolePermission = rolePermissionRequestDto.FirstOrDefault(p => p.Module == permissionRequestDto.Module);
+                    permissionRequestDto.ModulePermissionList = new List<PermissiongResponseDto>();
+                    RolePermissionResponseDto.Add(permissionRequestDto);
+                    rolePermission = RolePermissionResponseDto.FirstOrDefault(p => p.Module == permissionRequestDto.Module);
                 }
 
-                permissionRequestDto.Id = item.Split(".")[1] + item.Split(".")[2];
-                permissionRequestDto.PermissionType = item.Split(".")[2];
-                permissionRequestDto.Permission = item;
+                PermissiongResponseDto permissionResponseDto = new PermissiongResponseDto();
+                permissionResponseDto.Id = item.Split(".")[1] + item.Split(".")[2];
+                permissionResponseDto.PermissionType = item.Split(".")[2];
+                permissionResponseDto.Permission = item;
                 if (allClaimsByRole.Any(x => x.Value == item))
                 {
-                    permissionRequestDto.IsChecked = "checked";
+                    permissionResponseDto.IsChecked = "checked";
                 }
-                rolePermission.ModulePermissionList.Add(permissionRequestDto);
+                rolePermission.ModulePermissionList.Add(permissionResponseDto);
             }
 
-            return rolePermissionRequestDto;
+            return RolePermissionResponseDto;
         }
 
-        public async Task CreateRoleClaim(RolePermissionRequestDto model, CancellationToken cancellationToken)
+        public async Task CreateRoleClaim(RolePermissionRequestDto rolePermissionRequestDto, CancellationToken cancellationToken)
         {
-            var applicationRole = await _roleManager.FindByIdAsync(model.RoleId);
-            await _unitOfWorkDA.RolePermissionDA.CreateRolePermission(applicationRole, model.Permission, cancellationToken);
+            var applicationRole = await _roleManager.FindByIdAsync(rolePermissionRequestDto.RoleId);
+            await _unitOfWorkDA.RolePermissionDA.CreateRolePermission(applicationRole, rolePermissionRequestDto.Permission, cancellationToken);
         }
 
         public async Task DeleteRoleClaim(RolePermissionRequestDto model, CancellationToken cancellationToken)

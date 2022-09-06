@@ -7,9 +7,9 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IList<Claim>> GetAllRoleClaimsByRole(string applicationRole, CancellationToken cancellationToken);
 
-        public Task<List<RolePermissionRequestDto>> GetRolePermissions(string Id, List<string> allPermissions, CancellationToken cancellationToken);
+        public Task<List<RolePermissionResponseDto>> GetRolePermissions(string Id, List<string> allPermissions, CancellationToken cancellationToken);
 
-        public Task CreateRoleClaim(RolePermissionRequestDto rolePermissionRequestDto, CancellationToken cancellationToken);
+        public Task CreateRoleClaim(RolePermissionRequestDto rolePermissionResponseDto, CancellationToken cancellationToken);
 
         public Task DeleteRoleClaim(RolePermissionRequestDto model, CancellationToken cancellationToken);
     }

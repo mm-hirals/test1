@@ -11,10 +11,8 @@ $("input[type='checkbox']").click(function () {
         type: "POST",
         data: data,
         success: function (response) {
-            if (response == "sucess")
-                window.location.href = "/Role/Index"
-            else
-                alert("Error: " + response);
+            if (response != "success")
+               alert("Error: " + response);
         }
     });
 });

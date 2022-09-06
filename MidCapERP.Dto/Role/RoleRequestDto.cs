@@ -8,7 +8,7 @@ namespace MidCapERP.Dto.Role
     {
         public RoleRequestDto()
         {
-            ModulePermissionList = new List<RolePermissionRequestDto>();
+            ModulePermissionList = new List<RolePermissionResponseDto>();
         }
 
         public string Id { get; set; }
@@ -21,6 +21,6 @@ namespace MidCapERP.Dto.Role
         public string ConcurrencyStamp { get; set; }
         public int? TenantId { get; set; }
 
-        public List<RolePermissionRequestDto> ModulePermissionList { get; set; }
+        public List<RolePermissionResponseDto> ModulePermissionList { get; set; }
     }
 }
