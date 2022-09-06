@@ -9,7 +9,6 @@ namespace MidCapERP.Dto.RolePermission
         public string Module { get; set; }
         public string PermissionType { get; set; }
         public string IsChecked { get; set; }
-        public string AspNetRoleName { get; set; }
 
         public List<RolePermissionRequestDto> ModulePermissionList { get; set; }
     }

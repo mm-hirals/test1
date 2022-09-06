@@ -58,13 +58,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task CreateRoleClaim(RolePermissionRequestDto model, CancellationToken cancellationToken)
         {
-            var applicationRole = await _roleManager.FindByNameAsync(model.AspNetRoleName);
+            var applicationRole = await _roleManager.FindByIdAsync(model.RoleId);
             await _unitOfWorkDA.RolePermissionDA.CreateRolePermission(applicationRole, model.Permission, cancellationToken);
         }
 
         public async Task DeleteRoleClaim(RolePermissionRequestDto model, CancellationToken cancellationToken)
         {
-            var applicationRole = await _roleManager.FindByNameAsync(model.AspNetRoleName);
+            var applicationRole = await _roleManager.FindByIdAsync(model.RoleId);
             await _unitOfWorkDA.RolePermissionDA.DeleteRolePermission(applicationRole, model.Permission, cancellationToken);
         }
     }

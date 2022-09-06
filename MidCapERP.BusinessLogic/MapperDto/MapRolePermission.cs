@@ -9,6 +9,7 @@ namespace MidCapERP.BusinessLogic.MapperDto
         public MapRolePermission()
         {
             CreateMap<ApplicationRole, RolePermissionRequestDto>().ReverseMap();
+            CreateMap<ApplicationRole, RolePermissionResponseDto>().ReverseMap();
         }
     }
 }

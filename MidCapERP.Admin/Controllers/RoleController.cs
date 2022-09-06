@@ -71,13 +71,20 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Create)]
-        public async Task<IActionResult> CreateRolePermission([FromForm] RolePermissionRequestDto rolePermissionRequestDto, CancellationToken cancellationToken)
+        public async Task<JsonResult> CreateRolePermission([FromForm] RolePermissionRequestDto rolePermissionRequestDto, CancellationToken cancellationToken)
         {
-            if (rolePermissionRequestDto.IsChecked == "true")
-                await _unitOfWorkBL.RolePermissionBL.CreateRoleClaim(rolePermissionRequestDto, cancellationToken);
-            else
-                await _unitOfWorkBL.RolePermissionBL.DeleteRoleClaim(rolePermissionRequestDto, cancellationToken);
-            return RedirectToAction("Index", "Role");
+            try
+            {
+                if (rolePermissionRequestDto.IsChecked == "true")
+                    await _unitOfWorkBL.RolePermissionBL.CreateRoleClaim(rolePermissionRequestDto, cancellationToken);
+                else
+                    await _unitOfWorkBL.RolePermissionBL.DeleteRoleClaim(rolePermissionRequestDto, cancellationToken);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
         }
 
         // Role Name Validation

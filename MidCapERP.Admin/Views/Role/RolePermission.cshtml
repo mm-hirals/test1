@@ -16,7 +16,8 @@
                                 <label class="form-label">
                                     Role Name
                                 </label>
-                                <input asp-for="Name" type="text" class="form-control" placeholder="Role Name" id="RoleName" />
+                                <input asp-for="Id" type="hidden" class="form-control" placeholder="Role Id" id="RoleId" />
+                                <input asp-for="Name" type="text" class="form-control" placeholder="Role Name" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="form-group">
@@ -79,4 +80,4 @@
         <script src="~/js/RolePermission.js" asp-append-version="true"></script>
 
     }
-}
+    }
