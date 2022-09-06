@@ -32,6 +32,7 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _customerAddresses.UpdateAsync(model, cancellationToken);
         }
+
         public async Task<CustomerAddresses> DeleteCustomerAddress(Int64 Id, CancellationToken cancellationToken)
         {
             var entity = await _customerAddresses.GetByIdAsync(Id, cancellationToken);
