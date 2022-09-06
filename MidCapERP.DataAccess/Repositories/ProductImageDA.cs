@@ -6,16 +6,16 @@ namespace MidCapERP.DataAccess.Repositories
 {
     public class ProductImageDA : IProductImageDA
     {
-        private readonly ISqlRepository<ProductImage> _product;
+        private readonly ISqlRepository<ProductImage> _productImage;
 
-        public ProductImageDA(ISqlRepository<ProductImage> product)
+        public ProductImageDA(ISqlRepository<ProductImage> productImage)
         {
-            _product = product;
+            _productImage = productImage;
         }
 
         public async Task<ProductImage> CreateProductImage(ProductImage model, CancellationToken cancellationToken)
         {
-            return await _product.InsertAsync(model, cancellationToken);
+            return await _productImage.InsertAsync(model, cancellationToken);
         }
     }
 }

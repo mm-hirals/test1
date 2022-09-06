@@ -67,7 +67,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
-        public async Task<IActionResult> Update(int Id, ProductMainRequestDto PolishRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, ProductMainRequestDto productRequestDto, CancellationToken cancellationToken)
         {
             return RedirectToAction("Index");
         }

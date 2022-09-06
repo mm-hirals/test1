@@ -10,6 +10,7 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
+using MidCapERP.Dto.ProductMaterial;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -91,6 +92,23 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productImageToInsert.CreatedDate = DateTime.Now;
                 productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+            }
+
+            // Add Product Materials
+            foreach (var item in model.ProductMaterialRequestDto)
+            {
+                var productMaterialToInsert = _mapper.Map<ProductMaterial>(model.ProductMaterialRequestDto);
+                ProductMaterialRequestDto productMaterialRequestDto = new ProductMaterialRequestDto();
+
+                productMaterialToInsert.ProductId = productToInsert.ProductId;
+                productMaterialToInsert.SubjectTypeId = item.SubjectTypeId;
+                productMaterialToInsert.SubjectId = item.SubjectId;
+                productMaterialToInsert.Qty = item.Qty;
+                productMaterialToInsert.MaterialPrice = item.MaterialPrice;
+                productMaterialToInsert.Comments = productToInsert.Comments;
+                productMaterialRequestDto.CostPrice = item.Qty * item.MaterialPrice;
+                productToInsert.CostPrice += productMaterialRequestDto.CostPrice;
+                await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
             }
 
             return _mappedUser;
