@@ -203,9 +203,7 @@
             </form>
         </div>
     </div>
-    @if (Model != null)
-    {
-        @if (Model.CustomerId != null)
+        @if (Model != null && Model.CustomerId != null)
         {
             <nav class="product-nav-tab--sticky">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -237,7 +235,6 @@
                 </div>
             </div>
         }
-    }
 </div>
 
 @section Scripts {
