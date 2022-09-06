@@ -16,7 +16,7 @@ $(function () {
         },
         "columns": [
             {
-                "render": (data, type, full) => {
+                "render": (full) => {
                     return full.firstName + " " + full.lastName;
                 }
             },
