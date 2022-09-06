@@ -24,8 +24,11 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IUserDA UserDA { get; }
         public ICustomerAddressesDA CustomerAddressesDA { get; }
         public ICustomerTypesDA CustomerTypesDA { get; }
+        public IProductDA ProductDA { get; }
+        public IProductImageDA ProductImageDA { get; }
+        public IProductMaterialDA ProductMaterialDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA,IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA)
         {
             {
                 this._context = context;
@@ -47,6 +50,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
                 this.UserDA = userDA;
                 this.CustomerAddressesDA = customerAddressesDA;
                 this.CustomerTypesDA = customerTypesDA;
+                this.ProductDA = productDA;
+                this.ProductImageDA = productImageDA;
+                this.ProductMaterialDA = productMaterialDA;
             }
         }
 

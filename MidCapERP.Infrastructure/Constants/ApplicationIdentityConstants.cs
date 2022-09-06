@@ -1,4 +1,4 @@
-﻿namespace MidCapERP.Infrastructure.Constants
+namespace MidCapERP.Infrastructure.Constants
 {
     public static class ApplicationIdentityConstants
     {
@@ -55,6 +55,7 @@
                 .Union(GeneratePermissionsForModule("User"))
                 .Union(GeneratePermissionsForModule("CustomerAddresses"))
                 .Union(GeneratePermissionsForModule("CustomerTypes"))
+                .Union(GeneratePermissionsForModule("Product"))
                 .ToList();
             }
 
@@ -252,6 +253,14 @@
             public static class CustomerTypes
             {
                 public const string View = "Permissions.CustomerTypes.View";
+            }
+            
+            public static class Product
+            {
+                public const string View = "Permissions.Product.View";
+                public const string Create = "Permissions.Product.Create";
+                public const string Update = "Permissions.Product.Update";
+                public const string Delete = "Permissions.Product.Delete";
             }
         }
     }

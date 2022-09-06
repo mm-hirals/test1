@@ -25,9 +25,14 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IPolishBL PolishBL { get; }
         public IUserTenantMappingBL UserTenantMappingBL { get; }
         public IUserBL UserBL { get; }
+ 
         public ICustomerAddressesBL CustomerAddressesBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL,IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, ICustomerAddressesBL customerAddressesBL)
+        public IProductBL ProductBL { get; }
+        public IProductImageBL ProductImageBL { get; }
+        public IProductMaterialBL ProductMaterialBL { get; }
+
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL , ICustomerAddressesBL customerAddressesBL , IProductBL productBL, IProductImageBL productImageBL, IProductMaterialBL productMaterialBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -49,6 +54,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.UserTenantMappingBL = userTenantMappingBL;
             this.UserBL = userBL;
             this.CustomerAddressesBL = customerAddressesBL;
+            this.ProductBL = productBL;
+            this.ProductImageBL = productImageBL;
+            this.ProductMaterialBL = productMaterialBL;
         }
 
         #region DisposeMethod
