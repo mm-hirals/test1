@@ -37,9 +37,6 @@ $("#lnkProductFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-$("#lnkToProductIndex").click(function () {
-    window.location.href = "/Product/Index";
-});
 var counter = 0;
 
 $(".add-icon").click(function () {

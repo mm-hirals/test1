@@ -39,26 +39,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             ProductMainRequestDto productMainRequestDto = new ProductMainRequestDto();
             var data = await GetProductById(Id, cancellationToken);
-            productMainRequestDto.ProductRequestDto.ProductId = data.ProductId;
-            productMainRequestDto.ProductRequestDto.CategoryId = data.CategoryId;
-            productMainRequestDto.ProductRequestDto.ProductTitle = data.ProductTitle;
-            productMainRequestDto.ProductRequestDto.ModelNo = data.ModelNo;
-            productMainRequestDto.ProductRequestDto.Width = data.Width;
-            productMainRequestDto.ProductRequestDto.Height = data.Height;
-            productMainRequestDto.ProductRequestDto.Depth = data.Depth;
-            productMainRequestDto.ProductRequestDto.UsedFabric = data.UsedFabric;
-            productMainRequestDto.ProductRequestDto.UsedPolish = data.UsedPolish;
-            productMainRequestDto.ProductRequestDto.IsVisibleToWholesalers = data.IsVisibleToWholesalers;
-            productMainRequestDto.ProductRequestDto.TotalDaysToPrepare = data.TotalDaysToPrepare;
-            productMainRequestDto.ProductRequestDto.Features = data.Features;
-            productMainRequestDto.ProductRequestDto.Comments = data.Comments;
-            productMainRequestDto.ProductRequestDto.CostPrice = data.CostPrice;
-            productMainRequestDto.ProductRequestDto.RetailerPrice = data.RetailerPrice;
-            productMainRequestDto.ProductRequestDto.WholesalerPrice = data.WholesalerPrice;
-            productMainRequestDto.ProductRequestDto.CoverImage = data.CoverImage;
-            productMainRequestDto.ProductRequestDto.QRImage = data.QRImage;
-            productMainRequestDto.ProductRequestDto.TenantId = data.TenantId;
-            return _mapper.Map<ProductMainRequestDto>(productMainRequestDto);
+            productMainRequestDto.ProductRequestDto = _mapper.Map<ProductRequestDto>(data);
+            return productMainRequestDto;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

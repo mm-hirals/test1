@@ -170,8 +170,8 @@
                     <div class="col-12">
                         <div class="c-card--wrapper c-card-sm--wrapper">
                             <div class="c-card--footer">
-                                <a class="btn btn-danger" href="">
-                                    Cancle
+                                <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                                    Cancel
                                 </a>
                                 <a class="btn btn-primary ms-2" href="">
                                     Save
@@ -220,7 +220,9 @@
                     <div class="col-12">
                         <div class="c-card--wrapper c-card-sm--wrapper">
                             <div class="c-card--footer">
-                                <input type="button" value="Close" class="btn btn-danger" id="lnkToProductIndex" />
+                                <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                                    Cancel
+                                </a>
                                 <input type="submit" value="Save" class="btn btn-primary ms-2" />
                                 @*<input asp-for="File" class="btn btn-primary ms-2" id="submit-all" type="button" value="Save" />*@
                             </div>
@@ -261,7 +263,7 @@
                                         <tr>
                                             <td>
                                                 <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="100">
-                                                <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
+                                                <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.FrameSelectedList, "Value", "Text"))">
                                                     <option value="Ash Wood">
                                                         Ash Wood
                                                     </option>
@@ -379,10 +381,6 @@
                                                 <select data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.rawMaterialDropDownData, "Value", "Text"))">
                                                     <option value="" hidden disabled selected>Select Raw Material</option>
                                                 </select>
-
-                                                @*<select asp-for="" data-val="true" class="form-control" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.rawMaterialDropDownData, "Value", "Text"))">
-                                                <option value="" hidden disabled selected>Select Raw Material</option>
-                                                </select>*@
                                                 @*<span asp-validation-for="CategoryId" class="text-danger"></span>*@
                                             </td>
                                             <td>
@@ -482,7 +480,7 @@
                                 <table class="table c-table">
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th class="c-width-820">
                                                 Material
                                             </th>
                                             <th class="c-width-140">
@@ -726,7 +724,9 @@
                     <div class="col-12">
                         <div class="c-card--wrapper c-card-sm--wrapper">
                             <div class="c-card--footer">
-                                <input type="button" value="Close" class="btn btn-danger" id="lnkToProductIndex" />
+                                <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                                    Cancel
+                                </a>
                                 <input type="submit" value="Save" class="btn btn-primary ms-2" />
                             </div>
                         </div>
@@ -751,4 +751,4 @@
         <script src="~/js/Product.js" asp-append-version="true"></script>
         //<script src="~/js/ProductImage.js" asp-append-version="true"></script>
     }
-}
+    }

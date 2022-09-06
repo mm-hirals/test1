@@ -56,12 +56,12 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
+            var getProductData = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
             await FillCategoryDropDown(cancellationToken);
             await FillFrameDropDowns(cancellationToken);
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
             await FillCushionDropDowns(cancellationToken);
-            var getProductData = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
             return View("Create", getProductData);
         }
 
