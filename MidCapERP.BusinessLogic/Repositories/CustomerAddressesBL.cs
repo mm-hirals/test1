@@ -79,15 +79,29 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerAddressesGetById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow; ;
+            UpdateCustomerAddresses(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, oldData, cancellationToken);
             return _mapper.Map<CustomerAddressesRequestDto>(data);
         }
 
+        public async Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
+        {
+            var customerAddressToInsert = await CustomerAddressesGetById(Id, cancellationToken);
+            customerAddressToInsert.IsDeleted = true;
+            UpdateCustomerAddresses(customerAddressToInsert);
+            var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, customerAddressToInsert, cancellationToken);
+            return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
         #region PrivateMethods
+
+        private void UpdateCustomerAddresses(CustomerAddresses oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
+        }
 
         private async Task<CustomerAddresses> CustomerAddressesGetById(Int64 Id, CancellationToken cancellationToken)
         {

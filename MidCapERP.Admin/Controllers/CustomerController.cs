@@ -113,6 +113,14 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("CustomerEdit");
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Delete)]
+        public async Task<IActionResult> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);
+            return RedirectToAction("CustomerEdit");
+        }
+
         #region Private Method
 
         private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
