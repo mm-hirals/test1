@@ -205,7 +205,7 @@
     </div>
     @if (Model != null)
     {
-        @if (Model.CustomerId == Convert.ToInt64(TempData["CustomerId"]))
+        @if (Model.CustomerId != null)
         {
             <nav class="product-nav-tab--sticky">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -220,8 +220,8 @@
                         <div class="c-card--header">
                             <h4 class="c-card--header-title">Address Details</h4>
                             <div class="c-card--header-action">
-                                <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary" id="btnSave"
-                           data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax-update="#divUpdateCustomerAddresses"
+                                <a asp-controller="Customer" asp-action="CreateCustomerAddress"  class="btn btn-primary"
+                           data-ajax-complete="CustomerAddressesModel.onComplete"  id="customersId"  asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                             </div>
                         </div>

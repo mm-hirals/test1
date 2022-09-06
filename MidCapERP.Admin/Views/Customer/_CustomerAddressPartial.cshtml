@@ -1,7 +1,6 @@
 ﻿@model MidCapERP.Dto.CustomerAddresses.CustomerAddressesRequestDto
 @{
     string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateCustomerAddresses" : "CreateCustomerAddress";
-    TempData.Keep("CustomerId");
 }
 <!-- Modal -->
 <div class="modal right fade" id="divContractorAddressModal" tabindex="-1" aria-labelledby="ContractorAddressModalLabel" aria-hidden="true">
@@ -24,7 +23,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="CustomerId" class="form-label" hidden></label>
-                                <input asp-for="CustomerId" class="form-control" data-val="true" value="@TempData["CustomerId"]" readonly hidden/>
+                                <input asp-for="CustomerId" class="form-control" data-val="true" hidden/>
                                 <span asp-validation-for="CustomerId" class="text-danger" ></span>
                             </div>
                         </div>

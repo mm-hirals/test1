@@ -39,7 +39,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
         public async Task<IActionResult> GetCustomerAddressesData([FromForm] CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            TempData["CustomerId"] = dataTableFilterDto.customerId;
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
@@ -63,9 +62,11 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
-        public async Task<IActionResult> CreateCustomerAddress(CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateCustomerAddress(int customerId, CancellationToken cancellationToken)
         {
-            return PartialView("_CustomerAddressPartial");
+            CustomerAddressesRequestDto dto = new CustomerAddressesRequestDto();
+            dto.CustomerId = customerId;
+            return PartialView("_CustomerAddressPartial", dto);
         }
 
         [HttpPost]
@@ -83,7 +84,6 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillCustomerTypesDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
-            TempData["CustomerId"] = customers.CustomerId;
             return View("CustomerEdit", customers);
         }
 
