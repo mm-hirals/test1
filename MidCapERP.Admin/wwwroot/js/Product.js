@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+var counter = 0;
 var ProductModel = {};
 var tblProduct;
 
@@ -36,8 +37,6 @@ $("#lnkProductFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
-
-var counter = 0;
 
 $(".add-icon").click(function () {
     //debugger;
