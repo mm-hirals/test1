@@ -40,6 +40,7 @@ $("#lnkProductFilter").click(function () {
 var counter = 0;
 
 $(".add-icon").click(function () {
+    //debugger;
     var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
     htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
     htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")

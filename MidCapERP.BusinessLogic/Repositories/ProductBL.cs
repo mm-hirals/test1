@@ -67,51 +67,61 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
-            // Add Product Details
-            var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
-            productToInsert.IsDeleted = false;
-            productToInsert.TenantId = _currentUser.TenantId;
-            productToInsert.CreatedBy = _currentUser.UserId;
-            productToInsert.CreatedDate = DateTime.Now;
-            productToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-
-            // Add Product Images
-            foreach (var item in model.Files)
+            try
             {
-                ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
-                productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
-                productImageRequestDto.ImageName = item.FileName;
+                // Add Product Details
+                var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
+                productToInsert.IsDeleted = false;
+                productToInsert.TenantId = _currentUser.TenantId;
+                productToInsert.CreatedBy = _currentUser.UserId;
+                productToInsert.CreatedDate = DateTime.Now;
+                productToInsert.CreatedUTCDate = DateTime.UtcNow;
+                //var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+                //var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
 
-                var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
-                productImageToInsert.ProductId = productToInsert.ProductId;
-                productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
-                productImageToInsert.ImageName = productImageRequestDto.ImageName;
-                productImageToInsert.CreatedBy = _currentUser.UserId;
-                productImageToInsert.CreatedDate = DateTime.Now;
-                productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
-                await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+                // Add Product Images
+                //foreach (var item in model.Files)
+                //{
+                //    ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
+                //    productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
+                //    productImageRequestDto.ImageName = item.FileName;
+
+                //    var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
+                //    productImageToInsert.ProductId = productToInsert.ProductId;
+                //    productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
+                //    productImageToInsert.ImageName = productImageRequestDto.ImageName;
+                //    productImageToInsert.CreatedBy = _currentUser.UserId;
+                //    productImageToInsert.CreatedDate = DateTime.Now;
+                //    productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
+                //    //await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+                //}
+
+                // Add Product Materials
+                foreach (var item in model.ProductMaterialRequestDto)
+                {
+                    ProductMaterialRequestDto productMaterialRequestDto = new ProductMaterialRequestDto();
+
+                    productMaterialRequestDto.ProductId = productToInsert.ProductId;
+                    productMaterialRequestDto.SubjectTypeId = item.SubjectTypeId;
+                    productMaterialRequestDto.SubjectId = item.SubjectId;
+                    productMaterialRequestDto.Qty = item.Qty;
+                    productMaterialRequestDto.MaterialPrice = item.MaterialPrice;
+                    productMaterialRequestDto.Comments = productToInsert.Comments;
+                    productMaterialRequestDto.CostPrice = item.Qty * item.MaterialPrice;
+                    productToInsert.CostPrice += productMaterialRequestDto.CostPrice;
+                    var productMaterialToInsert = _mapper.Map<ProductMaterial>(productMaterialRequestDto);
+                    await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
+                }
+
+                //return _mappedUser;
             }
-
-            // Add Product Materials
-            foreach (var item in model.ProductMaterialRequestDto)
+            catch (Exception e)
             {
-                var productMaterialToInsert = _mapper.Map<ProductMaterial>(model.ProductMaterialRequestDto);
-                ProductMaterialRequestDto productMaterialRequestDto = new ProductMaterialRequestDto();
 
-                productMaterialToInsert.ProductId = productToInsert.ProductId;
-                productMaterialToInsert.SubjectTypeId = item.SubjectTypeId;
-                productMaterialToInsert.SubjectId = item.SubjectId;
-                productMaterialToInsert.Qty = item.Qty;
-                productMaterialToInsert.MaterialPrice = item.MaterialPrice;
-                productMaterialToInsert.Comments = productToInsert.Comments;
-                productMaterialRequestDto.CostPrice = item.Qty * item.MaterialPrice;
-                productToInsert.CostPrice += productMaterialRequestDto.CostPrice;
-                await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
+                throw;
             }
-
-            return _mappedUser;
+            
+            return null;
         }
 
         #region Private Method

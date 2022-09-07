@@ -114,7 +114,7 @@ namespace MidCapERP.Admin.Controllers
                                      Value = Convert.ToString(a.RawMaterialId),
                                      Text = a.Title
                                  }).ToList();
-            ViewBag.rawMaterialDropDownData = rawMaterialSelectedList;
+            ViewBag.RawMaterialDropDownData = rawMaterialSelectedList;
         }
 
         private async Task FillPolishDropDowns(CancellationToken cancellationToken)
@@ -126,7 +126,7 @@ namespace MidCapERP.Admin.Controllers
                                      Value = Convert.ToString(a.PolishId),
                                      Text = a.Title
                                  }).ToList();
-            ViewBag.polishDropDownData = polishSelectedList;
+            ViewBag.PolishDropDownData = polishSelectedList;
         }
 
         private async Task FillCushionDropDowns(CancellationToken cancellationToken)
@@ -138,7 +138,7 @@ namespace MidCapERP.Admin.Controllers
                                     Value = Convert.ToString(a.FrameId),
                                     Text = a.Title
                                 }).ToList();
-            ViewBag.cushionDropDownData = cushionSelectedList;
+            ViewBag.CushionDropDownData = cushionSelectedList;
         }
 
         #endregion Private Method
