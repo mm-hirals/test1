@@ -56,6 +56,8 @@ namespace MidCapERP.Infrastructure.Constants
                 .Union(GeneratePermissionsForModule("CustomerAddresses"))
                 .Union(GeneratePermissionsForModule("CustomerTypes"))
                 .Union(GeneratePermissionsForModule("Product"))
+                .Union(GeneratePermissionsForModule("RolePermission"))
+                .Union(GeneratePermissionsForModule("Product"))
                 .ToList();
             }
 
@@ -234,12 +236,12 @@ namespace MidCapERP.Infrastructure.Constants
                 public const string Delete = "Permissions.Polish.Delete";
             }
 
-            public static class User
+            public static class RolePermission
             {
-                public const string View = "Permissions.User.View";
-                public const string Create = "Permissions.User.Create";
-                public const string Update = "Permissions.User.Update";
-                public const string Delete = "Permissions.User.Delete";
+                public const string View = "Permissions.RolePermission.View";
+                public const string Create = "Permissions.RolePermission.Create";
+                public const string Update = "Permissions.RolePermission.Update";
+                public const string Delete = "Permissions.RolePermission.Delete";
             }
 
             public static class CustomerAddresses

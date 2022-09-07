@@ -1,9 +1,7 @@
 ﻿'use strict';
-
 var counter = 0;
 var ProductModel = {};
 var tblProduct;
-
 $(function () {
     tblProduct = $("#tblProduct").DataTable({
         "searching": false,
@@ -32,14 +30,15 @@ $(function () {
         ]
     });
 });
-
 $("#lnkProductFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
-
+$("#lnkToProductIndex").click(function () {
+    window.location.href = "/Product/Index";
+});
 $(".add-icon").click(function () {
-    //debugger;
+    debugger;
     var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
     htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
     htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
@@ -57,12 +56,13 @@ $("select").change(function () {
         return $(this).attr("value") == val;
     }).first().attr("selected", "selected");
     //$(this).('selected', $(this).val());
+
+    var subjectTypeId = $(this).parent().find('input').val();
+    console.log(subjectTypeId);
 })
 $(document).on("click", ".minus-icon", function () {
     var htmlStringToAppend = $(this).parent().parent();
-
     htmlStringToAppend.find("[name$='IsDeleted']").val("true");
-
     htmlStringToAppend.hide();
     //htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
     //htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")

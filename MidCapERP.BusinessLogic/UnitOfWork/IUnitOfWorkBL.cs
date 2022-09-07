@@ -23,6 +23,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IUserTenantMappingBL UserTenantMappingBL { get; }
         IUserBL UserBL { get; }
         ICustomerAddressesBL CustomerAddressesBL { get; }
+        IRoleBL RoleBL { get; }
+        IRolePermissionBL RolePermissionBL { get; }
         IFileStorageService FileStorageService { get; }
         IProductBL ProductBL { get; }
     }
