@@ -29,6 +29,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
         }
 
+        public async Task<CustomersResponseDto> GetCustomerByMobileNumber(string number, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerMobileNumber = customerData.Where(x => x.PhoneNumber == number).FirstOrDefault();
+            return _mapper.Map<CustomersResponseDto>(customerMobileNumber);
+        }
+
         public async Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomerTypesDA.GetAll(cancellationToken);
@@ -101,7 +108,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Customer not found");
             }
-            return data;  
+            return data;
         }
 
         private async Task<CustomerTypes> CustomerTypesGetById(Int64 Id, CancellationToken cancellationToken)
