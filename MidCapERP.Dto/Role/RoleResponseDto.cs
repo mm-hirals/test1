@@ -1,6 +1,6 @@
-﻿namespace MidCapERP.Dto.AspNetRole
+﻿namespace MidCapERP.Dto.Role
 {
-    public class AspNetRoleResponseDto
+    public class RoleResponseDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
