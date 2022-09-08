@@ -37,16 +37,41 @@ $("#lnkProductFilter").click(function () {
 });
 
 $(".add-icon").click(function () {
-    var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
-    htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
-    htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
-    htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
+    if ($(this).parent().parent().find("select").val() != "") {
+        var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
+        htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
+        htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
+        htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
 
-    $(this).parent().parent().parent().append(htmlStringToAppend)
-    $(this).parent().parent().find("[name$='MaterialPrice']")
-    counter++;
+        $(this).parent().parent().parent().append(htmlStringToAppend)
+        counter++;
+        emptyFields($(this).parent().parent())
+        calculateCostPrice();
+    } else {
+        // show validation message
+    }
 });
-$("input").change(function () {
+$(document).ready(function () {
+    calculateCostPrice();
+})
+function calculateCostPrice() {
+    var sum = 0;
+    $(".CostPrice").each(function () {
+        sum += +this.value;
+    });
+    $("#ProductRequestDto_CostPrice").val(sum);
+}
+
+function emptyFields(trRow) {
+    trRow.find("input").each(function () {
+        $(this).val("")
+    });
+    trRow.find("select").each(function () {
+        $(this).val("")
+    });
+
+}
+$("input.quantity").change(function () {
     var qty = $(this).attr('value', $(this).val());
     var unitPrice = $(this).parent().parent().find("td:eq(1)").find("input[type=text]").val();
     var costPrice = qty.val() * unitPrice;
@@ -54,7 +79,7 @@ $("input").change(function () {
     $(this).parent().parent().find("td:eq(3)").find("input[type=text]").val(costPrice);
     $(this).parent().parent().find("td:eq(3)").find("input[type=text]").attr('value', costPrice);
 })
-$("select").change(function (x) {
+$("select.material").change(function (x) {
     var val = $(this).val();
     $("option", this).removeAttr("selected").filter(function () {
         return $(this).attr("value") == val;
