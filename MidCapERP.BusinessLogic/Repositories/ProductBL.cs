@@ -10,6 +10,7 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
+using MidCapERP.Dto.ProductMaterial;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -41,6 +42,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await GetProductById(Id, cancellationToken);
             var productMaterialData = await GetProductMaterialById(Id, cancellationToken);
             productMainRequestDto.ProductRequestDto = _mapper.Map<ProductRequestDto>(data);
+            productMainRequestDto.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialData);
             return productMainRequestDto;
         }
 
@@ -108,6 +110,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<ProductRequestDto> UpdateProduct(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            // Update Product Details
+            var getProductById = await GetProductById(Id, cancellationToken);
+            UpdateData(getProductById);
+            MapToDbObject(model.ProductRequestDto, getProductById);
+            var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(data);
+
+            // Delete all Product Materials by product Id
+            var productMaterialById = await GetProductMaterialById(Id, cancellationToken);
+            foreach (var item in productMaterialById)
+            {
+                await _unitOfWorkDA.ProductMaterialDA.DeleteProductMaterial(item.ProductMaterialID, cancellationToken);
+            }
+
+            // Add Product Materials
+            foreach (var item in model.ProductMaterialRequestDto)
+            {
+                var productMaterialToInsert = _mapper.Map<ProductMaterial>(item);
+                productMaterialToInsert.ProductId = Id;
+                productMaterialToInsert.CreatedBy = _currentUser.UserId;
+                productMaterialToInsert.CreatedDate = DateTime.Now;
+                productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
+                await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
+            }
+
+            return _mappedUser;
+        }
+
         #region Private Method
 
         private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
@@ -120,14 +152,43 @@ namespace MidCapERP.BusinessLogic.Repositories
             return productDataById;
         }
 
-        private async Task<ProductMaterial> GetProductMaterialById(Int64 Id, CancellationToken cancellationToken)
+        private async Task<List<ProductMaterial>> GetProductMaterialById(Int64 Id, CancellationToken cancellationToken)
         {
-            var productMaterialDataById = await _unitOfWorkDA.ProductMaterialDA.GetById(Id, cancellationToken);
+            var productMaterial = await _unitOfWorkDA.ProductMaterialDA.GetAll(cancellationToken);
+            var productMaterialDataById = productMaterial.Where(x => x.ProductId == Id).ToList();
             if (productMaterialDataById == null)
             {
-                throw new Exception("Product not found");
+                throw new Exception("ProductMaterials not found");
             }
             return productMaterialDataById;
+        }
+
+        private void UpdateData(Product oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
+        }
+
+        private static void MapToDbObject(ProductRequestDto model, Product oldData)
+        {
+            oldData.CategoryId = model.CategoryId;
+            oldData.ProductTitle = model.ProductTitle;
+            oldData.ModelNo = model.ModelNo;
+            oldData.Width = model.Width;
+            oldData.Height = model.Height;
+            oldData.Depth = model.Depth;
+            oldData.UsedFabric = model.UsedFabric;
+            oldData.UsedPolish = model.UsedPolish;
+            oldData.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
+            oldData.TotalDaysToPrepare = model.TotalDaysToPrepare;
+            oldData.Features = model.Features;
+            oldData.Comments = model.Comments;
+            oldData.CostPrice = model.CostPrice;
+            oldData.RetailerPrice = model.RetailerPrice;
+            oldData.WholesalerPrice = model.WholesalerPrice;
+            oldData.CoverImage = model.CoverImage;
+            oldData.QRImage = model.QRImage;
         }
 
         #endregion Private Method

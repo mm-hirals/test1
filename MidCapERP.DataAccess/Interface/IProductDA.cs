@@ -9,5 +9,9 @@ namespace MidCapERP.DataAccess.Interface
         public Task<Product> GetById(Int64 Id, CancellationToken cancellationToken);
 
         public Task<Product> CreateProduct(Product model, CancellationToken cancellationToken);
+
+        public Task<Product> UpdateProduct(int Id, Product model, CancellationToken cancellationToken);
+
+        public Task<Product> DeleteProduct(int Id, CancellationToken cancellationToken);
     }
 }

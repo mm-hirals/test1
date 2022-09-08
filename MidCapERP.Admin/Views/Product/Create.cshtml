@@ -1,7 +1,7 @@
 ﻿@using MidCapERP.Dto.Product
 @model MidCapERP.Dto.Product.ProductMainRequestDto
 @{
-    ViewData["Title"] = "Create new product";
+    ViewData["Title"] = "Create or Update Product";
     string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
     var i = 0;
 }
@@ -264,7 +264,7 @@
 
                                                 <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
                                                     <option value="" hidden disabled selected>Select FrameType</option>
-                                                    @foreach (var item in (List<ProductMaterialListItem>)ViewBag.FrameSelectedList)
+                                                    @foreach (var item in (List<ProductMaterialListItem>)ViewBag.FrameDropDownData)
                                                     {
                                                         <option value="@item.Value" data-UnitPrice="@item.UnitPrice">@item.Text</option>
                                                     }
@@ -297,7 +297,11 @@
                                                 <tr>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="1">
-                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId" >
+                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
+                                                            @foreach (var list in (List<ProductMaterialListItem>)ViewBag.FrameDropDownData)
+                                                            {
+                                                                <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                            }
                                                         </select>
                                                     </td>
                                                     <td>
@@ -307,7 +311,10 @@
                                                         <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control" placeholder="Quantity" readonly />
                                                     </td>
                                                     <td>
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
+                                                        @{
+                                                            var costPrice = item.Qty * item.MaterialPrice;
+                                                        }
+                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
                                                     </td>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" value="false">
@@ -389,7 +396,11 @@
                                                 <tr>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="2">
-                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.RawMaterialDropDownData, "Value", "Text"))">
+                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
+                                                            @foreach (var list in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
+                                                            {
+                                                                <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                            }
                                                         </select>
                                                     </td>
                                                     <td>
@@ -399,7 +410,10 @@
                                                         <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control" placeholder="Quantity" readonly />
                                                     </td>
                                                     <td>
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
+                                                        @{
+                                                            var costPrice = item.Qty * item.MaterialPrice;
+                                                        }
+                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
                                                     </td>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" value="false">
@@ -481,8 +495,11 @@
                                                 <tr>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="3">
-                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.PolishDropDownData, "Value", "Text"))">
-                                                            <option value="" hidden disabled selected>Select Polish</option>
+                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
+                                                            @foreach (var list in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
+                                                            {
+                                                                <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                            }
                                                         </select>
                                                     </td>
                                                     <td>
@@ -492,7 +509,10 @@
                                                         <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control" placeholder="Quantity" readonly />
                                                     </td>
                                                     <td>
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
+                                                        @{
+                                                            var costPrice = item.Qty * item.MaterialPrice;
+                                                        }
+                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
                                                     </td>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" value="false">
@@ -574,8 +594,11 @@
                                                 <tr>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="4">
-                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId" asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CushionDropDownData, "Value", "Text"))">
-                                                            <option value="" hidden disabled selected>Select Cushion</option>
+                                                        <select class="form-select" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
+                                                            @foreach (var list in (List<ProductMaterialListItem>)ViewBag.CushionDropDownData)
+                                                            {
+                                                                <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                            }
                                                         </select>
                                                     </td>
                                                     <td>
@@ -585,7 +608,10 @@
                                                         <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control" placeholder="Quantity" readonly />
                                                     </td>
                                                     <td>
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
+                                                        @{
+                                                            var costPrice = item.Qty * item.MaterialPrice;
+                                                        }
+                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control" placeholder="Cost Price" readonly />
                                                     </td>
                                                     <td>
                                                         <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" value="false">
@@ -678,4 +704,4 @@
             });
         </script>
     }
-    }
+}

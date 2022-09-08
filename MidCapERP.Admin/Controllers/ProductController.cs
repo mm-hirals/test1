@@ -67,8 +67,10 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
-        public async Task<IActionResult> Update(int Id, ProductMainRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, [FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
+            productMainRequestDto.ProductMaterialRequestDto = productMainRequestDto.ProductMaterialRequestDto.Where(x => !x.IsDeleted).ToList();
+            await _unitOfWorkBL.ProductBL.UpdateProduct(Id, productMainRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -103,7 +105,7 @@ namespace MidCapERP.Admin.Controllers
                                      Text = a.Title,
                                      UnitPrice = a.UnitPrice
                                  }).ToList();
-            ViewBag.FrameSelectedList = frameSelectedList;
+            ViewBag.FrameDropDownData = frameSelectedList;
         }
 
         private async Task FillRawMaterialDropDowns(CancellationToken cancellationToken)

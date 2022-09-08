@@ -41,25 +41,24 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Total days to prepare")]
         public decimal TotalDaysToPrepare { get; set; }
 
-        [Required]
-        public string Features { get; set; }
+        public string? Features { get; set; }
+
+        public string? Comments { get; set; }
 
         [Required]
-        public string Comments { get; set; }
-
-        //[Required]
+        [DisplayName("Cost Price")]
         public decimal CostPrice { get; set; }
 
-        //[Required]
+        [Required]
+        [DisplayName("Retailer Price")]
         public decimal RetailerPrice { get; set; }
 
-        //[Required]
+        [Required]
+        [DisplayName("Wholesaler Price")]
         public decimal WholesalerPrice { get; set; }
 
-        //[Required]
         public string? CoverImage { get; set; }
 
-        //[Required]
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
 
