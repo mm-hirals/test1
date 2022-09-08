@@ -73,7 +73,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             return RedirectToAction("Index");
@@ -97,10 +97,11 @@ namespace MidCapERP.Admin.Controllers
         {
             var frameTypeData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
             var frameSelectedList = frameTypeData.Select(a =>
-                                 new SelectListItem
+                                 new ProductMaterialListItem
                                  {
                                      Value = Convert.ToString(a.FrameId),
-                                     Text = a.Title
+                                     Text = a.Title,
+                                     UnitPrice = a.UnitPrice
                                  }).ToList();
             ViewBag.FrameSelectedList = frameSelectedList;
         }
@@ -109,10 +110,11 @@ namespace MidCapERP.Admin.Controllers
         {
             var rawMaterialData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
             var rawMaterialSelectedList = rawMaterialData.Select(a =>
-                                 new SelectListItem
+                                 new ProductMaterialListItem
                                  {
                                      Value = Convert.ToString(a.RawMaterialId),
-                                     Text = a.Title
+                                     Text = a.Title,
+                                     UnitPrice = a.UnitPrice
                                  }).ToList();
             ViewBag.RawMaterialDropDownData = rawMaterialSelectedList;
         }
@@ -121,10 +123,11 @@ namespace MidCapERP.Admin.Controllers
         {
             var polishData = await _unitOfWorkBL.PolishBL.GetAll(cancellationToken);
             var polishSelectedList = polishData.Select(a =>
-                                 new SelectListItem
+                                 new ProductMaterialListItem
                                  {
                                      Value = Convert.ToString(a.PolishId),
-                                     Text = a.Title
+                                     Text = a.Title,
+                                     UnitPrice = a.UnitPrice
                                  }).ToList();
             ViewBag.PolishDropDownData = polishSelectedList;
         }
@@ -133,10 +136,11 @@ namespace MidCapERP.Admin.Controllers
         {
             var cushionData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
             var cushionSelectedList = cushionData.Select(a =>
-                                new SelectListItem
+                                new ProductMaterialListItem
                                 {
                                     Value = Convert.ToString(a.FrameId),
-                                    Text = a.Title
+                                    Text = a.Title,
+                                    UnitPrice = a.UnitPrice
                                 }).ToList();
             ViewBag.CushionDropDownData = cushionSelectedList;
         }

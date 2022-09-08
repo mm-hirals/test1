@@ -10,7 +10,6 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
-using MidCapERP.Dto.ProductMaterial;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -40,6 +39,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             ProductMainRequestDto productMainRequestDto = new ProductMainRequestDto();
             var data = await GetProductById(Id, cancellationToken);
+            var productMaterialData = await GetProductMaterialById(Id, cancellationToken);
             productMainRequestDto.ProductRequestDto = _mapper.Map<ProductRequestDto>(data);
             return productMainRequestDto;
         }
@@ -67,61 +67,45 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
-            try
+            // Add Product Details
+            var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
+            productToInsert.IsDeleted = false;
+            productToInsert.TenantId = _currentUser.TenantId;
+            productToInsert.CreatedBy = _currentUser.UserId;
+            productToInsert.CreatedDate = DateTime.Now;
+            productToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+
+            // Add Product Images
+            foreach (var item in model.Files)
             {
-                // Add Product Details
-                var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
-                productToInsert.IsDeleted = false;
-                productToInsert.TenantId = _currentUser.TenantId;
-                productToInsert.CreatedBy = _currentUser.UserId;
-                productToInsert.CreatedDate = DateTime.Now;
-                productToInsert.CreatedUTCDate = DateTime.UtcNow;
-                //var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-                //var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+                ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
+                productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
+                productImageRequestDto.ImageName = item.FileName;
 
-                // Add Product Images
-                //foreach (var item in model.Files)
-                //{
-                //    ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
-                //    productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
-                //    productImageRequestDto.ImageName = item.FileName;
-
-                //    var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
-                //    productImageToInsert.ProductId = productToInsert.ProductId;
-                //    productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
-                //    productImageToInsert.ImageName = productImageRequestDto.ImageName;
-                //    productImageToInsert.CreatedBy = _currentUser.UserId;
-                //    productImageToInsert.CreatedDate = DateTime.Now;
-                //    productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
-                //    //await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
-                //}
-
-                // Add Product Materials
-                foreach (var item in model.ProductMaterialRequestDto)
-                {
-                    ProductMaterialRequestDto productMaterialRequestDto = new ProductMaterialRequestDto();
-
-                    productMaterialRequestDto.ProductId = productToInsert.ProductId;
-                    productMaterialRequestDto.SubjectTypeId = item.SubjectTypeId;
-                    productMaterialRequestDto.SubjectId = item.SubjectId;
-                    productMaterialRequestDto.Qty = item.Qty;
-                    productMaterialRequestDto.MaterialPrice = item.MaterialPrice;
-                    productMaterialRequestDto.Comments = productToInsert.Comments;
-                    productMaterialRequestDto.CostPrice = item.Qty * item.MaterialPrice;
-                    productToInsert.CostPrice += productMaterialRequestDto.CostPrice;
-                    var productMaterialToInsert = _mapper.Map<ProductMaterial>(productMaterialRequestDto);
-                    await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
-                }
-
-                //return _mappedUser;
+                var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
+                productImageToInsert.ProductId = productToInsert.ProductId;
+                productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
+                productImageToInsert.ImageName = productImageRequestDto.ImageName;
+                productImageToInsert.CreatedBy = _currentUser.UserId;
+                productImageToInsert.CreatedDate = DateTime.Now;
+                productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
+                await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
             }
-            catch (Exception e)
+
+            // Add Product Materials
+            foreach (var item in model.ProductMaterialRequestDto)
             {
-
-                throw;
+                var productMaterialToInsert = _mapper.Map<ProductMaterial>(item);
+                productMaterialToInsert.ProductId = productToInsert.ProductId;
+                productMaterialToInsert.CreatedBy = _currentUser.UserId;
+                productMaterialToInsert.CreatedDate = DateTime.Now;
+                productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var productMaterialData = await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
             }
-            
-            return null;
+
+            return _mappedUser;
         }
 
         #region Private Method
@@ -134,6 +118,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Product not found");
             }
             return productDataById;
+        }
+
+        private async Task<ProductMaterial> GetProductMaterialById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var productMaterialDataById = await _unitOfWorkDA.ProductMaterialDA.GetById(Id, cancellationToken);
+            if (productMaterialDataById == null)
+            {
+                throw new Exception("Product not found");
+            }
+            return productMaterialDataById;
         }
 
         #endregion Private Method

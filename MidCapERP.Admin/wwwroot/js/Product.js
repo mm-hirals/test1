@@ -2,6 +2,7 @@
 var counter = 0;
 var ProductModel = {};
 var tblProduct;
+
 $(function () {
     tblProduct = $("#tblProduct").DataTable({
         "searching": false,
@@ -34,39 +35,41 @@ $("#lnkProductFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
-$("#lnkToProductIndex").click(function () {
-    window.location.href = "/Product/Index";
-});
+
 $(".add-icon").click(function () {
-    debugger;
     var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
     htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
     htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
     htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
+
     $(this).parent().parent().parent().append(htmlStringToAppend)
+    $(this).parent().parent().find("[name$='MaterialPrice']")
     counter++;
 });
 $("input").change(function () {
-    $(this).attr('value', $(this).val());
+    var qty = $(this).attr('value', $(this).val());
+    var unitPrice = $(this).parent().parent().find("td:eq(1)").find("input[type=text]").val();
+    var costPrice = qty.val() * unitPrice;
+    $(this).parent().parent().find("td:eq(2)").find("input[type=text]").attr('value', qty.val());
+    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").val(costPrice);
+    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").attr('value', costPrice);
 })
-$("select").change(function () {
-    var val = $(this).val(); //get new value
-    //find selected option
+$("select").change(function (x) {
+    var val = $(this).val();
     $("option", this).removeAttr("selected").filter(function () {
         return $(this).attr("value") == val;
     }).first().attr("selected", "selected");
-    //$(this).('selected', $(this).val());
 
-    var subjectTypeId = $(this).parent().find('input').val();
-    console.log(subjectTypeId);
+    var unitPrice = $(this).find(':selected').attr('data-unitprice');
+    $(this).parent().parent().find("td:eq(1)").find("input[type=text]").val(unitPrice);
+    $(this).parent().parent().find("td:eq(1)").find("input[type=text]").attr('value', unitPrice);
+    $(this).parent().parent().find("td:eq(2)").find("input[type=text]").val(1);
+    $(this).parent().parent().find("td:eq(2)").find("input[type=text]").attr('value', 1);
+    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").val(unitPrice);
+    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").attr('value', unitPrice);
 })
 $(document).on("click", ".minus-icon", function () {
     var htmlStringToAppend = $(this).parent().parent();
     htmlStringToAppend.find("[name$='IsDeleted']").val("true");
     htmlStringToAppend.hide();
-    //htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
-    //htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
-    //htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
-    //$(this).parent().parent().parent().append(htmlStringToAppend)
-    //counter++;
 });
