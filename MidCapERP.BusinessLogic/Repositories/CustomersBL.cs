@@ -32,7 +32,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomersResponseDto> GetCustomerByMobileNumber(string number, CancellationToken cancellationToken)
         {
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerMobileNumber = customerData.Where(x => x.PhoneNumber == number).FirstOrDefault();
+            var customerMobileNumber = customerData.FirstOrDefault(x => x.PhoneNumber == number);
             return _mapper.Map<CustomersResponseDto>(customerMobileNumber);
         }
 
