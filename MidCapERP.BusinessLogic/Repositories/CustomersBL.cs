@@ -66,15 +66,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             CustomerAddresses catDto = new CustomerAddresses();
             catDto.CustomerId = data.CustomerId;
-            catDto.AddressType = model.AddressType;
-            catDto.Street1 = model.Street1;
-            catDto.Street2 = model.Street2;
-            catDto.Landmark = model.Landmark;
-            catDto.Area = model.Area;
-            catDto.City = model.City;
-            catDto.State = model.State;
-            catDto.ZipCode = model.ZipCode;
-            catDto.IsDefault = model.IsDefault;
+            catDto.AddressType = model.CustomerAddressesRequestDto.AddressType;
+            catDto.Street1 = model.CustomerAddressesRequestDto.Street1;
+            catDto.Street2 = model.CustomerAddressesRequestDto.Street2;
+            catDto.Landmark = model.CustomerAddressesRequestDto.Landmark;
+            catDto.Area = model.CustomerAddressesRequestDto.Area;
+            catDto.City = model.CustomerAddressesRequestDto.City;
+            catDto.State = model.CustomerAddressesRequestDto.State;
+            catDto.ZipCode = model.CustomerAddressesRequestDto.ZipCode;
+            catDto.IsDefault = model.CustomerAddressesRequestDto.IsDefault;
             catDto.CreatedDate = DateTime.Now;
             catDto.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(catDto, cancellationToken);
@@ -101,7 +101,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Customer not found");
             }
-            return data;  
+            return data;
         }
 
         private async Task<CustomerTypes> CustomerTypesGetById(Int64 Id, CancellationToken cancellationToken)
