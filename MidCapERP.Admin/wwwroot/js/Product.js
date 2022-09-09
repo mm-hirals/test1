@@ -56,14 +56,15 @@ $(document).ready(function () {
 })
 function calculateCostPrice() {
     var sum = 0;
-    $(".CostPrice").each(function () {
-        sum += +this.value;
+    $(".costPrice").each(function () {
+        if ($(this).parent().parent().find("input.isDeleted").val() == 'false')
+            sum += +this.value;
     });
     $("#ProductRequestDto_CostPrice").val(sum);
 }
 
 function emptyFields(trRow) {
-    trRow.find("input").each(function () {
+    trRow.find("input[type=text]").each(function () {
         $(this).val("")
     });
     trRow.find("select").each(function () {
@@ -73,11 +74,11 @@ function emptyFields(trRow) {
 }
 $("input.quantity").change(function () {
     var qty = $(this).attr('value', $(this).val());
-    var unitPrice = $(this).parent().parent().find("td:eq(1)").find("input[type=text]").val();
+    var unitPrice = $(this).parent().parent().find("input.materialPrice").val();
     var costPrice = qty.val() * unitPrice;
-    $(this).parent().parent().find("td:eq(2)").find("input[type=text]").attr('value', qty.val());
-    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").val(costPrice);
-    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").attr('value', costPrice);
+    $(this).parent().parent().find("input.quantity").attr('value', qty.val());
+    $(this).parent().parent().find("input.costPrice").val(costPrice);
+    $(this).parent().parent().find("input.costPrice").attr('value', costPrice);
 })
 $("select.material").change(function (x) {
     var val = $(this).val();
@@ -86,15 +87,17 @@ $("select.material").change(function (x) {
     }).first().attr("selected", "selected");
 
     var unitPrice = $(this).find(':selected').attr('data-unitprice');
-    $(this).parent().parent().find("td:eq(1)").find("input[type=text]").val(unitPrice);
-    $(this).parent().parent().find("td:eq(1)").find("input[type=text]").attr('value', unitPrice);
-    $(this).parent().parent().find("td:eq(2)").find("input[type=text]").val(1);
-    $(this).parent().parent().find("td:eq(2)").find("input[type=text]").attr('value', 1);
-    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").val(unitPrice);
-    $(this).parent().parent().find("td:eq(3)").find("input[type=text]").attr('value', unitPrice);
+    $(this).parent().parent().find("input.materialPrice").val(unitPrice);
+    $(this).parent().parent().find("input.materialPrice").attr('value', unitPrice);
+    $(this).parent().parent().find("input.quantity").val(1);
+    $(this).parent().parent().find("input.quantity").attr('value', 1);
+    $(this).parent().parent().find("input.costPrice").val(unitPrice);
+    $(this).parent().parent().find("input.costPrice").attr('value', unitPrice);
 })
 $(document).on("click", ".minus-icon", function () {
     var htmlStringToAppend = $(this).parent().parent();
     htmlStringToAppend.find("[name$='IsDeleted']").val("true");
     htmlStringToAppend.hide();
+
+    calculateCostPrice();
 });
