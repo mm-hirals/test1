@@ -80,45 +80,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
 
             // Add Product Images
-            await SaveImages(model, productToInsert, cancellationToken);
+            await SaveImages(model, productData.ProductId, cancellationToken);
 
             // Add Product Materials
-            SaveProductMaterialRequestDto(model, productToInsert, cancellationToken);
+            await AddProductMaterials(productData.ProductId, model, cancellationToken);
 
             return _mappedUser;
-        }
-
-        private async void SaveProductMaterialRequestDto(ProductMainRequestDto model, Product productToInsert, CancellationToken cancellationToken)
-        {
-            if (model.ProductMaterialRequestDto != null)
-            {
-                foreach (var item in model.ProductMaterialRequestDto)
-                {
-                    await CreateProductMaterial(productToInsert.ProductId, item, cancellationToken);
-                }
-            }
-        }
-
-        private async Task SaveImages(ProductMainRequestDto model, Product productToInsert, CancellationToken cancellationToken)
-        {
-            if (model.Files != null)
-            {
-                foreach (var item in model.Files)
-                {
-                    ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
-                    productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
-                    productImageRequestDto.ImageName = item.FileName;
-
-                    var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
-                    productImageToInsert.ProductId = productToInsert.ProductId;
-                    productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
-                    productImageToInsert.ImageName = productImageRequestDto.ImageName;
-                    productImageToInsert.CreatedBy = _currentUser.UserId;
-                    productImageToInsert.CreatedDate = DateTime.Now;
-                    productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
-                    await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
-                }
-            }
         }
 
         public async Task<ProductRequestDto> UpdateProduct(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
@@ -134,26 +101,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             await DeleteProductMaterials(Id, cancellationToken);
 
             // Add Product Materials
-            await AddProductgMaterials(Id, model, cancellationToken);
+            await AddProductMaterials(Id, model, cancellationToken);
 
             return _mappedUser;
-        }
-
-        private async Task AddProductgMaterials(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
-        {
-            foreach (var item in model.ProductMaterialRequestDto)
-            {
-                await CreateProductMaterial(Id, item, cancellationToken);
-            }
-        }
-
-        private async Task DeleteProductMaterials(int Id, CancellationToken cancellationToken)
-        {
-            var productMaterialById = await GetProductMaterialById(Id, cancellationToken);
-            foreach (var item in productMaterialById)
-            {
-                await _unitOfWorkDA.ProductMaterialDA.DeleteProductMaterial(item.ProductMaterialID, cancellationToken);
-            }
         }
 
         #region Private Method
@@ -207,15 +157,57 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.QRImage = model.QRImage;
         }
 
-        private async Task CreateProductMaterial(long Id, ProductMaterialRequestDto item, CancellationToken cancellationToken)
+        private async Task SaveImages(ProductMainRequestDto model, long productId, CancellationToken cancellationToken)
+        {
+            if (model.Files != null)
+            {
+                foreach (var item in model.Files)
+                {
+                    ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
+                    productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
+                    productImageRequestDto.ImageName = item.FileName;
+
+                    var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
+                    productImageToInsert.ProductId = productId;
+                    productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
+                    productImageToInsert.ImageName = productImageRequestDto.ImageName;
+                    productImageToInsert.CreatedBy = _currentUser.UserId;
+                    productImageToInsert.CreatedDate = DateTime.Now;
+                    productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
+                    await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+                }
+            }
+        }
+
+        private async Task AddProductMaterials(long productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            if (model.ProductMaterialRequestDto != null)
+            {
+                foreach (var item in model.ProductMaterialRequestDto)
+                {
+                    item.ProductId = productId;
+                    await CreateProductMaterial(item, cancellationToken);
+                }
+            }
+        }
+
+        private async Task DeleteProductMaterials(int Id, CancellationToken cancellationToken)
+        {
+            var productMaterialById = await GetProductMaterialById(Id, cancellationToken);
+            foreach (var item in productMaterialById)
+            {
+                await _unitOfWorkDA.ProductMaterialDA.DeleteProductMaterial(item.ProductMaterialID, cancellationToken);
+            }
+        }
+
+        private async Task CreateProductMaterial(ProductMaterialRequestDto item, CancellationToken cancellationToken)
         {
             var productMaterialToInsert = _mapper.Map<ProductMaterial>(item);
-            productMaterialToInsert.ProductId = Id;
+            productMaterialToInsert.ProductId = item.ProductId;
             productMaterialToInsert.CreatedBy = _currentUser.UserId;
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
-
         }
 
         #endregion Private Method
