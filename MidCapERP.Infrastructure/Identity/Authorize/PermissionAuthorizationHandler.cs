@@ -44,6 +44,10 @@ namespace MidCapERP.Infrastructure.Identity.Authorization
                     context.Succeed(requirement);
                     return;
                 }
+                else
+                {
+                    //throw new ForbiddenAccessException();
+                }
             }
         }
 
