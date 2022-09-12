@@ -2,15 +2,19 @@
 {
     public class ProductForDorpDownByModuleNoResponseDto
     {
-        public ProductForDorpDownByModuleNoResponseDto(long productId, string productTitle, string modelNo)
+        public ProductForDorpDownByModuleNoResponseDto(long id, string title, string modelNo, string defaultImage, string productType)
         {
-            ProductId = productId;
-            ProductTitle = productTitle;
+            Id = id;
+            Title = title;
             ModelNo = modelNo;
+            DefaultImage = defaultImage;
+            ProductType = productType;
         }
 
-        public Int64 ProductId { get; set; }
-        public string ProductTitle { get; set; }
+        public Int64 Id { get; set; }
+        public string Title { get; set; }
         public string ModelNo { get; set; }
+        public string DefaultImage { get; set; }
+        public string ProductType { get; set; }
     }
 }

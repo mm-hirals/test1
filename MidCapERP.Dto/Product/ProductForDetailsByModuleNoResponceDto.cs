@@ -28,7 +28,6 @@
 
         public Int64 ProductId { get; set; }
         public int? CategoryId { get; set; }
-        public string? CategoryName { get; set; }
         public string ProductTitle { get; set; }
         public string ModelNo { get; set; }
         public decimal Width { get; set; }
@@ -45,5 +44,6 @@
         public decimal WholesalerPrice { get; set; }
         public string? CoverImage { get; set; }
         public string? QRImage { get; set; }
+        public string ProductType { get; set; }
     }
 }
