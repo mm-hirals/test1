@@ -48,12 +48,9 @@ $(".add-icon").click(function () {
         emptyFields($(this).parent().parent())
         calculateCostPrice();
     } else {
-        // show validation message
+        $("span.materialErrorMsg").text("Please select value");
     }
 });
-$(document).ready(function () {
-    calculateCostPrice();
-})
 function calculateCostPrice() {
     var sum = 0;
     $(".costPrice").each(function () {
@@ -70,8 +67,10 @@ function emptyFields(trRow) {
     trRow.find("select").each(function () {
         $(this).val("")
     });
-
 }
+$("input.costPrice").change(function () {
+    $(this).attr('value', $(this).val());
+})
 $("input.quantity").change(function () {
     var qty = $(this).attr('value', $(this).val());
     var unitPrice = $(this).parent().parent().find("input.materialPrice").val();
@@ -80,7 +79,7 @@ $("input.quantity").change(function () {
     $(this).parent().parent().find("input.costPrice").val(costPrice);
     $(this).parent().parent().find("input.costPrice").attr('value', costPrice);
 })
-$("select.material").change(function (x) {
+$("select.material").change(function () {
     var val = $(this).val();
     $("option", this).removeAttr("selected").filter(function () {
         return $(this).attr("value") == val;
@@ -93,6 +92,8 @@ $("select.material").change(function (x) {
     $(this).parent().parent().find("input.quantity").attr('value', 1);
     $(this).parent().parent().find("input.costPrice").val(unitPrice);
     $(this).parent().parent().find("input.costPrice").attr('value', unitPrice);
+
+    $("span.materialErrorMsg").hide();
 })
 $(document).on("click", ".minus-icon", function () {
     var htmlStringToAppend = $(this).parent().parent();
