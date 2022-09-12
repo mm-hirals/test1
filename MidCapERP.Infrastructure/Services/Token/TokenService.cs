@@ -31,7 +31,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager,
             IOptions<TokenConfiguration> tokenOptions,
-            IHttpContextAccessor httpContextAccessor,ILoginTokenDA loginDA)
+            IHttpContextAccessor httpContextAccessor, ILoginTokenDA loginDA)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -57,7 +57,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             return null;
         }
 
-        public async Task<string> GenerateOTP(TokenAPIRequest request,CancellationToken cancellationToken)
+        public async Task<string> GenerateOTP(TokenAPIRequest request, CancellationToken cancellationToken)
         {
             string data = string.Empty;
 
@@ -72,7 +72,7 @@ namespace MidCapERP.Infrastructure.Services.Token
                     LoginToken loginToken = new LoginToken()
                     {
                         PhoneNumber = request.PhoneNo,
-                        OTP = new Random().Next(1, 9999).ToString("D4"),
+                        OTP = "0000",// new Random().Next(1, 9999).ToString("D4"),
                         ExpiryTime = DateTime.UtcNow.AddMinutes(10),
                     };
 
@@ -81,7 +81,8 @@ namespace MidCapERP.Infrastructure.Services.Token
                 }
                 else
                 {
-                    oldLoginTokenByPhoneNo.OTP = new Random().Next(1, 9999).ToString("D4");
+                    oldLoginTokenByPhoneNo.OTP = "0000";
+                    //oldLoginTokenByPhoneNo.OTP = new Random().Next(1, 9999).ToString("D4");
                     oldLoginTokenByPhoneNo.ExpiryTime = DateTime.UtcNow.AddMinutes(10);
                     var createdToken = await _loginDA.UpdateLoginToken(oldLoginTokenByPhoneNo, cancellationToken);
                     data = createdToken.OTP;
@@ -91,24 +92,24 @@ namespace MidCapERP.Infrastructure.Services.Token
             return data;
         }
 
-        public async Task<TokenResponse> AuthenticateAPI(TokenAPIRequest request,CancellationToken cancellationToken)
+        public async Task<TokenResponse> AuthenticateAPI(TokenAPIRequest request, CancellationToken cancellationToken)
         {
             var user = _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted);
 
-            if(user != null)
+            if (user != null)
             {
                 var loginTokens = await _loginDA.GetAll(cancellationToken);
                 var oldLoginTokenByPhoneNo = loginTokens.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
 
-                if(DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime && oldLoginTokenByPhoneNo.OTP == request.OTP)
+                if (DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime && oldLoginTokenByPhoneNo.OTP == request.OTP)
                 {
-                    await _signInManager.SignInAsync(user, null, null);
-                    return await GenerateAuthentication(true, user, cancellationToken);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return await GenerateAuthentication(false, user, cancellationToken);
                 }
             }
             return null;
         }
-                
+
         public Task<TokenResponse> RefreshToken(string refreshToken, string ipAddress, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
