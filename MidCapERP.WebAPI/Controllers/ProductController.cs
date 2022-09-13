@@ -43,9 +43,9 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpGet("/Product/DetailsModelNo")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        public async Task<ApiResponse> GetDetails(string modelDetailsNo, CancellationToken cancellationToken)
+        public async Task<ApiResponse> GetDetails(string modelNo, CancellationToken cancellationToken)
         {
-            var productDetailsData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelDetailsNo, cancellationToken);
+            var productDetailsData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
             if (productDetailsData == null || productDetailsData.Count == 0)
             {
                 return new ApiResponse(message: "No Data found", result: productDetailsData, statusCode: 404);
