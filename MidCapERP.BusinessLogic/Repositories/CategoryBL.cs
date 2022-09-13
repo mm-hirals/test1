@@ -29,6 +29,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList());
         }
 
+        public async Task<CategoryResponseDto> GetCategorySearchByCategoryName(string searchName, CancellationToken cancellationToken)
+        {
+            var categoryuAlldata = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            return _mapper.Map<CategoryResponseDto>(categoryuAlldata.FirstOrDefault(x=>x.LookupValueName == searchName));
+        }
+
         public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var categoryAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
