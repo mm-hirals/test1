@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MidCapERP.DataEntities.Models
 {
-    [Table("LoginToken")]
-	public class LoginToken
+    [Table("OTPLogin")]
+	public class OTPLogin
 	{
 		[Key]
 		public long Id { get; set; }

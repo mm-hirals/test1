@@ -9,31 +9,31 @@ using System.Threading.Tasks;
 
 namespace MidCapERP.DataAccess.Repositories
 {
-    public class LoginTokenDA : ILoginTokenDA
+    public class LoginTokenDA : IOTPLoginDA
     {
-        private readonly ISqlRepository<LoginToken> _loginToken;
+        private readonly ISqlRepository<OTPLogin> _loginToken;
 
-        public LoginTokenDA(ISqlRepository<LoginToken> loginToken)
+        public LoginTokenDA(ISqlRepository<OTPLogin> loginToken)
         {
             _loginToken = loginToken;
         }
 
-        public async Task<IQueryable<LoginToken>> GetAll(CancellationToken cancellationToken)
+        public async Task<IQueryable<OTPLogin>> GetAll(CancellationToken cancellationToken)
         {
             return await _loginToken.GetAsync(cancellationToken);
         }
 
-        public async Task<LoginToken> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<OTPLogin> GetById(int Id, CancellationToken cancellationToken)
         {
             return await _loginToken.GetByIdAsync(Id, cancellationToken);
         }
 
-        public async Task<LoginToken> CreateLoginToken(LoginToken model, CancellationToken cancellationToken)
+        public async Task<OTPLogin> CreateLoginToken(OTPLogin model, CancellationToken cancellationToken)
         {
             return await _loginToken.InsertAsync(model, cancellationToken);
         }
 
-        public async Task<LoginToken> UpdateLoginToken(LoginToken model, CancellationToken cancellationToken)
+        public async Task<OTPLogin> UpdateLoginToken(OTPLogin model, CancellationToken cancellationToken)
         {
             return await _loginToken.UpdateAsync(model, cancellationToken);
         }
