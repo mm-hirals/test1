@@ -59,6 +59,7 @@ function calculateCostPrice() {
             sum += +this.value;
     });
     $("#ProductRequestDto_CostPrice").val(sum);
+    $("#ProductRequestDto_CostPrice-error").hide();
 }
 
 function emptyFields(trRow) {
