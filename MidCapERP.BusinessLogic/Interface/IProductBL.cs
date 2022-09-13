@@ -18,5 +18,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string detailsModelNo, CancellationToken cancellation);
 
         public Task<ProductRequestDto> CreateProduct(ProductMainRequestDto model, CancellationToken cancellationToken);
+
+        public Task<ProductRequestDto> UpdateProduct(int Id, ProductMainRequestDto model, CancellationToken cancellationToken);
     }
 }

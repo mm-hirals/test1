@@ -22,7 +22,7 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPost("/Search/")]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
-        public async Task<ApiResponse> Search([FromBody]DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Search([FromBody] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
             if (data == null)
@@ -43,6 +43,7 @@ namespace MidCapERP.WebAPI.Controllers
             }
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
+
         [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
         public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
@@ -54,6 +55,7 @@ namespace MidCapERP.WebAPI.Controllers
             }
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
+
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
         public async Task<ApiResponse> Post([FromBody] CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
@@ -66,7 +68,6 @@ namespace MidCapERP.WebAPI.Controllers
             }
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
-
 
         [HttpPut("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
@@ -81,7 +82,6 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
-
         #region Private methods
 
         private void ValidateRequest(CategoryRequestDto categoryRequestDto)
@@ -91,6 +91,7 @@ namespace MidCapERP.WebAPI.Controllers
                 throw new ApiException(ModelState.AllErrors());
             }
         }
-        #endregion
+
+        #endregion Private methods
     }
 }

@@ -67,13 +67,15 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
-        public async Task<IActionResult> Update(int Id, ProductMainRequestDto PolishRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int Id, [FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
+            productMainRequestDto.ProductMaterialRequestDto = productMainRequestDto.ProductMaterialRequestDto.Where(x => !x.IsDeleted).ToList();
+            await _unitOfWorkBL.ProductBL.UpdateProduct(Id, productMainRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             return RedirectToAction("Index");
@@ -97,48 +99,52 @@ namespace MidCapERP.Admin.Controllers
         {
             var frameTypeData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
             var frameSelectedList = frameTypeData.Select(a =>
-                                 new SelectListItem
+                                 new ProductMaterialListItem
                                  {
                                      Value = Convert.ToString(a.FrameId),
-                                     Text = a.Title
+                                     Text = a.Title,
+                                     UnitPrice = a.UnitPrice
                                  }).ToList();
-            ViewBag.FrameSelectedList = frameSelectedList;
+            ViewBag.FrameDropDownData = frameSelectedList;
         }
 
         private async Task FillRawMaterialDropDowns(CancellationToken cancellationToken)
         {
             var rawMaterialData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
             var rawMaterialSelectedList = rawMaterialData.Select(a =>
-                                 new SelectListItem
+                                 new ProductMaterialListItem
                                  {
                                      Value = Convert.ToString(a.RawMaterialId),
-                                     Text = a.Title
+                                     Text = a.Title,
+                                     UnitPrice = a.UnitPrice
                                  }).ToList();
-            ViewBag.rawMaterialDropDownData = rawMaterialSelectedList;
+            ViewBag.RawMaterialDropDownData = rawMaterialSelectedList;
         }
 
         private async Task FillPolishDropDowns(CancellationToken cancellationToken)
         {
             var polishData = await _unitOfWorkBL.PolishBL.GetAll(cancellationToken);
             var polishSelectedList = polishData.Select(a =>
-                                 new SelectListItem
+                                 new ProductMaterialListItem
                                  {
                                      Value = Convert.ToString(a.PolishId),
-                                     Text = a.Title
+                                     Text = a.Title,
+                                     UnitPrice = a.UnitPrice
                                  }).ToList();
-            ViewBag.polishDropDownData = polishSelectedList;
+            ViewBag.PolishDropDownData = polishSelectedList;
         }
 
         private async Task FillCushionDropDowns(CancellationToken cancellationToken)
         {
             var cushionData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
             var cushionSelectedList = cushionData.Select(a =>
-                                new SelectListItem
+                                new ProductMaterialListItem
                                 {
                                     Value = Convert.ToString(a.FrameId),
-                                    Text = a.Title
+                                    Text = a.Title,
+                                    UnitPrice = a.UnitPrice
                                 }).ToList();
-            ViewBag.cushionDropDownData = cushionSelectedList;
+            ViewBag.CushionDropDownData = cushionSelectedList;
         }
 
         #endregion Private Method
