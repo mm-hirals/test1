@@ -48,7 +48,8 @@ $(".add-icon").click(function () {
         emptyFields($(this).parent().parent())
         calculateCostPrice();
     } else {
-        $("span.materialErrorMsg").text("Please select value");
+        alert("Please select value");
+        //$("span.materialErrorMsg").text("Please select value");
     }
 });
 function calculateCostPrice() {
