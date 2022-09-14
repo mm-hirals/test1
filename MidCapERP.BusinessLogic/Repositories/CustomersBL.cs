@@ -29,11 +29,23 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
         }
 
-        public async Task<CustomersResponseDto> GetCustomerByMobileNumber(string number, CancellationToken cancellationToken)
+        public async Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerMobileNumber = customerData.FirstOrDefault(x => x.PhoneNumber == number);
-            return _mapper.Map<CustomersResponseDto>(customerMobileNumber);
+            var customerMobileNumberOrEmailId = customerData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
+            return _mapper.Map<CustomersResponseDto>(customerMobileNumberOrEmailId);
+        }
+
+        public async Task<bool>   CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerExistOrNot = data.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmail ||  x.EmailId ==  phoneNumberOrEmail);
+            bool isCustomer;
+            if (customerExistOrNot != null)
+                isCustomer = true;
+            else
+                isCustomer = false;
+            return isCustomer;
         }
 
         public async Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken)
