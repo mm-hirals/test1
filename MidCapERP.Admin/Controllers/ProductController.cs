@@ -23,6 +23,12 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProductBasicDetail(int productId)
+        {
+            return PartialView("~/Views/Product/_productPartial.cshtml");
+        }
+
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<IActionResult> GetProductData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -38,7 +44,7 @@ namespace MidCapERP.Admin.Controllers
             await FillCategoryDropDown(cancellationToken);
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
-            return View("Create");
+            return View("ProductMain");
         }
 
         [HttpPost]

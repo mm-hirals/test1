@@ -2,11 +2,14 @@
 @{
     string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
     ViewData["Title"] = (action == "Create") ? "Add Product" : "Update Product";
-}
+    var i = 0;
 
+    var productId = (Model == null) ? 0 : Model.ProductId;
+}
+@Html.Hidden("hdnProductId", productId)
 <div id="content">
     <div id="productPartial">
-        <partial name="_productPartial" />
+        @*<partial name="_productPartial" />*@
     </div>
 
     @if (action == "Update")
@@ -42,3 +45,17 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+        <script src="~/js/Product.js" asp-append-version="true"></script>
+        <script>
+            $(function() {
+                counter = @i;
+            });
+        </script>
+    }
+}
