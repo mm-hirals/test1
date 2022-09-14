@@ -36,7 +36,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
         public async Task<ApiResponse> Get(string searchText, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CategoryBL.GetAll(cancellationToken);
+            var data = await _unitOfWorkBL.CategoryBL.GetCategorySearchByCategoryName(searchText, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
