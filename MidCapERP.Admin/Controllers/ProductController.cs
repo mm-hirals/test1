@@ -36,18 +36,21 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
-            //await FillFrameDropDowns(cancellationToken);
-            //await FillRawMaterialDropDowns(cancellationToken);
-            //await FillPolishDropDowns(cancellationToken);
-            return View("ProductMain");
+            await FillRawMaterialDropDowns(cancellationToken);
+            await FillPolishDropDowns(cancellationToken);
+            return View("Create");
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
-        public async Task<IActionResult> Create([FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
         {
-            productMainRequestDto.ProductMaterialRequestDto = productMainRequestDto.ProductMaterialRequestDto.Where(x => x.IsDeleted != true).ToList();
-            await _unitOfWorkBL.ProductBL.CreateProduct(productMainRequestDto, cancellationToken);
+            //productRequestDto.ProductMaterialRequestDto = productRequestDto.ProductMaterialRequestDto.Where(x => x.IsDeleted != true).ToList();
+            await _unitOfWorkBL.ProductBL.CreateProduct(productRequestDto, cancellationToken);
+            var getAllProductData = await _unitOfWorkBL.ProductBL.GetAll(cancellationToken);
+            var insertedProductData = getAllProductData.Where(x => x.ProductId == productRequestDto.ProductId);
+
+            //return RedirectToAction("RolePermission", "Role", new { id = insertedProductData. });
             return RedirectToAction("Index");
         }
 
@@ -57,7 +60,6 @@ namespace MidCapERP.Admin.Controllers
         {
             var getProductData = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
             await FillCategoryDropDown(cancellationToken);
-            await FillFrameDropDowns(cancellationToken);
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
             return View("Create", getProductData);
@@ -70,6 +72,17 @@ namespace MidCapERP.Admin.Controllers
             productMainRequestDto.ProductMaterialRequestDto = productMainRequestDto.ProductMaterialRequestDto.Where(x => !x.IsDeleted).ToList();
             await _unitOfWorkBL.ProductBL.UpdateProduct(Id, productMainRequestDto, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
+        public async Task<IActionResult> CreateProductDetail(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        {
+            //await _unitOfWorkBL.ProductBL.CreateProduct(productRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+            //var insertedProductData = roleData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
+
+            //return RedirectToAction("RolePermission", "Role", new { id = insertedRoleData.Id });
         }
 
         [HttpGet]
@@ -91,22 +104,6 @@ namespace MidCapERP.Admin.Controllers
                                      Text = a.LookupValueName
                                  }).ToList();
             ViewBag.CategorySelectedList = categorySelectedList;
-        }
-
-        private async Task FillFrameDropDowns(CancellationToken cancellationToken)
-        {
-            var frameTypeData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
-            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
-            var frameSelectedList = (from x in frameTypeData
-                                     join y in unitData on x.UnitId equals y.LookupValueId
-                                     select new ProductMaterialListItem
-                                     {
-                                         Value = Convert.ToString(x.FrameId),
-                                         Text = x.Title,
-                                         UnitPrice = x.UnitPrice,
-                                         UnitName = y.LookupValueName
-                                     }).ToList();
-            ViewBag.FrameDropDownData = frameSelectedList;
         }
 
         private async Task FillRawMaterialDropDowns(CancellationToken cancellationToken)

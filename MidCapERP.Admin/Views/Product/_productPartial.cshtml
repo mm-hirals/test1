@@ -1,75 +1,91 @@
 ﻿@model MidCapERP.Dto.Product.ProductRequestDto
-<div class="card-product--wrapper mb-3">
-    <input type="hidden" asp-for="ProductId" />
-    <div class="card-product--image">
-        <input type="file" hidden />
-        <div class="product--image">
-            <img src="~/images/No_Image.jpg" alt="Product Name" />
-            <div class="edit--image">
-                <i class="bx bx-pencil"></i>
+@{
+    string action = (Model != null && Model.ProductId != 0) ? "Update" : "Create";
+}
+
+<form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
+    <div class="card-product--wrapper mb-3">
+        <input type="hidden" asp-for="ProductId" />
+        <div class="card-product--image">
+            <input type="file" hidden />
+            <div class="product--image">
+                <img src="~/images/No_Image.jpg" alt="Product Name" />
+                <div class="edit--image">
+                    <i class="bx bx-pencil"></i>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="card-prpoduct-cotent--wrapper">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="product-info--item">
-                    <div class="form-group">
-                        <label asp-for="CategoryId" class="form-label"></label>
-                        <select asp-for="CategoryId" data-val="true" class="form-control"
-                                asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
-                            <option value="" selected>Select Category</option>
-                        </select>
-                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+        <div class="card-prpoduct-cotent--wrapper">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            <select asp-for="CategoryId" data-val="true" class="form-control"
+                                    asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                                <option value="" selected>Select Category</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-info--item">
-                    <div class="form-group">
-                        <label asp-for="ProductTitle" class="form-label"></label>&nbsp;<span class="required">*</span>
-                        <input asp-for="ProductTitle" type="text" class="form-control" placeholder="Product Title">
-                        <span asp-validation-for="ProductTitle" class="text-danger"></span>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label asp-for="ProductTitle" class="form-label"></label>&nbsp;<span class="required">*</span>
+                            <input asp-for="ProductTitle" type="text" class="form-control" placeholder="Product Title">
+                            <span asp-validation-for="ProductTitle" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-info--item">
-                    <div class="form-group">
-                        <label asp-for="ModelNo" class="form-label"></label>&nbsp;<span class="required">*</span>
-                        <input asp-for="ModelNo" type="text" class="form-control" placeholder="Product Code">
-                        <span asp-validation-for="ModelNo" class="text-danger"></span>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label asp-for="ModelNo" class="form-label"></label>&nbsp;<span class="required">*</span>
+                            <input asp-for="ModelNo" type="text" class="form-control" placeholder="Product Code">
+                            <span asp-validation-for="ModelNo" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-info--item">
-                    <div class="form-group">
-                        <label class="form-label">
-                            Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth)</span>
-                        </label>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input asp-for="Width" type="text" class="form-control" placeholder="Width">
-                                <span asp-validation-for="Width" class="text-danger"></span>
-                                @*<label class="form-label">Width</label>*@
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="Height" type="text" class="form-control" placeholder="Height">
-                                <span asp-validation-for="Height" class="text-danger"></span>
-                                @*<label class="form-label">Height</label>*@
-                            </div>
-                            <div class="col-md-4">
-                                <input asp-for="Depth" type="text" class="form-control" placeholder="Depth">
-                                <span asp-validation-for="Depth" class="text-danger"></span>
-                                @*<label class="form-label">Depth</label>*@
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth)</span>
+                            </label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input asp-for="Width" type="text" class="form-control" placeholder="Width">
+                                    <span asp-validation-for="Width" class="text-danger"></span>
+                                    @*<label class="form-label">Width</label>*@
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="Height" type="text" class="form-control" placeholder="Height">
+                                    <span asp-validation-for="Height" class="text-danger"></span>
+                                    @*<label class="form-label">Height</label>*@
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="Depth" type="text" class="form-control" placeholder="Depth">
+                                    <span asp-validation-for="Depth" class="text-danger"></span>
+                                    @*<label class="form-label">Depth</label>*@
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="c-card--wrapper c-card-sm--wrapper">
+                        <div class="c-card--footer">
+                            <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                                Cancel
+                            </a>
+                            <input type="submit" value="Save" class="btn btn-primary ms-2 productSubmit" />
+                        </div>
+                    </div>
+                </div>
             </div>
+            @* <div class="product-info--wrapper">
+            </div>*@
         </div>
-        @* <div class="product-info--wrapper">
-        </div>*@
     </div>
-</div>
+</form>

@@ -11,7 +11,6 @@
         public decimal Height { get; set; }
         public decimal Depth { get; set; }
         public decimal? UsedFabric { get; set; }
-        public decimal? UsedPolish { get; set; }
         public bool IsVisibleToWholesalers { get; set; }
         public decimal TotalDaysToPrepare { get; set; }
         public string? Features { get; set; }

@@ -36,7 +36,7 @@ $("#lnkProductFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-var action = $("#formAction").attr("action");
+var action = $("form.formAction").attr("action");
 if (action == "/Product/Create") {
     $("select.category").attr('disabled', false);
 }

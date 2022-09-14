@@ -35,9 +35,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Role.Create)]
         public async Task<IActionResult> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
-            RoleRequestDto insertedRole = new RoleRequestDto();
-
-            insertedRole = await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
+            await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
             var roleData = await _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken);
             var insertedRoleData = roleData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
 

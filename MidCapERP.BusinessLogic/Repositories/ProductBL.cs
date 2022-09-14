@@ -31,9 +31,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             _fileStorageService = fileStorageService;
         }
 
-        public Task<IEnumerable<ProductResponseDto>> GetAll(CancellationToken cancellationToken)
+        public async Task<IEnumerable<ProductResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            return _mapper.Map<List<ProductResponseDto>>(productAllData.ToList());
         }
 
         public async Task<ProductMainRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
@@ -69,10 +70,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
         }
 
-        public async Task<ProductRequestDto> CreateProduct(ProductMainRequestDto model, CancellationToken cancellationToken)
+        public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
             // Add Product Details
-            var productToInsert = _mapper.Map<Product>(model.ProductRequestDto);
+            var productToInsert = _mapper.Map<Product>(model);
             productToInsert.IsDeleted = false;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
@@ -82,10 +83,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
 
             // Add Product Images
-            await SaveImages(model, productData.ProductId, cancellationToken);
+            //await SaveImages(model, productData.ProductId, cancellationToken);
 
             // Add Product Materials
-            await AddProductMaterials(productData.ProductId, model, cancellationToken);
+            //await AddProductMaterials(productData.ProductId, model, cancellationToken);
 
             return _mappedUser;
         }
@@ -158,7 +159,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.Height = model.Height;
             oldData.Depth = model.Depth;
             oldData.UsedFabric = model.UsedFabric;
-            oldData.UsedPolish = model.UsedPolish;
             oldData.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
             oldData.TotalDaysToPrepare = model.TotalDaysToPrepare;
             oldData.Features = model.Features;
