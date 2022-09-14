@@ -261,7 +261,7 @@
                                                     <option value="" selected>Select FrameType</option>
                                                     @foreach (var item in (List<ProductMaterialListItem>)ViewBag.FrameDropDownData)
                                                     {
-                                                        <option value="@item.Value" data-UnitPrice="@item.UnitPrice">@item.Text</option>
+                                                        <option value="@item.Value" data-UnitName="@item.UnitName" data-UnitPrice="@item.UnitPrice">@item.Text</option>
                                                     }
                                                 </select>
                                                 <span class="text-danger materialErrorMsg"></span>
@@ -361,7 +361,7 @@
                                                     <option value="" selected>Select Polish</option>
                                                     @foreach (var item in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
                                                     {
-                                                        <option value="@item.Value" data-UnitPrice="@item.UnitPrice">@item.Text</option>
+                                                        <option value="@item.Value" data-UnitName="@item.UnitName" data-UnitPrice="@item.UnitPrice">@item.Text</option>
                                                     }
                                                 </select>
                                                 <span class="text-danger materialErrorMsg"></span>
@@ -461,7 +461,7 @@
                                                     <option value="" selected>Select Raw Material</option>
                                                     @foreach (var item in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
                                                     {
-                                                        <option value="@item.Value" data-UnitPrice="@item.UnitPrice">@item.Text</option>
+                                                        <option value="@item.Value" data-UnitName="@item.UnitName" data-UnitPrice="@item.UnitPrice">@item.Text</option>
                                                     }
                                                 </select>
                                                 <span class="text-danger materialErrorMsg"></span>

@@ -39,7 +39,6 @@ namespace MidCapERP.Admin.Controllers
             await FillFrameDropDowns(cancellationToken);
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
-            await FillCushionDropDowns(cancellationToken);
             return View();
         }
 
@@ -61,7 +60,6 @@ namespace MidCapERP.Admin.Controllers
             await FillFrameDropDowns(cancellationToken);
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
-            await FillCushionDropDowns(cancellationToken);
             return View("Create", getProductData);
         }
 
@@ -98,53 +96,49 @@ namespace MidCapERP.Admin.Controllers
         private async Task FillFrameDropDowns(CancellationToken cancellationToken)
         {
             var frameTypeData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
-            var frameSelectedList = frameTypeData.Select(a =>
-                                 new ProductMaterialListItem
-                                 {
-                                     Value = Convert.ToString(a.FrameId),
-                                     Text = a.Title,
-                                     UnitPrice = a.UnitPrice
-                                 }).ToList();
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var frameSelectedList = (from x in frameTypeData
+                                     join y in unitData on x.UnitId equals y.LookupValueId
+                                     select new ProductMaterialListItem
+                                     {
+                                         Value = Convert.ToString(x.FrameId),
+                                         Text = x.Title,
+                                         UnitPrice = x.UnitPrice,
+                                         UnitName = y.LookupValueName
+                                     }).ToList();
             ViewBag.FrameDropDownData = frameSelectedList;
         }
 
         private async Task FillRawMaterialDropDowns(CancellationToken cancellationToken)
         {
             var rawMaterialData = await _unitOfWorkBL.RawMaterialBL.GetAll(cancellationToken);
-            var rawMaterialSelectedList = rawMaterialData.Select(a =>
-                                 new ProductMaterialListItem
-                                 {
-                                     Value = Convert.ToString(a.RawMaterialId),
-                                     Text = a.Title,
-                                     UnitPrice = a.UnitPrice
-                                 }).ToList();
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var rawMaterialSelectedList = (from x in rawMaterialData
+                                           join y in unitData on x.UnitId equals y.LookupValueId
+                                           select new ProductMaterialListItem
+                                           {
+                                               Value = Convert.ToString(x.RawMaterialId),
+                                               Text = x.Title,
+                                               UnitPrice = x.UnitPrice,
+                                               UnitName = y.LookupValueName
+                                           }).ToList();
             ViewBag.RawMaterialDropDownData = rawMaterialSelectedList;
         }
 
         private async Task FillPolishDropDowns(CancellationToken cancellationToken)
         {
             var polishData = await _unitOfWorkBL.PolishBL.GetAll(cancellationToken);
-            var polishSelectedList = polishData.Select(a =>
-                                 new ProductMaterialListItem
-                                 {
-                                     Value = Convert.ToString(a.PolishId),
-                                     Text = a.Title,
-                                     UnitPrice = a.UnitPrice
-                                 }).ToList();
+            var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
+            var polishSelectedList = (from x in polishData
+                                      join y in unitData on x.UnitId equals y.LookupValueId
+                                      select new ProductMaterialListItem
+                                      {
+                                          Value = Convert.ToString(x.PolishId),
+                                          Text = x.Title,
+                                          UnitPrice = x.UnitPrice,
+                                          UnitName = y.LookupValueName
+                                      }).ToList();
             ViewBag.PolishDropDownData = polishSelectedList;
-        }
-
-        private async Task FillCushionDropDowns(CancellationToken cancellationToken)
-        {
-            var cushionData = await _unitOfWorkBL.FrameBL.GetAll(cancellationToken);
-            var cushionSelectedList = cushionData.Select(a =>
-                                new ProductMaterialListItem
-                                {
-                                    Value = Convert.ToString(a.FrameId),
-                                    Text = a.Title,
-                                    UnitPrice = a.UnitPrice
-                                }).ToList();
-            ViewBag.CushionDropDownData = cushionSelectedList;
         }
 
         #endregion Private Method
