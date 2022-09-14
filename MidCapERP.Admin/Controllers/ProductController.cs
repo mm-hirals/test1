@@ -36,10 +36,10 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
-            await FillFrameDropDowns(cancellationToken);
-            await FillRawMaterialDropDowns(cancellationToken);
-            await FillPolishDropDowns(cancellationToken);
-            return View();
+            //await FillFrameDropDowns(cancellationToken);
+            //await FillRawMaterialDropDowns(cancellationToken);
+            //await FillPolishDropDowns(cancellationToken);
+            return View("ProductMain");
         }
 
         [HttpPost]

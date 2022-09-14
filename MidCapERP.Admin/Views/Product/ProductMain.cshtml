@@ -1,0 +1,27 @@
+﻿@model MidCapERP.Dto.Product.ProductMainRequestDto
+@{
+    string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
+    var title = (action == "Create") ? ViewData["Title"] = "Add Product" : ViewData["Title"] = "Update Product";
+    var i = 0;
+}
+
+<div id="content">
+    <div id="productPartial">
+        <partial name="_productPartial" />
+    </div>
+    <nav class="product-nav-tab--sticky">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
+            <button class="nav-link" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
+            <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Materials</button>
+            <button class="nav-link disabled" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Workflow</button>
+        </div>
+    </nav>
+
+    <div class="tab-content" id="nav-tabContent">
+        <div id="productDetailPartial"></div>
+        <div id="productImagePartial"></div>
+        <div id="productMaterialPartial"></div>
+        <div id="productWorkflowPartial"></div>
+    </div>
+</div>
