@@ -36,6 +36,14 @@ $("#lnkProductFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
+var action = $("#formAction").attr("action");
+if (action == "/Product/Create") {
+    $("select.category").attr('disabled', false);
+}
+else {
+    $("select.category").attr('disabled', true);
+}
+
 $(".add-icon").click(function () {
     if ($(this).parent().parent().find("select").val() != "") {
         var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)

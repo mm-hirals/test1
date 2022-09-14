@@ -40,8 +40,10 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             ProductMainRequestDto productMainRequestDto = new ProductMainRequestDto();
             var data = await GetProductById(Id, cancellationToken);
+            var productImage = await GetProductImageById(Id, cancellationToken);
             var productMaterialData = await GetProductMaterialById(Id, cancellationToken);
             productMainRequestDto.ProductRequestDto = _mapper.Map<ProductRequestDto>(data);
+            productMainRequestDto.ProductImageRequestDto = _mapper.Map<List<ProductImageRequestDto>>(productImage);
             productMainRequestDto.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialData);
             return productMainRequestDto;
         }
@@ -116,6 +118,17 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Product not found");
             }
             return productDataById;
+        }
+
+        private async Task<List<ProductImage>> GetProductImageById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var productImage = await _unitOfWorkDA.ProductImageDA.GetAll(cancellationToken);
+            var productImageDataById = productImage.Where(x => x.ProductId == Id).ToList();
+            if (productImageDataById == null)
+            {
+                throw new Exception("ProductImages not found");
+            }
+            return productImageDataById;
         }
 
         private async Task<List<ProductMaterial>> GetProductMaterialById(Int64 Id, CancellationToken cancellationToken)
