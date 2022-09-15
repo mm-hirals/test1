@@ -37,16 +37,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<ProductResponseDto>>(productAllData.ToList());
         }
 
-        public async Task<ProductMainRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        public async Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
         {
-            ProductMainRequestDto productMainRequestDto = new ProductMainRequestDto();
+            ProductRequestDto productRequestDto = new ProductRequestDto();
             var data = await GetProductById(Id, cancellationToken);
-            var productImage = await GetProductImageById(Id, cancellationToken);
-            var productMaterialData = await GetProductMaterialById(Id, cancellationToken);
-            productMainRequestDto.ProductRequestDto = _mapper.Map<ProductRequestDto>(data);
-            productMainRequestDto.ProductImageRequestDto = _mapper.Map<List<ProductImageRequestDto>>(productImage);
-            productMainRequestDto.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialData);
-            return productMainRequestDto;
+            productRequestDto = _mapper.Map<ProductRequestDto>(data);
+            //var productImage = await GetProductImageById(Id, cancellationToken);
+            //var productMaterialData = await GetProductMaterialById(Id, cancellationToken);
+            //productMainRequestDto.ProductImageRequestDto = _mapper.Map<List<ProductImageRequestDto>>(productImage);
+            //productMainRequestDto.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialData);
+            return productRequestDto;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -91,20 +91,64 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        public async Task<ProductRequestDto> UpdateProduct(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
+        public async Task<ProductRequestDto> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
+        {
+            // Add Product Details
+            var productToInsert = new Product();
+            MapToDbObject(model, productToInsert);
+            productToInsert.IsDeleted = false;
+            productToInsert.TenantId = _currentUser.TenantId;
+            productToInsert.CreatedBy = _currentUser.UserId;
+            productToInsert.CreatedDate = DateTime.Now;
+            productToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+
+            // Add Product Images
+            //await SaveImages(model, productData.ProductId, cancellationToken);
+
+            // Add Product Materials
+            //await AddProductMaterials(productData.ProductId, model, cancellationToken);
+
+            return _mappedUser;
+        }
+
+        public async Task<ProductRequestDto> UpdateProduct(int Id, ProductRequestDto model, CancellationToken cancellationToken)
         {
             // Update Product Details
             var getProductById = await GetProductById(Id, cancellationToken);
             UpdateData(getProductById);
-            MapToDbObject(model.ProductRequestDto, getProductById);
+            MapToDbObject(model, getProductById);
             var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
             // Delete all Product Materials by product Id
-            await DeleteProductMaterials(Id, cancellationToken);
+            //await DeleteProductMaterials(Id, cancellationToken);
 
-            // Add Product Materials
-            await AddProductMaterials(Id, model, cancellationToken);
+            //// Add Product Materials
+            //await AddProductMaterials(Id, model, cancellationToken);
+
+            return _mappedUser;
+        }
+
+        public async Task<ProductRequestDto> UpdateProductDetail(int Id, ProductRequestDto model, CancellationToken cancellationToken)
+        {
+            // Update Product Details
+            var getProductById = await GetProductById(Id, cancellationToken);
+            UpdateData(getProductById);
+            getProductById.UsedFabric = model.UsedFabric;
+            getProductById.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
+            getProductById.TotalDaysToPrepare = model.TotalDaysToPrepare;
+            getProductById.Features = model.Features;
+            getProductById.Comments = model.Comments;
+            var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(data);
+
+            // Delete all Product Materials by product Id
+            //await DeleteProductMaterials(Id, cancellationToken);
+
+            //// Add Product Materials
+            //await AddProductMaterials(Id, model, cancellationToken);
 
             return _mappedUser;
         }

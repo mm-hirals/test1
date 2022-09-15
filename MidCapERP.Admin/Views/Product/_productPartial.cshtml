@@ -1,9 +1,10 @@
 ﻿@model MidCapERP.Dto.Product.ProductRequestDto
 @{
-    string action = (Model != null && Model.ProductId != 0) ? "Update" : "Create";
+    string action = (Model != null && Model.ProductId != 0) ? "UpdateProductBasicDetail" : "CreateProductBasicDetail";
 }
 
-<form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
+<form asp-action="CreateProductBasicDetail" asp-controller="Product"
+      method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-3">
         <input type="hidden" asp-for="ProductId" />
         <div class="card-product--image">

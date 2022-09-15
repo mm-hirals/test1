@@ -7,7 +7,7 @@ $("#lnkProductFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-var action = $("form.formAction").attr("action");
+var action = $("form.productInfoForm").attr("action");
 if (action == "/Product/Create") {
     $("select.category").attr('disabled', false);
 }
@@ -84,7 +84,10 @@ $(document).on("click", ".minus-icon", function () {
 
     calculateCostPrice();
 });
-
 $(document).ready(function () {
-    $("#productPartial").load('/Product/GetProductBasicDetail' + "?ProductId=" + document.getElementById("hdnProductId").value);
+    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
+    $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+    $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+    $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+    //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
 });
