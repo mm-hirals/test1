@@ -85,6 +85,6 @@ $(document).on("click", ".minus-icon", function () {
     calculateCostPrice();
 });
 
-$(document).ready(function () {
-    $("#productPartial").load('/Product/GetProductBasicDetail' + "?ProductId=" + document.getElementById("hdnProductId").value);
-});
+//$(document).ready(function () {
+//    $("#productPartial").load('/Product/GetProductBasicDetail' + "?ProductId=" + document.getElementById("hdnProductId").value);
+//});

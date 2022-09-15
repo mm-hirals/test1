@@ -9,11 +9,11 @@
 @Html.Hidden("hdnProductId", productId)
 <div id="content">
     <div id="productPartial">
-        @*<partial name="_productPartial" />*@
+        <partial name="_productPartial" />
     </div>
 
-    @if (action == "Update")
-    {
+@*    @if (action == "Update")
+    {*@
         <nav class="product-nav-tab--sticky">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
@@ -43,7 +43,7 @@
                 <partial name="_productWorkflowPartial" />
             </div>
         </div>
-    }
+    @*}*@
 </div>
 
 @section Scripts {
