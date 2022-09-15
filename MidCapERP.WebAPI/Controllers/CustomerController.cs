@@ -51,9 +51,9 @@ namespace MidCapERP.WebAPI.Controllers
             bool data = await _unitOfWorkBL.CustomersBL.CheckCustomerExistOrNot(phoneNumberOrEmail, cancellationToken);
             if (data == null || data == false)
             {
-                return new ApiResponse(message: "False", result: data, statusCode: 404);
+                return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "True", result: data, statusCode: 200);
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
         }
 
         #region Private Methods
