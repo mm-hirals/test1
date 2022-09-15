@@ -4,7 +4,7 @@
 }
 
 <form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
-    <div class="card-product--wrapper mb-3">
+    <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" />
         <div class="card-product--image">
             <input type="file" hidden />
@@ -56,31 +56,26 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <input asp-for="Width" type="text" class="form-control" placeholder="Width">
-                                    <span asp-validation-for="Width" class="text-danger"></span>
-                                    @*<label class="form-label">Width</label>*@
                                 </div>
                                 <div class="col-md-4">
                                     <input asp-for="Height" type="text" class="form-control" placeholder="Height">
-                                    <span asp-validation-for="Height" class="text-danger"></span>
-                                    @*<label class="form-label">Height</label>*@
                                 </div>
                                 <div class="col-md-4">
                                     <input asp-for="Depth" type="text" class="form-control" placeholder="Depth">
-                                    <span asp-validation-for="Depth" class="text-danger"></span>
-                                    @*<label class="form-label">Depth</label>*@
                                 </div>
+                                <span asp-validation-for="Width" class="text-danger"></span>
+                                <span asp-validation-for="Height" class="text-danger"></span>
+                                <span asp-validation-for="Depth" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12">
-                    <div class="c-card--wrapper c-card-sm--wrapper">
-                        <div class="c-card--footer">
-                            <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
-                                Cancel
-                            </a>
-                            <input type="submit" value="Save" class="btn btn-primary ms-2 productSubmit" />
-                        </div>
+                    <div class="text-end pb-2">
+                        <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                            Cancel
+                        </a>
+                        <input type="submit" value="Save" class="btn btn-primary ms-2 productSubmit" />
                     </div>
                 </div>
             </div>

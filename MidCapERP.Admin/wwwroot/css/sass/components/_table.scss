@@ -13,7 +13,7 @@
                     &:before {
                         content: "\ea29" !important;
                         font-weight: 400;
-                        font-family: boxicons!important;
+                        font-family: boxicons !important;
                         -webkit-font-smoothing: antialiased;
                         font-size: 20px !important;
                         line-height: 100% !important;
@@ -47,14 +47,14 @@
     tr {
         outline: 1px solid transparent !important;
         vertical-align: middle;
-        &.even,
-        &:nth-child(even) {
-            background-color: lighten($primary, 45%) !important;
-        }
-        &.odd,
-        &:nth-child(odd) {
-            background-color: lighten($gray, 40%) !important;
-        }
+        // &.even,
+        // &:nth-child(even) {
+        //     background-color: lighten($primary, 45%) !important;
+        // }
+        // &.odd,
+        // &:nth-child(odd) {
+        //     background-color: lighten($gray, 40%) !important;
+        // }
         td {
             color: $black !important;
             border: 0;
@@ -99,14 +99,14 @@
                 }
             }
         }
-        tr {
-            &:nth-child(odd) {
-                background-color: transparent !important;
-            }
-            &:nth-child(even) {
-                background-color: lighten($gray, 40%) !important;
-            }
-        }
+        // tr {
+        //     &:nth-child(odd) {
+        //         background-color: transparent !important;
+        //     }
+        //     &:nth-child(even) {
+        //         background-color: lighten($gray, 40%) !important;
+        //     }
+        // }
         .btn {
             padding: spacing(0.1) spacing(0.8);
             padding: 4px 18px;
@@ -122,6 +122,23 @@
             align-items: center;
             padding: 0;
             justify-content: center;
+        }
+    }
+    &.c-table-bordered {
+        tr{
+            td {
+                border: 1px solid $offWhite;
+            }
+        }
+    }
+    &.c-table-stripted {
+        tr {
+            &:nth-child(odd) {
+                background-color: transparent !important;
+            }
+            &:nth-child(even) {
+                background-color: lighten($gray, 40%) !important;
+            }
         }
     }
 }
