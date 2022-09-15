@@ -58,11 +58,11 @@ namespace MidCapERP.Infrastructure.Services.Token
             return null;
         }
 
-        public async Task<string> GenerateOTP(TokenAPIRequest request, CancellationToken cancellationToken)
+        public async Task GenerateOTP(TokenAPIRequest request, CancellationToken cancellationToken)
         {
             string data = string.Empty;
 
-            var user = _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted);
+            var user = await GetUserByPhoneNo(request.PhoneNo);
             if (user != null)
             {
                 var otpLogin = await _loginDA.GetAll(cancellationToken);
@@ -88,51 +88,45 @@ namespace MidCapERP.Infrastructure.Services.Token
                     var createdToken = await _loginDA.UpdateLoginToken(oldLoginTokenByPhoneNo, cancellationToken);
                     data = createdToken.OTP;
                 }
-            }
 
-            return data;
+                //Send OTP to Someone through SMS or Email
+            }
+            else
+            {
+                throw new Exception("User not found");
+            }
         }
 
         public async Task<TokenResponse> AuthenticateAPI(TokenAPIRequest request, CancellationToken cancellationToken)
         {
-            var user = _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted);
+            var loginTokens = await _loginDA.GetAll(cancellationToken);
+            var oldLoginTokenByPhoneNo = loginTokens.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
 
-            if (user != null)
+            if (oldLoginTokenByPhoneNo != null)
             {
-                var loginTokens = await _loginDA.GetAll(cancellationToken);
-                var oldLoginTokenByPhoneNo = loginTokens.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
-
-                if (DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime && oldLoginTokenByPhoneNo.OTP == request.OTP)
+                if(oldLoginTokenByPhoneNo.OTP == request.OTP)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return await GenerateAuthentication(false, user, cancellationToken);
+                    if(DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
+                    {
+                        var user = await GetUserByPhoneNo(request.PhoneNo);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return await GenerateAuthentication(false, user, cancellationToken);
+                    }
+                    throw new Exception("OTP was Expired");
                 }
+                throw new Exception("OTP is wrong");
             }
-            return null;
+            throw new Exception("Phone No is not Registered");
+        }
+
+        public async Task<ApplicationUser?> GetUserByPhoneNo(string phoneNo)
+        {
+            return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == phoneNo && p.IsActive && !p.IsDeleted);
         }
 
         public Task<TokenResponse> RefreshToken(string refreshToken, string ipAddress, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-        }
-
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345")),
-                ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
-            return principal;
         }
 
         /// <inheritdoc cref="ITokenService.IsValidUser(string, string)" />
@@ -270,31 +264,6 @@ namespace MidCapERP.Infrastructure.Services.Token
             }
             SecurityToken token = handler.CreateToken(descriptor);
             return handler.WriteToken(token);
-        }
-
-        public string GenerateAccessToken(IEnumerable<Claim> claims)
-        {
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
-            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            var tokeOptions = new JwtSecurityToken(
-                issuer: "https://localhost:5001",
-                audience: "https://localhost:5001",
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
-                signingCredentials: signinCredentials
-            );
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-            return tokenString;
-        }
-
-        public string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
         }
 
         private async Task<TokenResponse> GenerateAuthentication(bool isCookie, ApplicationUser user, CancellationToken cancellationToken)

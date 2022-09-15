@@ -34,7 +34,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IProductMaterialDA, ProductMaterialDA>();
             services.AddScoped<IRoleDA, RoleDA>();
             services.AddScoped<IRolePermissionDA, RolePermissionDA>();
-            services.AddScoped<IOTPLoginDA, LoginTokenDA>();
+            services.AddScoped<IOTPLoginDA, OTPLoginDA>();
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }

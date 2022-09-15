@@ -11,14 +11,14 @@ namespace MidCapERP.Infrastructure.Identity.Models
     public class TokenAPIRequest
     {
         /// <summary>
-        /// The username of the user logging in.
+        /// The phone No which is used for login
         /// </summary>
         [Required]
         [JsonProperty("phoneNo")]
         public string PhoneNo { get; set; }
 
         /// <summary>
-        /// The password for the user logging in.
+        /// OTP which is used for login
         /// </summary>
         [Required]
         [JsonProperty("otp")]

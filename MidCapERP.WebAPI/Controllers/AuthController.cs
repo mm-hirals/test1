@@ -32,16 +32,8 @@ namespace MidCapERP.WebAPI.Controllers
         [HttpPost("GenerateOTPForAPI")]
         public async Task<ApiResponse> GenerateOTPForAPI(TokenAPIRequest request, CancellationToken cancellationToken)
         {
-            string otp = await _tokenService.GenerateOTP(request, cancellationToken);
-
-            if (!String.IsNullOrEmpty(otp))
-            {
-                return new ApiResponse(message: "Generate OTP successfully", result: otp, statusCode: 200);
-            }
-            else
-            {
-                return new ApiResponse(message: "PhoneNumber is Invalid", result: null, statusCode: 404);
-            }
+            await _tokenService.GenerateOTP(request, cancellationToken);
+            return new ApiResponse(message: "Generate OTP successfully", result: string.Empty, statusCode: 200);
         }
 
         [HttpPost("AuthenticateAPI")]

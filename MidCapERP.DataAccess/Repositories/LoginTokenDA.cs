@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace MidCapERP.DataAccess.Repositories
 {
-    public class LoginTokenDA : IOTPLoginDA
+    public class OTPLoginDA : IOTPLoginDA
     {
         private readonly ISqlRepository<OTPLogin> _loginToken;
 
-        public LoginTokenDA(ISqlRepository<OTPLogin> loginToken)
+        public OTPLoginDA(ISqlRepository<OTPLogin> loginToken)
         {
             _loginToken = loginToken;
         }
@@ -21,11 +21,6 @@ namespace MidCapERP.DataAccess.Repositories
         public async Task<IQueryable<OTPLogin>> GetAll(CancellationToken cancellationToken)
         {
             return await _loginToken.GetAsync(cancellationToken);
-        }
-
-        public async Task<OTPLogin> GetById(int Id, CancellationToken cancellationToken)
-        {
-            return await _loginToken.GetByIdAsync(Id, cancellationToken);
         }
 
         public async Task<OTPLogin> CreateLoginToken(OTPLogin model, CancellationToken cancellationToken)
