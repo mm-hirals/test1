@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MidCapERP.Infrastructure.Services.Token
@@ -22,6 +24,7 @@ namespace MidCapERP.Infrastructure.Services.Token
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly TokenConfiguration _token;
         private readonly HttpContext _httpContext;
+        private readonly IOTPLoginDA _loginDA;
 
         /// <inheritdoc cref="ITokenService" />
         public TokenService(
@@ -29,12 +32,13 @@ namespace MidCapERP.Infrastructure.Services.Token
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager,
             IOptions<TokenConfiguration> tokenOptions,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,IOTPLoginDA otpLoginDA)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _token = tokenOptions.Value;
+            _loginDA = otpLoginDA;
             _httpContext = httpContextAccessor.HttpContext;
         }
 
@@ -47,23 +51,77 @@ namespace MidCapERP.Infrastructure.Services.Token
 
                 if (user != null)//&& user.IsEnabled)
                 {
-                    string role = (await _userManager.GetRolesAsync(user))[0];
-                    string jwtToken = await GenerateJwtToken(user, cancellationToken, isCookie);
-
-                    //RefreshToken refreshToken = GenerateRefreshToken(ipAddress);
-
-                    //user.RefreshTokens.Add(refreshToken);
-                    await _userManager.UpdateAsync(user);
-
-                    return new TokenResponse(user,
-                                             role,
-                                             jwtToken
-                                             //""//refreshToken.Token
-                                             );
+                    return await GenerateAuthentication(isCookie, user, cancellationToken);
                 }
             }
 
             return null;
+        }
+
+        public async Task GenerateOTP(TokenAPIRequest request, CancellationToken cancellationToken)
+        {
+            string data = string.Empty;
+
+            var user = await GetUserByPhoneNo(request.PhoneNo);
+            if (user != null)
+            {
+                var otpLogin = await _loginDA.GetAll(cancellationToken);
+                var oldLoginTokenByPhoneNo = otpLogin.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
+
+                if (oldLoginTokenByPhoneNo == null)
+                {
+                    OTPLogin loginToken = new OTPLogin()
+                    {
+                        PhoneNumber = request.PhoneNo,
+                        OTP = "0000",// new Random().Next(1, 9999).ToString("D4"),
+                        ExpiryTime = DateTime.UtcNow.AddMinutes(10),
+                    };
+
+                    var createdToken = await _loginDA.CreateLoginToken(loginToken, cancellationToken);
+                    data = createdToken.OTP;
+                }
+                else
+                {
+                    oldLoginTokenByPhoneNo.OTP = "0000";
+                    //oldLoginTokenByPhoneNo.OTP = new Random().Next(1, 9999).ToString("D4");
+                    oldLoginTokenByPhoneNo.ExpiryTime = DateTime.UtcNow.AddMinutes(10);
+                    var createdToken = await _loginDA.UpdateLoginToken(oldLoginTokenByPhoneNo, cancellationToken);
+                    data = createdToken.OTP;
+                }
+
+                //Send OTP to Someone through SMS or Email
+            }
+            else
+            {
+                throw new Exception("User not found");
+            }
+        }
+
+        public async Task<TokenResponse> AuthenticateAPI(TokenAPIRequest request, CancellationToken cancellationToken)
+        {
+            var loginTokens = await _loginDA.GetAll(cancellationToken);
+            var oldLoginTokenByPhoneNo = loginTokens.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
+
+            if (oldLoginTokenByPhoneNo != null)
+            {
+                if(oldLoginTokenByPhoneNo.OTP == request.OTP)
+                {
+                    if(DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
+                    {
+                        var user = await GetUserByPhoneNo(request.PhoneNo);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return await GenerateAuthentication(false, user, cancellationToken);
+                    }
+                    throw new Exception("OTP was Expired");
+                }
+                throw new Exception("OTP is wrong");
+            }
+            throw new Exception("Phone No is not Registered");
+        }
+
+        public async Task<ApplicationUser?> GetUserByPhoneNo(string phoneNo)
+        {
+            return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == phoneNo && p.IsActive && !p.IsDeleted);
         }
 
         public Task<TokenResponse> RefreshToken(string refreshToken, string ipAddress, CancellationToken cancellationToken)
@@ -110,6 +168,31 @@ namespace MidCapERP.Infrastructure.Services.Token
             return user;
         }
 
+        public TokenResponse GetTokenDetails(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken)
+        {
+            var UserId = GetTokenClaim(claimsPrincipal, TokenEnum.UserId.ToString(), cancellationToken)?.Value;
+            var FullName = GetTokenClaim(claimsPrincipal, TokenEnum.FullName.ToString(), cancellationToken)?.Value;
+            var Name = GetTokenClaim(claimsPrincipal, TokenEnum.Name.ToString(), cancellationToken)?.Value;
+            var NameIdentifier = GetTokenClaim(claimsPrincipal, TokenEnum.NameIdentifier.ToString(), cancellationToken)?.Value;
+            var Role = GetTokenClaim(claimsPrincipal, TokenEnum.Role.ToString(), cancellationToken)?.Value;
+            var RoleId = GetTokenClaim(claimsPrincipal, TokenEnum.RoleId.ToString(), cancellationToken)?.Value;
+            var EmailAddress = GetTokenClaim(claimsPrincipal, TokenEnum.EmailAddress.ToString(), cancellationToken)?.Value;
+
+            return new TokenResponse()
+            {
+                EmailAddress = EmailAddress,
+                Id = UserId,
+                FullName = FullName,
+                Role = Role,
+                RoleId = RoleId,
+            };
+        }
+
+        public Claim GetTokenClaim(ClaimsPrincipal claimsPrincipal, string type, CancellationToken cancellationToken)
+        {
+            return claimsPrincipal.Claims.Where(c => c.Type == type).FirstOrDefault();
+        }
+
         /// <summary>
         ///     Issue JWT token
         /// </summary>
@@ -117,6 +200,7 @@ namespace MidCapERP.Infrastructure.Services.Token
         /// <returns></returns>
         private async Task<string> GenerateJwtToken(ApplicationUser user, CancellationToken cancellationToken, bool isCookie = false)
         {
+
             string roleName = (await _userManager.GetRolesAsync(user))[0];
             var roleDetails = await _roleManager.FindByNameAsync(roleName);
             byte[] secret = Encoding.ASCII.GetBytes(_token.Secret);
@@ -143,6 +227,12 @@ namespace MidCapERP.Infrastructure.Services.Token
                 Expires = DateTime.UtcNow.AddMinutes(_token.Expiry),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature)
             };
+
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+            }
 
             if (isCookie)
             {
@@ -176,29 +266,21 @@ namespace MidCapERP.Infrastructure.Services.Token
             return handler.WriteToken(token);
         }
 
-        public TokenResponse GetTokenDetails(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken)
+        private async Task<TokenResponse> GenerateAuthentication(bool isCookie, ApplicationUser user, CancellationToken cancellationToken)
         {
-            var UserId = GetTokenClaim(claimsPrincipal, TokenEnum.UserId.ToString(), cancellationToken)?.Value;
-            var FullName = GetTokenClaim(claimsPrincipal, TokenEnum.FullName.ToString(), cancellationToken)?.Value;
-            var Name = GetTokenClaim(claimsPrincipal, TokenEnum.Name.ToString(), cancellationToken)?.Value;
-            var NameIdentifier = GetTokenClaim(claimsPrincipal, TokenEnum.NameIdentifier.ToString(), cancellationToken)?.Value;
-            var Role = GetTokenClaim(claimsPrincipal, TokenEnum.Role.ToString(), cancellationToken)?.Value;
-            var RoleId = GetTokenClaim(claimsPrincipal, TokenEnum.RoleId.ToString(), cancellationToken)?.Value;
-            var EmailAddress = GetTokenClaim(claimsPrincipal, TokenEnum.EmailAddress.ToString(), cancellationToken)?.Value;
+            string role = (await _userManager.GetRolesAsync(user))[0];
+            string jwtToken = await GenerateJwtToken(user, cancellationToken, isCookie);
 
-            return new TokenResponse()
-            {
-                EmailAddress = EmailAddress,
-                Id = UserId,
-                FullName = FullName,
-                Role = Role,
-                RoleId = RoleId,
-            };
-        }
+            //RefreshToken refreshToken = GenerateRefreshToken();
 
-        public Claim GetTokenClaim(ClaimsPrincipal claimsPrincipal, string type, CancellationToken cancellationToken)
-        {
-            return claimsPrincipal.Claims.Where(c => c.Type == type).FirstOrDefault();
+            //user.RefreshTokens.Add(refreshToken);
+            //await _userManager.UpdateAsync(user);
+
+            return new TokenResponse(user,
+                                     role,
+                                     jwtToken
+                                     //""//refreshToken.Token
+                                     );
         }
     }
 }
