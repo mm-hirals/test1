@@ -1,5 +1,6 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Product;
+using MidCapERP.Dto.ProductMaterial;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -10,6 +11,8 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<List<ProductMaterialRequestDto>> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken);
 

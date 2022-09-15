@@ -74,7 +74,17 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
-            return PartialView("_productMaterialPartial");
+
+            if (productId > 0)
+            {
+                var productMaterial = await _unitOfWorkBL.ProductBL.GetMaterialByProductId(productId, cancellationToken);
+                ProductMainRequestDto productMain = new ProductMainRequestDto();
+                productMain.ProductId = productId;
+                productMain.ProductMaterialRequestDto = productMaterial;
+                return PartialView("_productMaterialPartial", productMain);
+            }
+            else
+                return PartialView("_productMaterialPartial");
         }
 
         [HttpGet]

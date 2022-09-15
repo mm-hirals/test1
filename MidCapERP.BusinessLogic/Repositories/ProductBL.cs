@@ -11,6 +11,7 @@ using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
+using System.Collections.Generic;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -47,6 +48,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             //productMainRequestDto.ProductImageRequestDto = _mapper.Map<List<ProductImageRequestDto>>(productImage);
             //productMainRequestDto.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialData);
             return productRequestDto;
+        }
+
+
+        public async Task<List<ProductMaterialRequestDto>> GetMaterialByProductId(long Id, CancellationToken cancellationToken)
+        {
+            var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
+            return _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialList);
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
