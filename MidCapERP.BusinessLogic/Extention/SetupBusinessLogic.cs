@@ -28,11 +28,11 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IPolishBL, PolishBL>();
             services.AddScoped<IUserTenantMappingBL, UserTenantMappingBL>();
             services.AddScoped<IUserBL, UserBL>();
-            services.AddScoped<ICustomerAddressesBL, CustomerAddressesBL>(); 
+            services.AddScoped<ICustomerAddressesBL, CustomerAddressesBL>();
             services.AddScoped<IProductBL, ProductBL>();
-            services.AddScoped<IProductImageBL, ProductImageBL>();
-            services.AddScoped<IProductMaterialBL, ProductMaterialBL>();
- 
+            services.AddScoped<IRoleBL, RoleBL>();
+            services.AddScoped<IRolePermissionBL, RolePermissionBL>();
+
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }

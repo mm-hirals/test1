@@ -16,6 +16,11 @@ $(function () {
         },
         "columns": [
             {
+                "mRender": function (o) {
+                    return '<div class="c-action-btn-group justify-content-start"><input type = "checkbox"/></div>';
+                }
+            },
+            {
                 "render": (data, type, full) => {
                     return full.firstName + " " + full.lastName;
                 }

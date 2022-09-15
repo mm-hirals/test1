@@ -1,0 +1,125 @@
+﻿@using MidCapERP.Dto.RolePermission
+@model MidCapERP.Dto.Role.RoleRequestDto
+@{
+    string action = (Model != null && Model.Id != null) ? "UpdateRole" : "CreateRole";
+}
+
+<div class="">
+    <div class="c-card--wrapper mb-3" id="divRoleModal">
+        <div class="c-card--body">
+            <form asp-action="@action" asp-controller="Role" method="post" class="modal-form--wrapper">
+                <div class="row align-items-end">
+                    <div class="col-md-3">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <input type="hidden" asp-for="Id" />
+                                <label class="form-label">
+                                    Role Name
+                                </label>
+                                <input asp-for="Id" type="hidden" class="form-control" placeholder="Role Id" id="RoleId" />
+                                <input asp-for="Name" type="text" class="form-control" placeholder="Role Name" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <a type="button" class="btn btn-primary" asp-controller="Role" asp-action="Index">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    @if (@action == "UpdateRole")
+    {
+        <nav class="product-nav-tab--sticky">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Role Claims</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+                <div class="c-card--wrapper c-card-sm--wrapper">
+                    <div class="c-card--body">
+                        <table class="table c-table">
+                            <thead>
+                                <tr>
+                                    <th>Modules</th>
+                                    <th>Create</th>
+                                    <th>View</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model.ModulePermissionList)
+                                    {
+                                        <tr>
+                                            <td>@item.Module</td>
+                                            @foreach (var permission in item.ModulePermissionList)
+                                            {
+                                                <td>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
+                                                        <label class="custom-control-label" for="@permission.Id">Active</label>
+                                                    </div>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @*<div class="row">
+                    <div class="col-4">Modules</div>
+                    <div class="col-8">
+                    <div class="row">
+                    <div class="col-md-3">Create</div>
+                    <div class="col-md-3">View</div>
+                    <div class="col-md-3">Update</div>
+                    <div class="col-md-3">Delete</div>
+                    </div>
+                    </div>
+                    </div>
+                    @if (Model != null)
+                    {
+                    foreach (var item in Model.ModulePermissionList)
+                    {
+                    <div class="row">
+                    <div class="col-4">@item.Module</div>
+                    <div class="col-8">
+                    <div class="row">
+                    @foreach (var permission in item.ModulePermissionList)
+                    {
+                    <div class="col-md-3">
+                    <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
+                    <label class="custom-control-label" for="@permission.Id"></label>
+                    </div>
+                    </div>
+                    }
+                    </div>
+                    </div>
+                    </div>
+                    }
+                    }*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+
+        <script src="~/js/RolePermission.js" asp-append-version="true"></script>
+
+    }
+    }

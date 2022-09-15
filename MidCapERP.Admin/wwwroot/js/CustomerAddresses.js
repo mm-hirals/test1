@@ -22,9 +22,9 @@ $(function () {
                 "data": "addressType", "name": "Address Type", "autoWidth": true,
                 "mRender": function (o) {
                     var addressTypeName = "Other";
-                    if (o == 1) {
+                    if (o == "Home") {
                         addressTypeName = "Home";
-                    } else if (o == 2) {
+                    } else if (o == "Office") {
                         addressTypeName = "Office";
                     }
                     return addressTypeName;
