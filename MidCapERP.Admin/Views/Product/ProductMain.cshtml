@@ -1,0 +1,61 @@
+﻿@model MidCapERP.Dto.Product.ProductMainRequestDto
+@{
+    string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
+    ViewData["Title"] = (action == "Create") ? "Add Product" : "Update Product";
+    var i = 0;
+
+    var productId = (Model == null) ? 0 : Model.ProductId;
+}
+@Html.Hidden("hdnProductId", productId)
+<div id="content">
+    <div id="productPartial">
+        <partial name="_productPartial" />
+    </div>
+
+@*    @if (action == "Update")
+    {*@
+        <nav class="product-nav-tab--sticky">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
+                <button class="nav-link" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
+                <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Materials</button>
+                <button class="nav-link disabled" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Workflow</button>
+            </div>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+                <div id="productDetailPartial">
+                    <partial name="_productDetailPartial" />
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
+                <div id="productImagePartial">
+                    <partial name="_productImagePartial" />
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-rowmaterial" role="tabpanel" aria-labelledby="nav-rowmaterial-tab">
+                <div id="productMaterialPartial">
+                    <partial name="_productMaterialPartial" />
+                </div>
+            </div>
+            <div id="productWorkflowPartial">
+                <partial name="_productWorkflowPartial" />
+            </div>
+        </div>
+    @*}*@
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+        <script src="~/js/Product.js" asp-append-version="true"></script>
+        <script>
+            $(function() {
+                counter = @i;
+            });
+        </script>
+    }
+}

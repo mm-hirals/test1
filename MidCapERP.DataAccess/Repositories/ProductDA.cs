@@ -27,5 +27,20 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _Product.InsertAsync(model, cancellationToken);
         }
+
+        public async Task<Product> UpdateProduct(int Id, Product model, CancellationToken cancellationToken)
+        {
+            return await _Product.UpdateAsync(model, cancellationToken);
+        }
+
+        public async Task<Product> DeleteProduct(int Id, CancellationToken cancellationToken)
+        {
+            var entity = await _Product.GetByIdAsync(Id, cancellationToken);
+            if (entity != null)
+            {
+                return await _Product.UpdateAsync(entity, cancellationToken);
+            }
+            return entity;
+        }
     }
 }

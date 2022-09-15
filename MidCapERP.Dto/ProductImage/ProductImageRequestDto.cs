@@ -1,4 +1,6 @@
-﻿namespace MidCapERP.Dto.ProductImage
+﻿using Microsoft.AspNetCore.Http;
+
+namespace MidCapERP.Dto.ProductImage
 {
     public class ProductImageRequestDto
     {
@@ -9,5 +11,8 @@
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
+
+        public List<IFormFile> Files { get; set; }
+        public List<ProductImageRequestDto> ProductImageList { get; set; }
     }
 }

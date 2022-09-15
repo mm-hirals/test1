@@ -11,11 +11,10 @@
         public decimal Height { get; set; }
         public decimal Depth { get; set; }
         public decimal? UsedFabric { get; set; }
-        public decimal? UsedPolish { get; set; }
         public bool IsVisibleToWholesalers { get; set; }
         public decimal TotalDaysToPrepare { get; set; }
-        public string Features { get; set; }
-        public string Comments { get; set; }
+        public string? Features { get; set; }
+        public string? Comments { get; set; }
         public decimal CostPrice { get; set; }
         public decimal RetailerPrice { get; set; }
         public decimal WholesalerPrice { get; set; }
