@@ -30,9 +30,6 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Fabric")]
         public decimal? UsedFabric { get; set; }
 
-        [DisplayName("Polish")]
-        public decimal? UsedPolish { get; set; }
-
         [Required]
         [DisplayName("Only for wholesalers")]
         public bool IsVisibleToWholesalers { get; set; }

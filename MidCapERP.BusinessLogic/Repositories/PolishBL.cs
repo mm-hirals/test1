@@ -9,6 +9,7 @@ using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Polish;
+using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -31,6 +32,19 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var data = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             return _mapper.Map<List<PolishResponseDto>>(data.ToList());
+        }
+
+        public async Task<IList<ProductForDorpDownByModuleNoResponseDto>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+            return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish")).ToList();
+        }
+
+        public async Task<PolishResponseDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+            var data = polishAlldata.FirstOrDefault(x => x.ModelNo.StartsWith(modelno));
+            return _mapper.Map<PolishResponseDto>(data);
         }
 
         public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

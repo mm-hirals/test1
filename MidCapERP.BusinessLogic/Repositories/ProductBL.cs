@@ -46,6 +46,24 @@ namespace MidCapERP.BusinessLogic.Repositories
             return productMainRequestDto;
         }
 
+        public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
+        {
+            var produdctData = await GetProductById(Id, cancellationToken);
+            return _mapper.Map<ProductRequestDto>(produdctData);
+        }
+
+        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
+        }
+
+        public async Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
+        {
+            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.UsedFabric, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice, x.RetailerPrice, x.WholesalerPrice, x.CoverImage)).ToList();
+        }
+
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
@@ -145,7 +163,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.Height = model.Height;
             oldData.Depth = model.Depth;
             oldData.UsedFabric = model.UsedFabric;
-            oldData.UsedPolish = model.UsedPolish;
             oldData.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
             oldData.TotalDaysToPrepare = model.TotalDaysToPrepare;
             oldData.Features = model.Features;
