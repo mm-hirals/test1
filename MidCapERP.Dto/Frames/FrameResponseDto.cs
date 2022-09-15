@@ -21,6 +21,8 @@ namespace MidCapERP.Dto.Frames
         [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
+        public int UnitId { get; set; }
+
         [Display(Name = "Unit Name")]
         public string UnitName { get; set; }
 

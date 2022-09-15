@@ -19,11 +19,11 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("/Customer/{phoneNumber}")]
+        [HttpGet("/Customer/{phoneNumberOrEmailId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> Get(string phoneNumber, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Get(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumber(phoneNumber, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumberOrEmailId(phoneNumberOrEmailId, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -31,7 +31,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
-        [HttpPost]
+        [HttpPost("/Customer")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<ApiResponse> Post([FromBody] CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
@@ -43,6 +43,19 @@ namespace MidCapERP.WebAPI.Controllers
             }
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
+
+        [HttpGet("/Customer/CheckCustomer")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)
+        {
+            bool data = await _unitOfWorkBL.CustomersBL.CheckCustomerExistOrNot(phoneNumberOrEmail, cancellationToken);
+            if (data == null || data == false)
+            {
+                return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
+        }
+
         #region Private Methods
 
         private void ValidationRequest(CustomersRequestDto customersRequestDto)

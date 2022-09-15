@@ -30,9 +30,6 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Fabric")]
         public decimal? UsedFabric { get; set; }
 
-        [DisplayName("Polish")]
-        public decimal? UsedPolish { get; set; }
-
         [Required]
         [DisplayName("Only for wholesalers")]
         public bool IsVisibleToWholesalers { get; set; }
@@ -41,25 +38,24 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Total days to prepare")]
         public decimal TotalDaysToPrepare { get; set; }
 
-        [Required]
-        public string Features { get; set; }
+        public string? Features { get; set; }
+
+        public string? Comments { get; set; }
 
         [Required]
-        public string Comments { get; set; }
-
-        //[Required]
+        [DisplayName("Cost Price")]
         public decimal CostPrice { get; set; }
 
-        //[Required]
+        [Required]
+        [DisplayName("Retailer Price")]
         public decimal RetailerPrice { get; set; }
 
-        //[Required]
+        [Required]
+        [DisplayName("Wholesaler Price")]
         public decimal WholesalerPrice { get; set; }
 
-        //[Required]
         public string? CoverImage { get; set; }
 
-        //[Required]
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
 
