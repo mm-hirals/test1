@@ -34,7 +34,7 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
         {
             var productData = await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(modelNo, cancellationToken);
-            if (productData == null || productData.Count == 0)
+            if (productData == null)
             {
                 return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
             }

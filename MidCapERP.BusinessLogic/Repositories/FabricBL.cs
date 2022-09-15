@@ -34,7 +34,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<FabricResponseDto>>(data.ToList());
         }
 
-        public async Task<IList<ProductForDorpDownByModuleNoResponseDto>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).ToList();

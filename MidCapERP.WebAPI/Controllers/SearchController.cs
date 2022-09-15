@@ -18,82 +18,42 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("/Search/{modelNo}/productType")]
+        [HttpGet("/Search/modelNo/{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.View)]
-        public async Task<ApiResponse> Get(string modelNo, string productType, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
         {
-            IList<ProductForDorpDownByModuleNoResponseDto> productData = new List<ProductForDorpDownByModuleNoResponseDto>();
-            if (productType.ToUpper() == "PRD")
-            {
-                productData = await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(modelNo, cancellationToken);
-                if (productData == null)
-                {
-                    return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
-                }
-            }
-            else if (productType.ToUpper() == "FBR")
-            {
-                productData = await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(modelNo, cancellationToken);
-                if (productData == null)
-                {
-                    return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
-                }
-            }
-            else if (productType.ToUpper() == "PLS")
-            {
-                productData = await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(modelNo, cancellationToken);
-                if (productData == null)
-                {
-                    return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
-                }
-            }
+            List<ProductForDorpDownByModuleNoResponseDto> productData = new List<ProductForDorpDownByModuleNoResponseDto>();
+            productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(modelNo, cancellationToken));
+            productData.AddRange(await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(modelNo, cancellationToken));
+            productData.AddRange(await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(modelNo, cancellationToken));
+            if (productData != null)
+                return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             else
-            {
-                return new ApiResponse(message: "No Data found");
-            }
-            return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
+                return new ApiResponse(message: "No Data Found", result: productData, statusCode: 200);
         }
 
-        [HttpGet("/Search/DetailsModelNo/productTypes")]
+        [HttpGet("/Search/DetailsModelNo/{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, string productType, CancellationToken cancellationToken)
         {
-            IList<ProductForDetailsByModuleNoResponceDto> productData = new List<ProductForDetailsByModuleNoResponceDto>();
-            if (productType.ToUpper() == "PRD")
+            if (productType == "Product")
             {
+                IList<ProductForDetailsByModuleNoResponceDto> productData = new List<ProductForDetailsByModuleNoResponceDto>();
                 productData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
-                if (modelNo == null || productData.Count == 0)
-                {
-                    return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
-                }
+                return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             }
-            else if (productType.ToUpper() == "FBR")
+            else if (productType == "Fabric")
             {
                 var frabricData = await _unitOfWorkBL.FabricBL.GetFabricForDetailsByModuleNo(modelNo, cancellationToken);
-                if (frabricData == null)
-                {
-                    return new ApiResponse(message: "No Data found", result: frabricData, statusCode: 404);
-                }
                 return new ApiResponse(message: "Data Found", result: frabricData, statusCode: 200);
             }
-            else if (productType.ToUpper() == "PLS")
+            else if (productType == "Polish")
             {
                 var polishData = await _unitOfWorkBL.PolishBL.GetPolishForDetailsByModuleNo(modelNo, cancellationToken);
-                if (polishData == null)
-                {
-                    return new ApiResponse(message: "No Data found", result: polishData, statusCode: 404);
-                }
                 return new ApiResponse(message: "Data Found", result: polishData, statusCode: 200);
             }
             else
-            {
-                return new ApiResponse(message: "No Data found");
-            }
-            return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
+                return new ApiResponse(message: "No Data found", statusCode: 404);
         }
     }
 }
