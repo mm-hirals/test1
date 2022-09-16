@@ -135,8 +135,7 @@ namespace MidCapERP.Admin.Controllers
             else
             {
                 var createProduct = await _unitOfWorkBL.ProductBL.CreateProduct(model, cancellationToken);
-                var getProductById = await _unitOfWorkBL.ProductBL.GetById(createProduct.ProductId, cancellationToken);
-                return RedirectToAction("Update", "Product", new { Id = getProductById.ProductId });
+                return RedirectToAction("Update", "Product", new { Id = createProduct.ProductId });
             }
         }
 
@@ -159,12 +158,12 @@ namespace MidCapERP.Admin.Controllers
         {
             if (productId > 0)
             {
-                var saveImage = await _unitOfWorkBL.ProductBL.SaveImages(productId, model, cancellationToken);
+                await _unitOfWorkBL.ProductBL.SaveImages(productId, model, cancellationToken);
                 return PartialView("ProductMain");
             }
             else
             {
-                return PartialView("ProductMain", model);
+                throw new Exception("Please Provide ProductId.");
             }
         }
 
