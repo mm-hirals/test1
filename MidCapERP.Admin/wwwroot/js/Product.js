@@ -7,7 +7,7 @@ $(document).on("#lnkProductFilter", "click", (function () {
     $("#FilterCard").slideToggle("slow");
 }));
 
-var action = $("form.productInfoForm").attr("action");
+var action = $("input.productIdForCat").val();
 if (action == "/Product/Create") {
     $("select.category").attr('disabled', false);
 }
@@ -74,7 +74,7 @@ $(document).on("change", "select.material", (function () {
     $(this).parent().parent().find("input.costPrice").val(unitPrice);
     $(this).parent().parent().find("input.costPrice").attr('value', unitPrice);
 
-    $("span.materialErrorMsg").hide();
+    //$("span.materialErrorMsg").hide();
 }));
 
 $(document).on("click", ".minus-icon", function () {

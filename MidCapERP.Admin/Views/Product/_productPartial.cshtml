@@ -3,7 +3,7 @@
 <form asp-action="CreateProductBasicDetail" asp-controller="Product"
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
-        <input type="hidden" asp-for="ProductId" />
+        <input type="hidden" asp-for="ProductId" class="form-control productIdForCat" />
         <div class="card-product--image">
             <input type="file" hidden />
             <div class="product--image">
