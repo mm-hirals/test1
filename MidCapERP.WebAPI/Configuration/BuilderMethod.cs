@@ -45,6 +45,7 @@ namespace MidCapERP.WebAPI.Configuration
             }
 
             builder.Services.ConfigureEmail(configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            builder.Services.AddCors();
             builder.Services.SetupControllers();
             builder.Services.SetupIdentityDatabase(configuration);
             builder.Services.SetupDIServices(configuration, "Bearer");

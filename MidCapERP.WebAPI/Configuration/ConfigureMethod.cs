@@ -44,6 +44,11 @@ namespace MidCapERP.WebAPI.Configuration
             app.UseExceptionHandlerMiddleware();
             app.UseRouting();
 
+            app.UseCors(builder => builder
+               .AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod());
+
             app.UseAuthentication();
             app.UseAuthorization();
 
