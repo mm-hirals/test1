@@ -111,6 +111,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<List<ProductMaterialRequestDto>> CreateProductMaterial(int productId, List<ProductMaterialRequestDto> productMaterialRequestList,CancellationToken cancellationToken)
+        {
+            await DeleteProductMaterials(productId, cancellationToken);
+            await SaveProductMaterials(productId, productMaterialRequestList, cancellationToken);
+            
+            return null;
+        }
+
         public async Task<ProductRequestDto> UpdateProduct(int Id, ProductRequestDto model, CancellationToken cancellationToken)
         {
             var getProductById = await GetProductById(Id, cancellationToken);
@@ -155,6 +163,18 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
             return _mapper.Map<ProductImageRequestDto>(saveImage);
+        }
+
+        public async Task<ProductRequestDto?> UpdateProductCost(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            // Update Product Cost Detail
+            var getProductById = await GetProductById(Id, cancellationToken);
+            getProductById.CostPrice = model.CostPrice;
+            getProductById.RetailerPrice = model.RetailerPrice;
+            getProductById.WholesalerPrice = model.WholesalerPrice;
+            var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
+
+            return _mapper.Map<ProductRequestDto>(data);
         }
 
         #region Private Method
@@ -247,20 +267,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        //private async Task DeleteProductImages(int Id, CancellationToken cancellationToken)
-        //{
-        //    var productMaterialById = await GetProductMaterialById(Id, cancellationToken);
-        //    foreach (var item in productMaterialById)
-        //    {
-        //        await _unitOfWorkDA.ProductMaterialDA.DeleteProductMaterial(item.ProductMaterialID, cancellationToken);
-        //    }
-        //}
-
-        private async Task AddProductMaterials(long productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        private async Task SaveProductMaterials(long productId, List<ProductMaterialRequestDto> model, CancellationToken cancellationToken)
         {
-            if (model.ProductMaterialRequestDto != null)
+            if (model != null)
             {
-                foreach (var item in model.ProductMaterialRequestDto)
+                foreach (var item in model.Where(p => !p.IsDeleted))
                 {
                     item.ProductId = productId;
                     await CreateProductMaterial(item, cancellationToken);

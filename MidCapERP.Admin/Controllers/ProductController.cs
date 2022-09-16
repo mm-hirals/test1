@@ -84,13 +84,31 @@ namespace MidCapERP.Admin.Controllers
             if (productId > 0)
             {
                 var productMaterial = await _unitOfWorkBL.ProductBL.GetMaterialByProductId(productId, cancellationToken);
+                var getProductInfoById = await _unitOfWorkBL.ProductBL.GetById(productId, cancellationToken);
                 ProductMainRequestDto productMain = new ProductMainRequestDto();
                 productMain.ProductId = productId;
+                productMain.CostPrice = getProductInfoById.CostPrice;
+                productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
+                productMain.RetailerPrice = getProductInfoById.RetailerPrice;
                 productMain.ProductMaterialRequestDto = productMaterial;
                 return PartialView("_productMaterialPartial", productMain);
             }
             else
                 return PartialView("_productMaterialPartial");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        {
+            if(productMainRequestDto.ProductMaterialRequestDto.Count > 0)
+            {
+                await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto.ProductId, productMainRequestDto.ProductMaterialRequestDto, cancellationToken);
+                await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto.ProductId, productMainRequestDto,cancellationToken);
+
+                return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
+            }
+
+            return null;
         }
 
         [HttpGet]
