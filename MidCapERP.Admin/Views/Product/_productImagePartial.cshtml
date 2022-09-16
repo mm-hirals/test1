@@ -1,15 +1,13 @@
 ﻿@model MidCapERP.Dto.Product.ProductMainRequestDto
-@{
-    string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
-}
 
-<form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
+<form asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
     <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+        <input type="hidden" asp-for="ProductId" class="form-control productId" />
         <div class="c-card--header">
             <h4 class="c-card--header-title">Product Images</h4>
         </div>
         <div class="c-card--body">
-            @*<div id="dropzone" id="dropzone-form" name="mainFileUploader">
+            @* <div id="dropzone" id="dropzone-form" name="mainFileUploader">
             <div class="dropzone needsclick" action="/upload">
             <div class="dz-message needsclick">
             Drop files here or click to upload.
@@ -21,23 +19,16 @@
             </div>
             </div>
             </div>*@
-            @*<div class="dropzone" id="dropzone-form" name="mainFileUploader">
-            <div class="fallback">
-            <input asp-for="File" type="file" multiple />
-            </div>
-            </div>*@
-            <div class="row">
-                <div class="col-3">
-                    <div class="form-group">
-                        <input asp-for="Files" class="form-control" type="file" multiple />
-                    </div>
+            <div class="dropzone" id="dropzone-form" name="mainFileUploader">
+                <div class="fallback">
+                    <input asp-for="Files" type="file" multiple />
                 </div>
             </div>
 
-            <div class="row">
+            @*<div class="row">
                 <div class="col-3">
                     <div class="form-group">
-                        @if (action == "Update")
+                        @if (@Model.ProductId > 0)
                         {
                             @foreach (var item in @Model.ProductImageRequestDto)
                             {
@@ -45,13 +36,12 @@
                                 <div>
                                     <img src="@item.ImagePath" width="150" height="150">
                                 </div>
-
                                 <br>
                             }
                         }
                     </div>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
     <div class="row c-card-footer--btn">
@@ -61,10 +51,12 @@
                     <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                         Cancel
                     </a>
-                    <input type="submit" value="Save" class="btn btn-primary ms-2" />
-                    @*<input asp-for="File" class="btn btn-primary ms-2" id="submit-all" type="button" value="Save" />*@
+                    <input class="btn btn-primary ms-2" id="submit-all" type="button" value="Save" />
                 </div>
             </div>
         </div>
     </div>
 </form>
+
+<script src="~/lib/dropzone/dropzone.js"></script>
+<script src="~/js/ProductImage.js" asp-append-version="true"></script>
