@@ -61,5 +61,17 @@ namespace MidCapERP.WebAPI.Controllers
             else
                 return new ApiResponse(message: "No Data found", statusCode: 404);
         }
+
+        [HttpGet("/Search/Customer/{CustomerNameOrEmailOrMobileNo}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        public async Task<ApiResponse> SearchCustomer(string CustomerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.SearchCustomer(CustomerNameOrEmailOrMobileNo, cancellationToken);
+            if (data == null || data.Count() == 0)
+            {
+                return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
+        }
     }
 }
