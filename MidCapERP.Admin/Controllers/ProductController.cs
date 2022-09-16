@@ -23,12 +23,6 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetProductBasicDetail(int productId)
-        {
-            return PartialView("~/Views/Product/_productPartial.cshtml");
-        }
-
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<IActionResult> GetProductData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -41,54 +35,137 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillCategoryDropDown(cancellationToken);
-            await FillRawMaterialDropDowns(cancellationToken);
-            await FillPolishDropDowns(cancellationToken);
             return View("ProductMain");
         }
 
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
-        public async Task<IActionResult> Create(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<IActionResult> CreateProductBasicDetail(int productId, CancellationToken cancellationToken)
         {
-            //productRequestDto.ProductMaterialRequestDto = productRequestDto.ProductMaterialRequestDto.Where(x => x.IsDeleted != true).ToList();
-            await _unitOfWorkBL.ProductBL.CreateProduct(productRequestDto, cancellationToken);
-            var getAllProductData = await _unitOfWorkBL.ProductBL.GetAll(cancellationToken);
-            var insertedProductData = getAllProductData.Where(x => x.ProductId == productRequestDto.ProductId);
+            await FillCategoryDropDown(cancellationToken);
+            if (productId > 0)
+            {
+                var getProductInfoById = await _unitOfWorkBL.ProductBL.GetById(productId, cancellationToken);
+                return PartialView("_productPartial", getProductInfoById);
+            }
+            else
+                return PartialView("_productPartial");
+        }
 
-            //return RedirectToAction("RolePermission", "Role", new { id = insertedProductData. });
-            return RedirectToAction("Index");
+        [HttpGet]
+        public async Task<IActionResult> CreateProductDetail(int productId, CancellationToken cancellationToken)
+        {
+            if (productId > 0)
+            {
+                var getProductInfoById = await _unitOfWorkBL.ProductBL.GetById(productId, cancellationToken);
+                return PartialView("_productDetailPartial", getProductInfoById);
+            }
+            else
+                return PartialView("_productDetailPartial");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateProductImage(int productId, CancellationToken cancellationToken)
+        {
+            if (productId > 0)
+            {
+                var getImageById = await _unitOfWorkBL.ProductBL.GetImageByProductId(productId, cancellationToken);
+                ProductMainRequestDto prodMainDto = new ProductMainRequestDto();
+                prodMainDto.ProductId = productId;
+                prodMainDto.ProductImageRequestDto = getImageById;
+                return PartialView("_productImagePartial", prodMainDto);
+            }
+            else
+                return PartialView("_productImagePartial");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateProductMaterial(int productId, CancellationToken cancellationToken)
+        {
+            await FillRawMaterialDropDowns(cancellationToken);
+            await FillPolishDropDowns(cancellationToken);
+
+            if (productId > 0)
+            {
+                var productMaterial = await _unitOfWorkBL.ProductBL.GetMaterialByProductId(productId, cancellationToken);
+                var getProductInfoById = await _unitOfWorkBL.ProductBL.GetById(productId, cancellationToken);
+                ProductMainRequestDto productMain = new ProductMainRequestDto();
+                productMain.ProductId = productId;
+                productMain.CostPrice = getProductInfoById.CostPrice;
+                productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
+                productMain.RetailerPrice = getProductInfoById.RetailerPrice;
+                productMain.ProductMaterialRequestDto = productMaterial;
+                return PartialView("_productMaterialPartial", productMain);
+            }
+            else
+                return PartialView("_productMaterialPartial");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        {
+            if (productMainRequestDto.ProductMaterialRequestDto.Count > 0)
+            {
+                await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto.ProductId, productMainRequestDto.ProductMaterialRequestDto, cancellationToken);
+                await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto.ProductId, productMainRequestDto, cancellationToken);
+
+                return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
+            }
+
+            return null;
         }
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
-            var getProductData = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
+            ProductMainRequestDto prdMainDto = new ProductMainRequestDto();
+            prdMainDto.ProductId = Id;
+            return View("ProductMain", prdMainDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductBasicDetail(int productId, ProductRequestDto model, CancellationToken cancellationToken)
+        {
             await FillCategoryDropDown(cancellationToken);
-            await FillRawMaterialDropDowns(cancellationToken);
-            await FillPolishDropDowns(cancellationToken);
-            return View("Create", getProductData);
+            if (productId > 0)
+            {
+                var updateProduct = await _unitOfWorkBL.ProductBL.UpdateProduct(productId, model, cancellationToken);
+                return RedirectToAction("Update", "Product", new { Id = updateProduct.ProductId });
+            }
+            else
+            {
+                var createProduct = await _unitOfWorkBL.ProductBL.CreateProduct(model, cancellationToken);
+                var getProductById = await _unitOfWorkBL.ProductBL.GetById(createProduct.ProductId, cancellationToken);
+                return RedirectToAction("Update", "Product", new { Id = getProductById.ProductId });
+            }
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
-        public async Task<IActionResult> Update(int Id, [FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductDetail(int productId, ProductRequestDto model, CancellationToken cancellationToken)
         {
-            productMainRequestDto.ProductMaterialRequestDto = productMainRequestDto.ProductMaterialRequestDto.Where(x => !x.IsDeleted).ToList();
-            await _unitOfWorkBL.ProductBL.UpdateProduct(Id, productMainRequestDto, cancellationToken);
-            return RedirectToAction("Index");
+            if (productId > 0)
+            {
+                var updateProductDetail = await _unitOfWorkBL.ProductBL.UpdateProductDetail(productId, model, cancellationToken);
+                return PartialView("ProductMain", updateProductDetail);
+            }
+            else
+            {
+                return PartialView("ProductMain", model);
+            }
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
-        public async Task<IActionResult> CreateProductDetail(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductImage(int productId, ProductMainRequestDto model, CancellationToken cancellationToken)
         {
-            //await _unitOfWorkBL.ProductBL.CreateProduct(productRequestDto, cancellationToken);
-            return RedirectToAction("Index");
-            //var insertedProductData = roleData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
-
-            //return RedirectToAction("RolePermission", "Role", new { id = insertedRoleData.Id });
+            if (productId > 0)
+            {
+                var saveImage = await _unitOfWorkBL.ProductBL.SaveImages(productId, model, cancellationToken);
+                return PartialView("ProductMain");
+            }
+            else
+            {
+                return PartialView("ProductMain", model);
+            }
         }
 
         [HttpGet]
@@ -118,6 +195,7 @@ namespace MidCapERP.Admin.Controllers
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
             var rawMaterialSelectedList = (from x in rawMaterialData
                                            join y in unitData on x.UnitId equals y.LookupValueId
+                                           orderby x.Title
                                            select new ProductMaterialListItem
                                            {
                                                Value = Convert.ToString(x.RawMaterialId),
@@ -134,6 +212,7 @@ namespace MidCapERP.Admin.Controllers
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
             var polishSelectedList = (from x in polishData
                                       join y in unitData on x.UnitId equals y.LookupValueId
+                                      orderby x.Title
                                       select new ProductMaterialListItem
                                       {
                                           Value = Convert.ToString(x.PolishId),

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
+using System.ComponentModel;
 
 namespace MidCapERP.Dto.Product
 {
@@ -14,6 +15,12 @@ namespace MidCapERP.Dto.Product
         }
 
         public int ProductId { get; set; } = 0;
+        [DisplayName("Cost Price")]
+        public decimal CostPrice { get; set; }
+        [DisplayName("Retailer Price")]
+        public decimal RetailerPrice { get; set; }
+        [DisplayName("Wholesaler Price")]
+        public decimal WholesalerPrice { get; set; }
 
         public ProductRequestDto ProductRequestDto { get; set; }
         public List<ProductImageRequestDto> ProductImageRequestDto { get; set; }
