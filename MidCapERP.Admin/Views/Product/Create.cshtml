@@ -2,12 +2,12 @@
 @model MidCapERP.Dto.Product.ProductMainRequestDto
 @{
     string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
-    var title = (action == "Create") ? ViewData["Title"] = "Add Product" : ViewData["Title"] = "Update Product";
+    ViewData["Title"] = (action == "Create") ? "Add Product" : "Update Product";
     var i = 0;
 }
 
 <div class="">
-    <form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper" enctype="multipart/form-data">
+    <form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
 
         @*Product*@
         <div class="card-product--wrapper mb-3">
@@ -27,7 +27,7 @@
                         <div class="product-info--item">
                             <div class="form-group">
                                 <label asp-for="ProductRequestDto.CategoryId" class="form-label"></label>
-                                <select asp-for="ProductRequestDto.CategoryId" data-val="true" class="form-control"
+                                <select asp-for="ProductRequestDto.CategoryId" data-val="true" class="form-control category"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
                                     <option value="" selected>Select Category</option>
                                 </select>
@@ -198,8 +198,26 @@
                         <div class="row">
                             <div class="col-3">
                                 <div class="form-group">
-                                    @*<label asp-for="ProductImageRequestDto" class="form-label"></label>*@
                                     <input asp-for="Files" class="form-control" type="file" multiple />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    @if (action == "Update")
+                                    {
+                                        @foreach (var item in @Model.ProductImageRequestDto)
+                                        {
+                                            <input type="hidden" asp-for="@item.ProductImageID" value="@item.ImagePath" />
+                                            <div>
+                                                <img src="@item.ImagePath" width="150" height="150">
+                                            </div>
+
+                                            <br>
+                                        }
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -225,114 +243,14 @@
                     <div class="col-md-9">
                         <div class="c-card--wrapper c-card-sm--wrapper mb-3">
                             <div class="c-card--header">
-                                <h4 class="c-card--header-title">Frame Type</h4>
-                            </div>
-                            <div class="c-card--body">
-                                <table class="table c-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="c-width-820">
-                                                Material
-                                            </th>
-                                            <th class="c-width-140">
-                                                Unit Price
-                                            </th>
-                                            <th class="c-width-140">
-                                                Quantity
-                                            </th>
-                                            <th class="c-width-140">
-                                                Cost Price
-                                            </th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="1">
-
-                                                <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
-                                                    <option value="" selected>Select FrameType</option>
-                                                    @foreach (var item in (List<ProductMaterialListItem>)ViewBag.FrameDropDownData)
-                                                    {
-                                                        <option value="@item.Value" data-UnitName="@item.UnitName" data-UnitPrice="@item.UnitPrice">@item.Text</option>
-                                                    }
-                                                </select>
-                                                <span class="text-danger materialErrorMsg"></span>
-                                            </td>
-                                            <td>
-                                                <input type="text" data-name="ProductMaterialRequestDto[{ID}].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
-                                            </td>
-                                            <td>
-                                                <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Quantity">
-                                            </td>
-                                            <td>
-                                                <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
-                                            </td>
-                                            <td>
-                                                <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
-                                            </td>
-                                            <td>
-                                                <div class="add-icon">
-                                                    <i class="bx bx-plus"></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @{
-                                            var FrameType = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == 1).ToList();
-                                        }
-                                        @if (FrameType != null)
-                                            foreach (var item in FrameType)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="1">
-                                                        <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
-                                                            @foreach (var list in (List<ProductMaterialListItem>)ViewBag.FrameDropDownData)
-                                                            {
-                                                                <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
-                                                            }
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Quantity" readonly />
-                                                    </td>
-                                                    <td>
-                                                        @{
-                                                            var costPrice = item.Qty * item.MaterialPrice;
-                                                        }
-                                                        <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
-                                                    </td>
-                                                    <td>
-                                                        <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" class="form-control isDeleted" value="false">
-                                                    </td>
-                                                    <td>
-                                                        <div class="minus-icon">
-                                                            <i class="bx bx-minus"></i>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                {
-                                                    i = i + 1;
-                                                }
-                                            }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="c-card--wrapper c-card-sm--wrapper mb-3">
-                            <div class="c-card--header">
                                 <h4 class="c-card--header-title">Polish</h4>
                             </div>
                             <div class="c-card--body">
-                                <table class="table c-table">
+                                <table class="table c-table c-table-stripted">
                                     <thead>
                                         <tr>
                                             <th class="c-width-820">
-                                                Material
+                                                Cost Analyzer
                                             </th>
                                             <th class="c-width-140">
                                                 Unit Price
@@ -428,11 +346,11 @@
                                 <h4 class="c-card--header-title">Raw Materials</h4>
                             </div>
                             <div class="c-card--body">
-                                <table class="table c-table">
+                                <table class="table c-table c-table-stripted">
                                     <thead>
                                         <tr>
                                             <th class="c-width-820">
-                                                Material
+                                                Cost Analyzer
                                             </th>
                                             <th class="c-width-140">
                                                 Unit Price

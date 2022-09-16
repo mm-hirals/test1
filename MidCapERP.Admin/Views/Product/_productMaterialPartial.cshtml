@@ -1,0 +1,272 @@
+﻿@using MidCapERP.Dto.Product
+@model MidCapERP.Dto.Product.ProductMainRequestDto
+@{
+    string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
+    var i = 0;
+}
+
+<form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                @*<div class="c-card--header">
+                    <h4 class="c-card--header-title">Polish</h4>
+                </div>*@
+                <div class="c-card--body p-0">
+                    <table class="table c-table c-table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="c-width-820">
+                                    Polish
+                                </th>
+                                <th class="c-width-140">
+                                    Unit Price
+                                </th>
+                                <th class="c-width-80">
+                                    Quantity
+                                </th>
+                                <th class="c-width-140">
+                                    Cost Price
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="3">
+
+                                    <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
+                                        <option value="" selected>Select Polish</option>
+                                        @foreach (var item in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
+                                        {
+                                            <option value="@item.Value" data-UnitName="@item.UnitName" data-UnitPrice="@item.UnitPrice">@item.Text</option>
+                                        }
+                                    </select>
+                                    <span class="text-danger materialErrorMsg"></span>
+                                </td>
+                                <td>
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
+                                </td>
+                                <td>
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
+                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
+                                </td>
+                                @*<td>
+                                </td>*@
+                                <td>
+                                    <div class="add-icon ms-auto">
+                                        <i class="bx bx-plus"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @{
+                                var Polish = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == 3).ToList();
+                            }
+                            @if (Polish != null)
+                                foreach (var item in Polish)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="3">
+                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
+                                                @foreach (var list in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
+                                                {
+                                                    <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty" readonly />
+                                        </td>
+                                        <td>
+                                            @{
+                                                var costPrice = item.Qty * item.MaterialPrice;
+                                            }
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
+                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" class="form-control isDeleted" value="false">
+                                        </td>
+                                        @*<td>
+                                        </td>*@
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {
+                                        i = i + 1;
+                                    }
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                @*<div class="c-card--header">
+                    <h4 class="c-card--header-title">Raw Materials</h4>
+                </div>*@
+                <div class="c-card--body p-0">
+                    <table class="table c-table c-table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="c-width-820">
+                                    Raw Materials
+                                </th>
+                                <th class="c-width-140">
+                                    Unit Price
+                                </th>
+                                <th class="c-width-80">
+                                    Quantity
+                                </th>
+                                <th class="c-width-140">
+                                    Cost Price
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="2">
+
+                                    <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId">
+                                        <option value="" selected>Select Raw Material</option>
+                                        @foreach (var item in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
+                                        {
+                                            <option value="@item.Value" data-UnitName="@item.UnitName" data-UnitPrice="@item.UnitPrice">@item.Text</option>
+                                        }
+                                    </select>
+                                    <span class="text-danger materialErrorMsg"></span>
+                                </td>
+                                <td>
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
+                                </td>
+                                <td>
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
+                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
+                                </td>
+                                @*<td>
+                                </td>*@
+                                <td>
+                                    <div class="add-icon ms-auto">
+                                        <i class="bx bx-plus"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @{
+                                var RawMaterial = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == 2).ToList();
+                            }
+                            @if (RawMaterial != null)
+                                foreach (var item in RawMaterial)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" data-readonly="readonly" class="form-control" value="2">
+                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
+                                                @foreach (var list in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
+                                                {
+                                                    <option value="@list.Value" data-UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty" readonly />
+                                        </td>
+                                        <td>
+                                            @{
+                                                var costPrice = item.Qty * item.MaterialPrice;
+                                            }
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
+                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" data-readonly="readonly" class="form-control isDeleted" value="false">
+                                        </td>
+                                        @*<td>
+                                        </td>*@
+                                        <td>
+                                            <div class="minus-icon">
+                                                <i class="bx bx-minus"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {
+                                        i = i + 1;
+                                    }
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="c-card--wrapper c-card-sm--wrapper price-card--wrapper">
+                <div class="c-card--header">
+                    <h4 class="c-card--header-title">Total Price</h4>
+                </div>
+                <div class="c-card--body">
+                    <ul class="price-list--wrapper">
+                        <li class="price-list--item">
+                            <span class="price-list--title">
+                                Cost Price
+                            </span>
+                            <div class="price-list--value price-list--input">
+                                <span class="price--icon">
+                                    ₹
+                                </span>
+                                <input asp-for="ProductRequestDto.CostPrice" type="text" class="form-control">
+                                <span asp-validation-for="ProductRequestDto.CostPrice" class="text-danger"></span>
+                            </div>
+                        </li>
+                        <li class="price-list--item">
+                            <span class="price-list--title">
+                                Retailers Price
+                            </span>
+                            <div class="price-list--value price-list--input">
+                                <span class="price--icon">
+                                    ₹
+                                </span>
+                                <input asp-for="ProductRequestDto.RetailerPrice" type="text" class="form-control">
+                                <span asp-validation-for="ProductRequestDto.RetailerPrice" class="text-danger"></span>
+                            </div>
+                        </li>
+                        <li class="price-list--item">
+                            <span class="price-list--title">
+                                Wholesalers Price
+                            </span>
+                            <div class="price-list--value price-list--input">
+                                <span class="price--icon">
+                                    ₹
+                                </span>
+                                <input asp-for="ProductRequestDto.WholesalerPrice" type="text" class="form-control">
+                                <span asp-validation-for="ProductRequestDto.WholesalerPrice" class="text-danger"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row c-card-footer--btn">
+        <div class="col-12">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--footer">
+                    <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                        Cancel
+                    </a>
+                    <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

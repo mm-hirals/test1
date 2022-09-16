@@ -1,40 +1,19 @@
 ﻿'use strict';
 var counter = 0;
 var ProductModel = {};
-var tblProduct;
 
-$(function () {
-    tblProduct = $("#tblProduct").DataTable({
-        "searching": false,
-        "processing": true,
-        "serverSide": true,
-        "filter": true,
-        "ajax": {
-            "url": "/Product/GetProductData",
-            "type": "POST",
-            "datatype": "json"
-        },
-        "columns": [
-            { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
-            { "data": "productTitle", "name": "ProductTitle", "autoWidth": true },
-            { "data": "modelNo", "name": "ModelNo", "autoWidth": true },
-            { "data": "costPrice", "name": "CostPrice", "autoWidth": true },
-            { "data": "retailerPrice", "name": "RetailerPrice", "autoWidth": true },
-            { "data": "wholesalerPrice", "name": "WholesalerPrice", "autoWidth": true },
-            {
-                "mData": null, "bSortable": false,
-                "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a class="btn btn-icon btn-outline-primary" href="/Product/Update/' + o.productId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="ProductModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Product/Delete/' + o.productId + '"><i class="bx bxs-trash"></i></a></div>';
-                }
-            }
-        ]
-    });
-});
 $("#lnkProductFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
+
+var action = $("form.formAction").attr("action");
+if (action == "/Product/Create") {
+    $("select.category").attr('disabled', false);
+}
+else {
+    $("select.category").attr('disabled', true);
+}
 
 $(".add-icon").click(function () {
     if ($(this).parent().parent().find("select").val() != "") {
@@ -80,7 +59,7 @@ $("input.quantity").change(function () {
     $(this).parent().parent().find("input.quantity").attr('value', qty.val());
     $(this).parent().parent().find("input.costPrice").val(costPrice);
     $(this).parent().parent().find("input.costPrice").attr('value', costPrice);
-})
+});
 $("select.material").change(function () {
     var val = $(this).val();
     $("option", this).removeAttr("selected").filter(function () {
@@ -96,7 +75,8 @@ $("select.material").change(function () {
     $(this).parent().parent().find("input.costPrice").attr('value', unitPrice);
 
     $("span.materialErrorMsg").hide();
-})
+});
+
 $(document).on("click", ".minus-icon", function () {
     var htmlStringToAppend = $(this).parent().parent();
     htmlStringToAppend.find("[name$='IsDeleted']").val("true");
@@ -104,3 +84,7 @@ $(document).on("click", ".minus-icon", function () {
 
     calculateCostPrice();
 });
+
+//$(document).ready(function () {
+//    $("#productPartial").load('/Product/GetProductBasicDetail' + "?ProductId=" + document.getElementById("hdnProductId").value);
+//});

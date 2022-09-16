@@ -1,0 +1,70 @@
+﻿@model MidCapERP.Dto.Product.ProductMainRequestDto
+@{
+    string action = (Model != null && Model.ProductRequestDto.ProductId != 0) ? "Update" : "Create";
+}
+
+<form asp-action="@action" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
+    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+        <div class="c-card--header">
+            <h4 class="c-card--header-title">Product Images</h4>
+        </div>
+        <div class="c-card--body">
+            @*<div id="dropzone" id="dropzone-form" name="mainFileUploader">
+            <div class="dropzone needsclick" action="/upload">
+            <div class="dz-message needsclick">
+            Drop files here or click to upload.
+            <br>
+            <span class="note needsclick">
+            (This is just a demo dropzone. Selected
+            files are <strong>not</strong> actually uploaded.)
+            </span>
+            </div>
+            </div>
+            </div>*@
+            @*<div class="dropzone" id="dropzone-form" name="mainFileUploader">
+            <div class="fallback">
+            <input asp-for="File" type="file" multiple />
+            </div>
+            </div>*@
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <input asp-for="Files" class="form-control" type="file" multiple />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        @if (action == "Update")
+                        {
+                            @foreach (var item in @Model.ProductImageRequestDto)
+                            {
+                                <input type="hidden" asp-for="@item.ProductImageID" value="@item.ImagePath" />
+                                <div>
+                                    <img src="@item.ImagePath" width="150" height="150">
+                                </div>
+
+                                <br>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row c-card-footer--btn">
+        <div class="col-12">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--footer">
+                    <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                        Cancel
+                    </a>
+                    <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                    @*<input asp-for="File" class="btn btn-primary ms-2" id="submit-all" type="button" value="Save" />*@
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

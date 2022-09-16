@@ -8,10 +8,12 @@ $darkGray: #454545;
 $crystal: #a5d8dd;
 $formLabelColor: #606060;
 $errorColor: #e20000;
+$inputborderColor: #ced4da;
 // Layout Color
 $primary: #4b49ac;
 $secondary: #98bdff;
 $tertiary: #f3797e;
+$disabled: #e9ecef;
 // Component Color
 $layoutBgColor: lighten($secondary, 18%);
 $defaultBorderColor: $crystal;
@@ -22,11 +24,11 @@ $breakpoints: ( sm: 576px, md: 768px, lg: 992px, xl: 1201px, );
 //========================= Start Layout Config =================
 // Global Config
 $defaultRadius: 6px;
-$defaulShaodw: 2px 2px 15px 0px rgba($black, 0.1);
-$cardTitleFontSize: 18px;
+$defaulShaodw: 2px 2px 12px -1px rgba($black, 0.1);
+$cardTitleFontSize: 14px;
 $cardsmTitleFontSize: 16px;
 $cardTitleFontWeight: 700;
-$cardTitleColor: $darkGray;
+$cardTitleColor: $primary;
 // Header Config
 $headerHeight: 4rem;
 $footerHeight: 54px;
