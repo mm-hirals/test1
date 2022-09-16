@@ -19,12 +19,12 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    
+
     .container{
       max-width: 1140px;
     }
   .main-cards{
-    box-shadow: 0 0 5px #6767672b;
+    box-shadow: 0 0 5px rgba($formLabelColor,0.17);
   }
   .login-logo-main{
     position: absolute;
@@ -48,7 +48,7 @@
     height: 550px;
   }
   .login-first-overlary{
-    background-color: rgb(75 73 172 / 63%);
+    background-color: rgba($primary,0.63);
     width: 100%;
     position: absolute;
     top: 0;
@@ -59,7 +59,7 @@
     height: 100%;
   }
   .form-login-right{
-    background-color: #fff;
+    background-color: $white;
     height: 100%;
     width: 100%;
     padding: 50px;
@@ -72,15 +72,15 @@
   }
   h1{
     font-size: 1.5rem;
-    color: #4b49ac;
+    color: $primary;
   }
   label{
-    color: #000;
+    color: $black;
   }
   input{
-    color: #000;
-    border: 1px solid #ced4da;
-    background-color: #fff;
+    color: $black;
+    border: 1px solid $inputborderColor;
+    background-color: $white;
   }
   .forgot-password{
     float: right;
@@ -88,13 +88,13 @@
   .login-btn{
     width: 100%;
     border-radius: 0px;
-    background: #4b49ac;
-    color: #fff;
+    background: $primary;
+    color: $white;
     border-radius: 0.25rem;
     font-size: 1.2rem;
   }
   .back-title{
-    color: #4b49ac9e;
+    color: ($primary, 0.62);
   }
   .back-title a{
     text-decoration: underline;

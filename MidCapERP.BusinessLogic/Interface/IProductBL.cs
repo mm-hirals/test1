@@ -14,6 +14,12 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<List<ProductMaterialRequestDto>> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
 
+        public Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
+
+        public Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellation);
+
         public Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken);

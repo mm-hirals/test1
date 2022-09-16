@@ -9,6 +9,7 @@ using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
 using MidCapERP.Dto.Paging;
+using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -31,6 +32,19 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var data = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             return _mapper.Map<List<FabricResponseDto>>(data.ToList());
+        }
+
+        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).ToList();
+        }
+
+        public async Task<FabricResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var data = frabricAlldata.FirstOrDefault(x => x.ModelNo.StartsWith(modelno));
+            return _mapper.Map<FabricResponseDto>(data);
         }
 
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
