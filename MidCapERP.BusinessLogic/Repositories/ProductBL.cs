@@ -11,7 +11,6 @@ using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
-using System.Collections.Generic;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -43,13 +42,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             ProductRequestDto productRequestDto = new ProductRequestDto();
             var data = await GetProductById(Id, cancellationToken);
             productRequestDto = _mapper.Map<ProductRequestDto>(data);
-            //var productImage = await GetProductImageById(Id, cancellationToken);
-            //var productMaterialData = await GetProductMaterialById(Id, cancellationToken);
-            //productMainRequestDto.ProductImageRequestDto = _mapper.Map<List<ProductImageRequestDto>>(productImage);
-            //productMainRequestDto.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialData);
             return productRequestDto;
         }
 
+        public async Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken)
+        {
+            var productImageList = await GetProductImageById(Id, cancellationToken);
+            return _mapper.Map<List<ProductImageRequestDto>>(productImageList);
+        }
 
         public async Task<List<ProductMaterialRequestDto>> GetMaterialByProductId(long Id, CancellationToken cancellationToken)
         {
@@ -98,7 +98,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            // Add Product Details
             var productToInsert = _mapper.Map<Product>(model);
             productToInsert.IsDeleted = false;
             productToInsert.TenantId = _currentUser.TenantId;
@@ -108,20 +107,17 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
 
-            // Add Product Images
-            //await SaveImages(model, productData.ProductId, cancellationToken);
-
-            // Add Product Materials
-            //await AddProductMaterials(productData.ProductId, model, cancellationToken);
-
             return _mappedUser;
         }
 
         public async Task<ProductRequestDto> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            // Add Product Details
             var productToInsert = new Product();
-            MapToDbObject(model, productToInsert);
+            productToInsert.UsedFabric = model.UsedFabric;
+            productToInsert.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
+            productToInsert.TotalDaysToPrepare = model.TotalDaysToPrepare;
+            productToInsert.Features = model.Features;
+            productToInsert.Comments = model.Comments;
             productToInsert.IsDeleted = false;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
@@ -129,12 +125,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             productToInsert.CreatedUTCDate = DateTime.UtcNow;
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-
-            // Add Product Images
-            //await SaveImages(model, productData.ProductId, cancellationToken);
-
-            // Add Product Materials
-            //await AddProductMaterials(productData.ProductId, model, cancellationToken);
 
             return _mappedUser;
         }
@@ -149,18 +139,11 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> UpdateProduct(int Id, ProductRequestDto model, CancellationToken cancellationToken)
         {
-            // Update Product Details
             var getProductById = await GetProductById(Id, cancellationToken);
             UpdateData(getProductById);
             MapToDbObject(model, getProductById);
             var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);
-
-            // Delete all Product Materials by product Id
-            //await DeleteProductMaterials(Id, cancellationToken);
-
-            //// Add Product Materials
-            //await AddProductMaterials(Id, model, cancellationToken);
 
             return _mappedUser;
         }
@@ -178,13 +161,26 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
-            // Delete all Product Materials by product Id
-            //await DeleteProductMaterials(Id, cancellationToken);
-
-            //// Add Product Materials
-            //await AddProductMaterials(Id, model, cancellationToken);
-
             return _mappedUser;
+        }
+
+        public async Task<ProductImageRequestDto> SaveImages(long productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            ProductImage saveImage = new ProductImage();
+            if (model.Files != null)
+            {
+                var getImageById = await GetProductImageById(productId, cancellationToken);
+                if (getImageById.Count() > 0)
+                {
+                    await DeleteImages(getImageById, cancellationToken);
+                    saveImage = await AddImages(productId, model, saveImage, cancellationToken);
+                }
+                else
+                {
+                    saveImage = await AddImages(productId, model, saveImage, cancellationToken);
+                }
+            }
+            return _mapper.Map<ProductImageRequestDto>(saveImage);
         }
 
         public async Task<ProductRequestDto?> UpdateProductCost(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
@@ -260,25 +256,32 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.QRImage = model.QRImage;
         }
 
-        private async Task SaveImages(ProductMainRequestDto model, long productId, CancellationToken cancellationToken)
+        private async Task<ProductImage> AddImages(long productId, ProductMainRequestDto model, ProductImage saveImage, CancellationToken cancellationToken)
         {
-            if (model.Files != null)
+            foreach (var item in model.Files)
             {
-                foreach (var item in model.Files)
-                {
-                    ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
-                    productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
-                    productImageRequestDto.ImageName = item.FileName;
+                ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
+                productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
+                productImageRequestDto.ImageName = item.FileName;
 
-                    var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
-                    productImageToInsert.ProductId = productId;
-                    productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
-                    productImageToInsert.ImageName = productImageRequestDto.ImageName;
-                    productImageToInsert.CreatedBy = _currentUser.UserId;
-                    productImageToInsert.CreatedDate = DateTime.Now;
-                    productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
-                    await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
-                }
+                var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
+                productImageToInsert.ProductId = productId;
+                productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
+                productImageToInsert.ImageName = productImageRequestDto.ImageName;
+                productImageToInsert.CreatedBy = _currentUser.UserId;
+                productImageToInsert.CreatedDate = DateTime.Now;
+                productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
+                saveImage = await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+            }
+
+            return saveImage;
+        }
+
+        private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
+        {
+            foreach (var item in getImageById)
+            {
+                await _unitOfWorkDA.ProductImageDA.DeleteProductMaterial(item.ProductImageID, cancellationToken);
             }
         }
 

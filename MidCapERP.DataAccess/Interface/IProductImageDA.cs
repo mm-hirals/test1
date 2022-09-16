@@ -7,5 +7,6 @@ namespace MidCapERP.DataAccess.Interface
         public Task<IQueryable<ProductImage>> GetAll(CancellationToken cancellationToken);
 
         public Task<ProductImage> CreateProductImage(ProductImage model, CancellationToken cancellationToken);
+        public Task<ProductImage> DeleteProductMaterial(long Id, CancellationToken cancellationToken);
     }
 }

@@ -1,5 +1,5 @@
 ﻿Dropzone.options.dropzoneForm = {
-    url: "/Product/Create",
+    url: "/Product/CreateProductImage",
     paramName: "file",
     autoProcessQueue: false,
     uploadMultiple: true,
@@ -28,8 +28,7 @@
         });
 
         this.on("sending", function (file, response, formData) {
-            debugger;
-            formData.append("Name", $("#Name").val());
+            formData.append("ProductId", $("input.productId").val());
             formData.append("Files", file);
         });
     }

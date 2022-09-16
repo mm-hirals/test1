@@ -66,7 +66,13 @@ namespace MidCapERP.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateProductImage(int productId, CancellationToken cancellationToken)
         {
-            return PartialView("_productImagePartial");
+            if (productId > 0)
+            {
+                //var getImageById = await _unitOfWorkBL.ProductBL.GetImageByProductId(productId, cancellationToken);
+                return PartialView("_productImagePartial");
+            }
+            else
+                return PartialView("_productImagePartial");
         }
 
         [HttpGet]
@@ -141,8 +147,21 @@ namespace MidCapERP.Admin.Controllers
             }
             else
             {
-                var data = await _unitOfWorkBL.ProductBL.CreateProductDetail(model, cancellationToken);
-                return PartialView("ProductMain", data);
+                return PartialView("ProductMain", model);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductImage(int productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            if (productId > 0)
+            {
+                var saveImage = await _unitOfWorkBL.ProductBL.SaveImages(productId, model, cancellationToken);
+                return PartialView("ProductMain");
+            }
+            else
+            {
+                return PartialView("ProductMain", model);
             }
         }
 
@@ -173,6 +192,7 @@ namespace MidCapERP.Admin.Controllers
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
             var rawMaterialSelectedList = (from x in rawMaterialData
                                            join y in unitData on x.UnitId equals y.LookupValueId
+                                           orderby x.Title
                                            select new ProductMaterialListItem
                                            {
                                                Value = Convert.ToString(x.RawMaterialId),
@@ -189,6 +209,7 @@ namespace MidCapERP.Admin.Controllers
             var unitData = await _unitOfWorkBL.UnitBL.GetAll(cancellationToken);
             var polishSelectedList = (from x in polishData
                                       join y in unitData on x.UnitId equals y.LookupValueId
+                                      orderby x.Title
                                       select new ProductMaterialListItem
                                       {
                                           Value = Convert.ToString(x.PolishId),
