@@ -21,5 +21,8 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<ProductRequestDto> UpdateProduct(int Id, ProductRequestDto model, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> UpdateProductDetail(int Id, ProductRequestDto model, CancellationToken cancellationToken);
+
+        public Task<List<ProductMaterialRequestDto>> CreateProductMaterial(int productId, List<ProductMaterialRequestDto> productMaterialRequestList, CancellationToken cancellationToken);
+        public Task<ProductRequestDto?> UpdateProductCost(int Id, ProductMainRequestDto model, CancellationToken cancellationToken);
     }
 }
