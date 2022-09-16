@@ -64,9 +64,9 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpGet("/Search/Customer/{CustomerNameOrEmailOrMobileNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> CustomerMegaSerchGet(string CustomerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
+        public async Task<ApiResponse> SearchCustomer(string CustomerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.GetCustomerMegaSerch(CustomerNameOrEmailOrMobileNo, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.SearchCustomer(CustomerNameOrEmailOrMobileNo, cancellationToken);
             if (data == null || data.Count() == 0)
             {
                 return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);

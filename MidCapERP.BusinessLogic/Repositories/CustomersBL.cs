@@ -52,10 +52,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomersTypesResponseDto>>(data.ToList());
         }
 
-        public async Task<IEnumerable<CustomersResponseDto>> GetCustomerMegaSerch(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerData = customerAllData.Where(x => x.PhoneNumber == customerNameOrEmailOrMobileNo || x.FirstName == customerNameOrEmailOrMobileNo || x.LastName == customerNameOrEmailOrMobileNo || x.EmailId == customerNameOrEmailOrMobileNo || x.FirstName + " " + x.LastName   == customerNameOrEmailOrMobileNo);
+            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo)  || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
             return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 

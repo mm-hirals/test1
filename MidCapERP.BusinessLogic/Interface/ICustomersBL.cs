@@ -14,7 +14,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail,CancellationToken cancellationToken);
 
-        public Task<IEnumerable<CustomersResponseDto>> GetCustomerMegaSerch(string customerNameOrEmailOrMobileNo,CancellationToken cancellationToken);
+        public Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo,CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
