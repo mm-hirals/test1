@@ -68,8 +68,11 @@ namespace MidCapERP.Admin.Controllers
         {
             if (productId > 0)
             {
-                //var getImageById = await _unitOfWorkBL.ProductBL.GetImageByProductId(productId, cancellationToken);
-                return PartialView("_productImagePartial");
+                var getImageById = await _unitOfWorkBL.ProductBL.GetImageByProductId(productId, cancellationToken);
+                ProductMainRequestDto prodMainDto = new ProductMainRequestDto();
+                prodMainDto.ProductId = productId;
+                prodMainDto.ProductImageRequestDto = getImageById;
+                return PartialView("_productImagePartial", prodMainDto);
             }
             else
                 return PartialView("_productImagePartial");
@@ -100,10 +103,10 @@ namespace MidCapERP.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
-            if(productMainRequestDto.ProductMaterialRequestDto.Count > 0)
+            if (productMainRequestDto.ProductMaterialRequestDto.Count > 0)
             {
                 await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto.ProductId, productMainRequestDto.ProductMaterialRequestDto, cancellationToken);
-                await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto.ProductId, productMainRequestDto,cancellationToken);
+                await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto.ProductId, productMainRequestDto, cancellationToken);
 
                 return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
             }
