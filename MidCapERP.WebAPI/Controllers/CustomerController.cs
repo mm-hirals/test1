@@ -3,6 +3,7 @@ using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Infrastructure.Constants;
 
@@ -56,9 +57,54 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
         }
 
+        [HttpGet("/CustomerAddress/{CustomerId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        public async Task<ApiResponse> CustomerAddressGet(long customerId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerById(customerId, cancellationToken);
+            if (data == null || data.Count() == 0)
+            {
+                return new ApiResponse(message: "Customer Address not found!", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
+        }
+
+        [HttpPost("/CustomerAddress/{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        public async Task<ApiResponse> CreateOrEditCustomerAddress(int id, [FromBody] CustomerAddressesRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerAddressesRequestDto);
+            if (id == 0 || id == null)
+            {
+                var data = await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customerAddressesRequestDto, cancellationToken);
+                if (data == null)
+                {
+                    return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+                }
+                return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+            }
+            else
+            {
+                var data = await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(id, customerAddressesRequestDto, cancellationToken);
+                if (data == null)
+                {
+                    return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+                }
+                return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
+            }
+        }
+
         #region Private Methods
 
         private void ValidationRequest(CustomersRequestDto customersRequestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new ApiException(ModelState.AllErrors());
+            }
+        }
+
+        private void ValidationRequest(CustomerAddressesRequestDto customersRequestDto)
         {
             if (!ModelState.IsValid)
             {

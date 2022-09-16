@@ -39,7 +39,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = data.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmail ||  x.EmailId ==  phoneNumberOrEmail);
+            var customerExistOrNot = data.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmail || x.EmailId == phoneNumberOrEmail);
             if (customerExistOrNot != null)
                 return true;
             else
@@ -50,6 +50,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var data = await _unitOfWorkDA.CustomerTypesDA.GetAll(cancellationToken);
             return _mapper.Map<List<CustomersTypesResponseDto>>(data.ToList());
+        }
+
+        public async Task<IEnumerable<CustomersResponseDto>> GetCustomerMegaSerch(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
+        {
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerData = customerAllData.Where(x => x.PhoneNumber == customerNameOrEmailOrMobileNo || x.FirstName == customerNameOrEmailOrMobileNo || x.LastName == customerNameOrEmailOrMobileNo || x.EmailId == customerNameOrEmailOrMobileNo || x.FirstName + " " + x.LastName   == customerNameOrEmailOrMobileNo);
+            return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 
         public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
