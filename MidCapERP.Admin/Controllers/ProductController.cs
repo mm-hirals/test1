@@ -87,31 +87,22 @@ namespace MidCapERP.Admin.Controllers
             if (productId > 0)
             {
                 var productMaterial = await _unitOfWorkBL.ProductBL.GetMaterialByProductId(productId, cancellationToken);
-                var getProductInfoById = await _unitOfWorkBL.ProductBL.GetById(productId, cancellationToken);
-                ProductMainRequestDto productMain = new ProductMainRequestDto();
-                productMain.ProductId = productId;
-                productMain.CostPrice = getProductInfoById.CostPrice;
-                productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
-                productMain.RetailerPrice = getProductInfoById.RetailerPrice;
-                productMain.ProductMaterialRequestDto = productMaterial;
-                return PartialView("_productMaterialPartial", productMain);
+                return PartialView("_productMaterialPartial", productMaterial);
             }
             else
                 return PartialView("_productMaterialPartial");
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
             if (productMainRequestDto.ProductMaterialRequestDto.Count > 0)
             {
-                await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto.ProductId, productMainRequestDto.ProductMaterialRequestDto, cancellationToken);
-                await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto.ProductId, productMainRequestDto, cancellationToken);
-
+                await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto, cancellationToken);
                 return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
             }
 
-            return null;
+            throw new Exception("Please Add Material");
         }
 
         [HttpGet]
@@ -129,7 +120,7 @@ namespace MidCapERP.Admin.Controllers
             await FillCategoryDropDown(cancellationToken);
             if (productId > 0)
             {
-                var updateProduct = await _unitOfWorkBL.ProductBL.UpdateProduct(productId, model, cancellationToken);
+                var updateProduct = await _unitOfWorkBL.ProductBL.UpdateProduct(model, cancellationToken);
                 return RedirectToAction("Update", "Product", new { Id = updateProduct.ProductId });
             }
             else
@@ -140,25 +131,23 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductDetail(int productId, ProductRequestDto model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            if (productId > 0)
+            if (model.ProductId > 0)
             {
-                var updateProductDetail = await _unitOfWorkBL.ProductBL.UpdateProductDetail(productId, model, cancellationToken);
-                return PartialView("ProductMain", updateProductDetail);
+                var updateProductDetail = await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
+                return RedirectToAction("CreateProductDetail", "Product", new { productId = model.ProductId });
             }
-            else
-            {
-                return PartialView("ProductMain", model);
-            }
+
+            throw new Exception("Product Not Found!");
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductImage(int productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductImage(Int64 productId, ProductMainRequestDto model, CancellationToken cancellationToken)
         {
             if (productId > 0)
             {
-                await _unitOfWorkBL.ProductBL.SaveImages(productId, model, cancellationToken);
+                await _unitOfWorkBL.ProductBL.CreateProductImages(model, cancellationToken);
                 return PartialView("ProductMain");
             }
             else

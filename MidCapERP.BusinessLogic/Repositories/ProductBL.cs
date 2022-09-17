@@ -31,50 +31,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             _fileStorageService = fileStorageService;
         }
 
-        public async Task<IEnumerable<ProductResponseDto>> GetAll(CancellationToken cancellationToken)
-        {
-            var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return _mapper.Map<List<ProductResponseDto>>(productAllData.ToList());
-        }
-
-        public async Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
-        {
-            ProductRequestDto productRequestDto = new ProductRequestDto();
-            var data = await GetProductById(Id, cancellationToken);
-            productRequestDto = _mapper.Map<ProductRequestDto>(data);
-            return productRequestDto;
-        }
-
-        public async Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken)
-        {
-            var productImageList = await GetProductImageById(Id, cancellationToken);
-            return _mapper.Map<List<ProductImageRequestDto>>(productImageList);
-        }
-
-        public async Task<List<ProductMaterialRequestDto>> GetMaterialByProductId(long Id, CancellationToken cancellationToken)
-        {
-            var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
-            return _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialList);
-        }
-
-        public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
-        {
-            var produdctData = await GetProductById(Id, cancellationToken);
-            return _mapper.Map<ProductRequestDto>(produdctData);
-        }
-
-        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
-        {
-            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
-        }
-
-        public async Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
-        {
-            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.UsedFabric, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice, x.RetailerPrice, x.WholesalerPrice, x.CoverImage)).ToList();
-        }
-
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
@@ -96,6 +52,39 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
         }
 
+        public async Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            ProductRequestDto productRequestDto = new ProductRequestDto();
+            var data = await GetProductById(Id, cancellationToken);
+            productRequestDto = _mapper.Map<ProductRequestDto>(data);
+            return productRequestDto;
+        }
+
+        public async Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken)
+        {
+            var productImageList = await GetProductImageById(Id, cancellationToken);
+            return _mapper.Map<List<ProductImageRequestDto>>(productImageList.ToList());
+        }
+
+        public async Task<ProductMainRequestDto> GetMaterialByProductId(long Id, CancellationToken cancellationToken)
+        {
+            var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
+            var getProductInfoById = await GetById(Id, cancellationToken);
+            ProductMainRequestDto productMain = new ProductMainRequestDto();
+            productMain.ProductId = Id;
+            productMain.CostPrice = getProductInfoById.CostPrice;
+            productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
+            productMain.RetailerPrice = getProductInfoById.RetailerPrice;
+            productMain.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialList);
+            return productMain;
+        }
+
+        public async Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
+        {
+            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.UsedFabric, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice, x.RetailerPrice, x.WholesalerPrice, x.CoverImage)).ToList();
+        }
+
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
             var productToInsert = _mapper.Map<Product>(model);
@@ -110,90 +99,123 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        public async Task<ProductRequestDto> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
+        public async Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
-            var productToInsert = new Product();
-            productToInsert.UsedFabric = model.UsedFabric;
-            productToInsert.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
-            productToInsert.TotalDaysToPrepare = model.TotalDaysToPrepare;
-            productToInsert.Features = model.Features;
-            productToInsert.Comments = model.Comments;
-            productToInsert.IsDeleted = false;
-            productToInsert.TenantId = _currentUser.TenantId;
-            productToInsert.CreatedBy = _currentUser.UserId;
-            productToInsert.CreatedDate = DateTime.Now;
-            productToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+            await DeleteProductMaterials(productMainRequestDto.ProductId, cancellationToken);
 
-            return _mappedUser;
+            await SaveProductMaterials(productMainRequestDto, cancellationToken);
+            await UpdateProductCost(productMainRequestDto, cancellationToken);
+
+            return productMainRequestDto;
         }
 
-        public async Task<List<ProductMaterialRequestDto>> CreateProductMaterial(int productId, List<ProductMaterialRequestDto> productMaterialRequestList,CancellationToken cancellationToken)
-        {
-            await DeleteProductMaterials(productId, cancellationToken);
-            await SaveProductMaterials(productId, productMaterialRequestList, cancellationToken);
-            
-            return null;
-        }
-
-        public async Task<ProductRequestDto> UpdateProduct(int Id, ProductRequestDto model, CancellationToken cancellationToken)
-        {
-            var getProductById = await GetProductById(Id, cancellationToken);
-            UpdateData(getProductById);
-            MapToDbObject(model, getProductById);
-            var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
-            var _mappedUser = _mapper.Map<ProductRequestDto>(data);
-
-            return _mappedUser;
-        }
-
-        public async Task<ProductRequestDto> UpdateProductDetail(int Id, ProductRequestDto model, CancellationToken cancellationToken)
-        {
-            // Update Product Details
-            var getProductById = await GetProductById(Id, cancellationToken);
-            UpdateData(getProductById);
-            getProductById.UsedFabric = model.UsedFabric;
-            getProductById.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
-            getProductById.TotalDaysToPrepare = model.TotalDaysToPrepare;
-            getProductById.Features = model.Features;
-            getProductById.Comments = model.Comments;
-            var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
-            var _mappedUser = _mapper.Map<ProductRequestDto>(data);
-
-            return _mappedUser;
-        }
-
-        public async Task<ProductImageRequestDto> SaveImages(long productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        public async Task<ProductImageRequestDto> CreateProductImages(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
             ProductImage saveImage = new ProductImage();
-            if (model.Files != null)
+
+            if (model.ProductId > 0)
             {
-                var getImageById = await GetProductImageById(productId, cancellationToken);
-                if (getImageById.Count() > 0)
+                if (model.Files != null)
                 {
-                    await DeleteImages(getImageById, cancellationToken);
-                    saveImage = await AddImages(productId, model, saveImage, cancellationToken);
+                    var getImageById = await GetProductImageById(model.ProductId, cancellationToken);
+                    if (getImageById.Count() > 0)
+                        await DeleteImages(getImageById.ToList(), cancellationToken);
+                    await AddImages(model, cancellationToken);
+                    return _mapper.Map<ProductImageRequestDto>(saveImage);
                 }
-                else
-                {
-                    saveImage = await AddImages(productId, model, saveImage, cancellationToken);
-                }
+                throw new Exception("No Material Image Found");
             }
-            return _mapper.Map<ProductImageRequestDto>(saveImage);
+            throw new Exception("Product Not Found");
         }
 
-        public async Task<ProductRequestDto?> UpdateProductCost(int Id, ProductMainRequestDto model, CancellationToken cancellationToken)
+        public async Task<ProductRequestDto> UpdateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            // Update Product Cost Detail
-            var getProductById = await GetProductById(Id, cancellationToken);
-            getProductById.CostPrice = model.CostPrice;
-            getProductById.RetailerPrice = model.RetailerPrice;
-            getProductById.WholesalerPrice = model.WholesalerPrice;
-            var data = await _unitOfWorkDA.ProductDA.UpdateProduct(Id, getProductById, cancellationToken);
+            if (model.ProductId > 0)
+            {
+                var getProductById = await GetProductById(model.ProductId, cancellationToken);
 
-            return _mapper.Map<ProductRequestDto>(data);
+                if (getProductById != null)
+                {
+                    UpdateData(getProductById);
+                    getProductById.ProductTitle = model.ProductTitle;
+                    getProductById.ModelNo = model.ModelNo;
+                    getProductById.Width = model.Width;
+                    getProductById.Height = model.Height;
+                    getProductById.Depth = model.Depth;
+                    var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+                    var _mappedUser = _mapper.Map<ProductRequestDto>(data);
+
+                    return _mappedUser;
+                }
+
+                throw new Exception("Product is not found");
+            }
+
+            throw new Exception("Product is not found");
         }
+
+        public async Task<ProductRequestDto> UpdateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
+        {
+            if (model.ProductId > 0)
+            {
+                var getProductById = await GetProductById(model.ProductId, cancellationToken);
+
+                if (getProductById != null)
+                {
+                    UpdateData(getProductById);
+                    getProductById.UsedFabric = model.UsedFabric;
+                    getProductById.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
+                    getProductById.TotalDaysToPrepare = model.TotalDaysToPrepare;
+                    getProductById.Features = model.Features;
+                    getProductById.Comments = model.Comments;
+                    var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+                    var _mappedUser = _mapper.Map<ProductRequestDto>(data);
+
+                    return _mappedUser;
+                }
+
+                throw new Exception("Product is not found");
+            }
+
+            throw new Exception("Product is not found");
+        }
+
+        public async Task<ProductRequestDto?> UpdateProductCost(ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            if (model.ProductId > 0)
+            {
+                var getProductById = await GetProductById(model.ProductId, cancellationToken);
+
+                if (getProductById != null)
+                {
+                    UpdateData(getProductById);
+                    getProductById.CostPrice = model.CostPrice;
+                    getProductById.RetailerPrice = model.RetailerPrice;
+                    getProductById.WholesalerPrice = model.WholesalerPrice;
+                    var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+
+                    return _mapper.Map<ProductRequestDto>(data);
+                }
+
+                throw new Exception("Product is not found");
+            }
+
+            throw new Exception("Product is not found");
+        }
+
+        #region API Methods
+        public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
+        {
+            var produdctData = await GetProductById(Id, cancellationToken);
+            return _mapper.Map<ProductRequestDto>(produdctData);
+        }
+
+        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
+        }
+        #endregion
 
         #region Private Method
 
@@ -207,21 +229,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             return productDataById;
         }
 
-        private async Task<List<ProductImage>> GetProductImageById(Int64 Id, CancellationToken cancellationToken)
+        private async Task<IQueryable<ProductImage>> GetProductImageById(Int64 Id, CancellationToken cancellationToken)
         {
             var productImage = await _unitOfWorkDA.ProductImageDA.GetAll(cancellationToken);
-            var productImageDataById = productImage.Where(x => x.ProductId == Id).ToList();
-            if (productImageDataById == null)
-            {
-                throw new Exception("ProductImages not found");
-            }
-            return productImageDataById;
+            return productImage.Where(x => x.ProductId == Id);
         }
 
         private async Task<List<ProductMaterial>> GetProductMaterialById(Int64 Id, CancellationToken cancellationToken)
         {
             var productMaterial = await _unitOfWorkDA.ProductMaterialDA.GetAll(cancellationToken);
-            var productMaterialDataById = productMaterial.Where(x => x.ProductId == Id).ToList();
+            var productMaterialDataById = productMaterial.Where(x => x.ProductId == Id).OrderBy(p => p.SubjectTypeId).ToList();
             if (productMaterialDataById == null)
             {
                 throw new Exception("ProductMaterials not found");
@@ -256,7 +273,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.QRImage = model.QRImage;
         }
 
-        private async Task<ProductImage> AddImages(long productId, ProductMainRequestDto model, ProductImage saveImage, CancellationToken cancellationToken)
+        private async Task AddImages(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
             foreach (var item in model.Files)
             {
@@ -265,16 +282,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productImageRequestDto.ImageName = item.FileName;
 
                 var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
-                productImageToInsert.ProductId = productId;
+                productImageToInsert.ProductId = model.ProductId;
                 productImageToInsert.ImagePath = productImageRequestDto.ImagePath;
                 productImageToInsert.ImageName = productImageRequestDto.ImageName;
                 productImageToInsert.CreatedBy = _currentUser.UserId;
                 productImageToInsert.CreatedDate = DateTime.Now;
                 productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
-                saveImage = await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
+                await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
             }
-
-            return saveImage;
         }
 
         private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
@@ -285,19 +300,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        private async Task SaveProductMaterials(long productId, List<ProductMaterialRequestDto> model, CancellationToken cancellationToken)
+        private async Task SaveProductMaterials(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
-            if (model != null)
+            if (model.ProductMaterialRequestDto != null)
             {
-                foreach (var item in model.Where(p => !p.IsDeleted))
+                foreach (var item in model.ProductMaterialRequestDto.Where(p => !p.IsDeleted))
                 {
-                    item.ProductId = productId;
+                    item.ProductId = model.ProductId;
                     await CreateProductMaterial(item, cancellationToken);
                 }
             }
         }
 
-        private async Task DeleteProductMaterials(int Id, CancellationToken cancellationToken)
+        private async Task DeleteProductMaterials(Int64 Id, CancellationToken cancellationToken)
         {
             var productMaterialById = await GetProductMaterialById(Id, cancellationToken);
             foreach (var item in productMaterialById)
