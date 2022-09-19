@@ -74,6 +74,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerAddressesRequestDto> CreateCustomerAddresses(CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
+            if (model.IsDefault)
+            {
+                var defualtAddress = await GetCustomerDefualtAddress(model.CustomerId, cancellationToken);
+                if (defualtAddress != null)
+                {
+                    defualtAddress.IsDefault = false;
+                    await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(defualtAddress.CustomerAddressId, defualtAddress, cancellationToken);
+                }
+            }
             var customerAddresses = _mapper.Map<CustomerAddresses>(model);
             customerAddresses.IsDeleted = false;
             customerAddresses.CreatedBy = _currentUser.UserId;
@@ -85,11 +94,31 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
+            if (model.IsDefault)
+            {
+                var defualtAddress = await GetCustomerDefualtAddress(model.CustomerId, cancellationToken);
+                if (defualtAddress != null)
+                {
+                    defualtAddress.IsDefault = false;
+                    await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(defualtAddress.CustomerAddressId, defualtAddress, cancellationToken);
+                }
+            }
             var oldData = await CustomerAddressesGetById(Id, cancellationToken);
             UpdateCustomerAddresses(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, oldData, cancellationToken);
             return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
+        public async Task<CustomerAddresses?> GetCustomerDefualtAddress(Int64 Id, CancellationToken cancellationToken)
+        {
+            var customerAddressesAllData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+            var customerHaveDefualtAddress = customerAddressesAllData.FirstOrDefault(x => x.CustomerId == Id && x.IsDefault == true);
+            if (customerHaveDefualtAddress != null)
+            {
+                return customerHaveDefualtAddress;
+            }
+            return null;
         }
 
         public async Task<CustomerAddressesRequestDto> DeleteCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
