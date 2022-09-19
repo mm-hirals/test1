@@ -52,7 +52,7 @@ namespace MidCapERP.Infrastructure.Services.Token
         /// <param name="claimsPrincipal">HttpContext.User</param>
         /// <returns></returns>
         TokenResponse GetTokenDetails(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken);
-        Task GenerateOTP(TokenAPIRequest request, CancellationToken cancellationToken);
+        Task GenerateOTP(TokenOtpGenerateRequest request, CancellationToken cancellationToken);
         Task<TokenResponse> AuthenticateAPI(TokenAPIRequest request, CancellationToken cancellationToken);
         Task Logout();
     }

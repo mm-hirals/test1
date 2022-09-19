@@ -19,9 +19,9 @@
                                         <label asp-for="CustomerTypeId" class="form-label"></label>
                                     </label>
                                     <select asp-for="CustomerTypeId" data-val="true" class="form-control"
-                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select Customer Type</option>
-                                </select>
+                                            asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
+                                        <option value="" hidden disabled selected>Select Customer Type</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -113,14 +113,14 @@
                                 </div>
                             </div>
                         </div>
-                        @if(Model == null)
+                        @if (Model == null)
                         {
                             <div class="col-3">
-                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.AddressType" class="form-label"></label>                         
-                                    <select  asp-for="CustomerAddressesRequestDto.AddressType" id="AddressTypeId" data-val="true" class="form-control">
-                                        <option value="" hidden disabled selected>Select Address Type</option>
-	                                    <option value="Home">Home</option>
+                                <div class="form-group">
+                                    <label asp-for="CustomerAddressesRequestDto.AddressType" class="form-label"></label>
+                                    <select asp-for="CustomerAddressesRequestDto.AddressType" id="AddressTypeId" data-val="true" class="form-control">
+                                        <option value="" hidden disabled>Select Address Type</option>
+                                        <option value="Home" selected>Home</option>
                                         <option value="Office">Office</option>
                                         <option value="Other">Other</option>
                                     </select>
@@ -178,63 +178,63 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                      <div class="custom-control custom-switch">
+                                    <div class="custom-control custom-switch">
                                         <label class="form-label">
-                                            IsDefault 
+                                            IsDefault
                                         </label>
-                                        <input asp-for="CustomerAddressesRequestDto.IsDefault" type="checkbox" class="custom-control-input" id="isDefualtCheck" data-val="true">
-                                        <label class="custom-control-label" for="isDefualtCheck">Active</label>    
+                                        <input asp-for="CustomerAddressesRequestDto.IsDefault" type="checkbox" class="custom-control-input" id="isDefualtCheck" data-val="true" checked>
+                                        <label class="custom-control-label" for="isDefualtCheck">Active</label>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
                     <div class="row c-card-footer--btn">
-                         <div class="col-12">
-                             <div class="c-card--wrapper c-card-sm--wrapper">
-                                    <div class="c-card--footer">
-                                        <a class="btn btn-danger" href="/Customer/Index">Cancle</a>
-                                        <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
-                                    </div>
-                             </div>
-                         </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-        @if (Model != null && Model.CustomerId != null)
-        {
-            <nav class="product-nav-tab--sticky">
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-                        Addresses
-                    </button>
-                </div>
-            </nav>
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
-                    <div class="c-card--wrapper c-card-sm--wrapper mb-3">
-                        <div class="c-card--header">
-                            <h4 class="c-card--header-title">Address Details</h4>
-                            <div class="c-card--header-action">
-                                <a asp-controller="Customer" asp-action="CreateCustomerAddress"  class="btn btn-primary"
-                           data-ajax-complete="CustomerAddressesModel.onComplete"  id="customersId"  asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
-                           data-ajax="true" data-ajax-mode="replace">Create New</a>
-                            </div>
-                        </div>
-                        <div class="c-card--body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <partial name="_CustomerAddressesTable" model="null" />
-                                    <div id="divUpdateCustomerAddresses"></div>
+                        <div class="col-12">
+                            <div class="c-card--wrapper c-card-sm--wrapper">
+                                <div class="c-card--footer">
+                                    <a class="btn btn-danger" href="/Customer/Index">Cancle</a>
+                                    <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </form>
+        </div>
+    </div>
+    @if (Model != null && Model.CustomerId != null)
+    {
+        <nav class="product-nav-tab--sticky">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                    Addresses
+                </button>
             </div>
-        }
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+                <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                    <div class="c-card--header">
+                        <h4 class="c-card--header-title">Address Details</h4>
+                        <div class="c-card--header-action">
+                            <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary"
+                           data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
+                           data-ajax="true" data-ajax-mode="replace">Create New</a>
+                        </div>
+                    </div>
+                    <div class="c-card--body">
+                        <div class="row">
+                            <div class="col-12">
+                                <partial name="_CustomerAddressesTable" model="null" />
+                                <div id="divUpdateCustomerAddresses"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @section Scripts {
