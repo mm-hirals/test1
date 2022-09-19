@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MidCapERP.Admin.Models;
 using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Constants;
+using MidCapERP.Infrastructure.Localizer.JsonString;
 using NToastNotify;
 using System.Diagnostics;
 
@@ -14,7 +16,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly CurrentUser _currentUser;
         private readonly IToastNotification _toastNotification;
 
-        public DashboardController(ILogger<DashboardController> logger, CurrentUser currentUser, IToastNotification toastNotification)
+        public DashboardController(ILogger<DashboardController> logger, CurrentUser currentUser, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _currentUser = currentUser;
             _logger = logger;
@@ -24,6 +26,13 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
+            _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
+            var lang = "hi-IN";
+            Response.Headers.AcceptLanguage = new Microsoft.Extensions.Primitives.StringValues(lang);
+            
+            //gu-IN
+            //hi-IN
+
             return View();
         }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Role;
@@ -8,11 +9,11 @@ using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class RoleController : Controller
+    public class RoleController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public RoleController(IUnitOfWorkBL unitOfWorkBL)
+        public RoleController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }

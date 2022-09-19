@@ -30,6 +30,9 @@ namespace MidCapERP.Admin.Configuration
             app.UseExceptionHandlerMiddleware();
             app.UseRouting();
 
+            // Localization implemented for message response
+            app.UseLocalizationMiddleware();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

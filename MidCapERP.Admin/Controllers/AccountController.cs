@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Linq;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
@@ -10,9 +13,11 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IStringLocalizer<BaseController> _localizer;
 
-        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService)
+        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IStringLocalizer<BaseController> localizer)
         {
+            _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _tokenService = tokenService;
         }
@@ -92,6 +97,20 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Profile(CancellationToken cancellationToken)
         {
             return View();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+        {
+            await _tokenService.Logout();
+            foreach (var item in Request.Cookies)
+            {
+                Response.Cookies.Delete(item.Key);
+            }
+            return RedirectToAction("Index", "Dashboard");
         }
     }
 }

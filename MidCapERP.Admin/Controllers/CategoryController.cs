@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Category;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
@@ -13,7 +14,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
 
-        public CategoryController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public CategoryController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;

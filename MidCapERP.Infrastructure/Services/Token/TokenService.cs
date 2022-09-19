@@ -32,7 +32,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager,
             IOptions<TokenConfiguration> tokenOptions,
-            IHttpContextAccessor httpContextAccessor,IOTPLoginDA otpLoginDA)
+            IHttpContextAccessor httpContextAccessor, IOTPLoginDA otpLoginDA)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -104,9 +104,9 @@ namespace MidCapERP.Infrastructure.Services.Token
 
             if (oldLoginTokenByPhoneNo != null)
             {
-                if(oldLoginTokenByPhoneNo.OTP == request.OTP)
+                if (oldLoginTokenByPhoneNo.OTP == request.OTP)
                 {
-                    if(DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
+                    if (DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
                     {
                         var user = await GetUserByPhoneNo(request.PhoneNo);
                         await _signInManager.SignInAsync(user, isPersistent: false);
@@ -144,6 +144,14 @@ namespace MidCapERP.Infrastructure.Services.Token
 
             return signInResult.Succeeded;
         }
+
+
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
+            //await _httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
 
         /// <inheritdoc cref="ITokenService.GetUserByEmail(string)" />
         public async Task<ApplicationUser> GetUserByEmail(string email, CancellationToken cancellationToken)
