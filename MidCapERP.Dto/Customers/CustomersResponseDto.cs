@@ -23,7 +23,7 @@ namespace MidCapERP.Dto.Customers
 
         [DisplayName("Alternate Phone Number")]
         public string AltPhoneNumber { get; set; }
-
+        [DisplayName("GST No")]
         public string? GSTNo { get; set; }
         public long? RefferedBy { get; set; }
         public decimal Discount { get; set; }
