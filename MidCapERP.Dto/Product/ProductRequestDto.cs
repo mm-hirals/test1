@@ -67,5 +67,6 @@ namespace MidCapERP.Dto.Product
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+        public bool IsPublished { get; set; }
     }
 }
