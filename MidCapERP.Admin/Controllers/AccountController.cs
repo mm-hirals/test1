@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
+using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -10,11 +11,13 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IToastNotification _toastNotification;
 
-        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService)
+        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IToastNotification toastNotification)
         {
             _httpContextAccessor = httpContextAccessor;
             _tokenService = tokenService;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
@@ -45,14 +48,14 @@ namespace MidCapERP.Admin.Controllers
         {
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, true);
+
             if (tokenResponse == null)
             {
-                return RedirectToAction("Login", "Account");   
+                _toastNotification.AddErrorToastMessage("Incorrect username or Password. Please try again.");
+                return RedirectToAction("Login", "Account");
             }
-            else
-            {
-                return  RedirectToAction("Index", "Dashboard");
-            }
+         
+            return  RedirectToAction("Index", "Dashboard");
         }
 
         /// <summary>
