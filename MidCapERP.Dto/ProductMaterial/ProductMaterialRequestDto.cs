@@ -10,6 +10,8 @@
         public decimal MaterialPrice { get; set; }
         public decimal CostPrice { get; set; }
         public string? Comments { get; set; }
+        public string? RowMaterialUnitType { get; set; }
+        public string? PolishUnitType { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

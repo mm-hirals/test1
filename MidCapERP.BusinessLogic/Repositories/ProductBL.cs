@@ -75,7 +75,47 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMain.CostPrice = getProductInfoById.CostPrice;
             productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
             productMain.RetailerPrice = getProductInfoById.RetailerPrice;
-            productMain.ProductMaterialRequestDto = _mapper.Map<List<ProductMaterialRequestDto>>(productMaterialList);
+
+            var unitData = await GetAllUnit(cancellationToken);
+            var rowMaterial = await GetAllRowMaterial(cancellationToken);
+            var polish = await GetAllPolish(cancellationToken);
+            var data = (from x in productMaterialList
+                            //left join start for rawmaterial
+                        join y in rowMaterial on x.SubjectId equals y.RawMaterialId into rowM
+                        from rowMat in rowM.DefaultIfEmpty()
+                            // inner join on unitdata on rowmaterial
+                        join ur in unitData on rowMat.UnitId equals ur.LookupValueId
+                        // left join end
+
+
+                        //left join start for POlise
+                        join z in polish on x.SubjectId equals z.PolishId into polishM
+                        from polishMat in polishM.DefaultIfEmpty()
+                            // inner join on unitdata on policede
+                        join up in unitData on rowMat.UnitId equals up.LookupValueId
+                        // left join end
+
+                        select new ProductMaterialRequestDto
+                        {
+                            ProductMaterialID = x.ProductMaterialID,
+                            ProductId = x.ProductId,
+                            SubjectTypeId = x.SubjectTypeId,
+                            SubjectId = x.SubjectId,
+                            Qty = x.Qty,
+                            MaterialPrice = x.MaterialPrice,
+                            Comments = x.Comments,
+                            RowMaterialUnitType = x.SubjectTypeId == 2 ? ur.LookupValueName : String.Empty,
+                            PolishUnitType = x.SubjectTypeId == 3 ? up.LookupValueName : String.Empty,
+                            CreatedBy = x.CreatedBy,
+                            CreatedDate = x.CreatedDate,
+                            CreatedUTCDate = x.CreatedUTCDate,
+                            UpdatedBy = x.UpdatedBy,
+                            UpdatedDate = x.UpdatedDate,
+                            UpdatedUTCDate = x.UpdatedUTCDate,
+                            IsDeleted = false
+                        }).OrderBy(p => p.SubjectTypeId).ToList();
+
+            productMain.ProductMaterialRequestDto = data;
             return productMain;
         }
 
@@ -219,6 +259,22 @@ namespace MidCapERP.BusinessLogic.Repositories
         #endregion
 
         #region Private Method
+
+        public async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
+        {
+            var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            return lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
+        }
+
+        public async Task<IQueryable<RawMaterial>> GetAllRowMaterial(CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+        }
+
+        public async Task<IQueryable<Polish>> GetAllPolish(CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+        }
 
         private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
         {
