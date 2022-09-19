@@ -43,13 +43,16 @@ namespace MidCapERP.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(TokenRequest request, CancellationToken cancellationToken)
         {
-            request.Username = "kparmar@magnusminds.net";
-            request.Password = "Password@1";
-
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, true);
-
-            return RedirectToAction("Index", "Dashboard");
+            if (tokenResponse == null)
+            {
+                return RedirectToAction("Login", "Account");   
+            }
+            else
+            {
+                return  RedirectToAction("Index", "Dashboard");
+            }
         }
 
         /// <summary>
@@ -85,6 +88,7 @@ namespace MidCapERP.Admin.Controllers
 
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, false);
+
             return View();
         }
 
