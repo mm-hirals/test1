@@ -23,7 +23,7 @@ namespace MidCapERP.DataAccess.Repositories
             return await _productImage.InsertAsync(model, cancellationToken);
         }
 
-        public async Task<ProductImage> DeleteProductMaterial(long Id, CancellationToken cancellationToken)
+        public async Task<ProductImage> DeleteProductImage(long Id, CancellationToken cancellationToken)
         {
             var entity = await _productImage.GetByIdAsync(Id, cancellationToken);
             if (entity != null)

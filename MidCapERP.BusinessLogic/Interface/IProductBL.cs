@@ -7,15 +7,13 @@ namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IProductBL
     {
-        public Task<IEnumerable<ProductResponseDto>> GetAll(CancellationToken cancellationToken);
-
         public Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
 
         public Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken);
 
-        public Task<List<ProductMaterialRequestDto>> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
+        public Task<ProductMainRequestDto> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
 
@@ -25,15 +23,15 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken);
 
-        public Task<ProductRequestDto> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken);
+        public Task<ProductRequestDto> UpdateProduct(ProductRequestDto model, CancellationToken cancellationToken);
 
-        public Task<ProductRequestDto> UpdateProduct(int Id, ProductRequestDto model, CancellationToken cancellationToken);
+        public Task<ProductRequestDto> UpdateProductDetail(ProductRequestDto model, CancellationToken cancellationToken);
 
-        public Task<ProductRequestDto> UpdateProductDetail(int Id, ProductRequestDto model, CancellationToken cancellationToken);
+        public Task<ProductRequestDto?> UpdateProductCost(ProductMainRequestDto model, CancellationToken cancellationToken);
 
-        public Task<ProductImageRequestDto> SaveImages(long productId, ProductMainRequestDto model, CancellationToken cancellationToken);
+        public Task<ProductImageRequestDto> CreateProductImages(ProductMainRequestDto model, CancellationToken cancellationToken);
 
-        public Task<List<ProductMaterialRequestDto>> CreateProductMaterial(int productId, List<ProductMaterialRequestDto> productMaterialRequestList, CancellationToken cancellationToken);
-        public Task<ProductRequestDto?> UpdateProductCost(int Id, ProductMainRequestDto model, CancellationToken cancellationToken);
+        public Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken);
+
     }
 }

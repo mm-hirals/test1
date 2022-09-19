@@ -4,7 +4,7 @@
     var i = 0;
 }
 
-<form asp-action="SaveProductMaterial" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data"
+<form asp-action="CreateProductMaterial" asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data"
       data-ajax="true" data-ajax-method="post"
       data-ajax-complete="ProductModel.onProductMaterialSuccess"
       data-ajax-failure="ProductModel.onProductMaterialFailed"
@@ -13,9 +13,6 @@
         <input type="hidden" asp-for="ProductId" />
         <div class="col-md-8">
             <div class="c-card--wrapper c-card-sm--wrapper mb-3">
-                <div class="c-card--header">
-                    <h4 class="c-card--header-title">Raw Materials</h4>
-                </div>
                 <div class="c-card--body">
                     <table class="table c-table c-table-bordered">
                         <thead>
@@ -77,10 +74,10 @@
                                     <tr>
                                         <td>
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="2">
-                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
+                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
                                                 @foreach (var list in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
                                                 {
-                                                    <option value="@list.Value" UnitPrice="@list.UnitPrice">@list.Text</option>
+                                                    <option value="@list.Value" UnitPrice="@list.UnitPrice" data-value="true">@list.Text</option>
                                                 }
                                             </select>
                                         </td>
@@ -112,9 +109,6 @@
                 </div>
             </div>
             <div class="c-card--wrapper c-card-sm--wrapper mb-3">
-                <div class="c-card--header">
-                    <h4 class="c-card--header-title">Polish</h4>
-                </div>
                 <div class="c-card--body">
                     <table class="table c-table c-table-bordered">
                         <thead>

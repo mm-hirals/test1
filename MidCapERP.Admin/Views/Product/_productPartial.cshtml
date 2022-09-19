@@ -19,10 +19,20 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label asp-for="CategoryId" class="form-label"></label>
-                            <select asp-for="CategoryId" data-val="true" class="form-control"
+                            @if (Model?.ProductId > 0)
+                            {
+                                <select asp-for="CategoryId" data-val="true" class="form-control" readonly="readonly"
                                     asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
-                                <option value="" selected>Select Category</option>
-                            </select>
+                                    <option value="" selected>Select Category</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select asp-for="CategoryId" data-val="true" class="form-control"
+                                    asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                                    <option value="" selected>Select Category</option>
+                                </select>
+                            }
                             <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div>
                     </div>
@@ -77,8 +87,6 @@
                     </div>
                 </div>
             </div>
-            @* <div class="product-info--wrapper">
-            </div>*@
         </div>
     </div>
 </form>

@@ -7,14 +7,6 @@ $(document).on("#lnkProductFilter", "click", (function () {
     $("#FilterCard").slideToggle("slow");
 }));
 
-var action = $("input.productIdForCat").val();
-if (action == "/Product/Create") {
-    $("select.category").attr('disabled', false);
-}
-else {
-    $("select.category").attr('disabled', true);
-}
-
 $(document).on("click", ".add-icon", (function () {
     if ($(this).parent().parent().find("select").val() != "") {
         var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
@@ -74,7 +66,7 @@ $(document).on("change", "select.material", (function () {
     $(this).parent().parent().find("input.costPrice").val(unitPrice);
     $(this).parent().parent().find("input.costPrice").attr('value', unitPrice);
 
-    //$("span.materialErrorMsg").hide();
+    $("span.materialErrorMsg").hide();
 }));
 
 $(document).on("click", ".minus-icon", function () {
