@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Product
@@ -55,6 +56,7 @@ namespace MidCapERP.Dto.Product
         public decimal WholesalerPrice { get; set; }
 
         public string? CoverImage { get; set; }
+        public IFormFile? UploadImage { get; set; }
 
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
