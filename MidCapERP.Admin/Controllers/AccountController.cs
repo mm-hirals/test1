@@ -15,7 +15,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IToastNotification _toastNotification;
-
+        private readonly IStringLocalizer<BaseController> _localizer;
         public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer)
         {
             _localizer = localizer;
