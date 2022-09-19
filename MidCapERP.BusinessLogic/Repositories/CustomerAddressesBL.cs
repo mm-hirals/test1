@@ -69,7 +69,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             if (model.IsDefault)
             {
-                var defualtAddress = await UpdateCustomerDefualtAddressStatus(model.CustomerId, cancellationToken);
+                var defualtAddress = await GetCustomerDefualtAddress(model.CustomerId, cancellationToken);
                 if (defualtAddress != null)
                 {
                     defualtAddress.IsDefault = false;
@@ -89,7 +89,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             if (model.IsDefault)
             {
-                var defualtAddress = await UpdateCustomerDefualtAddressStatus(model.CustomerId, cancellationToken);
+                var defualtAddress = await GetCustomerDefualtAddress(model.CustomerId, cancellationToken);
                 if (defualtAddress != null)
                 {
                     defualtAddress.IsDefault = false;
@@ -103,7 +103,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomerAddressesRequestDto>(data);
         }
 
-        public async Task<CustomerAddresses?> UpdateCustomerDefualtAddressStatus(Int64 Id, CancellationToken cancellationToken)
+        public async Task<CustomerAddresses?> GetCustomerDefualtAddress(Int64 Id, CancellationToken cancellationToken)
         {
             var customerAddressesAllData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
             var customerHaveDefualtAddress = customerAddressesAllData.FirstOrDefault(x => x.CustomerId == Id && x.IsDefault == true);
