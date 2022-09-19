@@ -100,6 +100,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             applicationUser.Email = model.Email;
             applicationUser.PhoneNumber = model.PhoneNumber;
             applicationUser.IsActive = true;
+            applicationUser.EmailConfirmed = true;
             await _unitOfWorkDA.UserDA.CreateUser(applicationUser, model.Password);
 
             // Add UserId and TenantId into UserTenantMapping
@@ -143,6 +144,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var userAllData = await GetAllUsersData(cancellationToken);
             var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
             userById.IsActive = false;
+            userById.EmailConfirmed = false;
             await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
             return _mapper.Map<UserRequestDto>(userById);
         }
