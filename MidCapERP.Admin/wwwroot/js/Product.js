@@ -59,12 +59,16 @@ $(document).on("change", "select.material", (function () {
     }).first().attr("selected", "selected");
 
     var unitPrice = $(this).find(':selected').attr('data-unitprice');
+    var unit = $(this).find(':selected').attr('data-unitname');
+
     $(this).parent().parent().find("input.materialPrice").val(unitPrice);
     $(this).parent().parent().find("input.materialPrice").attr('value', unitPrice);
     $(this).parent().parent().find("input.quantity").val(1);
     $(this).parent().parent().find("input.quantity").attr('value', 1);
     $(this).parent().parent().find("input.costPrice").val(unitPrice);
     $(this).parent().parent().find("input.costPrice").attr('value', unitPrice);
+    $(this).parent().parent().find("input.Unit").val(unit);
+    $(this).parent().parent().find("input.Unit").attr('value', unit);
 
     $("span.materialErrorMsg").hide();
 }));
