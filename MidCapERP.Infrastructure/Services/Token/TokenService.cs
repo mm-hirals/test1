@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MidCapERP.DataAccess.Interface;
+using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
@@ -25,14 +26,16 @@ namespace MidCapERP.Infrastructure.Services.Token
         private readonly TokenConfiguration _token;
         private readonly HttpContext _httpContext;
         private readonly IOTPLoginDA _loginDA;
+        private readonly IUnitOfWorkDA _unitOfWorkDA;
 
         /// <inheritdoc cref="ITokenService" />
         public TokenService(
+            IUnitOfWorkDA unitOfWorkDA,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<ApplicationRole> roleManager,
             IOptions<TokenConfiguration> tokenOptions,
-            IHttpContextAccessor httpContextAccessor,IOTPLoginDA otpLoginDA)
+            IHttpContextAccessor httpContextAccessor, IOTPLoginDA otpLoginDA)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -40,6 +43,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             _token = tokenOptions.Value;
             _loginDA = otpLoginDA;
             _httpContext = httpContextAccessor.HttpContext;
+            _unitOfWorkDA = unitOfWorkDA;
         }
 
         /// <inheritdoc cref="ITokenService.Authenticate(TokenRequest, string)"/>
@@ -62,12 +66,12 @@ namespace MidCapERP.Infrastructure.Services.Token
         {
             string data = string.Empty;
 
-            var user = await GetUserByPhoneNo(request);
+            var user = await GetUserByPhoneNo(request, cancellationToken);
             if (user != null)
             {
                 var otpLogin = await _loginDA.GetAll(cancellationToken);
                 var oldLoginTokenByPhoneNo = otpLogin.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
-               
+
                 if (oldLoginTokenByPhoneNo == null)
                 {
                     OTPLogin loginToken = new OTPLogin()
@@ -104,14 +108,14 @@ namespace MidCapERP.Infrastructure.Services.Token
 
             if (oldLoginTokenByPhoneNo != null)
             {
-                if(oldLoginTokenByPhoneNo.OTP == request.OTP)
+                if (oldLoginTokenByPhoneNo.OTP == request.OTP)
                 {
-                    if(DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
+                    if (DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
                     {
                         TokenOtpGenerateRequest tokenOtpGenerate = new TokenOtpGenerateRequest();
                         tokenOtpGenerate.PhoneNo = request.PhoneNo;
                         tokenOtpGenerate.MobileDeviceId = request.MobileDeviceId;
-                        var user = await GetUserByPhoneNo(tokenOtpGenerate);
+                        var user = await GetUserByPhoneNo(tokenOtpGenerate, cancellationToken);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return await GenerateAuthentication(false, user, cancellationToken);
                     }
@@ -122,8 +126,15 @@ namespace MidCapERP.Infrastructure.Services.Token
             throw new Exception("Phone No is not Registered");
         }
 
-        public async Task<ApplicationUser?> GetUserByPhoneNo(TokenOtpGenerateRequest request)
+        public async Task<ApplicationUser?> GetUserByPhoneNo(TokenOtpGenerateRequest request, CancellationToken cancellationToken)
         {
+            var getAllUser = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var getNullMobileDevice = getAllUser.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.MobileDeviceId == null);
+            if (getNullMobileDevice != null)
+            {
+                getNullMobileDevice.MobileDeviceId = request.MobileDeviceId;
+                await _unitOfWorkDA.UserDA.UpdateUser(getNullMobileDevice);
+            }
             return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted && p.MobileDeviceId == request.MobileDeviceId);
         }
 
@@ -203,7 +214,6 @@ namespace MidCapERP.Infrastructure.Services.Token
         /// <returns></returns>
         private async Task<string> GenerateJwtToken(ApplicationUser user, CancellationToken cancellationToken, bool isCookie = false)
         {
-
             string roleName = (await _userManager.GetRolesAsync(user))[0];
             var roleDetails = await _roleManager.FindByNameAsync(roleName);
             byte[] secret = Encoding.ASCII.GetBytes(_token.Secret);
