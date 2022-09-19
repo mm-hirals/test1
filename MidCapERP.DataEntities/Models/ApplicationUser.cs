@@ -26,6 +26,8 @@ namespace MidCapERP.DataEntities.Models
             }
         }
 
+        public string MobileDeviceId { get; set; }
+
         //[JsonIgnore]
         //public List<RefreshToken> RefreshTokens { get; set; }
     }

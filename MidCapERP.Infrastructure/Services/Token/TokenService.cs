@@ -58,16 +58,16 @@ namespace MidCapERP.Infrastructure.Services.Token
             return null;
         }
 
-        public async Task GenerateOTP(TokenAPIRequest request, CancellationToken cancellationToken)
+        public async Task GenerateOTP(TokenOtpGenerateRequest request, CancellationToken cancellationToken)
         {
             string data = string.Empty;
 
-            var user = await GetUserByPhoneNo(request.PhoneNo);
+            var user = await GetUserByPhoneNo(request);
             if (user != null)
             {
                 var otpLogin = await _loginDA.GetAll(cancellationToken);
                 var oldLoginTokenByPhoneNo = otpLogin.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
-
+               
                 if (oldLoginTokenByPhoneNo == null)
                 {
                     OTPLogin loginToken = new OTPLogin()
@@ -108,7 +108,10 @@ namespace MidCapERP.Infrastructure.Services.Token
                 {
                     if(DateTime.UtcNow < oldLoginTokenByPhoneNo.ExpiryTime)
                     {
-                        var user = await GetUserByPhoneNo(request.PhoneNo);
+                        TokenOtpGenerateRequest tokenOtpGenerate = new TokenOtpGenerateRequest();
+                        tokenOtpGenerate.PhoneNo = request.PhoneNo;
+                        tokenOtpGenerate.MobileDeviceId = request.MobileDeviceId;
+                        var user = await GetUserByPhoneNo(tokenOtpGenerate);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return await GenerateAuthentication(false, user, cancellationToken);
                     }
@@ -119,9 +122,9 @@ namespace MidCapERP.Infrastructure.Services.Token
             throw new Exception("Phone No is not Registered");
         }
 
-        public async Task<ApplicationUser?> GetUserByPhoneNo(string phoneNo)
+        public async Task<ApplicationUser?> GetUserByPhoneNo(TokenOtpGenerateRequest request)
         {
-            return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == phoneNo && p.IsActive && !p.IsDeleted);
+            return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted && p.MobileDeviceId == request.MobileDeviceId);
         }
 
         public Task<TokenResponse> RefreshToken(string refreshToken, string ipAddress, CancellationToken cancellationToken)
