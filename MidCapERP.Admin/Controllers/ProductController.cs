@@ -135,7 +135,7 @@ namespace MidCapERP.Admin.Controllers
         {
             if (model.ProductId > 0)
             {
-                var updateProductDetail = await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
+                await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
                 return RedirectToAction("CreateProductDetail", "Product", new { productId = model.ProductId });
             }
 
@@ -160,6 +160,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
+            await _unitOfWorkBL.ProductBL.DeleteProduct(Id, cancellationToken);
             return RedirectToAction("Index");
         }
 

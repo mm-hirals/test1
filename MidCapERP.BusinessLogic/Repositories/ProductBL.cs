@@ -88,6 +88,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
             var productToInsert = _mapper.Map<Product>(model);
+            if (model.UploadImage != null)
+                productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
             productToInsert.IsDeleted = false;
             productToInsert.IsPublished = false;
             productToInsert.TenantId = _currentUser.TenantId;
@@ -143,6 +145,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Width = model.Width;
                     getProductById.Height = model.Height;
                     getProductById.Depth = model.Depth;
+                    if (model.UploadImage != null)
+                        getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
@@ -204,7 +208,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             throw new Exception("Product is not found");
         }
 
+        public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
+        {
+            var productToDelete = await GetProductById(Id, cancellationToken);
+            productToDelete.IsDeleted = true;
+            UpdateData(productToDelete);
+            var data = await _unitOfWorkDA.ProductDA.DeleteProduct(Id, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(data);
+            return _mappedUser;
+        }
+
         #region API Methods
+
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
         {
             var produdctData = await GetProductById(Id, cancellationToken);
@@ -216,7 +231,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
         }
-        #endregion
+
+        #endregion API Methods
 
         #region Private Method
 

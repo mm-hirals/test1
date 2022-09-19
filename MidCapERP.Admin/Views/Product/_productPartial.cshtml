@@ -3,11 +3,18 @@
 <form asp-action="CreateProductBasicDetail" asp-controller="Product"
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
-        <input type="hidden" asp-for="ProductId" class="form-control productIdForCat" />
+        <input type="hidden" asp-for="ProductId" class="form-control productIdForCat" accept="image/*" />
         <div class="card-product--image">
-            <input type="file" hidden />
+            <input asp-for="CoverImage" type="file" hidden />
             <div class="product--image">
-                <img src="~/images/No_Image.jpg" alt="Product Name" />
+                @if (Model?.CoverImage != null)
+                {
+                    <img src="@Model.CoverImage" alt="Product Image" />
+                }
+                else
+                {
+                    <img src="~/images/No_Image.jpg" alt="Product Image" />
+                }
                 <div class="edit--image">
                     <i class="bx bx-pencil"></i>
                 </div>
@@ -80,6 +87,9 @@
                 </div>
                 <div class="col-12">
                     <div class="text-end pb-2">
+                        <div class="col-md-3">
+                            <input type="file" asp-for="UploadImage" class="form-control" />
+                        </div>
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                             Cancel
                         </a>

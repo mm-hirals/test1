@@ -1,4 +1,6 @@
 ﻿'use strict';
+
+var ProductModel = {};
 var tblProduct;
 
 $(function () {
@@ -29,3 +31,7 @@ $(function () {
         ]
     });
 });
+
+ProductModel.onDelete = function () {
+    tblProduct.ajax.reload();
+}
