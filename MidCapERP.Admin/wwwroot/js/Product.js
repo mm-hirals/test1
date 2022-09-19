@@ -7,14 +7,6 @@ $(document).on("#lnkProductFilter", "click", (function () {
     $("#FilterCard").slideToggle("slow");
 }));
 
-var action = $("form.productInfoForm").attr("action");
-if (action == "/Product/Create") {
-    $("select.category").attr('disabled', false);
-}
-else {
-    $("select.category").attr('disabled', true);
-}
-
 $(document).on("click", ".add-icon", (function () {
     if ($(this).parent().parent().find("select").val() != "") {
         var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)

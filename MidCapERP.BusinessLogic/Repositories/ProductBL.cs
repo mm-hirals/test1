@@ -296,7 +296,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             foreach (var item in getImageById)
             {
-                await _unitOfWorkDA.ProductImageDA.DeleteProductMaterial(item.ProductImageID, cancellationToken);
+                await _unitOfWorkDA.ProductImageDA.DeleteProductImage(item.ProductImageID, cancellationToken);
             }
         }
 
