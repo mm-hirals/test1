@@ -129,8 +129,10 @@ namespace MidCapERP.Infrastructure.Services.Token
         public async Task<ApplicationUser?> GetUserByPhoneNo(TokenOtpGenerateRequest request, CancellationToken cancellationToken)
         {
             var getAllUser = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
-            var getNullMobileDevice = getAllUser.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.MobileDeviceId == null);
-            if (getNullMobileDevice != null)
+            var getNullMobileDevice = getAllUser.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
+            if (getNullMobileDevice == null)
+                throw new Exception("User Not Found");
+            if (getNullMobileDevice.MobileDeviceId == null || getNullMobileDevice.MobileDeviceId != request.MobileDeviceId )
             {
                 getNullMobileDevice.MobileDeviceId = request.MobileDeviceId;
                 await _unitOfWorkDA.UserDA.UpdateUser(getNullMobileDevice);
