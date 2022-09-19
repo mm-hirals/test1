@@ -8,6 +8,7 @@ namespace MidCapERP.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)] 
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;

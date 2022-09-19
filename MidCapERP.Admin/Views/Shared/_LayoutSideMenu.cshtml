@@ -27,7 +27,7 @@
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-user-dropdown" data-popper-placement="bottom-end">
                 <h6 class="dropdown-header">Welcome @_currentUser.Name!</h6>
                 <a class="dropdown-item" href="/Account/Profile"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
-                <a class="dropdown-item" href="/Account/Login"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
+                <a class="dropdown-item" href="/Account/Logout"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
             </div>
         </div>
     </div>
@@ -103,7 +103,7 @@
                                 Polish
                             </a>
                         </li>
-                        <li class="nav-item">
+@*                        <li class="nav-item">
                             <a class="nav_link" href="/FrameType">
                                 Frame Types
                             </a>
@@ -112,7 +112,7 @@
                             <a class="nav_link" href="/Frame">
                                 Frames
                             </a>
-                        </li>
+                        </li>*@
                     </ul>
                 </li>
                 <li class="nav-item submenu-item">
@@ -136,7 +136,7 @@
             </ul>
         </div>
         <div class="nav-item">
-            <a href="#" class="nav_link">
+            <a href="/Account/Logout" class="nav_link">
                 <i class="bx bx-log-out nav_icon"></i>
                 <span class="nav_name">SignOut</span>
             </a>

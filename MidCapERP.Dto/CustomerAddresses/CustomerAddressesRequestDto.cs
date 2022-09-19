@@ -40,7 +40,7 @@ namespace MidCapERP.Dto.CustomerAddresses
         public string State { get; set; }
 
         [Required]
-        [DisplayName("ZipCode")]
+        [DisplayName("PinCode")]
         [MaxLength(6)]
         [MinLength(6, ErrorMessage = "Please enter 6 digits")]
         public string ZipCode { get; set; }

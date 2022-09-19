@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Unit;
@@ -8,12 +9,12 @@ using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class UnitController : Controller
+    public class UnitController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
 
-        public UnitController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public UnitController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;

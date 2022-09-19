@@ -8,6 +8,7 @@ using MidCapERP.DataAccess.Extention;
 using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Identity.Authorization;
 using MidCapERP.Infrastructure.Identity.Models;
+using MidCapERP.Infrastructure.Localizer.JsonString;
 using MidCapERP.Infrastructure.Services.Email;
 using MidCapERP.Infrastructure.Services.Token;
 using System.Text;
@@ -27,6 +28,7 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.SetupUnitOfWorkDA();
             services.SetupUnitOfWorkBL();
             services.SetupAutoMapper();
+            services.SetupJsonStrinLocalizer();
         }
 
         public static void SetAuthorization(this IServiceCollection services, IConfiguration configuration, string AuthenticationScheme)

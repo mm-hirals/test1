@@ -1,0 +1,6 @@
+{
+    "hi": "Hello",
+    "welcome": "Welcome {0}, How are you?",
+    "loginSuccessfull": "Login Successfull!",
+    "forgotPassword": "Forgot Password"
+}

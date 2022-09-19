@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Infrastructure.Identity.Models
 {
-    public class TokenAPIRequest
+    public class TokenOtpGenerateRequest
     {
         /// <summary>
         /// The phone No which is used for login
@@ -11,13 +11,6 @@ namespace MidCapERP.Infrastructure.Identity.Models
         [Required]
         [JsonProperty("phoneNo")]
         public string PhoneNo { get; set; }
-
-        /// <summary>
-        /// OTP which is used for login
-        /// </summary>
-        [Required]
-        [JsonProperty("otp")]
-        public string OTP { get; set; }
 
         /// <summary>
         /// MobileDeviceId which is used for AspNetUsers
