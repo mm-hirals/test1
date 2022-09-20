@@ -21,7 +21,7 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [DisplayName("Alternate Phone Number")]
+        [DisplayName("Alt.Phone Number")]
         public string AltPhoneNumber { get; set; }
         [DisplayName("GST No")]
         public string? GSTNo { get; set; }
