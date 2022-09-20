@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -22,13 +23,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private readonly CurrentUser _currentUser;
         private readonly IFileStorageService _fileStorageService;
+        private readonly IQRCodeService _iQRCodeService;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
             _fileStorageService = fileStorageService;
+            _iQRCodeService = iQRCodeService;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -82,12 +85,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CoverImage = x.CoverImage,
                                        QRImage = x.QRImage,
                                        TenantId = x.TenantId,
-                                       IsDeleted = x.IsDeleted,
                                        CreatedByName = y.FullName,
                                        CreatedDate = x.CreatedDate,
                                        UpdatedByName = y.FullName,
                                        UpdatedDate = x.UpdatedDate,
-                                       IsPublished = x.IsPublished
+                                       //IsDeleted = x.IsDeleted,
+                                       //IsPublished = x.IsPublished
                                    }).FirstOrDefault();
 
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
@@ -167,15 +170,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productToInsert = _mapper.Map<Product>(model);
             if (model.UploadImage != null)
                 productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-            productToInsert.IsDeleted = false;
-            productToInsert.IsPublished = false;
+            //productToInsert.IsDeleted = false;
+            //productToInsert.IsPublished = false;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
             productToInsert.CreatedDate = DateTime.Now;
             productToInsert.CreatedUTCDate = DateTime.UtcNow;
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-
+            if (productData.ProductId > 0)
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
             return _mappedUser;
         }
 
@@ -288,7 +292,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
         {
             var productToDelete = await GetProductById(Id, cancellationToken);
-            productToDelete.IsDeleted = true;
+            //productToDelete.IsDeleted = true;
             UpdateData(productToDelete);
             var data = await _unitOfWorkDA.ProductDA.DeleteProduct(Id, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);

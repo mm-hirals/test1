@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MidCapERP.DataEntities.Models
 {
     [Table("Products")]
-    public class Product : BaseEntity
+    public class Product
     {
         [Key]
         public Int64 ProductId { get; set; }
@@ -26,6 +26,12 @@ namespace MidCapERP.DataEntities.Models
         public string? CoverImage { get; set; }
         public string? QRImage { get; set; }
         public int TenantId { get; set; }
-        public bool IsPublished { get; set; }
+        public int? Status { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedUTCDate { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedUTCDate { get; set; }
     }
 }

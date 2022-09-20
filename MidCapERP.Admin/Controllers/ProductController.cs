@@ -165,6 +165,14 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        public async Task<IActionResult> Detail(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
+            return View("Detail", data);
+        }
+
         #region Private Method
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
