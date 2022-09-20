@@ -1,21 +1,24 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class FrameDA : IFrameDA
     {
         private readonly ISqlRepository<Frames> _frame;
+        private readonly CurrentUser _currentUser;
 
-        public FrameDA(ISqlRepository<Frames> frame)
+        public FrameDA(ISqlRepository<Frames> frame, CurrentUser currentUser)
         {
             _frame = frame;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<Frames>> GetAll(CancellationToken cancellationToken)
         {
-            return await _frame.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _frame.GetAsync(cancellationToken, x => x.IsDeleted == false && x.TenantId == _currentUser.TenantId);
         }
 
         public async Task<Frames> GetById(int Id, CancellationToken cancellationToken)

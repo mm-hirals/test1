@@ -1,21 +1,24 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class ContractorsDA : IContractorsDA
     {
         private readonly ISqlRepository<Contractors> _contractors;
+        private readonly CurrentUser _currentUser;
 
-        public ContractorsDA(ISqlRepository<Contractors> contractors)
+        public ContractorsDA(ISqlRepository<Contractors> contractors, CurrentUser currentUser)
         {
             _contractors = contractors;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<Contractors>> GetAll(CancellationToken cancellationToken)
         {
-            return await _contractors.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _contractors.GetAsync(cancellationToken, x => x.IsDeleted == false && x.TenantId == _currentUser.TenantId);
         }
 
         public async Task<Contractors> GetById(int Id, CancellationToken cancellationToken)
