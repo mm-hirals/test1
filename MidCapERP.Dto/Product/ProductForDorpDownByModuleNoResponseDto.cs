@@ -1,4 +1,7 @@
-﻿namespace MidCapERP.Dto.Product
+﻿using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.Order;
+
+namespace MidCapERP.Dto.Product
 {
     public class ProductForDorpDownByModuleNoResponseDto
     {
@@ -16,5 +19,9 @@
         public string ModelNo { get; set; }
         public string DefaultImage { get; set; }
         public string ProductType { get; set; }
+
+        private List<CustomerForDorpDownByModuleNoResponseDto> CustomerForDorpDownByModuleNoResponse = new List<CustomerForDorpDownByModuleNoResponseDto>();
+
+        private List<OrderForDorpDownByOrderNoResponseDto> OrderForDorpDownByOrderNoResponseDto = new List<OrderForDorpDownByOrderNoResponseDto>();
     }
 }

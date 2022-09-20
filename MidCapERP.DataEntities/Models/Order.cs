@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MidCapERP.DataEntities.Models
 {
     [Table("Orders")]
-    public class Order : BaseEntity
+    public class Order
     {
         [Key]
         public long OrderId { get; set; }
@@ -22,5 +22,12 @@ namespace MidCapERP.DataEntities.Models
         public string GSTNo { get; set; }
         public int Status { get; set; }
         public bool IsDraft { get; set; }
+        public int TenantId { get; set; }
+        public long CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedUTCDate { get; set; }
+        public long? UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedUTCDate { get; set; }
     }
 }

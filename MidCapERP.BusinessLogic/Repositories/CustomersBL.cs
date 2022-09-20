@@ -46,10 +46,17 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return false;
         }
 
-        public async Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string MobileNo, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
-            var customersData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return customersData.Where(x => x.PhoneNumber.StartsWith(MobileNo)).Select(x => new CustomerForDorpDownByModuleNoResponseDto(x.CustomerId, x.FirstName + x.LastName, "Customer")).ToList();
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new CustomerForDorpDownByModuleNoResponseDto(x.CustomerId, x.FirstName + " " + x.LastName, "Customer")).ToList();
+        }
+
+        public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
+        {
+            var cutomerAlldata = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var data = cutomerAlldata.FirstOrDefault(x => x.PhoneNumber.StartsWith(searchText));
+            return _mapper.Map<CustomersResponseDto>(data);
         }
 
         public async Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken)
@@ -61,7 +68,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo)  || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
+            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo) || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
             return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 

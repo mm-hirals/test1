@@ -10,7 +10,7 @@ namespace MidCapERP.Dto.Order
         public string OrderNo { get; set; }
 
         [Required]
-        public Int64 CustomerID { get; set; }
+        public long CustomerID { get; set; }
 
         [Required]
         public decimal GrossTotal { get; set; }

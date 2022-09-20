@@ -32,7 +32,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
-        [HttpPost("/Customer")]
+        [HttpPost("/api/Customer")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<ApiResponse> Post([FromBody] CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
@@ -45,7 +45,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
 
-        [HttpGet("/Customer/CheckCustomer")]
+        [HttpGet("/api/Customer/CheckCustomer")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)
         {
@@ -57,7 +57,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
         }
 
-        [HttpGet("/CustomerAddress/{CustomerId}")]
+        [HttpGet("/api/CustomerAddress/{CustomerId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
         public async Task<ApiResponse> CustomerAddressGet(long customerId, CancellationToken cancellationToken)
         {
@@ -69,7 +69,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
         }
 
-        [HttpPost("/CustomerAddress/{id}")]
+        [HttpPost("/api/CustomerAddress/{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<ApiResponse> CreateOrEditCustomerAddress(int id, [FromBody] CustomerAddressesRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
         {
