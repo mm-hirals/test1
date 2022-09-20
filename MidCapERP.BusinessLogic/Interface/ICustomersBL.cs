@@ -1,6 +1,7 @@
 ﻿using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -12,11 +13,13 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken);
 
-        public Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail,CancellationToken cancellationToken);
+        public Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken);
 
         public Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo,CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string MobileNo, CancellationToken cancellation);
 
         public Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken);
 
