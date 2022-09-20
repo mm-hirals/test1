@@ -15,7 +15,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IQueryable<ContractorCategoryMapping>> GetAll(CancellationToken cancellationToken)
         {
-            return await _contractorCategoryMapping.GetAsync(cancellationToken);
+            return await _contractorCategoryMapping.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
 
         public async Task<ContractorCategoryMapping> GetById(int Id, CancellationToken cancellationToken)

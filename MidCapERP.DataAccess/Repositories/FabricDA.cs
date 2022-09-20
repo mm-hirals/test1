@@ -1,21 +1,24 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class FabricDA : IFabricDA
     {
         private readonly ISqlRepository<Fabrics> _fabric;
+        private readonly CurrentUser _currentUser;
 
-        public FabricDA(ISqlRepository<Fabrics> fabric)
+        public FabricDA(ISqlRepository<Fabrics> fabric, CurrentUser currentUser)
         {
             _fabric = fabric;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<Fabrics>> GetAll(CancellationToken cancellationToken)
         {
-            return await _fabric.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _fabric.GetAsync(cancellationToken, x => x.IsDeleted == false && x.TenantId == _currentUser.TenantId);
         }
 
         public async Task<Fabrics> GetById(int Id, CancellationToken cancellationToken)
