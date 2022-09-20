@@ -85,11 +85,46 @@
                         </div>
                     </div>
                 </div>
+                @if (Model?.ProductId > 0)
+                {
+                    <div class="col-md-3">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Created Name Date
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input asp-for="CreatedByName" class="form-control" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input asp-for="CreatedDate" type="date" class="form-control" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Updated Name Date
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input asp-for="UpdatedByName" class="form-control" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input asp-for="UpdatedDate" type="date" class="form-control" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="col-12">
                     <div class="text-end pb-2">
-                        @*<div class="col-md-3">
-                            <input type="file" asp-for="UploadImage" class="form-control" />
-                        </div>*@
+                        @*<input type="file" asp-for="UploadImage" class="form-control" />*@
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                             Cancel
                         </a>

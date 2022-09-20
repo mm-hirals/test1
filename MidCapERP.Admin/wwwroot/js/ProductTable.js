@@ -18,9 +18,8 @@ $(function () {
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             { "data": "productTitle", "name": "ProductTitle", "autoWidth": true },
             { "data": "modelNo", "name": "ModelNo", "autoWidth": true },
-            { "data": "costPrice", "name": "CostPrice", "autoWidth": true },
-            { "data": "retailerPrice", "name": "RetailerPrice", "autoWidth": true },
-            { "data": "wholesalerPrice", "name": "WholesalerPrice", "autoWidth": true },
+            { "data": "createdDate", "name": "CreatedDate", "autoWidth": true },
+            { "data": "updatedDate", "name": "UpdatedDate", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

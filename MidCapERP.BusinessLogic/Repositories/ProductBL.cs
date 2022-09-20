@@ -44,9 +44,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            CategoryName = y.LookupValueName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
-                                           CostPrice = x.CostPrice,
-                                           RetailerPrice = x.RetailerPrice,
-                                           WholesalerPrice = x.WholesalerPrice
+                                           CreatedBy = x.CreatedBy,
+                                           CreatedDate = x.CreatedDate,
+                                           UpdatedBy = x.UpdatedBy,
+                                           UpdatedDate = x.UpdatedDate
                                        }).AsQueryable();
             var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -54,10 +55,48 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
         {
-            ProductRequestDto productRequestDto = new ProductRequestDto();
-            var data = await GetProductById(Id, cancellationToken);
-            productRequestDto = _mapper.Map<ProductRequestDto>(data);
-            return productRequestDto;
+            try
+            {
+                ProductRequestDto productRequestDto = new ProductRequestDto();
+                var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
+                                   join y in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken)
+                                   on x.CreatedBy equals y.UserId
+                                   select new ProductRequestDto()
+                                   {
+                                       ProductId = Id,
+                                       CategoryId = x.CategoryId,
+                                       ProductTitle = x.ProductTitle,
+                                       ModelNo = x.ModelNo,
+                                       Width = x.Width,
+                                       Height = x.Height,
+                                       Depth = x.Depth,
+                                       UsedFabric = x.UsedFabric,
+                                       IsVisibleToWholesalers = x.IsVisibleToWholesalers,
+                                       TotalDaysToPrepare = x.TotalDaysToPrepare,
+                                       Features = x.Features,
+                                       Comments = x.Comments,
+                                       CostPrice = x.CostPrice,
+                                       RetailerPrice = x.RetailerPrice,
+                                       WholesalerPrice = x.WholesalerPrice,
+                                       CoverImage = x.CoverImage,
+                                       QRImage = x.QRImage,
+                                       TenantId = x.TenantId,
+                                       IsDeleted = x.IsDeleted,
+                                       CreatedByName = y.FullName,
+                                       CreatedDate = x.CreatedDate,
+                                       UpdatedByName = y.FullName,
+                                       UpdatedDate = x.UpdatedDate,
+                                       IsPublished = x.IsPublished
+                                   }).FirstOrDefault();
+
+                productRequestDto = _mapper.Map<ProductRequestDto>(productData);
+                return productRequestDto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken)
@@ -86,7 +125,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                             // inner join on unitdata on rowmaterial
                         join ur in unitData on rowMat.UnitId equals ur.LookupValueId
                         // left join end
-
 
                         //left join start for POlise
                         join z in polish on x.SubjectId equals z.PolishId into polishM
