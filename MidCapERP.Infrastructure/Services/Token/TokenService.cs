@@ -261,6 +261,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             {
                 var authProperties = new AuthenticationProperties
                 {
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(_token.Expiry),
                     //AllowRefresh = <bool>,
                     // Refreshing the authentication session should be allowed.
 
