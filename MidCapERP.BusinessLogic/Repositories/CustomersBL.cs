@@ -46,12 +46,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return false;
         }
 
-        public async Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string MobileNo, CancellationToken cancellationToken)
-        {
-            var customersData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return customersData.Where(x => x.PhoneNumber.StartsWith(MobileNo)).Select(x => new CustomerForDorpDownByModuleNoResponseDto(x.CustomerId, x.FirstName + x.LastName, "Customer")).ToList();
-        }
-
         public async Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomerTypesDA.GetAll(cancellationToken);

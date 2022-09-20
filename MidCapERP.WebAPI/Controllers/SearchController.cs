@@ -32,27 +32,6 @@ namespace MidCapERP.WebAPI.Controllers
                 return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
         }
 
-        [HttpGet("/MegaSearch/{modelNo}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        public async Task<ApiResponse> MegaSearch(string modelNo, CancellationToken cancellationToken)
-        {
-            List<ProductForDorpDownByModuleNoResponseDto> productData = new List<ProductForDorpDownByModuleNoResponseDto>();
-            productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(modelNo, cancellationToken));
-            productData.AddRange(await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(modelNo, cancellationToken));
-            productData.AddRange(await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(modelNo, cancellationToken));
-
-            var customerData = await _unitOfWorkBL.CustomersBL.GetCustomerForDropDownByMobileNo(modelNo, cancellationToken);
-            /*var OrderData = await _unitOfWorkBL.OrderBL.GetOrderForDropDownByModuleNo(modelNo, cancellationToken);*/
-            if (productData != null && productData.Count > 0)
-                return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
-            if (customerData != null)
-                return new ApiResponse(message: "Data Found", result: customerData, statusCode: 200);
-            /*if (OrderData != null)
-                return new ApiResponse(message: "Data Found", result: OrderData, statusCode: 200);*/
-            else
-                return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
-        }
-
         [HttpGet("/Search/{modelNo}/{productType}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, string productType, CancellationToken cancellationToken)
