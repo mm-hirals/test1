@@ -1,21 +1,24 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class ProductDA : IProductDA
     {
         private readonly ISqlRepository<Product> _Product;
+        private readonly CurrentUser _currentUser;
 
-        public ProductDA(ISqlRepository<Product> product)
+        public ProductDA(ISqlRepository<Product> product, CurrentUser currentUser)
         {
             _Product = product;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<Product>> GetAll(CancellationToken cancellationToken)
         {
-            return await _Product.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _Product.GetAsync(cancellationToken, x => x.TenantId == _currentUser.TenantId && x.IsDeleted == false);
         }
 
         public async Task<Product> GetById(Int64 Id, CancellationToken cancellationToken)
