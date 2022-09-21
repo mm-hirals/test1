@@ -65,10 +65,6 @@ namespace MidCapERP.WebAPI.Middleware
                             {
                                 _currentUser.TenantId = Convert.ToInt32(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName].ToString());
                             }
-                            else
-                            {
-                                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-                            }
                         }
                     }
                 }
