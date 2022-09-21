@@ -46,7 +46,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<OrderResponseDto> GetOrderForDetailsByOrderNo(string searchText, CancellationToken cancellationToken)
         {
             var orderAlldata = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            var data = orderAlldata.FirstOrDefault(x => x.OrderNo.StartsWith(searchText));
+            var data = orderAlldata.Where(x => x.OrderNo == searchText);
             return _mapper.Map<OrderResponseDto>(data);
         }
     }

@@ -55,7 +55,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var cutomerAlldata = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var data = cutomerAlldata.FirstOrDefault(x => x.PhoneNumber.StartsWith(searchText));
+            var data = cutomerAlldata.Where(x => x.PhoneNumber == searchText);
             return _mapper.Map<CustomersResponseDto>(data);
         }
 

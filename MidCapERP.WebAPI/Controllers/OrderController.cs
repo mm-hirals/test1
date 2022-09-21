@@ -19,7 +19,7 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpPost("/api/Order")]
+        [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Create)]
         public async Task<ApiResponse> Post([FromBody] OrderRequestDto orderRequestDto, CancellationToken cancellationToken)
         {

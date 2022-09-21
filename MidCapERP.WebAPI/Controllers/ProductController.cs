@@ -18,7 +18,7 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("/api/Products/{id}")]
+        [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
         {
@@ -30,7 +30,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
         }
 
-        [HttpGet("/api/Product/{modelNo}")]
+        [HttpGet("{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
         {
@@ -42,7 +42,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
         }
 
-        [HttpGet("/api/Product/detailsModelNo/{modelNo}")]
+        [HttpGet("detailsModelNo/{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, CancellationToken cancellationToken)
         {

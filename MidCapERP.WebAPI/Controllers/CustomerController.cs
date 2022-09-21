@@ -20,7 +20,7 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("/Customer/{phoneNumberOrEmailId}")]
+        [HttpGet("{phoneNumberOrEmailId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> Get(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
@@ -32,7 +32,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
-        [HttpPost("/api/Customer")]
+        [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<ApiResponse> Post([FromBody] CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
@@ -45,7 +45,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
 
-        [HttpGet("/api/Customer/CheckCustomer")]
+        [HttpGet("CheckCustomer")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)
         {
@@ -57,7 +57,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
         }
 
-        [HttpGet("/api/CustomerAddress/{CustomerId}")]
+        [HttpGet("CustomerAddress/{CustomerId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
         public async Task<ApiResponse> CustomerAddressGet(long customerId, CancellationToken cancellationToken)
         {
@@ -69,7 +69,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
         }
 
-        [HttpPost("/api/CustomerAddress/{id}")]
+        [HttpPost("CustomerAddress/{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<ApiResponse> CreateOrEditCustomerAddress(int id, [FromBody] CustomerAddressesRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
         {
