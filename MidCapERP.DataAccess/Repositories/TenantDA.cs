@@ -17,5 +17,15 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _tenant.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
+
+        public async Task<Tenant> GetById(int Id, CancellationToken cancellationToken)
+        {
+            return await _tenant.GetByIdAsync(Id, cancellationToken);
+        }
+
+        public async Task<Tenant> UpdateTenant(int Id, Tenant model, CancellationToken cancellationToken)
+        {
+            return await _tenant.UpdateAsync(model, cancellationToken);
+        }
     }
 }

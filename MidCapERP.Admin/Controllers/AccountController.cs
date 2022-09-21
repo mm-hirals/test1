@@ -102,7 +102,7 @@ namespace MidCapERP.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile(CancellationToken cancellationToken)
         {
-            return View();
+            return RedirectToAction("Update", "Tenant");
         }
 
         /// <summary>

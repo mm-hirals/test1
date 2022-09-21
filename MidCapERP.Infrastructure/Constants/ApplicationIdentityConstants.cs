@@ -58,6 +58,7 @@ namespace MidCapERP.Infrastructure.Constants
                 .Union(GeneratePermissionsForModule("Product"))
                 .Union(GeneratePermissionsForModule("RolePermission"))
                 .Union(GeneratePermissionsForModule("Product"))
+                .Union(GeneratePermissionsForModule("Tenant"))
                 .ToList();
             }
 
@@ -263,6 +264,12 @@ namespace MidCapERP.Infrastructure.Constants
                 public const string Create = "Permissions.Product.Create";
                 public const string Update = "Permissions.Product.Update";
                 public const string Delete = "Permissions.Product.Delete";
+            }
+
+            public static class Tenant
+            {
+                public const string View = "Permissions.Tenant.View";
+                public const string Update = "Permissions.Tenant.Update";
             }
         }
     }

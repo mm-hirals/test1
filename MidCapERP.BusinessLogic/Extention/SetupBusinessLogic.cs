@@ -32,6 +32,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IProductBL, ProductBL>();
             services.AddScoped<IRoleBL, RoleBL>();
             services.AddScoped<IRolePermissionBL, RolePermissionBL>();
+            services.AddScoped<ITenantBL, TenantBL>();
 
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();

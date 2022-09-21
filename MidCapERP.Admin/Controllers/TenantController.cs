@@ -4,6 +4,8 @@ using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
+using Microsoft.AspNetCore.Authorization;
+using MidCapERP.Dto.Tenant;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -40,6 +42,21 @@ namespace MidCapERP.Admin.Controllers
             var encValue = MagnusMinds.Utility.Encryption.Encrypt(selectTenant.TenantId, true, ApplicationIdentityConstants.EncryptionSecret);
             SetTenantCookie(encValue);
             return RedirectToAction("Index", "Dashboard");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
+        {
+            var tenant = await _unitOfWorkBL.TenantBL.GetById(1, cancellationToken);
+            return View("Views/Account/Profile.cshtml",tenant);
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
+        public async Task<IActionResult> Update(int Id, TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.TenantBL.UpdateTenant(Id, tenantRequestDto, cancellationToken);
+            return RedirectToAction("Index");
         }
 
         #region PrivateMethod

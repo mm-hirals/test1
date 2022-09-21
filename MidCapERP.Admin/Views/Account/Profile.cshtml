@@ -1,5 +1,112 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model MidCapERP.Dto.Tenant.TenantRequestDto
+
+      <div class="tab-content" id="nav-tabContent">
+           <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+                <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                    <div class="c-card--header">
+                        <h4 class="c-card--header-title">Tenant Detail</h4>
+                        </div>
+                <form asp-action="update" asp-controller="Tenant" method="post">
+                    <div class="c-card--body">
+                        <div class="row">
+                               <div class="col-md-10">
+                                    <div class="row">
+                                        <input asp-for="TenantId" hidden class="form-control" />
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="TenantName" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="TenantName" type="text" class="form-control" placeholder="Tenant Name">                  
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="FirstName" class="form-label"></label>
+                                                <input asp-for="FirstName" type="text" class="form-control fabric" placeholder="FirstName">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="LastName" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="LastName" type="text" class="form-control" placeholder="LastName">
+                                       
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="EmailId" class="form-label"></label>
+                                                <input asp-for="EmailId" type="text" class="form-control fabric" placeholder="EmailId">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="PhoneNumber" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="PhoneNumber" type="number" class="form-control" placeholder="Phonetext">
+                                       
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="LogoPath" class="form-label"></label>
+                                                <input asp-for="LogoPath" type="text" class="form-control fabric" placeholder="LogoPath">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="StreetAddress1" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="StreetAddress1" type="text" class="form-control" placeholder="StreetAddress1">
+                                       
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="StreetAddress2" class="form-label"></label>
+                                                <input asp-for="StreetAddress2" type="text" class="form-control fabric" placeholder="StreetAddress2">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="Landmark" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="Landmark" type="text" class="form-control" placeholder="Landmark">
+                                       
+                                            </div>
+                                        </div>
+                                         <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="City" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="City" type="text" class="form-control" placeholder="City">
+                                       
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="State" class="form-label"></label>
+                                                <input asp-for="State" type="text" class="form-control fabric" placeholder="State">
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <label asp-for="Pincode" class="form-label"></label>&nbsp;<span class="required">*</span>
+                                                <input asp-for="Pincode" type="number" class="form-control" placeholder="Pincode">
+                                       
+                                            </div>
+                                        </div>
+                                
+                                    </div>
+                               </div> 
+                        </div>
+                    </div>
+                </form>
+           </div>  
+           <div class="row c-card-footer--btn">
+                    <div class="col-12">
+                        <div class="c-card--wrapper c-card-sm--wrapper">
+                            <div class="c-card--footer">
+                                <a class="btn btn-danger" asp-action="Index" asp-controller="Tenant">
+                                    Cancel
+                                </a>
+                                <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                            </div>
+                        </div>
+                    </div>
+           </div>
+      </div>
