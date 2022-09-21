@@ -38,6 +38,7 @@ namespace MidCapERP.Dto.Product
         public string? QRImage { get; set; }
         public int TenantId { get; set; }
         public byte? Status { get; set; }
+ 
         public int CreatedBy { get; set; }
 
         [DisplayName("Created Date")]
@@ -50,7 +51,6 @@ namespace MidCapERP.Dto.Product
         public DateTime? UpdatedDate { get; set; }
 
         public DateTime? UpdatedUTCDate { get; set; }
-        //public bool IsDeleted { get; set; }
-        //public bool IsPublished { get; set; }
+ 
     }
 }

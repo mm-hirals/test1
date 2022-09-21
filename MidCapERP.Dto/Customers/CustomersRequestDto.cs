@@ -1,6 +1,7 @@
 ﻿using MidCapERP.Dto.CustomerAddresses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MidCapERP.Dto.Customers
 {
@@ -37,10 +38,11 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Reffered By")]
         public long? RefferedBy { get; set; }
 
-
         public CustomerAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
 
+        [JsonIgnore]
         public decimal Discount { get; set; }
+
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

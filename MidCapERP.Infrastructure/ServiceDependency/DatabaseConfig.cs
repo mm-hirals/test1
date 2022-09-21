@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Infrastructure.ServiceDependency
 {

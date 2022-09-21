@@ -171,7 +171,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productToInsert = _mapper.Map<Product>(model);
             if (model.UploadImage != null)
                 productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-            productToInsert.Status = 0;
+            productToInsert.Status = 0; 
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
             productToInsert.CreatedDate = DateTime.Now;
