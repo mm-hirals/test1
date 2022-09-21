@@ -28,7 +28,7 @@ namespace MidCapERP.Dto.CustomerAddresses
         [DisplayName("State")]
         public string State { get; set; }
 
-        [DisplayName("ZipCode")]
+        [DisplayName("Pincode")]
         public string ZipCode { get; set; }
 
         [DisplayName("Default Address")]

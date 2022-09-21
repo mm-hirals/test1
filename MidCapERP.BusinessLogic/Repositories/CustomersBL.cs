@@ -29,6 +29,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
         }
 
+        public async Task<IEnumerable<CustomersResponseDto>> GetCustomerCount(CancellationToken cancellationToken)
+        {
+            DateTime currenteDate = DateTime.UtcNow.Date.AddDays(-6);
+            var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerData = data.Where(x => x.CreatedUTCDate >= currenteDate).ToList();
+            return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
+        }
+
         public async Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
@@ -46,6 +54,19 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return false;
         }
 
+        public async Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
+        {
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new CustomerForDorpDownByModuleNoResponseDto(x.CustomerId, x.FirstName + " " + x.LastName, "Customer")).ToList();
+        }
+
+        public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
+        {
+            var cutomerAlldata = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var data = cutomerAlldata.Where(x => x.PhoneNumber == searchText);
+            return _mapper.Map<CustomersResponseDto>(data);
+        }
+
         public async Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomerTypesDA.GetAll(cancellationToken);
@@ -55,7 +76,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo)  || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
+            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo) || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
             return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 

@@ -47,6 +47,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            CategoryName = y.LookupValueName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
+                                           Status = x.Status,
                                            CreatedBy = x.CreatedBy,
                                            CreatedDate = x.CreatedDate,
                                            UpdatedBy = x.UpdatedBy,
@@ -170,8 +171,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productToInsert = _mapper.Map<Product>(model);
             if (model.UploadImage != null)
                 productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-            //productToInsert.IsDeleted = false;
-            //productToInsert.IsPublished = false;
+            productToInsert.Status = 0;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
             productToInsert.CreatedDate = DateTime.Now;
@@ -266,6 +266,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             throw new Exception("Product is not found");
         }
 
+        public async Task UpdateProductStatus(ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            if (model.ProductId > 0)
+            {
+                var getProductById = await GetProductById(model.ProductId, cancellationToken);
+
+                if (getProductById != null)
+                {
+                    UpdateData(getProductById);
+                    if (model.Status == "true")
+                        getProductById.Status = (byte)ProductStatusConstants.Published;
+                    else
+                        getProductById.Status = (byte)ProductStatusConstants.UnPublished;
+
+                    await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+                }
+            }
+            else
+                throw new Exception("Product is not found");
+        }
+
         public async Task<ProductRequestDto?> UpdateProductCost(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
             if (model.ProductId > 0)
@@ -292,7 +313,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
         {
             var productToDelete = await GetProductById(Id, cancellationToken);
-            //productToDelete.IsDeleted = true;
+            productToDelete.Status = (int)ProductStatusConstants.Delete;
             UpdateData(productToDelete);
             var data = await _unitOfWorkDA.ProductDA.DeleteProduct(Id, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);
@@ -315,8 +336,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #endregion API Methods
 
-        #region Private Method
-
         public async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
@@ -332,6 +351,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             return await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
         }
+
+        #region Private Method
 
         private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
         {

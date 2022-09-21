@@ -26,7 +26,7 @@ namespace MidCapERP.DataEntities.Models
         public string? CoverImage { get; set; }
         public string? QRImage { get; set; }
         public int TenantId { get; set; }
-        public int? Status { get; set; }
+        public byte? Status { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Product;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -163,6 +163,21 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.ProductBL.DeleteProduct(Id, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
+        public async Task<JsonResult> UpdateProductStatus([FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.UpdateProductStatus(productMainRequestDto, cancellationToken);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
         }
 
         [HttpGet]
