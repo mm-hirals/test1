@@ -37,7 +37,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderRequestDto>(data);
         }
 
-        public async Task<IEnumerable<OrderForDorpDownByOrderNoResponseDto>> GetCustomerForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
+        public async Task<IEnumerable<OrderForDorpDownByOrderNoResponseDto>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             return orderAllData.Where(x => x.OrderNo.StartsWith(orderNo)).Select(x => new OrderForDorpDownByOrderNoResponseDto(x.OrderId, x.OrderNo , "Order")).ToList();

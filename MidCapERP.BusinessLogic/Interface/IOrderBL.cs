@@ -8,7 +8,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderRequestDto> CreateOrder(OrderRequestDto model, CancellationToken cancellationToken);
 
-        public Task<IEnumerable<OrderForDorpDownByOrderNoResponseDto>> GetCustomerForDropDownByOrderNo(string orderNo, CancellationToken cancellation);
+        public Task<IEnumerable<OrderForDorpDownByOrderNoResponseDto>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellation);
 
         public Task<OrderResponseDto> GetOrderForDetailsByOrderNo(string searchText, CancellationToken cancellation);
     }

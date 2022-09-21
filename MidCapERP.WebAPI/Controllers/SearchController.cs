@@ -83,7 +83,7 @@ namespace MidCapERP.WebAPI.Controllers
             productData.AddRange(await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.CustomersBL.GetCustomerForDropDownByMobileNo(searchText, cancellationToken));
-            productData.AddRange(await _unitOfWorkBL.OrderBL.GetCustomerForDropDownByOrderNo(searchText, cancellationToken));
+            productData.AddRange(await _unitOfWorkBL.OrderBL.GetOrderForDropDownByOrderNo(searchText, cancellationToken));
             if (productData != null && productData.Count > 0)
                 return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             else
