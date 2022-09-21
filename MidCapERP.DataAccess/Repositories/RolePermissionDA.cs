@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 using System.Security.Claims;
@@ -21,12 +22,12 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IdentityResult> CreateRolePermission(ApplicationRole applicationRole, string claimValue, CancellationToken cancellationToken)
         {
-            return await _roleManager.AddClaimAsync(applicationRole, new Claim("permission", claimValue));
+            return await _roleManager.AddClaimAsync(applicationRole, new Claim(CustomClaimTypes.Permission, claimValue));
         }
 
         public async Task<IdentityResult> DeleteRolePermission(ApplicationRole applicationRole, string claimValue, CancellationToken cancellationToken)
         {
-            return await _roleManager.RemoveClaimAsync(applicationRole, new Claim("permission", claimValue));
+            return await _roleManager.RemoveClaimAsync(applicationRole, new Claim(CustomClaimTypes.Permission, claimValue));
         }
     }
 }

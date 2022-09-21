@@ -3,9 +3,9 @@ using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Category;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.WebAPI.Controllers
 {

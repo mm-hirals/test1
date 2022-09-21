@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -161,13 +161,11 @@ namespace MidCapERP.Infrastructure.Services.Token
             return signInResult.Succeeded;
         }
 
-
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
             //await _httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
-
 
         /// <inheritdoc cref="ITokenService.GetUserByEmail(string)" />
         public async Task<ApplicationUser> GetUserByEmail(string email, CancellationToken cancellationToken)
@@ -214,7 +212,7 @@ namespace MidCapERP.Infrastructure.Services.Token
 
         public Claim GetTokenClaim(ClaimsPrincipal claimsPrincipal, string type, CancellationToken cancellationToken)
         {
-            return claimsPrincipal.Claims.Where(c => c.Type == type).FirstOrDefault();
+            return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == type);
         }
 
         /// <summary>

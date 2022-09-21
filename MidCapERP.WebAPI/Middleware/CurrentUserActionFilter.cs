@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Infrastructure.Constants;
-using System.Net;
-using System.Web.Http;
 
 namespace MidCapERP.WebAPI.Middleware
 {
@@ -61,7 +59,7 @@ namespace MidCapERP.WebAPI.Middleware
 
                         if (!string.IsNullOrEmpty(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName]))
                         {
-                            _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret)); 
+                            _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret));
                         }
                     }
                 }

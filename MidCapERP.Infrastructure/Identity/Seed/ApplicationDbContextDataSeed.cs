@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 using System.Security.Claims;
 
 namespace MidCapERP.Infrastructure.Identity.Seed

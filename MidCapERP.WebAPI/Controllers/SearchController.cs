@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Product;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.WebAPI.Controllers
 {
