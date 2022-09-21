@@ -59,12 +59,9 @@ namespace MidCapERP.WebAPI.Middleware
                         //    }
                         //}
 
-                        if (context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName] != string.Empty)
+                        if (!string.IsNullOrEmpty(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName]))
                         {
-                            if (context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName].ToString() != String.Empty)
-                            {
-                                _currentUser.TenantId = Convert.ToInt32(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName].ToString());
-                            }
+                            _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret)); 
                         }
                     }
                 }

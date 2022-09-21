@@ -132,7 +132,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             var getNullMobileDevice = getAllUser.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
             if (getNullMobileDevice == null)
                 throw new Exception("User Not Found");
-            if (getNullMobileDevice.MobileDeviceId == null || getNullMobileDevice.MobileDeviceId != request.MobileDeviceId )
+            if (getNullMobileDevice.MobileDeviceId == null || getNullMobileDevice.MobileDeviceId != request.MobileDeviceId)
             {
                 getNullMobileDevice.MobileDeviceId = request.MobileDeviceId;
                 await _unitOfWorkDA.UserDA.UpdateUser(getNullMobileDevice);
@@ -298,11 +298,7 @@ namespace MidCapERP.Infrastructure.Services.Token
             var userTenants = await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken);
             var tenant = userTenants.FirstOrDefault(p => p.UserId == user.UserId);
             string tenantId = string.Empty;
-            if (tenant != null) tenantId = tenant.TenantId.ToString();
-             //RefreshToken refreshToken = GenerateRefreshToken();
-
-                //user.RefreshTokens.Add(refreshToken);
-                //await _userManager.UpdateAsync(user);
+            if (tenant != null) tenantId = MagnusMinds.Utility.Encryption.Encrypt(Convert.ToString(tenant.TenantId), true, ApplicationIdentityConstants.EncryptionSecret);
 
             return new TokenResponse(user,
                                      role,
