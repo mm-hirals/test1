@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
@@ -65,7 +65,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
         public async Task<IActionResult> CreateCustomerAddress(int customerId, CancellationToken cancellationToken)
         {
-            CustomerAddressesRequestDto dto = new CustomerAddressesRequestDto();
+            CustomerAddressesRequestDto dto = new();
             dto.CustomerId = customerId;
             return PartialView("_CustomerAddressPartial", dto);
         }

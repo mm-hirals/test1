@@ -12,11 +12,15 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken);
 
-        public Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail,CancellationToken cancellationToken);
+        public Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken);
 
-        public Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo,CancellationToken cancellationToken);
+        public Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellation);
+
+        public Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellation);
 
         public Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken);
 
@@ -25,5 +29,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken);
 
         public Task<CustomersRequestDto> UpdateCustomers(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<CustomersResponseDto>> GetCustomerCount(CancellationToken cancellationToken);
     }
 }
