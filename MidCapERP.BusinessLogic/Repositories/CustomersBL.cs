@@ -29,6 +29,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
         }
 
+        public async Task<IEnumerable<CustomersResponseDto>> GetCustomerCount(CancellationToken cancellationToken)
+        {
+            DateTime currenteDate = DateTime.UtcNow.Date.AddDays(-6);
+            var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var lastSevenDayCustomerData = data.Where(x => x.CreatedUTCDate >= currenteDate).ToList();
+            return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
+        }
+
         public async Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
