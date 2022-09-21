@@ -79,17 +79,12 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> MegaSearch(string searchText, CancellationToken cancellationToken)
         {
             List<Object> productData = new List<Object>();
-
             productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.CustomersBL.GetCustomerForDropDownByMobileNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.OrderBL.GetCustomerForDropDownByOrderNo(searchText, cancellationToken));
             if (productData != null && productData.Count > 0)
-                return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
-            if (productData != null && productData.Any())
-                return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
-            if (productData != null && productData.Any())
                 return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             else
                 return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
