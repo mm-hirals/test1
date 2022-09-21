@@ -17,6 +17,12 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
+        /// <summary>
+        /// search for All Products, Customers and Orders
+        /// </summary>
+        /// <param name="searchText">Product model no OR Customers mobile number OR Order No </param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("{searchText}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> MegaSearch(string searchText, CancellationToken cancellationToken)
