@@ -21,12 +21,12 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IdentityResult> CreateRolePermission(ApplicationRole applicationRole, string claimValue, CancellationToken cancellationToken)
         {
-            return await _roleManager.AddClaimAsync(applicationRole, new Claim("Permission", claimValue));
+            return await _roleManager.AddClaimAsync(applicationRole, new Claim("permission", claimValue));
         }
 
         public async Task<IdentityResult> DeleteRolePermission(ApplicationRole applicationRole, string claimValue, CancellationToken cancellationToken)
         {
-            return await _roleManager.RemoveClaimAsync(applicationRole, new Claim("Permission", claimValue));
+            return await _roleManager.RemoveClaimAsync(applicationRole, new Claim("permission", claimValue));
         }
     }
 }
