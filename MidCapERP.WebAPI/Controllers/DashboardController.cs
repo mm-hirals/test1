@@ -8,11 +8,11 @@ namespace MidCapERP.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DashBoardController : Controller
+    public class DashboardController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public DashBoardController(IUnitOfWorkBL unitOfWorkBL)
+        public DashboardController(IUnitOfWorkBL unitOfWorkBL)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
