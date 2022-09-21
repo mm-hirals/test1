@@ -43,7 +43,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<FabricResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-            var data = frabricAlldata.FirstOrDefault(x => x.ModelNo.StartsWith(modelno));
+            var data = frabricAlldata.Where(x => x.ModelNo == modelno);
             return _mapper.Map<FabricResponseDto>(data);
         }
 
