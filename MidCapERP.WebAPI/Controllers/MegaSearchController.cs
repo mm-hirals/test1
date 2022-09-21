@@ -2,36 +2,35 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.Product;
 using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SearchController : Controller
+    public class MegaSearchController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public SearchController(IUnitOfWorkBL unitOfWorkBL)
+        public MegaSearchController(IUnitOfWorkBL unitOfWorkBL)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
 
         /// <summary>
-        /// Search by Product, Fabric and Police for binding into the dropdown 
+        /// search for All Products, Customers and Orders
         /// </summary>
-        /// <param name="modelNo">Model No of Product or Fabric or Police</param>
+        /// <param name="searchText">Product model no OR Customers mobile number OR Order No </param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("{modelNo}")]
+        [HttpGet("{searchText}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
+        public async Task<ApiResponse> MegaSearch(string searchText, CancellationToken cancellationToken)
         {
-            List<ProductForDorpDownByModuleNoResponseDto> productData = new List<ProductForDorpDownByModuleNoResponseDto>();
-            productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(modelNo, cancellationToken));
-            productData.AddRange(await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(modelNo, cancellationToken));
-            productData.AddRange(await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(modelNo, cancellationToken));
+            List<Object> productData = new List<Object>();
+            productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(searchText, cancellationToken));
+            productData.AddRange(await _unitOfWorkBL.CustomersBL.GetCustomerForDropDownByMobileNo(searchText, cancellationToken));
+            productData.AddRange(await _unitOfWorkBL.OrderBL.GetOrderForDropDownByOrderNo(searchText, cancellationToken));
             if (productData != null && productData.Count > 0)
                 return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             else

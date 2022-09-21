@@ -49,5 +49,8 @@ namespace MidCapERP.DataEntities
         public DbSet<ProductImage> ProductImage { get; set; }
         public DbSet<ProductMaterial> ProductMaterial { get; set; }
         public DbSet<OTPLogin> LoginToken { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderSet> OrderSets { get; set; }
+        public DbSet<OrderSetItem> OrderSetItems { get; set; }
     }
 }

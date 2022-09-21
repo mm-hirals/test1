@@ -127,8 +127,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
             var productToInsert = _mapper.Map<Product>(model);
-            productToInsert.IsDeleted = false;
-            productToInsert.IsPublished = false;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
             productToInsert.CreatedDate = DateTime.Now;
