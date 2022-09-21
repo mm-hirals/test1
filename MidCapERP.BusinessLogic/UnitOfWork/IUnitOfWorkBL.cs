@@ -27,5 +27,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IRolePermissionBL RolePermissionBL { get; }
         IFileStorageService FileStorageService { get; }
         IProductBL ProductBL { get; }
+        IDashboardBL DashboardBL { get; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.Admin.Models;
+using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Localizer.JsonString;
@@ -12,28 +13,45 @@ namespace MidCapERP.Admin.Controllers
 {
     public class DashboardController : BaseController
     {
+        private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly ILogger<DashboardController> _logger;
         private readonly CurrentUser _currentUser;
         private readonly IToastNotification _toastNotification;
 
-        public DashboardController(ILogger<DashboardController> logger, CurrentUser currentUser, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public DashboardController(IUnitOfWorkBL unitOfWorkBL, ILogger<DashboardController> logger, CurrentUser currentUser, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
+            _unitOfWorkBL = unitOfWorkBL;
             _currentUser = currentUser;
             _logger = logger;
             _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
-        public IActionResult Index(CancellationToken cancellationToken)
+        public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
-            var lang = "hi-IN";
-            Response.Headers.AcceptLanguage = new Microsoft.Extensions.Primitives.StringValues(lang);
-            
-            //gu-IN
-            //hi-IN
+            try
+            {
+                _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
+                var lang = "hi-IN";
+                Response.Headers.AcceptLanguage = new Microsoft.Extensions.Primitives.StringValues(lang);
 
-            return View();
+                //gu-IN
+                //hi-IN
+
+                var customerCount = await _unitOfWorkBL.DashboardBL.GetCustomerCount(cancellationToken);
+                ViewBag.CustomerCount = customerCount;
+
+                var categoryCount = await _unitOfWorkBL.DashboardBL.GetCategoriesCount(cancellationToken);
+                ViewBag.CategoryCount = categoryCount;
+
+                var productCount = await _unitOfWorkBL.DashboardBL.GetProductCount(cancellationToken);
+                ViewBag.ProductCount = productCount;
+                return View();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]

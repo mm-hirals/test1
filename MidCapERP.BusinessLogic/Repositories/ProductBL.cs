@@ -87,7 +87,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                         join ur in unitData on rowMat.UnitId equals ur.LookupValueId
                         // left join end
 
-
                         //left join start for POlise
                         join z in polish on x.SubjectId equals z.PolishId into polishM
                         from polishMat in polishM.DefaultIfEmpty()
@@ -127,8 +126,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
             var productToInsert = _mapper.Map<Product>(model);
-            productToInsert.IsDeleted = false;
-            productToInsert.IsPublished = false;
+            //productToInsert.IsDeleted = false;
+            //productToInsert.IsPublished = false;
             productToInsert.TenantId = _currentUser.TenantId;
             productToInsert.CreatedBy = _currentUser.UserId;
             productToInsert.CreatedDate = DateTime.Now;
@@ -244,6 +243,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         }
 
         #region API Methods
+
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
         {
             var produdctData = await GetProductById(Id, cancellationToken);
@@ -255,7 +255,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
         }
-        #endregion
+
+        #endregion API Methods
 
         #region Private Method
 
