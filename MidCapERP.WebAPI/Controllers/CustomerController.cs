@@ -57,7 +57,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
         }
 
-        [HttpGet("CustomerAddress/{CustomerId}")]
+        [HttpGet("CustomerAddress/{customerId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
         public async Task<ApiResponse> CustomerAddressGet(long customerId, CancellationToken cancellationToken)
         {
