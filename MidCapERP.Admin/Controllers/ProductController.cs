@@ -165,6 +165,21 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
+        public async Task<JsonResult> UpdateProductStatus([FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.UpdateProductStatus(productMainRequestDto, cancellationToken);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<IActionResult> Detail(int Id, CancellationToken cancellationToken)

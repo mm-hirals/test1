@@ -62,7 +62,7 @@ namespace MidCapERP.Dto.Product
         public string? QRImage { get; set; }
 
         public int TenantId { get; set; }
-        public int? Status { get; set; }
+        public byte? Status { get; set; }
         public int CreatedBy { get; set; }
         public string CreatedByName { get; set; }
         public DateTime CreatedDate { get; set; }
