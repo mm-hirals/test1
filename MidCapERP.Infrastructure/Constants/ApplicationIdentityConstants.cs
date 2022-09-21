@@ -4,6 +4,7 @@ namespace MidCapERP.Infrastructure.Constants
     {
         public static readonly string DefaultPassword = "Password@1";
         public static readonly string TenantCookieName = "TenantId";
+        public static readonly string TenantHeaderName = "TenantId";
         public static readonly string EncryptionSecret = "MAGNUSMINDS_SAB_KA_BAAP";
 
         public static class Roles

@@ -295,14 +295,19 @@ namespace MidCapERP.Infrastructure.Services.Token
             string role = (await _userManager.GetRolesAsync(user))[0];
             string jwtToken = await GenerateJwtToken(user, cancellationToken, isCookie);
 
-            //RefreshToken refreshToken = GenerateRefreshToken();
+            var userTenants = await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken);
+            var tenant = userTenants.FirstOrDefault(p => p.UserId == user.UserId);
+            string tenantId = string.Empty;
+            if (tenant != null) tenantId = tenant.TenantId.ToString();
+             //RefreshToken refreshToken = GenerateRefreshToken();
 
-            //user.RefreshTokens.Add(refreshToken);
-            //await _userManager.UpdateAsync(user);
+                //user.RefreshTokens.Add(refreshToken);
+                //await _userManager.UpdateAsync(user);
 
             return new TokenResponse(user,
                                      role,
-                                     jwtToken
+                                     jwtToken,
+                                     tenantId
                                      //""//refreshToken.Token
                                      );
         }

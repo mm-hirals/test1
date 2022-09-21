@@ -55,6 +55,11 @@ namespace MidCapERP.WebAPI.Middleware
                                 _currentUser.IsMultipleTenant = userTenantData.Count() == 1 ? false : true;
                             }
                         }
+
+                        if(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName] != string.Empty)
+                        {
+                            _currentUser.TenantId = Convert.ToInt32(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName].ToString());
+                        }
                     }
                 }
             }
