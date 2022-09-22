@@ -168,19 +168,29 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            var productToInsert = _mapper.Map<Product>(model);
-            if (model.UploadImage != null)
-                productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-            productToInsert.Status = 0;
-            productToInsert.TenantId = _currentUser.TenantId;
-            productToInsert.CreatedBy = _currentUser.UserId;
-            productToInsert.CreatedDate = DateTime.Now;
-            productToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-            if (productData.ProductId > 0)
-                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
-            return _mappedUser;
+            try
+            {
+                var productToInsert = _mapper.Map<Product>(model);
+                if (model.UploadImage != null)
+                    productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
+                productToInsert.Status = 0;
+                productToInsert.TenantId = _currentUser.TenantId;
+                productToInsert.CreatedBy = _currentUser.UserId;
+                productToInsert.CreatedDate = DateTime.Now;
+                productToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+                var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+                if (productData.ProductId > 0)
+                {
+                    productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                    await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
+                }
+                return _mappedUser;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         public async Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)

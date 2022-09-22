@@ -63,7 +63,8 @@
                         <div class="form-group">
                             <label asp-for="QRImage" class="form-label"></label>
                             <div class="product--image">
-                                <img src="~/images/qr-code.png" alt="Product Name" class="w-100"/>
+                                <img src="@Model.QRImage" alt="Product Image" width="250" height="250" />
+                                @*<img src="~/images/qr-code.png" alt="Product Name" class="w-100"/>*@
                             </div>
                         </div>
                     </div>

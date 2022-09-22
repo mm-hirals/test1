@@ -24,10 +24,10 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (x) {
                     if (x.status == 1) {
-                        return '<div class="custom-control custom-switch"><input asp-for="' + x.status + '" type="checkbox" class="custom-control-input productStatus" value="' + x.productId + '" id="' + x.productId + '" checked /><label class="custom-control-label" for="' + x.productId + '"></label></div>'
+                        return '<div class="custom-control custom-switch d-flex"><input type="checkbox" class="custom-control-input productStatus" value="' + x.productId + '" id="' + x.productId + '" checked /><label class="custom-control-label" for="' + x.productId + '"></label></div>'
                     }
                     else {
-                        return '<div class="custom-control custom-switch"><input asp-for="' + x.status + '" type="checkbox" class="custom-control-input productStatus" value="' + x.productId + '" id="' + x.productId + '" /><label class="custom-control-label" for="' + x.productId + '"></label></div>'
+                        return '<div class="custom-control custom-switch d-flex"><input type="checkbox" class="custom-control-input productStatus" value="' + x.productId + '" id="' + x.productId + '" /><label class="custom-control-label" for="' + x.productId + '"></label></div>'
                     }
                 }
             },
