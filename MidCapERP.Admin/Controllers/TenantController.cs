@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Dto.Tenant;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
-using Microsoft.AspNetCore.Authorization;
-using MidCapERP.Dto.Tenant;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -13,12 +13,13 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public TenantController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) 
+        public TenantController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
 
         [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var userData = await _unitOfWorkBL.UserTenantMappingBL.GetAll(cancellationToken);
@@ -37,6 +38,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.View)]
         public async Task<IActionResult> Index([FromForm] SelectTenant selectTenant, CancellationToken cancellationToken)
         {
             var encValue = MagnusMinds.Utility.Encryption.Encrypt(selectTenant.TenantId, true, ApplicationIdentityConstants.EncryptionSecret);
@@ -45,18 +47,34 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var tenant = await _unitOfWorkBL.TenantBL.GetById(1, cancellationToken);
-            return View("Views/Account/Profile.cshtml",tenant);
+            return View("Views/Account/ProfileMain.cshtml", tenant);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
         public async Task<IActionResult> Update(int Id, TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
         {
+            Id = tenantRequestDto.TenantId;
             await _unitOfWorkBL.TenantBL.UpdateTenant(Id, tenantRequestDto, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTenantDetail(int Id, CancellationToken cancellationToken)
+        {
+            var tenant = await _unitOfWorkBL.TenantBL.GetById(1, cancellationToken);
+            return PartialView("_TenantDetailPartial", tenant);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTenantBankDetail(int Id, CancellationToken cancellationToken)
+        {
+            var tenantBankDetail =await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
+            return PartialView("_TenantBankDetailPartial", tenantBankDetail);
         }
 
         #region PrivateMethod

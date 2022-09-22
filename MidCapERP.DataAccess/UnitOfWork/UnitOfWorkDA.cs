@@ -29,9 +29,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IProductMaterialDA ProductMaterialDA { get; }
         public IRoleDA RoleDA { get; }
         public IRolePermissionDA RolePermissionDA { get; }
-      
+        public ITenantBankDetailDA TenantBankDetailDA{ get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA,ITenantBankDetailDA tenantBankDetailDA)
         {
             {
                 this._context = context;
@@ -58,6 +58,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
                 this.ProductMaterialDA = productMaterialDA;
                 this.RoleDA = roleDA;
                 this.RolePermissionDA = rolePermissionDA;
+                this.TenantBankDetailDA = tenantBankDetailDA;
             }
         }
 

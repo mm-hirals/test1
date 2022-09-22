@@ -28,5 +28,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IFileStorageService FileStorageService { get; }
         IProductBL ProductBL { get; }
         ITenantBL TenantBL { get; }
+        ITenantBankDetailBL TenantBankDetailBL { get; }
     }
 }

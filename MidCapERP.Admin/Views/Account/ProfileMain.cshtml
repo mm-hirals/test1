@@ -1,0 +1,27 @@
+﻿@model MidCapERP.Dto.Tenant.TenantRequestDto
+@{
+	ViewData["Title"] = (Model != null && Model.TenantId != 0) ? "Update Tenant" : "Add Tenant";
+	var i = 0;
+
+	var tenantId = (Model == null) ? 0 : Model.TenantId;
+}
+
+@Html.Hidden("hdnTenantId", tenantId)
+<div id="content">
+
+	@if (tenantId > 0)
+	{
+		<div id="divTenantInfo"></div>
+		<div id="divTenantBankDetailInfo"></div>
+	}
+</div>
+
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+		await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+		<script src="~/js/Profile.js" asp-append-version="true"></script>
+	}
+}

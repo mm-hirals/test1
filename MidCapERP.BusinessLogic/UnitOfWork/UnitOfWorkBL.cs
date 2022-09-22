@@ -31,9 +31,10 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IRoleBL RoleBL { get; }
         public IRolePermissionBL RolePermissionBL { get; }
         public ITenantBL TenantBL { get; }
+        public ITenantBankDetailBL TenantBankDetailBL { get; }
 
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, ITenantBL tenantBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, ITenantBL tenantBL,ITenantBankDetailBL tenantBankDetailBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -59,6 +60,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.RoleBL = roleBL;
             this.RolePermissionBL = rolePermissionBL;
             this.TenantBL = tenantBL;
+            this.TenantBankDetailBL = tenantBankDetailBL;
         }
 
         #region DisposeMethod
