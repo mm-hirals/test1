@@ -91,7 +91,7 @@
                         <div class="product-info--item">
                             <div class="form-group">
                                 <label class="form-label">
-                                    Created Name Date
+                                    Created Name/Date
                                 </label>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -104,23 +104,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="product-info--item">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    Updated Name Date
-                                </label>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input asp-for="UpdatedDate" type="date" class="form-control" readonly="readonly" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input asp-for="UpdatedByName" class="form-control" readonly="readonly" />
+                    @if (@Model.UpdatedDate != null && @Model.UpdatedByName != null)
+                    {
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Updated Name/Date
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input asp-for="UpdatedDate" type="date" class="form-control" readonly="readonly" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input asp-for="UpdatedByName" class="form-control" readonly="readonly" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
                 <div class="col-12">
                     <div class="text-end pb-2">

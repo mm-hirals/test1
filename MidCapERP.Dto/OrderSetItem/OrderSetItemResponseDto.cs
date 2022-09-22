@@ -2,7 +2,7 @@
 
 namespace MidCapERP.Dto.OrderSetItem
 {
-    public class OrderSetItemResponceDto
+    public class OrderSetItemResponseDto
     {
         public long OrderSetItemId { get; set; }
 
@@ -14,6 +14,7 @@ namespace MidCapERP.Dto.OrderSetItem
 
         [Required]
         public int SubjectTypeId { get; set; }
+        public string SubjectTypeName { get; set; }
 
         [Required]
         public long SubjectId { get; set; }

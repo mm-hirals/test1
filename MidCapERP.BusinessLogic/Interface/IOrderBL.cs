@@ -1,10 +1,15 @@
-﻿using MidCapERP.Dto.Order;
+﻿using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.Order;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IOrderBL
     {
         public Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<OrderResponseDto>> GetFilterOrderData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+
+        public Task<OrderResponseDto> GetOrderDetailData(long Id, CancellationToken cancellationToken);
 
         public Task<OrderRequestDto> CreateOrder(OrderRequestDto model, CancellationToken cancellationToken);
 

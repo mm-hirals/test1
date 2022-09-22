@@ -50,7 +50,7 @@ namespace MidCapERP.DataEntities
         public DbSet<ProductMaterial> ProductMaterial { get; set; }
         public DbSet<OTPLogin> LoginToken { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderSet> OrderSets { get; set; }
-        public DbSet<OrderSetItem> OrderSetItems { get; set; }
+        public DbSet<OrderSet> OrderSet { get; set; }
+        public DbSet<OrderSetItem> OrderSetItem { get; set; }
     }
 }
