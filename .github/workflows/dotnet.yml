@@ -24,4 +24,4 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Pulish 
-      run: dotnet publish -c Release -r win-x64 --output /Publish/ ./MidCapERP.Admin/MidCapERP.Admin.csproj --self-contained false
+      run: dotnet publish -c Release -r win-x64 --output Publish/ ./MidCapERP.Admin/MidCapERP.Admin.csproj --self-contained false
