@@ -2,7 +2,7 @@
 {
     public class OrderForDorpDownByOrderNoResponseDto
     {
-        public OrderForDorpDownByOrderNoResponseDto(long id, string type, string orderNo)
+        public OrderForDorpDownByOrderNoResponseDto(long id, string orderNo, string type)
         {
             Id = id;
             OrderNo = orderNo;
