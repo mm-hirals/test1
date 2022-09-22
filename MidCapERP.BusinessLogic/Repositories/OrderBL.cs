@@ -3,6 +3,7 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -37,10 +38,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderRequestDto>(data);
         }
 
-        public async Task<IEnumerable<OrderForDorpDownByOrderNoResponseDto>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            return orderAllData.Where(x => x.OrderNo.StartsWith(orderNo)).Select(x => new OrderForDorpDownByOrderNoResponseDto(x.OrderId, x.OrderNo , "Order")).ToList();
+            return orderAllData.Where(x => x.OrderNo.StartsWith(orderNo)).Select(x => new MegaSearchResponse(x.OrderId, x.OrderNo, null, null, "Order")).Take(10).ToList();
         }
 
         public async Task<OrderResponseDto> GetOrderForDetailsByOrderNo(string searchText, CancellationToken cancellationToken)

@@ -6,6 +6,7 @@ using MidCapERP.Dto;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -54,10 +55,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return false;
         }
 
-        public async Task<IEnumerable<CustomerForDorpDownByModuleNoResponseDto>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new CustomerForDorpDownByModuleNoResponseDto(x.CustomerId, x.FirstName + " " + x.LastName, "Customer")).ToList();
+            return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new MegaSearchResponse(x.CustomerId, x.FirstName + " " + x.LastName, x.PhoneNumber, null, "Customer")).Take(10).ToList();
         }
 
         public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)

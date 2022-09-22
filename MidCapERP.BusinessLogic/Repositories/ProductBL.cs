@@ -3,11 +3,13 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
@@ -286,9 +288,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     UpdateData(getProductById);
                     if (model.Status == "true")
-                        getProductById.Status = (byte)ProductStatusConstants.Published;
+                        getProductById.Status = (byte)ProductStatusEnum.Published;
                     else
-                        getProductById.Status = (byte)ProductStatusConstants.UnPublished;
+                        getProductById.Status = (byte)ProductStatusEnum.UnPublished;
 
                     await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                 }
@@ -323,7 +325,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
         {
             var productToDelete = await GetProductById(Id, cancellationToken);
-            productToDelete.Status = (int)ProductStatusConstants.Delete;
+            productToDelete.Status = (int)ProductStatusEnum.Delete;
             UpdateData(productToDelete);
             var data = await _unitOfWorkDA.ProductDA.DeleteProduct(Id, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);
@@ -338,10 +340,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<ProductRequestDto>(produdctData);
         }
 
-        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MegaSearchResponse>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
+            return productAlldata.Where(x => x.Status == (int)ProductStatusEnum.Published && x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).Take(10).ToList();
         }
 
         #endregion API Methods

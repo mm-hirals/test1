@@ -1,6 +1,6 @@
-﻿namespace MidCapERP.BusinessLogic.Constants
+﻿namespace MidCapERP.Core.Constants
 {
-    public enum ProductStatusConstants
+    public enum ProductStatusEnum
     {
         Pending = 0,
         Published = 1,
