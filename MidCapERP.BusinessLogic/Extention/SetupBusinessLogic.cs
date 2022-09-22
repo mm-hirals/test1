@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Repositories;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.BusinessLogic.UnitOfWork;
 
 namespace MidCapERP.BusinessLogic.Extention
@@ -22,6 +23,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IAccessoriesTypeBL, AccessoriesTypeBL>();
             services.AddScoped<IRawMaterialBL, RawMaterialBL>();
             services.AddScoped<IFileStorageService, FileStorageService>();
+            services.AddScoped<IQRCodeService, QRCodeService>();
             services.AddScoped<IAccessoriesBL, AccessoriesBL>();
             services.AddScoped<IFabricBL, FabricBL>();
             services.AddScoped<IFrameBL, FrameBL>();

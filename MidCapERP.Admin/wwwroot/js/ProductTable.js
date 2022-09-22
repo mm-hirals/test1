@@ -1,4 +1,6 @@
 ﻿'use strict';
+
+var ProductModel = {};
 var tblProduct;
 
 $(function () {
@@ -16,9 +18,19 @@ $(function () {
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             { "data": "productTitle", "name": "ProductTitle", "autoWidth": true },
             { "data": "modelNo", "name": "ModelNo", "autoWidth": true },
-            { "data": "costPrice", "name": "CostPrice", "autoWidth": true },
-            { "data": "retailerPrice", "name": "RetailerPrice", "autoWidth": true },
-            { "data": "wholesalerPrice", "name": "WholesalerPrice", "autoWidth": true },
+            { "data": "createdDate", "name": "CreatedDate", "autoWidth": true },
+            { "data": "updatedDate", "name": "UpdatedDate", "autoWidth": true },
+            {
+                "mData": null, "bSortable": false,
+                "mRender": function (x) {
+                    if (x.status == 1) {
+                        return '<div class="custom-control custom-switch d-flex"><input type="checkbox" class="custom-control-input productStatus" value="' + x.productId + '" id="' + x.productId + '" checked /><label class="custom-control-label" for="' + x.productId + '"></label></div>'
+                    }
+                    else {
+                        return '<div class="custom-control custom-switch d-flex"><input type="checkbox" class="custom-control-input productStatus" value="' + x.productId + '" id="' + x.productId + '" /><label class="custom-control-label" for="' + x.productId + '"></label></div>'
+                    }
+                }
+            },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
@@ -27,5 +39,28 @@ $(function () {
                 }
             }
         ]
+    });
+});
+
+ProductModel.onDelete = function () {
+    tblProduct.ajax.reload();
+}
+
+$('#tblProduct').on('click', 'input[type="checkbox"]', function () {
+    var data = {
+        ProductId: $(this).val(),
+        Status: this.checked,
+    };
+    $.ajax({
+        url: "/Product/UpdateProductStatus",
+        type: "POST",
+        data: data,
+        success: function (response) {
+            if (response == "success") {
+                tblProduct.ajax.reload();
+            }
+            else
+                alert("Error: " + response);
+        }
     });
 });

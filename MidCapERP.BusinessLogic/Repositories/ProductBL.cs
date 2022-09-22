@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -22,13 +23,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private readonly CurrentUser _currentUser;
         private readonly IFileStorageService _fileStorageService;
+        private readonly IQRCodeService _iQRCodeService;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
             _fileStorageService = fileStorageService;
+            _iQRCodeService = iQRCodeService;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -44,9 +47,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            CategoryName = y.LookupValueName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
-                                           CostPrice = x.CostPrice,
-                                           RetailerPrice = x.RetailerPrice,
-                                           WholesalerPrice = x.WholesalerPrice
+                                           Status = x.Status,
+                                           CreatedBy = x.CreatedBy,
+                                           CreatedDate = x.CreatedDate,
+                                           UpdatedBy = x.UpdatedBy,
+                                           UpdatedDate = x.UpdatedDate
                                        }).AsQueryable();
             var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -54,10 +59,48 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
         {
-            ProductRequestDto productRequestDto = new ProductRequestDto();
-            var data = await GetProductById(Id, cancellationToken);
-            productRequestDto = _mapper.Map<ProductRequestDto>(data);
-            return productRequestDto;
+            try
+            {
+                ProductRequestDto productRequestDto = new ProductRequestDto();
+                var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
+                                   join y in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken)
+                                   on x.CreatedBy equals y.UserId
+                                   select new ProductRequestDto()
+                                   {
+                                       ProductId = Id,
+                                       CategoryId = x.CategoryId,
+                                       ProductTitle = x.ProductTitle,
+                                       ModelNo = x.ModelNo,
+                                       Width = x.Width,
+                                       Height = x.Height,
+                                       Depth = x.Depth,
+                                       UsedFabric = x.UsedFabric,
+                                       IsVisibleToWholesalers = x.IsVisibleToWholesalers,
+                                       TotalDaysToPrepare = x.TotalDaysToPrepare,
+                                       Features = x.Features,
+                                       Comments = x.Comments,
+                                       CostPrice = x.CostPrice,
+                                       RetailerPrice = x.RetailerPrice,
+                                       WholesalerPrice = x.WholesalerPrice,
+                                       CoverImage = x.CoverImage,
+                                       QRImage = x.QRImage,
+                                       TenantId = x.TenantId,
+                                       CreatedByName = y.FullName,
+                                       CreatedDate = x.CreatedDate,
+                                       UpdatedByName = y.FullName,
+                                       UpdatedDate = x.UpdatedDate,
+                                       //IsDeleted = x.IsDeleted,
+                                       //IsPublished = x.IsPublished
+                                   }).FirstOrDefault();
+
+                productRequestDto = _mapper.Map<ProductRequestDto>(productData);
+                return productRequestDto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken)
@@ -86,7 +129,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                             // inner join on unitdata on rowmaterial
                         join ur in unitData on rowMat.UnitId equals ur.LookupValueId
                         // left join end
-
 
                         //left join start for POlise
                         join z in polish on x.SubjectId equals z.PolishId into polishM
@@ -126,15 +168,29 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            var productToInsert = _mapper.Map<Product>(model);
-            productToInsert.TenantId = _currentUser.TenantId;
-            productToInsert.CreatedBy = _currentUser.UserId;
-            productToInsert.CreatedDate = DateTime.Now;
-            productToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-
-            return _mappedUser;
+            try
+            {
+                var productToInsert = _mapper.Map<Product>(model);
+                if (model.UploadImage != null)
+                    productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
+                productToInsert.Status = 0;
+                productToInsert.TenantId = _currentUser.TenantId;
+                productToInsert.CreatedBy = _currentUser.UserId;
+                productToInsert.CreatedDate = DateTime.Now;
+                productToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+                var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+                if (productData.ProductId > 0)
+                {
+                    productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                    await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
+                }
+                return _mappedUser;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         public async Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
@@ -180,6 +236,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Width = model.Width;
                     getProductById.Height = model.Height;
                     getProductById.Depth = model.Depth;
+                    if (model.UploadImage != null)
+                        getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
@@ -218,6 +276,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             throw new Exception("Product is not found");
         }
 
+        public async Task UpdateProductStatus(ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            if (model.ProductId > 0)
+            {
+                var getProductById = await GetProductById(model.ProductId, cancellationToken);
+
+                if (getProductById != null)
+                {
+                    UpdateData(getProductById);
+                    if (model.Status == "true")
+                        getProductById.Status = (byte)ProductStatusConstants.Published;
+                    else
+                        getProductById.Status = (byte)ProductStatusConstants.UnPublished;
+
+                    await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+                }
+            }
+            else
+                throw new Exception("Product is not found");
+        }
+
         public async Task<ProductRequestDto?> UpdateProductCost(ProductMainRequestDto model, CancellationToken cancellationToken)
         {
             if (model.ProductId > 0)
@@ -241,7 +320,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             throw new Exception("Product is not found");
         }
 
+        public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
+        {
+            var productToDelete = await GetProductById(Id, cancellationToken);
+            productToDelete.Status = (int)ProductStatusConstants.Delete;
+            UpdateData(productToDelete);
+            var data = await _unitOfWorkDA.ProductDA.DeleteProduct(Id, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(data);
+            return _mappedUser;
+        }
+
         #region API Methods
+
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
         {
             var produdctData = await GetProductById(Id, cancellationToken);
@@ -253,9 +343,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
         }
-        #endregion
 
-        #region Private Method
+        #endregion API Methods
 
         public async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
@@ -272,6 +361,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             return await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
         }
+
+        #region Private Method
 
         private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
         {

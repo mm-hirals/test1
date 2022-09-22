@@ -1,7 +1,6 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
-using MidCapERP.Dto.ProductMaterial;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -27,11 +26,14 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductRequestDto> UpdateProductDetail(ProductRequestDto model, CancellationToken cancellationToken);
 
+        public Task UpdateProductStatus(ProductMainRequestDto model, CancellationToken cancellationToken);
+
         public Task<ProductRequestDto?> UpdateProductCost(ProductMainRequestDto model, CancellationToken cancellationToken);
 
         public Task<ProductImageRequestDto> CreateProductImages(ProductMainRequestDto model, CancellationToken cancellationToken);
 
         public Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken);
 
+        public Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken);
     }
 }

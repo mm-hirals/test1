@@ -136,7 +136,7 @@ namespace MidCapERP.Admin.Controllers
         {
             if (model.ProductId > 0)
             {
-                var updateProductDetail = await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
+                await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
                 return RedirectToAction("CreateProductDetail", "Product", new { productId = model.ProductId });
             }
 
@@ -161,7 +161,31 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
+            await _unitOfWorkBL.ProductBL.DeleteProduct(Id, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
+        public async Task<JsonResult> UpdateProductStatus([FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.UpdateProductStatus(productMainRequestDto, cancellationToken);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        public async Task<IActionResult> Detail(int Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
+            return View("Detail", data);
         }
 
         #region Private Method
