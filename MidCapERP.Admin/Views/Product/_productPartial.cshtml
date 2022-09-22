@@ -3,11 +3,11 @@
 <form asp-action="CreateProductBasicDetail" asp-controller="Product"
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
-        <input type="hidden" asp-for="ProductId" class="form-control productIdForCat" accept="image/*" />
+        <input type="hidden" asp-for="ProductId" class="form-control" />
         <div class="card-product--image">
-            <input asp-for="CoverImage" type="file" hidden />
+            <input asp-for="CoverImage" type="file" hidden accept="image/*" />
             <div class="product--image">
-                @if (Model?.CoverImage != null)
+                @if (!string.IsNullOrEmpty(Model?.CoverImage))
                 {
                     <img src="@Model.CoverImage" alt="Product Image" />
                 }
