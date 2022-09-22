@@ -4,12 +4,12 @@
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" class="form-control" />
-        <div class="card-product--image">
-            <input asp-for="CoverImage" type="file" hidden accept="image/*" />
-            <div class="product--image">
+        <label for="CoverImage" class="card-product--image">
+            <input asp-for="CoverImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
+            <div class="product--image" style="cursor:pointer">
                 @if (!string.IsNullOrEmpty(Model?.CoverImage))
                 {
-                    <img src="@Model.CoverImage" alt="Product Image" />
+                    <img src="@Model.CoverImage" id="editProductImage" alt="Product Image" />
                 }
                 else
                 {
@@ -19,7 +19,7 @@
                     <i class="bx bx-pencil"></i>
                 </div>
             </div>
-        </div>
+        </label>
         <div class="card-prpoduct-cotent--wrapper">
             <div class="row">
                 <div class="col-md-3">
