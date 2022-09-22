@@ -80,9 +80,33 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 
-        public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+
+            if(dataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
+                {
+                    customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
+                }
+
+                if (!string.IsNullOrEmpty(dataTableFilterDto.customerMobileNo))
+                {
+                    customerAllData = customerAllData.Where(p => p.PhoneNumber.StartsWith(dataTableFilterDto.customerMobileNo));
+                }
+
+                if (dataTableFilterDto.customerFromDate != DateTime.MinValue)
+                {
+                    customerAllData = customerAllData.Where(p => p.CreatedDate > dataTableFilterDto.customerFromDate || p.UpdatedDate > dataTableFilterDto.customerFromDate);
+                }
+
+                if (dataTableFilterDto.customerToDate != DateTime.MinValue)
+                {
+                    customerAllData = customerAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate > dataTableFilterDto.customerToDate);
+                }
+            }
+
             var customerData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerAllData).AsQueryable(), dataTableFilterDto);
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerData.TotalCount, customerData.TotalCount, customerData);
         }
