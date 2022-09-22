@@ -14,9 +14,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidCapERP.Dto", "MidCapERP.Dto\MidCapERP.Dto.csproj", "{8DEB2045-D058-4965-B814-D548E6D7C3C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidCapERP.Admin", "MidCapERP.Admin\MidCapERP.Admin.csproj", "{8E21C110-471D-4C01-8B71-CEF500B592E8}"
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MidCapERP.Database", "MidCapERP.Database\MidCapERP.Database.sqlproj", "{2CBB1016-D317-4EF2-8881-A5424C774F12}"
-EndProject
+EndProject 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidCapERP.Infrastructure", "MidCapERP.Infrastructure\MidCapERP.Infrastructure.csproj", "{CA1EC6D4-EAAA-4D86-A6CA-17421747D95D}"
 EndProject
 Global
