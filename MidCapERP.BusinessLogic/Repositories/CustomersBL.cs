@@ -84,7 +84,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
 
-            if(dataTableFilterDto != null)
+            customerAllData = FilterCustomerData(dataTableFilterDto, customerAllData);
+
+            var customerData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerAllData).AsQueryable(), dataTableFilterDto);
+            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerData.TotalCount, customerData.TotalCount, customerData);
+        }
+
+        private static IQueryable<Customers> FilterCustomerData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<Customers> customerAllData)
+        {
+            if (dataTableFilterDto != null)
             {
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
                 {
@@ -107,8 +115,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
 
-            var customerData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerAllData).AsQueryable(), dataTableFilterDto);
-            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerData.TotalCount, customerData.TotalCount, customerData);
+            return customerAllData;
         }
 
         public async Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken)
