@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Localization;
-using MidCapERP.Infrastructure.Localizer.JsonString;
 using System.Globalization;
 
 namespace MidCapERP.Admin.Middleware

@@ -2,5 +2,8 @@
     "hi": "Hello",
     "welcome": "Welcome {0}, How are you?",
     "loginSuccessfull": "Login Successfull!",
-    "forgotPassword": "Forgot Password"
+    "forgotPassword": "Forgot Password",
+    "generateOTPSuccessfully": "Generate OTP successfully",
+    "tokenGeneratedSuccessfully": "Token Generated Successfully",
+    "otpInvalid": "OTP is Invalid"
 }
