@@ -72,9 +72,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       Width = (x.Width == 0) ? 0 : x.Width/12,
-                                       Height = (x.Height == 0) ? 0 : x.Height/12,
-                                       Depth = (x.Depth == 0) ? 0 : x.Depth/12,
+                                       Width = x.Width/12,
+                                       Height = x.Height/12,
+                                       Depth = x.Depth/12,
                                        UsedFabric = x.UsedFabric,
                                        IsVisibleToWholesalers = x.IsVisibleToWholesalers,
                                        TotalDaysToPrepare = x.TotalDaysToPrepare,
@@ -182,7 +182,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
+            {
                 productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
+            }
             return _mappedUser;
         }
 
