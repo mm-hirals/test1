@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Localization;
-using MidCapERP.Infrastructure.Localizer.JsonString;
+using MidCapERP.Core.Localizer.JsonString;
 using System.Globalization;
 
 namespace MidCapERP.WebAPI.Middleware
 {
     public static class UseJsonStringLocalizer
-    {       
+    {
         /// <summary>
         /// Use exception handler to handle the exception
         /// </summary>

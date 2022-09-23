@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.Core.Constants;
+using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.Infrastructure.Identity.Models;
-using MidCapERP.Infrastructure.Localizer.JsonString;
 using MidCapERP.Infrastructure.Services.Token;
 using NToastNotify;
 

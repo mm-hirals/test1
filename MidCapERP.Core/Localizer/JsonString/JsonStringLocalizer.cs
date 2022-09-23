@@ -1,20 +1,17 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace MidCapERP.Infrastructure.Localizer.JsonString
+namespace MidCapERP.Core.Localizer.JsonString
 {
     public class JsonStringLocalizer : IStringLocalizer
     {
         private readonly IDistributedCache _cache;
         private readonly JsonSerializer _serializer = new JsonSerializer();
-        public IWebHostEnvironment _webHostEnvironment;
-        public JsonStringLocalizer(IDistributedCache cache, IWebHostEnvironment webHostEnvironment)
+        public JsonStringLocalizer(IDistributedCache cache)
         {
             _cache = cache;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         public LocalizedString this[string name]

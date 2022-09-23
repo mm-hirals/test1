@@ -13,9 +13,11 @@ namespace MidCapERP.Dto.Customers
         public int CustomerTypeId { get; set; }
 
         [DisplayName("First Name")]
+        [Required]
         public string FirstName { get; set; }
 
         [DisplayName("Last Name")]
+        [Required]
         public string LastName { get; set; }
 
         [DisplayName("Email Address")]
@@ -23,6 +25,7 @@ namespace MidCapERP.Dto.Customers
         public string? EmailId { get; set; }
 
         [DisplayName("Phone Number")]
+        [Required]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Globalization;
 
-namespace MidCapERP.Infrastructure.Localizer.JsonString
+namespace MidCapERP.Core.Localizer.JsonString
 {
     public class LocalizationMiddleware : IMiddleware
     {
