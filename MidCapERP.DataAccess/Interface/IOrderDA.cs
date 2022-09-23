@@ -6,6 +6,12 @@ namespace MidCapERP.DataAccess.Interface
     {
         public Task<IQueryable<Order>> GetAll(CancellationToken cancellationToken);
 
+        public Task<Order> GetById(long Id, CancellationToken cancellationToken);
+
+        public Task<IQueryable<OrderSet>> GetAllOrderSet(CancellationToken cancellationToken);
+
+        public Task<IQueryable<OrderSetItem>> GetAllOrderSetItem(CancellationToken cancellationToken);
+
         public Task<Order> CreateOrder(Order model, CancellationToken cancellationToken);
     }
 }
