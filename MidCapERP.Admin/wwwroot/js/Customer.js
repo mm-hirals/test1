@@ -12,14 +12,15 @@ $(function () {
         "ajax": {
             "url": "/Customer/GetCustomersData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.customerName = $("#customerName").val().trim(),
+                    d.customerMobileNo = $("#customerMobileNo").val().trim(),
+                    d.customerFromDate = $("#customerFromDate").val().trim(),
+                    d.customerToDate = $("#customerToDate").val().trim()
+            }
         },
         "columns": [
-            {
-                "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><input type = "checkbox"/></div>';
-                }
-            },
             {
                 "render": (data, type, full) => {
                     return full.firstName + " " + full.lastName;
@@ -27,8 +28,6 @@ $(function () {
             },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
-            { "data": "altPhoneNumber", "name": "altPhoneNumber", "autoWidth": true },
-            { "data": "gstNo", "name": "GSTNo", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
@@ -37,6 +36,22 @@ $(function () {
             }
         ]
     });
+});
+
+$('#customerName').keyup(function () {
+   tblCustomer.ajax.reload(null, false);
+});
+
+$('#customerMobileNo').keyup(function () {
+    tblCustomer.ajax.reload(null, false);
+});
+
+$("#customerFromDate").on("input", function () {
+    tblCustomer.ajax.reload(null, false);
+});
+
+$("#customerToDate").on("input", function () {
+    tblCustomer.ajax.reload(null, false);
 });
 
 $("#lnkCustomerFilter").click(function () {
