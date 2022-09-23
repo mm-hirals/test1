@@ -59,8 +59,10 @@ namespace MidCapERP.Dto.Order
         [DisplayName("Salesman Name")]
         public string CreatedByName { get; set; }
 
-        [DisplayName("Order Date")]
         public DateTime CreatedDate { get; set; }
+
+        [DisplayName("Order Date")]
+        public string CreatedDateFormat { get; set; }
 
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
