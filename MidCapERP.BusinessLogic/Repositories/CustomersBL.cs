@@ -163,6 +163,17 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id,CustomerApiRequestDto model, CancellationToken cancellationToken)
+        {
+            var oldData = await CustomerGetById(Id, cancellationToken);
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            MapToDbObject(model, oldData);
+            var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
+            return _mapper.Map<CustomerApiRequestDto>(data);
+        }
+
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
@@ -233,6 +244,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.RefferedBy = model.RefferedBy;
+        }
+
+        private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
+        {
+            oldData.FirstName = model.FirstName;
+            oldData.LastName = model.LastName;
+            oldData.EmailId = model.EmailId;
+            oldData.PhoneNumber = model.PhoneNumber;
+            oldData.AltPhoneNumber = model.AltPhoneNumber;
+            oldData.GSTNo = model.GSTNo;
         }
 
         #endregion PrivateMethods

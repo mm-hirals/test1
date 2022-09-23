@@ -31,6 +31,8 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken);
 
+        public Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken);
+
         public Task<CustomersRequestDto> UpdateCustomers(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken);
 
         public Task<int> GetCustomerCount(CancellationToken cancellationToken);
