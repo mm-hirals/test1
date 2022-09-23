@@ -17,10 +17,13 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("Last Name")]
         public string LastName { get; set; }
         [Required]
-        [DisplayName("Last Name")]
+        [DisplayName("Email Id")]
+        [EmailAddress(ErrorMessage = "Please enter valid email address")]
         public string EmailId { get; set; }
         [Required]
         [DisplayName("Phone Number")]
+        [MaxLength(10)]
+        [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; }
         [Required]
         [DisplayName("LogoPath")]
@@ -36,7 +39,7 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("City")]
         public string City { get; set; }
         [Required]
-        [DisplayName("City")]
+        [DisplayName("State")]
         public string State { get; set; }
         [Required]
         [DisplayName("Pincode")]
