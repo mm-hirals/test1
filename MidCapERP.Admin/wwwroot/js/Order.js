@@ -29,6 +29,15 @@ $(function () {
                     return '<div class="c-action-btn-group justify-content-start"><a class="btn btn-icon btn-outline-primary" href="/Order/OrderDetail/' + o.orderId + '"><i class="bx bxs-show"></i></a></div> ';
                 }
             }
+        ],
+        columnDefs: [
+            {
+                "type": "unix",
+                "targets": 1,
+                "render": function (data) {
+                    return moment(data).format('DD/MM/YYYY HH:MM')
+                }
+            },
         ]
     });
 });
