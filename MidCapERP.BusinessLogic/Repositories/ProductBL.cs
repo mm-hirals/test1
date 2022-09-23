@@ -214,8 +214,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (model.Files != null)
                 {
                     var getImageById = await GetProductImageById(model.ProductId, cancellationToken);
-                    if (getImageById.Count() > 0)
-                        await DeleteImages(getImageById.ToList(), cancellationToken);
+                    // comented theis code for no need to delete the old images.
+                    //if (getImageById.Count() > 0)
+                    //    await DeleteImages(getImageById.ToList(), cancellationToken);
                     await AddImages(model, cancellationToken);
                     return _mapper.Map<ProductImageRequestDto>(saveImage);
                 }
