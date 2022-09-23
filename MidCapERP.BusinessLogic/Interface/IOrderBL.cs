@@ -1,4 +1,5 @@
 ﻿using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
 
 namespace MidCapERP.BusinessLogic.Interface
@@ -13,7 +14,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderRequestDto> CreateOrder(OrderRequestDto model, CancellationToken cancellationToken);
 
-        public Task<IEnumerable<OrderForDorpDownByOrderNoResponseDto>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellation);
+        public Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellation);
 
         public Task<OrderResponseDto> GetOrderForDetailsByOrderNo(string searchText, CancellationToken cancellation);
     }

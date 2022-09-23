@@ -46,15 +46,28 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<ApiResponse> Post([FromBody] CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Post([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
-            ValidationRequest(customersRequestDto);
-            var data = await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
+            ValidationRequest(customerApiRequestDto);
+            var data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
             }
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<ApiResponse> Put(int id, [FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerApiRequestDto);
+            var data = await _unitOfWorkBL.CustomersBL.UpdateCustomerApi(id, customerApiRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
         [HttpGet("CheckCustomer")]
@@ -108,7 +121,7 @@ namespace MidCapERP.WebAPI.Controllers
 
         #region Private Methods
 
-        private void ValidationRequest(CustomersRequestDto customersRequestDto)
+        private void ValidationRequest(CustomerApiRequestDto customersRequestDto)
         {
             if (!ModelState.IsValid)
             {

@@ -40,6 +40,10 @@ namespace MidCapERP.WebAPI.Configuration
             // using static System.Net.Mime.MediaTypeNames;
             app.UseStatusCodePages(Text.Plain, "Status Code Page: {0}");
 
+            // Localization implemented for message response
+            app.UseLocalizationMiddleware();
+
+
             //app.UseMiddleware<UseExceptionHandlerMiddleware>();
             app.UseExceptionHandlerMiddleware();
             app.UseRouting();

@@ -3,11 +3,13 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
@@ -72,9 +74,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       Width = x.Width,
-                                       Height = x.Height,
-                                       Depth = x.Depth,
+                                       Width = x.Width/12,
+                                       Height = x.Height/12,
+                                       Depth = x.Depth/12,
                                        UsedFabric = x.UsedFabric,
                                        IsVisibleToWholesalers = x.IsVisibleToWholesalers,
                                        TotalDaysToPrepare = x.TotalDaysToPrepare,
@@ -168,29 +170,25 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            try
+            model.Width = model.Width * 12;
+            model.Height = model.Height * 12;
+            model.Depth = model.Depth * 12;
+            var productToInsert = _mapper.Map<Product>(model);
+            if (model.UploadImage != null)
+                productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
+            productToInsert.Status = 0;
+            productToInsert.TenantId = _currentUser.TenantId;
+            productToInsert.CreatedBy = _currentUser.UserId;
+            productToInsert.CreatedDate = DateTime.Now;
+            productToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+            if (productData.ProductId > 0)
             {
-                var productToInsert = _mapper.Map<Product>(model);
-                if (model.UploadImage != null)
-                    productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-                productToInsert.Status = 0;
-                productToInsert.TenantId = _currentUser.TenantId;
-                productToInsert.CreatedBy = _currentUser.UserId;
-                productToInsert.CreatedDate = DateTime.Now;
-                productToInsert.CreatedUTCDate = DateTime.UtcNow;
-                var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-                var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-                if (productData.ProductId > 0)
-                {
-                    productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
-                    await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
-                }
-                return _mappedUser;
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+            return _mappedUser;
         }
 
         public async Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
@@ -212,8 +210,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (model.Files != null)
                 {
                     var getImageById = await GetProductImageById(model.ProductId, cancellationToken);
-                    if (getImageById.Count() > 0)
-                        await DeleteImages(getImageById.ToList(), cancellationToken);
+                    // comented theis code for no need to delete the old images.
+                    //if (getImageById.Count() > 0)
+                    //    await DeleteImages(getImageById.ToList(), cancellationToken);
                     await AddImages(model, cancellationToken);
                     return _mapper.Map<ProductImageRequestDto>(saveImage);
                 }
@@ -233,9 +232,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                     UpdateData(getProductById);
                     getProductById.ProductTitle = model.ProductTitle;
                     getProductById.ModelNo = model.ModelNo;
-                    getProductById.Width = model.Width;
-                    getProductById.Height = model.Height;
-                    getProductById.Depth = model.Depth;
+                    getProductById.Width = model.Width * 12;
+                    getProductById.Height = model.Height * 12;
+                    getProductById.Depth = model.Depth * 12;
                     if (model.UploadImage != null)
                         getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
@@ -286,9 +285,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     UpdateData(getProductById);
                     if (model.Status == "true")
-                        getProductById.Status = (byte)ProductStatusConstants.Published;
+                        getProductById.Status = (byte)ProductStatusEnum.Published;
                     else
-                        getProductById.Status = (byte)ProductStatusConstants.UnPublished;
+                        getProductById.Status = (byte)ProductStatusEnum.UnPublished;
 
                     await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                 }
@@ -323,7 +322,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
         {
             var productToDelete = await GetProductById(Id, cancellationToken);
-            productToDelete.Status = (int)ProductStatusConstants.Delete;
+            productToDelete.Status = (int)ProductStatusEnum.Delete;
             UpdateData(productToDelete);
             var data = await _unitOfWorkDA.ProductDA.DeleteProduct(Id, cancellationToken);
             var _mappedUser = _mapper.Map<ProductRequestDto>(data);
@@ -338,10 +337,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<ProductRequestDto>(produdctData);
         }
 
-        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MegaSearchResponse>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).ToList();
+            return productAlldata.Where(x => x.Status == (int)ProductStatusEnum.Published && x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.ProductId, x.ProductTitle, x.ModelNo, x.CoverImage, "Product")).Take(10).ToList();
         }
 
         #endregion API Methods

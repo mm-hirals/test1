@@ -1,4 +1,5 @@
 ﻿using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 
@@ -16,7 +17,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
 
-        public Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetProductForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
+        public Task<IEnumerable<MegaSearchResponse>> GetProductForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
 
         public Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellation);
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.WebAPI.Controllers
@@ -27,7 +28,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> MegaSearch(string searchText, CancellationToken cancellationToken)
         {
-            List<Object> productData = new List<Object>();
+            List<MegaSearchResponse> productData = new List<MegaSearchResponse>();
             productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.CustomersBL.GetCustomerForDropDownByMobileNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.OrderBL.GetOrderForDropDownByOrderNo(searchText, cancellationToken));

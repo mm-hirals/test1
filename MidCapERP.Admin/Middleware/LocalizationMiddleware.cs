@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace MidCapERP.Infrastructure.Localizer.JsonString
+namespace MidCapERP.Admin.Middleware
 {
     public class LocalizationMiddleware : IMiddleware
     {
@@ -17,6 +16,7 @@ namespace MidCapERP.Infrastructure.Localizer.JsonString
                     Thread.CurrentThread.CurrentUICulture = culture;
                 }
             }
+
             await next(context);
         }
 
