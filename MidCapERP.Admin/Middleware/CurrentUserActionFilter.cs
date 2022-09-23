@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Middleware
 {

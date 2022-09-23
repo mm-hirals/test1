@@ -1,5 +1,6 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Interface
@@ -14,7 +15,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<FabricRequestDto> GetById(int Id, CancellationToken cancellationToken);
 
-        public Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellation);
+        public Task<IEnumerable<MegaSearchResponse>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellation);
 
         public Task<FabricResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellation);
 

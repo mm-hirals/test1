@@ -1,10 +1,9 @@
-﻿using System.Linq;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using MidCapERP.Infrastructure.Constants;
+using MidCapERP.Core.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
+using MidCapERP.Infrastructure.Localizer.JsonString;
 using MidCapERP.Infrastructure.Services.Token;
 using NToastNotify;
 
@@ -16,6 +15,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IToastNotification _toastNotification;
         private readonly IStringLocalizer<BaseController> _localizer;
+
         public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer)
         {
             _localizer = localizer;
@@ -58,8 +58,9 @@ namespace MidCapERP.Admin.Controllers
                 _toastNotification.AddErrorToastMessage("Incorrect username or Password. Please try again.");
                 return RedirectToAction("Login", "Account");
             }
-         
-            return  RedirectToAction("Index", "Dashboard");
+
+            _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         /// <summary>

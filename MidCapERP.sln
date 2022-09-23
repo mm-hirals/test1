@@ -12,12 +12,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidCapERP.BusinessLogic", "MidCapERP.BusinessLogic\MidCapERP.BusinessLogic.csproj", "{FE2EE9EC-5C7E-4A97-A3ED-EE012E5ABF26}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidCapERP.Dto", "MidCapERP.Dto\MidCapERP.Dto.csproj", "{8DEB2045-D058-4965-B814-D548E6D7C3C5}"
-EndProject
+EndProject 
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidCapERP.Admin", "MidCapERP.Admin\MidCapERP.Admin.csproj", "{8E21C110-471D-4C01-8B71-CEF500B592E8}"
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MidCapERP.Database", "MidCapERP.Database\MidCapERP.Database.sqlproj", "{2CBB1016-D317-4EF2-8881-A5424C774F12}"
-EndProject
+EndProject 
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MidCapERP.Infrastructure", "MidCapERP.Infrastructure\MidCapERP.Infrastructure.csproj", "{CA1EC6D4-EAAA-4D86-A6CA-17421747D95D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MidCapERP.Core", "MidCapERP.Core\MidCapERP.Core.csproj", "{263AE181-6783-4715-84E0-43A95FFC10F2}" 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +59,10 @@ Global
 		{CA1EC6D4-EAAA-4D86-A6CA-17421747D95D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA1EC6D4-EAAA-4D86-A6CA-17421747D95D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA1EC6D4-EAAA-4D86-A6CA-17421747D95D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{263AE181-6783-4715-84E0-43A95FFC10F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{263AE181-6783-4715-84E0-43A95FFC10F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{263AE181-6783-4715-84E0-43A95FFC10F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{263AE181-6783-4715-84E0-43A95FFC10F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,13 +37,18 @@ namespace MidCapERP.Dto.Product
         public string? CoverImage { get; set; }
         public string? QRImage { get; set; }
         public int TenantId { get; set; }
-        public bool IsDeleted { get; set; }
+        public byte? Status { get; set; }
         public int CreatedBy { get; set; }
+
+        [DisplayName("Created Date")]
         public DateTime CreatedDate { get; set; }
+
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
+
+        [DisplayName("Updated Date")]
         public DateTime? UpdatedDate { get; set; }
+
         public DateTime? UpdatedUTCDate { get; set; }
-        public bool IsPublished { get; set; }
     }
 }

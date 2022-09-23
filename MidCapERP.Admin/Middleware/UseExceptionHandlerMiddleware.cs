@@ -75,6 +75,7 @@ namespace MidCapERP.Admin.Middleware
                 var result = JsonSerializer.Serialize(new { errorMessage = Newtonsoft.Json.JsonConvert.SerializeObject(logEntry) });
                 _logger.LogError(result);
                 await SendEmailAsync(logEntry);
+                throw error;
             }
         }
 

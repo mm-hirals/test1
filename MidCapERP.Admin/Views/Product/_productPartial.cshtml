@@ -3,16 +3,23 @@
 <form asp-action="CreateProductBasicDetail" asp-controller="Product"
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
-        <input type="hidden" asp-for="ProductId" class="form-control productIdForCat" />
-        <div class="card-product--image">
-            <input type="file" hidden />
-            <div class="product--image">
-                <img src="~/images/No_Image.jpg" alt="Product Name" />
+        <input type="hidden" asp-for="ProductId" class="form-control" />
+        <label for="CoverImage" class="card-product--image">
+            <input asp-for="CoverImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
+            <div class="product--image" style="cursor:pointer">
+                @if (!string.IsNullOrEmpty(Model?.CoverImage))
+                {
+                    <img src="@Model.CoverImage" id="editProductImage" alt="Product Image" />
+                }
+                else
+                {
+                    <img src="~/images/No_Image.jpg" alt="Product Image" />
+                }
                 <div class="edit--image">
                     <i class="bx bx-pencil"></i>
                 </div>
             </div>
-        </div>
+        </label>
         <div class="card-prpoduct-cotent--wrapper">
             <div class="row">
                 <div class="col-md-3">
@@ -78,8 +85,46 @@
                         </div>
                     </div>
                 </div>
+                @if (Model?.ProductId > 0)
+                {
+                    <div class="col-md-3">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Created Name Date
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input asp-for="CreatedDate" type="date" class="form-control" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input asp-for="CreatedByName" class="form-control" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Updated Name Date
+                                </label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input asp-for="UpdatedDate" type="date" class="form-control" readonly="readonly" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input asp-for="UpdatedByName" class="form-control" readonly="readonly" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="col-12">
                     <div class="text-end pb-2">
+                        @*<input type="file" asp-for="UploadImage" class="form-control" />*@
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                             Cancel
                         </a>
