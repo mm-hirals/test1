@@ -74,9 +74,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       Width = x.Width,
-                                       Height = x.Height,
-                                       Depth = x.Depth,
+                                       Width = x.Width/12,
+                                       Height = x.Height/12,
+                                       Depth = x.Depth/12,
                                        UsedFabric = x.UsedFabric,
                                        IsVisibleToWholesalers = x.IsVisibleToWholesalers,
                                        TotalDaysToPrepare = x.TotalDaysToPrepare,
@@ -170,29 +170,25 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            try
+            model.Width = model.Width * 12;
+            model.Height = model.Height * 12;
+            model.Depth = model.Depth * 12;
+            var productToInsert = _mapper.Map<Product>(model);
+            if (model.UploadImage != null)
+                productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
+            productToInsert.Status = 0;
+            productToInsert.TenantId = _currentUser.TenantId;
+            productToInsert.CreatedBy = _currentUser.UserId;
+            productToInsert.CreatedDate = DateTime.Now;
+            productToInsert.CreatedUTCDate = DateTime.UtcNow;
+            var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+            var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
+            if (productData.ProductId > 0)
             {
-                var productToInsert = _mapper.Map<Product>(model);
-                if (model.UploadImage != null)
-                    productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-                productToInsert.Status = 0;
-                productToInsert.TenantId = _currentUser.TenantId;
-                productToInsert.CreatedBy = _currentUser.UserId;
-                productToInsert.CreatedDate = DateTime.Now;
-                productToInsert.CreatedUTCDate = DateTime.UtcNow;
-                var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
-                var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
-                if (productData.ProductId > 0)
-                {
-                    productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
-                    await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
-                }
-                return _mappedUser;
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
             }
-            catch (Exception e)
-            {
-                throw;
-            }
+            return _mappedUser;
         }
 
         public async Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
@@ -236,9 +232,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                     UpdateData(getProductById);
                     getProductById.ProductTitle = model.ProductTitle;
                     getProductById.ModelNo = model.ModelNo;
-                    getProductById.Width = model.Width;
-                    getProductById.Height = model.Height;
-                    getProductById.Depth = model.Depth;
+                    getProductById.Width = model.Width * 12;
+                    getProductById.Height = model.Height * 12;
+                    getProductById.Depth = model.Depth * 12;
                     if (model.UploadImage != null)
                         getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
