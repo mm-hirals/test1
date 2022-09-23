@@ -31,6 +31,8 @@ namespace MidCapERP.Admin.Controllers
             return Ok(data);
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
         {
             OrderResponseDto orderData = new OrderResponseDto();
@@ -41,6 +43,8 @@ namespace MidCapERP.Admin.Controllers
             return View(orderData);
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<IActionResult> CustomerDetail(long CustomerId, CancellationToken cancellationToken)
         {
             var customerById = await _unitOfWorkBL.CustomersBL.GetById(CustomerId, cancellationToken);
