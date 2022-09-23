@@ -43,6 +43,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
             var productResponseData = (from x in productAllData
                                        join y in cateagoryData on x.CategoryId equals y.LookupValueId
+                                       join z in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken) on x.CreatedBy equals z.UserId
                                        select new ProductResponseDto()
                                        {
                                            ProductId = x.ProductId,
@@ -50,10 +51,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
                                            Status = x.Status,
-                                           CreatedBy = x.CreatedBy,
+                                           CreatedByName = z.FullName,
                                            CreatedDate = x.CreatedDate,
-                                           UpdatedBy = x.UpdatedBy,
-                                           UpdatedDate = x.UpdatedDate
+                                           CreatedDateFormat = x.CreatedDate.ToString("dd/MM/yyyy hh:mm"),
+                                           UpdatedByName = z.FullName,
+                                           UpdatedDate = x.UpdatedDate,
+                                           UpdatedDateFormat = x.UpdatedDate != null ? x.UpdatedDate.Value.ToString("dd/MM/yyyy hh:mm") : ""
                                        }).AsQueryable();
             var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -74,9 +77,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       Width = x.Width/12,
-                                       Height = x.Height/12,
-                                       Depth = x.Depth/12,
+                                       Width = x.Width / 12,
+                                       Height = x.Height / 12,
+                                       Depth = x.Depth / 12,
                                        UsedFabric = x.UsedFabric,
                                        IsVisibleToWholesalers = x.IsVisibleToWholesalers,
                                        TotalDaysToPrepare = x.TotalDaysToPrepare,
@@ -92,8 +95,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CreatedDate = x.CreatedDate,
                                        UpdatedByName = y.FullName,
                                        UpdatedDate = x.UpdatedDate,
-                                       //IsDeleted = x.IsDeleted,
-                                       //IsPublished = x.IsPublished
                                    }).FirstOrDefault();
 
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
@@ -210,7 +211,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (model.Files != null)
                 {
                     var getImageById = await GetProductImageById(model.ProductId, cancellationToken);
-                    // comented theis code for no need to delete the old images.
+                    // commented these code for no need to delete the old images.
                     //if (getImageById.Count() > 0)
                     //    await DeleteImages(getImageById.ToList(), cancellationToken);
                     await AddImages(model, cancellationToken);
