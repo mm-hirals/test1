@@ -7,8 +7,8 @@ namespace MidCapERP.DataEntities.Models
 	public class TenantBankDetail : BaseEntity
 	{
 		[Key]
-		public long TenantBankDetailID { get; set; }
-		public long TenantID { get; set; }
+		public long TenantBankDetailId { get; set; }
+		public long TenantId { get; set; }
 		public string BankName { get; set; }
 		public string AccountName { get; set; }
 		public string AccountNo { get; set; }

@@ -4,7 +4,7 @@ using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Middleware
 {
-    public class TenantSelectionFilterAttribute : TypeFilterAttribute
+	public class TenantSelectionFilterAttribute : TypeFilterAttribute
     {
         public TenantSelectionFilterAttribute() : base(typeof(TenantSelectionActionFilter))
         {

@@ -6,8 +6,8 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<TenantResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<TenantRequestDto> GetById(int id, CancellationToken cancellationToken);
+        public Task<TenantRequestDto> GetById(int Id, CancellationToken cancellationToken);
 
-        public Task<TenantRequestDto> UpdateTenant(int id, TenantRequestDto model, CancellationToken cancellationToken);
+        public Task<TenantRequestDto> UpdateTenant(int Id, TenantRequestDto model, CancellationToken cancellationToken);
     }
 }

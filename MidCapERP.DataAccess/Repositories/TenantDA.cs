@@ -4,7 +4,7 @@ using MidCapERP.DataEntities.Models;
 
 namespace MidCapERP.DataAccess.Repositories
 {
-    public class TenantDA : ITenantDA
+	public class TenantDA : ITenantDA
     {
         private readonly ISqlRepository<Tenant> _tenant;
 

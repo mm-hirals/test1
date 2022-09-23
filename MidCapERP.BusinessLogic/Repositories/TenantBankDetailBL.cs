@@ -3,8 +3,6 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.TenantBankDetail;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -41,16 +39,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            MapToDbObject(model, _mapper.Map<TenantBankDetailRequestDto>(oldData));
+            MapToDbObject(model, ref oldData);
             var data = await _unitOfWorkDA.TenantBankDetailDA.UpdateTenantBankDetail(Id, oldData, cancellationToken);
             return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
 
         #region PrivateMethods
 
-        private static void MapToDbObject(TenantBankDetailRequestDto model, TenantBankDetailRequestDto oldData)
+        private static void MapToDbObject(TenantBankDetailRequestDto model, ref TenantBankDetail oldData)
         {
-            oldData.TenantID = model.TenantID;
+            oldData.TenantId = model.TenantId;
             oldData.BankName = model.BankName;
             oldData.AccountName = model.AccountName;
             oldData.AccountNo = model.AccountNo;
@@ -59,30 +57,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.IFSCCode = model.IFSCCode;
             oldData.UPIId = model.UPIId;
             oldData.QRCode = model.QRCode;
-            oldData.IsDeleted = model.IsDeleted;
-            oldData.CreatedBy = model.CreatedBy;
-            oldData.CreatedDate = model.CreatedDate;
-            oldData.UpdatedBy = model.UpdatedBy;
-            oldData.UpdatedDate = model.UpdatedDate;
-            oldData.UpdatedUTCDate = model.UpdatedUTCDate;
         }
 
         private async Task<TenantBankDetail> TenantGetById(int Id, CancellationToken cancellationToken)
         {
-            try
+            var data = await _unitOfWorkDA.TenantBankDetailDA.GetById(Id, cancellationToken);
+            if (data == null)
             {
-                var data = await _unitOfWorkDA.TenantBankDetailDA.GetById(Id, cancellationToken);
-                if (data == null)
-                {
-                    throw new Exception("Tenant not found");
-                }
-                return data;
+                throw new Exception("Tenant not found");
             }
-            catch (Exception e)
-            {
-                throw;
-            }
-            return null;
+            return data;
         }
 
         #endregion PrivateMethods

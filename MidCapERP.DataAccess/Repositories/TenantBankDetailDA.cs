@@ -20,15 +20,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<TenantBankDetail> GetById(int Id, CancellationToken cancellationToken)
         {
-			try
-			{
-                return await _tenantBankDetail.GetByIdAsync(Convert.ToInt64(Id), cancellationToken);
-            }
-			catch (Exception e)
-			{
-
-				throw;
-			}
+            return await _tenantBankDetail.GetByIdAsync(Convert.ToInt64(Id), cancellationToken);
         }
 
         public async Task<TenantBankDetail> UpdateTenantBankDetail(int Id, TenantBankDetail model, CancellationToken cancellationToken)

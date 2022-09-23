@@ -1,10 +1,10 @@
-﻿using MidCapERP.DataEntities.Models;
+﻿using AutoMapper;
+using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto.Tenant;
-using AutoMapper;
 
 namespace MidCapERP.BusinessLogic.MapperDto
 {
-    public class MapTenant : Profile
+	public class MapTenant : Profile
     {
         public MapTenant()
         {

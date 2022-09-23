@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto.Tenant;
+using MidCapERP.Dto.TenantBankDetail;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class TenantController : Controller
+	public class TenantController : Controller
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
@@ -60,7 +61,7 @@ namespace MidCapERP.Admin.Controllers
         {
             Id = tenantRequestDto.TenantId;
             await _unitOfWorkBL.TenantBL.UpdateTenant(Id, tenantRequestDto, cancellationToken);
-            return RedirectToAction("Index");
+            return RedirectToAction("Update");
         }
 
         [HttpGet]
@@ -75,6 +76,23 @@ namespace MidCapERP.Admin.Controllers
         {
             var tenantBankDetail =await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
             return PartialView("_TenantBankDetailPartial", tenantBankDetail);
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
+        public async Task<IActionResult> updateBankDetail(int Id, CancellationToken cancellationToken)
+        {
+            var tenantBankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
+            return View("Views/Account/ProfileMain.cshtml", tenantBankDetail);
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
+        public async Task<IActionResult> updateBankDetail(int Id, TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
+        {
+            Id = tenantBankDetailRequestDto.TenantId;
+            await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
+            return RedirectToAction("Update", "Tenant");
         }
 
         #region PrivateMethod

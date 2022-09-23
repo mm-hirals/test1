@@ -7,8 +7,8 @@
                         <h4 class="c-card--header-title">Tenant Detail</h4>
                         </div>
                 <form asp-action="update" asp-controller="Tenant" method="post" >
-                    <div class="c-card--body">
-                        <div class="row">
+                     <div class="c-card--body">
+                          <div class="row">
                                <div class="col-md-10">
                                     <div class="row">
                                         <input asp-for="TenantId" hidden class="form-control" />
@@ -28,7 +28,6 @@
                                             <div class="form-group">
                                                 <label asp-for="LastName" class="form-label"></label>
                                                 <input asp-for="LastName" type="text" class="form-control" placeholder="LastName">
-                                       
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -41,7 +40,6 @@
                                             <div class="form-group">
                                                 <label asp-for="PhoneNumber" class="form-label"></label>
                                                 <input asp-for="PhoneNumber" type="number" class="form-control" placeholder="Phonetext">
-                                       
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -66,15 +64,13 @@
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="Landmark" class="form-label"></label>
-                                                <input asp-for="Landmark" type="text" class="form-control" placeholder="Landmark">
-                                       
+                                                <input asp-for="Landmark" type="text" class="form-control" placeholder="Landmark">                            
                                             </div>
                                         </div>
-                                         <div class="col-3">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="City" class="form-label"></label>
-                                                <input asp-for="City" type="text" class="form-control" placeholder="City">
-                                       
+                                                <input asp-for="City" type="text" class="form-control" placeholder="City">    
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -87,14 +83,12 @@
                                             <div class="form-group">
                                                 <label asp-for="Pincode" class="form-label"></label>
                                                 <input asp-for="Pincode" type="number" class="form-control" placeholder="Pincode">
-                                       
                                             </div>
-                                        </div>
-                                
+                                        </div>                              
                                     </div>
                                </div> 
-                        </div>
-                    </div>
+                          </div>
+                     </div>
                     <div class="row c-card-footer--btn">
                     <div class="col-12">
                         <div class="c-card--wrapper c-card-sm--wrapper">
@@ -106,10 +100,8 @@
                             </div>
                         </div>
                     </div>
-           </div>
                 </form>
            </div>  
-           
       </div>
 </div>
 @{

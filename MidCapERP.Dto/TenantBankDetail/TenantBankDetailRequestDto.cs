@@ -1,16 +1,33 @@
-﻿namespace MidCapERP.Dto.TenantBankDetail
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace MidCapERP.Dto.TenantBankDetail
 {
-    public class TenantBankDetailRequestDto
+	public class TenantBankDetailRequestDto
     {
-		public long TenantBankDetailID { get; set; }
-		public long TenantID { get; set; }
+		public long TenantBankDetailId { get; set; }
+		public int TenantId { get; set; }
+		[Required]
+		[DisplayName("Bank Name")]
 		public string BankName { get; set; }
+		[Required]
+		[DisplayName("Account Name")]
 		public string AccountName { get; set; }
+		[Required]
+		[DisplayName("Account No")]
 		public string AccountNo { get; set; }
+		[Required]
+		[DisplayName("Branch Name")]
 		public string BranchName { get; set; }
+		[Required]
+		[DisplayName("Account Type")]
 		public string AccountType { get; set; }
+		[Required]
+		[DisplayName("IFSC Code")]
 		public string IFSCCode { get; set; }
+		[DisplayName("UPI Id")]
 		public string? UPIId { get; set; }
+		[DisplayName("QR Code")]
 		public string? QRCode { get; set; }
 		public string IsDeleted { get; set; }
 		public string CreatedBy { get; set; }
