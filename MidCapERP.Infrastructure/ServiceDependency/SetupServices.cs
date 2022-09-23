@@ -12,7 +12,7 @@ using MidCapERP.Infrastructure.Localizer.JsonString;
 using MidCapERP.Infrastructure.Services.Email;
 using MidCapERP.Infrastructure.Services.Token;
 using System.Text;
-using static MidCapERP.Infrastructure.Constants.ApplicationIdentityConstants;
+using static MidCapERP.Core.Constants.ApplicationIdentityConstants;
 
 namespace MidCapERP.Infrastructure.ServiceDependency
 {

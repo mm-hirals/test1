@@ -3,9 +3,9 @@ using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Category;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -20,29 +20,29 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpPost("/Search/")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
-        public async Task<ApiResponse> Search([FromBody] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
-        }
+        //[HttpPost("/Search/")]
+        //[Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
+        //public async Task<ApiResponse> Search([FromBody] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        //{
+        //    var data = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
+        //    if (data == null)
+        //    {
+        //        return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+        //    }
+        //    return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        //}
 
-        [HttpGet("/Search/{searchText}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
-        public async Task<ApiResponse> Get(string searchText, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.CategoryBL.GetCategorySearchByCategoryName(searchText, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
-        }
+        //[HttpGet("/Search/{searchText}")]
+        //[Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
+        //public async Task<ApiResponse> Get(string searchText, CancellationToken cancellationToken)
+        //{
+        //    var data = await _unitOfWorkBL.CategoryBL.GetCategorySearchByCategoryName(searchText, cancellationToken);
+        //    if (data == null)
+        //    {
+        //        return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+        //    }
+        //    return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        //}
 
         [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]

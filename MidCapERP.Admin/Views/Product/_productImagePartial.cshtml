@@ -7,36 +7,35 @@
             <h4 class="c-card--header-title">Product Images</h4>
         </div>
         <div class="c-card--body">
-@*            <div id="dropzone" id="dropzone-form" name="mainFileUploader">
-                <div class="dropzone needsclick" action="/upload">
-                    <div class="dz-message needsclick">
-                        Drop files here or click to upload.
-                        <br>
-                        <span class="note needsclick">
-                            (This is just a demo dropzone. Selected
-                            files are <strong>not</strong> actually uploaded.)
-                        </span>
-                    </div>
-                </div>
+            @*            <div id="dropzone" id="dropzone-form" name="mainFileUploader">
+            <div class="dropzone needsclick" action="/upload">
+            <div class="dz-message needsclick">
+            Drop files here or click to upload.
+            <br>
+            <span class="note needsclick">
+            (This is just a demo dropzone. Selected
+            files are <strong>not</strong> actually uploaded.)
+            </span>
+            </div>
+            </div>
             </div>*@
-            <div class="dropzone" id="dropzone-form" name="mainFileUploader">
+            <div class="dropzone" id="productImagesDropZone" name="mainFileUploader">
                 <div class="fallback">
                     <input asp-for="Files" type="file" multiple />
                 </div>
             </div>
             <br />
             <div class="row">
-                <div class="col-3">
-                    <div class="form-group">
+                <div class="col-12">
+                    <div class="d-flex">
                         @if (@Model.ProductId > 0)
                         {
                             @foreach (var item in @Model.ProductImageRequestDto)
                             {
                                 <input type="hidden" asp-for="@item.ProductImageID" value="@item.ImagePath" />
-                                <div>
-                                    <img src="@item.ImagePath" width="150" height="150">
+                                <div class="me-2 c-width-120 img-thumbnail d-flex align-items-center">
+                                    <img src="@item.ImagePath" width="100%" height="100%" class="img-thumbnail p-0 border-0">
                                 </div>
-                                <br>
                             }
                         }
                     </div>

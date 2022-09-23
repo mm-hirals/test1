@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.WebAPI.Middleware
 {
@@ -45,15 +45,21 @@ namespace MidCapERP.WebAPI.Middleware
                         _currentUser.EmailAddress = user.Email;
                         _currentUser.RoleId = userRoles?.Id;
                         _currentUser.Role = userRoles?.Name;
-                        if (context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName] != null)
+
+                        //if (context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName] != null)
+                        //{
+                        //    _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret));
+                        //    var userTenantData = await _unitOfWorkBL.UserTenantMappingBL.GetAll(new CancellationToken());
+                        //    if (userTenantData != null)
+                        //    {
+                        //        _currentUser.TenantName = userTenantData?.FirstOrDefault(x => x.TenantId == _currentUser.TenantId)?.TenantName;
+                        //        _currentUser.IsMultipleTenant = userTenantData.Count() == 1 ? false : true;
+                        //    }
+                        //}
+
+                        if (!string.IsNullOrEmpty(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantHeaderName]))
                         {
-                            _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret));
-                            var userTenantData = await _unitOfWorkBL.UserTenantMappingBL.GetAll(new CancellationToken());
-                            if (userTenantData != null)
-                            {
-                                _currentUser.TenantName = userTenantData?.FirstOrDefault(x => x.TenantId == _currentUser.TenantId)?.TenantName;
-                                _currentUser.IsMultipleTenant = userTenantData.Count() == 1 ? false : true;
-                            }
+                            _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret));
                         }
                     }
                 }

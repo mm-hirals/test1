@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 using System.Security.Claims;
 
 namespace MidCapERP.Infrastructure.Identity.Seed
@@ -47,7 +47,7 @@ namespace MidCapERP.Infrastructure.Identity.Seed
 
         private static async Task GrantPermissionToAdminUser(RoleManager<ApplicationRole> roleManager, ApplicationRole administratorRole)
         {
-            var collection = new List<string>() { "Users", "Role", "Dashboard", "Lookup", "Status", "Contractor", "SubjectType", "LookupValues", "ContractorCategoryMapping", "Customer", "ErrorLogs", "Category", "Company", "Unit", "FrameType", "AccessoriesType", "RawMaterial", "Accessories", "Fabric", "Frame", "Polish", "RolePermission", "Product","Tenant","TenantBankDetail"
+            var collection = new List<string>() { "Users", "Role", "Dashboard", "Lookup", "Status", "Contractor", "SubjectType", "LookupValues", "ContractorCategoryMapping", "Customer", "ErrorLogs", "Category", "Company", "Unit", "FrameType", "AccessoriesType", "RawMaterial", "Accessories", "Fabric", "Frame", "Polish", "RolePermission", "Product", "Order","Tenant","TenantBankDetail"
                 };
             foreach (var item in collection)
             {
