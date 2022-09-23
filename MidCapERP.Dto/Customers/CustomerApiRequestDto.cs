@@ -31,13 +31,11 @@ namespace MidCapERP.Dto.Customers
         public string PhoneNumber { get; set; }
 
         [DisplayName("Alt. Phone Number")]
-        [MaxLength(10)]
-        [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string? AltPhoneNumber { get; set; }
 
         [DisplayName("GST No")]
         public string? GSTNo { get; set; }
-       
+
         public string? RefferedNumber { get; set; }
 
         public string? RefferedName { get; set; }
