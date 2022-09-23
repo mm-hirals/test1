@@ -32,16 +32,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IQueryable<OrderSet>> GetAllOrderSet(CancellationToken cancellationToken)
         {
-            try
-            {
-
-                return await _orderSet.GetAsync(cancellationToken, x => x.IsDeleted == false);
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            return await _orderSet.GetAsync(cancellationToken, x => x.IsDeleted == false);
         }
 
         public async Task<IQueryable<OrderSetItem>> GetAllOrderSetItem(CancellationToken cancellationToken)

@@ -40,5 +40,11 @@ namespace MidCapERP.Admin.Controllers
             }
             return View(orderData);
         }
+
+        public async Task<IActionResult> CustomerDetail(long CustomerId, CancellationToken cancellationToken)
+        {
+            var customerById = await _unitOfWorkBL.CustomersBL.GetById(CustomerId, cancellationToken);
+            return PartialView("Order_CustomerPartial", customerById);
+        }
     }
 }

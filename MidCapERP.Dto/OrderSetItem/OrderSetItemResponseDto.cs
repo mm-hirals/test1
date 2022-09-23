@@ -14,7 +14,6 @@ namespace MidCapERP.Dto.OrderSetItem
 
         [Required]
         public int SubjectTypeId { get; set; }
-        public string SubjectTypeName { get; set; }
 
         [Required]
         public long SubjectId { get; set; }
@@ -28,6 +27,9 @@ namespace MidCapERP.Dto.OrderSetItem
 
         [Required]
         public int Quantity { get; set; }
+
+        public string ProductTitle { get; set; }
+        public string ModelNo { get; set; }
 
         [Required]
         public decimal UnitPrice { get; set; }

@@ -37,3 +37,7 @@ $("#lnkOrderFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
+
+$(document).ready(function () {
+    $("#divCustomerInfo").load('/Order/CustomerDetail' + "?CustomerId=" + $("#hdnCustomerId").val());
+});

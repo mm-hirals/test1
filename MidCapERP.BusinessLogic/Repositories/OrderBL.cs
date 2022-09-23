@@ -60,22 +60,46 @@ namespace MidCapERP.BusinessLogic.Repositories
             try
             {
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
+                // Get Order data by OrderId
                 var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
-                var orderById1 = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
                 orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
-                var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
 
-                // Order Set Data by Order Id
+                // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
                 var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
                 orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
 
-                // Order Set Item by Order Id and Order Set Id
+                // Get Order Set Items Data
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
                 foreach (var item in orderResponseDto.OrderSetResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-                    item.OrderSetItemResponseDto = _mapper.Map<List<OrderSetItemResponseDto>>(orderSetItemDataById);
+                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+
+                    var orderSetItemsData = (from x in orderSetItemDataById
+                                             join y in productData on x.SubjectId equals y.ProductId
+                                             select new OrderSetItemResponseDto
+                                             {
+                                                 OrderSetItemId = x.OrderSetItemId,
+                                                 OrderId = x.OrderId,
+                                                 OrderSetId = x.OrderSetId,
+                                                 SubjectTypeId = x.SubjectTypeId,
+                                                 SubjectId = x.SubjectId,
+                                                 ProductImage = x.ProductImage,
+                                                 Width = x.Width,
+                                                 Height = x.Height,
+                                                 Depth = x.Depth,
+                                                 Quantity = x.Quantity,
+                                                 ProductTitle = y.ProductTitle,
+                                                 ModelNo = y.ModelNo,
+                                                 UnitPrice = x.UnitPrice,
+                                                 DiscountPrice = x.DiscountPrice,
+                                                 TotalAmount = x.TotalAmount,
+                                                 Comment = x.Comment,
+                                                 Status = x.Status
+                                             }).ToList();
+
+                    item.OrderSetItemResponseDto = orderSetItemsData;
                 }
                 return orderResponseDto;
             }
