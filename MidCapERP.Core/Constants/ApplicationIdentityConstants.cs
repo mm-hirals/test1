@@ -59,6 +59,7 @@
                 .Union(GeneratePermissionsForModule("Product"))
                 .Union(GeneratePermissionsForModule("RolePermission"))
                 .Union(GeneratePermissionsForModule("Product"))
+                .Union(GeneratePermissionsForModule("Order"))
                 .ToList();
             }
 
@@ -264,6 +265,11 @@
                 public const string Create = "Permissions.Product.Create";
                 public const string Update = "Permissions.Product.Update";
                 public const string Delete = "Permissions.Product.Delete";
+            }
+
+            public static class Order
+            {
+                public const string View = "Permissions.Product.View";
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace MidCapERP.Dto.OrderSet
+﻿using MidCapERP.Dto.OrderSetItem;
+
+namespace MidCapERP.Dto.OrderSet
 {
     public class OrderSetResponseDto
     {
@@ -13,5 +15,6 @@
         public long? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+        public List<OrderSetItemResponseDto> OrderSetItemResponseDto { get; set; }
     }
 }
