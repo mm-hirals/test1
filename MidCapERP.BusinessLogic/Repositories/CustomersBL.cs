@@ -177,27 +177,41 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.IsDeleted = false;
-            customerToInsert.TenantId = _currentUser.TenantId;
-            customerToInsert.CreatedBy = _currentUser.UserId;
-            customerToInsert.CreatedDate = DateTime.Now;
-            customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+            Customers data = null;
+            await _unitOfWorkDA.BeginTransactionAsync();
 
-            CustomerAddresses catDto = new CustomerAddresses();
-            catDto.CustomerId = data.CustomerId;
-            catDto.AddressType = model.CustomerAddressesRequestDto.AddressType;
-            catDto.Street1 = model.CustomerAddressesRequestDto.Street1;
-            catDto.Street2 = model.CustomerAddressesRequestDto.Street2;
-            catDto.Landmark = model.CustomerAddressesRequestDto.Landmark;
-            catDto.Area = model.CustomerAddressesRequestDto.Area;
-            catDto.City = model.CustomerAddressesRequestDto.City;
-            catDto.State = model.CustomerAddressesRequestDto.State;
-            catDto.ZipCode = model.CustomerAddressesRequestDto.ZipCode;
-            catDto.IsDefault = model.CustomerAddressesRequestDto.IsDefault;
-            catDto.CreatedDate = DateTime.Now;
-            catDto.CreatedUTCDate = DateTime.UtcNow;
-            await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(catDto, cancellationToken);
+            try
+            {
+                customerToInsert.IsDeleted = false;
+                customerToInsert.TenantId = _currentUser.TenantId;
+                customerToInsert.CreatedBy = _currentUser.UserId;
+                customerToInsert.CreatedDate = DateTime.Now;
+                customerToInsert.CreatedUTCDate = DateTime.UtcNow;
+                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+
+                CustomerAddresses catDto = new CustomerAddresses();
+                catDto.CustomerId = data.CustomerId;
+                catDto.AddressType = model.CustomerAddressesRequestDto.AddressType;
+                catDto.Street1 = model.CustomerAddressesRequestDto.Street1;
+                catDto.Street2 = model.CustomerAddressesRequestDto.Street2;
+                catDto.Landmark = model.CustomerAddressesRequestDto.Landmark;
+                catDto.Area = model.CustomerAddressesRequestDto.Area;
+                catDto.City = model.CustomerAddressesRequestDto.City;
+                catDto.State = model.CustomerAddressesRequestDto.State;
+                catDto.ZipCode = model.CustomerAddressesRequestDto.ZipCode;
+                catDto.IsDefault = model.CustomerAddressesRequestDto.IsDefault;
+                catDto.CreatedDate = DateTime.Now;
+                catDto.CreatedUTCDate = DateTime.UtcNow;
+                await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(catDto, cancellationToken);
+
+                await _unitOfWorkDA.CommitTransactionAsync();
+            }
+            catch (Exception e)
+            {
+                await _unitOfWorkDA.rollbackTransactionAsync();
+                throw new Exception("Customer data is not saved");
+            }
+
             return _mapper.Map<CustomersRequestDto>(data);
         }
 
