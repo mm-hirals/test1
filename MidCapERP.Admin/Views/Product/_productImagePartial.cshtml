@@ -1,5 +1,34 @@
 ﻿@model MidCapERP.Dto.Product.ProductMainRequestDto
 
+<style>
+    .img-wrap {
+        position: relative;
+        display: inline-block;
+        border: 1px red solid;
+        font-size: 0;
+    }
+
+        .img-wrap .close {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            z-index: 100;
+            background-color: #FFF;
+            padding: 5px 2px 2px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: .2;
+            text-align: center;
+            font-size: 22px;
+            line-height: 10px;
+            border-radius: 50%;
+        }
+
+        .img-wrap:hover .close {
+            opacity: 1;
+        }
+</style>
 <form asp-controller="Product" method="post" class="modal-form--wrapper formAction" enctype="multipart/form-data">
     <div class="c-card--wrapper c-card-sm--wrapper mb-3">
         <input type="hidden" asp-for="ProductId" class="form-control productId" />
@@ -33,8 +62,9 @@
                             @foreach (var item in @Model.ProductImageRequestDto)
                             {
                                 <input type="hidden" asp-for="@item.ProductImageID" value="@item.ImagePath" />
-                                <div class="me-2 c-width-120 img-thumbnail d-flex align-items-center">
-                                    <img src="@item.ImagePath" width="100%" height="100%" class="img-thumbnail p-0 border-0">
+                                <div class="me-2 c-width-120 img-thumbnail d-flex align-items-center img-wrap">
+                                    <span class="close">&times;</span>
+                                    <img src="@item.ImagePath" width="100%" height="100%" class="img-thumbnail p-0 border-0" data-imageId="@item.ProductImageID">
                                 </div>
                             }
                         }

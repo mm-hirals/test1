@@ -330,6 +330,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task DeleteProductImage(int productImageId, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
+        }
+
         #region API Methods
 
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
@@ -346,23 +351,23 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #endregion API Methods
 
-        public async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
+        #region Private Method
+
+        private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             return lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
         }
 
-        public async Task<IQueryable<RawMaterial>> GetAllRowMaterial(CancellationToken cancellationToken)
+        private async Task<IQueryable<RawMaterial>> GetAllRowMaterial(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
         }
 
-        public async Task<IQueryable<Polish>> GetAllPolish(CancellationToken cancellationToken)
+        private async Task<IQueryable<Polish>> GetAllPolish(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
         }
-
-        #region Private Method
 
         private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
         {

@@ -53,6 +53,20 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> DeleteProductImage(int ProductImageId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.DeleteProductImage(ProductImageId, cancellationToken);
+                return Json(new { result = "success" });
+            }
+            catch (Exception)
+            {
+                throw new Exception("Image not deleted");
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CreateProductDetail(int productId, CancellationToken cancellationToken)
         {
             if (productId > 0)
