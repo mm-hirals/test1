@@ -76,9 +76,20 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
                     var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
-                                             join y in productData on x.SubjectId equals y.ProductId
+
+                                             join y in productData on x.SubjectId equals y.ProductId into productM
+                                             from productMat in productM.DefaultIfEmpty()
+
+                                             join z in polishData on x.SubjectId equals z.PolishId into polishM
+                                             from polishMat in polishM.DefaultIfEmpty()
+
+                                             join a in fabricData on x.SubjectId equals a.FabricId into fabricM
+                                             from fabricMat in fabricM.DefaultIfEmpty()
+
                                              select new OrderSetItemResponseDto
                                              {
                                                  OrderSetItemId = x.OrderSetItemId,
@@ -91,8 +102,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Height = x.Height,
                                                  Depth = x.Depth,
                                                  Quantity = x.Quantity,
-                                                 ProductTitle = y.ProductTitle,
-                                                 ModelNo = y.ModelNo,
+                                                 ProductTitle = (x.SubjectTypeId == 1 ? productMat.ProductTitle : (x.SubjectTypeId == 3 ? polishMat.Title : fabricMat.Title)),
+                                                 ModelNo = (x.SubjectTypeId == 1 ? productMat.ModelNo : (x.SubjectTypeId == 3 ? polishMat.ModelNo : fabricMat.ModelNo)),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
