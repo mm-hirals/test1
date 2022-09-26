@@ -3,20 +3,22 @@
     <div class="header_toggle">
         <i class="bx bx-menu" id="header-toggle"></i>
     </div>
+    <div class="ms-2 me-auto">
+        <span>@_currentUser.TenantName</span>
+    </div>
     <div class="header-right-section d-flex align-items-center">
         <div class="d-flex align-items-center">
             <div class="d-flex align-items-center">
-                @*<span class="pe-2">@_currentUser.TenantName</span>*@
                 @if (_currentUser.IsMultipleTenant)
                 {
-                    <a href="/Tenant" class="btn btn-primary d-flex align-items-center d-flex align-items-center"><i class='bx bx-transfer exchange-icon pe-3'></i> @_currentUser.TenantName </a>
+                    <a href="/Tenant" class="btn btn-primary d-flex align-items-center d-flex align-items-center"><i class='bx bx-transfer exchange-icon pe-3'> Change Tenant</i></a>
                 }
             </div>
         </div>
         <div class="dropdown">
             <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="d-flex align-items-center">
-                    <img class="rounded-circle header-profile-user img-fluid" src="https://picsum.photos/200/300?random=1" alt="Header Avatar" style="width: 50px; height: 50px;">
+                    <img class="rounded-circle header-profile-user img-fluid" src="https://picsum.photos/200/300?random=1" alt="Header Avatar" style="width: 40px; height: 40px;">
                     <span class="text-start ms-xl-2">
                         <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@_currentUser.FullName</span>
                         <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">@_currentUser.Role</span>
@@ -103,15 +105,15 @@
                                 Polish
                             </a>
                         </li>
-@*                        <li class="nav-item">
-                            <a class="nav_link" href="/FrameType">
-                                Frame Types
-                            </a>
+                        @*                        <li class="nav-item">
+                        <a class="nav_link" href="/FrameType">
+                        Frame Types
+                        </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav_link" href="/Frame">
-                                Frames
-                            </a>
+                        <a class="nav_link" href="/Frame">
+                        Frames
+                        </a>
                         </li>*@
                     </ul>
                 </li>
