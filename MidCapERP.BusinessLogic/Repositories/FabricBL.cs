@@ -8,6 +8,7 @@ using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 
@@ -34,16 +35,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<FabricResponseDto>>(data.ToList());
         }
 
-        public async Task<IEnumerable<ProductForDorpDownByModuleNoResponseDto>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MegaSearchResponse>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-            return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).ToList();
+            return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).Take(10).ToList();
         }
 
         public async Task<FabricResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-            var data = frabricAlldata.FirstOrDefault(x => x.ModelNo.StartsWith(modelno));
+            var data = frabricAlldata.Where(x => x.ModelNo == modelno);
             return _mapper.Map<FabricResponseDto>(data);
         }
 

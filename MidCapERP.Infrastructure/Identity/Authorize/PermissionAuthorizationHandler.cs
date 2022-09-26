@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Infrastructure.Identity.Authorization
 {

@@ -1,4 +1,5 @@
-﻿using MidCapERP.DataAccess.Generic;
+﻿using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -18,7 +19,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<IQueryable<Product>> GetAll(CancellationToken cancellationToken)
         {
-            return await _Product.GetAsync(cancellationToken, x => x.TenantId == _currentUser.TenantId);
+            return await _Product.GetAsync(cancellationToken, x => x.TenantId == _currentUser.TenantId && x.Status != (int)ProductStatusEnum.Delete);
         }
 
         public async Task<Product> GetById(Int64 Id, CancellationToken cancellationToken)

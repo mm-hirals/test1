@@ -4,15 +4,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MidCapERP.BusinessLogic.Extention;
+using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.DataAccess.Extention;
 using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Identity.Authorization;
 using MidCapERP.Infrastructure.Identity.Models;
-using MidCapERP.Infrastructure.Localizer.JsonString;
 using MidCapERP.Infrastructure.Services.Email;
 using MidCapERP.Infrastructure.Services.Token;
 using System.Text;
-using static MidCapERP.Infrastructure.Constants.ApplicationIdentityConstants;
+using static MidCapERP.Core.Constants.ApplicationIdentityConstants;
 
 namespace MidCapERP.Infrastructure.ServiceDependency
 {

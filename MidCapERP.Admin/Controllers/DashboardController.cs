@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.Admin.Models;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
-using MidCapERP.Infrastructure.Constants;
-using MidCapERP.Infrastructure.Localizer.JsonString;
 using NToastNotify;
 using System.Diagnostics;
 

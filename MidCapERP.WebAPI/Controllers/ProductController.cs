@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Infrastructure.Constants;
+using MidCapERP.Core.Constants;
 
 namespace MidCapERP.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ApiExplorerSettings(IgnoreApi = true)] 
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
@@ -18,7 +18,7 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("/Products/{id}")]
+        [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
         {
@@ -30,7 +30,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
         }
 
-        [HttpGet("/Product/{modelNo}")]
+        [HttpGet("{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
         {
@@ -42,7 +42,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
         }
 
-        [HttpGet("/Product/detailsModelNo/{modelNo}")]
+        [HttpGet("detailsModelNo/{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, CancellationToken cancellationToken)
         {

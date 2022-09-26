@@ -1,0 +1,9 @@
+﻿{
+    "hi": "नमस्ते",
+    "welcome": "स्वागत है {0}, आप कैसे हैं?",
+    "loginSuccessfull": "लॉगिन सफल!",
+    "forgotPassword": "पासवर्ड भूल गए",
+    "generateOTPSuccessfully": "सफलतापूर्वक ओटीपी जनरेट करें",
+    "tokenGeneratedSuccessfully": "टोकन सफलतापूर्वक उत्पन्न हुआ",
+    "otpInvalid": "ओटीपी अमान्य है"
+}

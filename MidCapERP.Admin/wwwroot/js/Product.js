@@ -92,17 +92,13 @@ $(document).ready(function () {
 });
 
 ProductModel.onSuccess = function (xhr) {
-
 };
 
 ProductModel.onFailed = function (xhr) {
-
 };
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
-
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
-
 };
