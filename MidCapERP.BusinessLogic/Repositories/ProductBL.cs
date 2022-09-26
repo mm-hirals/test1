@@ -38,9 +38,10 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            int lookupId = await GetCategoryLookupId(cancellationToken);
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
+            var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == lookupId);
             var productResponseData = (from x in productAllData
                                        join y in cateagoryData on x.CategoryId equals y.LookupValueId
                                        join z in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken) on x.CreatedBy equals z.UserId
@@ -355,8 +356,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
+            var lookupId = await GetUnitLookupId(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
+            return lookupValuesAllData.Where(x => x.LookupId == lookupId);
         }
 
         private async Task<IQueryable<RawMaterial>> GetAllRowMaterial(CancellationToken cancellationToken)
@@ -479,6 +481,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
+        }
+
+        private async Task<int> GetCategoryLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Category)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
+        }
+
+        private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion Private Method
