@@ -6,7 +6,6 @@ using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using MidCapERP.Dto.DataGrid;
 using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
@@ -120,6 +119,19 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);
             return RedirectToAction("CustomerEdit");
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> MultipleSendCustomer(long?[] value_check)
+        {
+            try
+            {
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
         }
 
         #region Private Method

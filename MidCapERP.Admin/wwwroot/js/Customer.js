@@ -2,6 +2,7 @@
 
 var CustomerModel = {};
 var tblCustomer;
+var value_check = new Array();
 
 $(function () {
     tblCustomer = $("#tblCustomer").DataTable({
@@ -20,7 +21,18 @@ $(function () {
                     d.customerToDate = $("#customerToDate").val().trim()
             }
         },
+        "columnDefs": [
+            {
+                "orderable": false,
+                "targets": 0
+            }
+        ],
         "columns": [
+            {
+                "render": function (data, type, row) {
+                    return '<div class="c-action-btn-group justify-content-start"><input type="checkbox" class="case" value="' + row.customerId + '" id="' + row.customerId + '" /></div>';
+                }
+            },
             {
                 "render": (data, type, full) => {
                     return full.firstName + " " + full.lastName;
@@ -31,7 +43,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';         
+                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
                 }
             }
         ]
@@ -39,7 +51,7 @@ $(function () {
 });
 
 $('#customerName').keyup(function () {
-   tblCustomer.ajax.reload(null, false);
+    tblCustomer.ajax.reload(null, false);
 });
 
 $('#customerMobileNo').keyup(function () {
@@ -68,3 +80,33 @@ CustomerModel.onFailed = function (xhr) {
     tblCustomer.ajax.reload(null, false);
     $("#divCustomerModal").modal('hide');
 };
+
+$("#selectall").click(function () {
+    if (this.checked) {
+        $('.case').prop('checked', true);
+        for (var i = 0; i < $(".case:checked").length; i++) {
+            value_check.push($(".case:checked")[i].id);
+        }
+    }
+    else {
+        $('.case').prop('checked', false);
+        value_check = [];
+    }
+});
+
+$("#multiSelectCustomer").click(function () {
+    for (var i = 0; i < $(".case:checked").length; i++) {
+        value_check.push($(".case:checked")[i].id);
+    }
+    $.ajax({
+        url: "/Customer/MultipleSendCustomer",
+        type: "POST",
+        data: { 'value_check': value_check },
+        success: function (response) {
+            //if (response == "success")
+            //    alert("Success : ", response);
+            //else
+            //    alert("Error : ", response)
+        }
+    });
+});
