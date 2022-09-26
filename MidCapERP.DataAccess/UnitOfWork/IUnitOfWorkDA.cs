@@ -28,5 +28,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IRoleDA RoleDA { get; }
         IRolePermissionDA RolePermissionDA { get; }
         IOrderDA OrderDA { get; }
+
+        Task BeginTransactionAsync();
+        Task CommitTransactionAsync();
+        Task rollbackTransactionAsync();
     }
 }
