@@ -1,4 +1,4 @@
-﻿@model MidCapERP.Dto.Tenant.TenantRequestDto
+﻿@model MidCapERP.Dto.Tenant.TenantResponseDto
 
 <div class="tab-content" id="nav-tabContent">
            <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
@@ -88,7 +88,7 @@
                                     </div>
                                </div> 
                           </div>
-                     </div>
+                     </div> 
                     <div class="row c-card-footer--btn">
                     <div class="col-12">
                         <div class="c-card--wrapper c-card-sm--wrapper">
@@ -104,6 +104,10 @@
            </div>  
       </div>
 </div>
-@{
-    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+
+@section Scripts {
+	@{
+		<script src="~/js/Profile.js" asp-append-version="true"></script>
+	}
 }
+

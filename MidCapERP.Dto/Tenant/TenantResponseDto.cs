@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using MidCapERP.Dto.TenantBankDetail;
 
 namespace MidCapERP.Dto.Tenant
 {
@@ -40,17 +41,6 @@ namespace MidCapERP.Dto.Tenant
         [Required]
         [DisplayName("Pincode")]
         public string Pincode { get; set; }
-        public string IsDeleted { get; set; }
-        public string CreatedBy { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedUTCDate { get; set; }
-        public string? UpdatedBy { get; set; }
-        public string? UpdatedDate { get; set; }
-        public string? UpdatedUTCDate { get; set; }
-        public string? WebsiteURL { get; set; }
-        public string? TwitterURL { get; set; }
-        public string? FacebookURL { get; set; }
-        public string? InstagramURL { get; set; }
         [Required]
         [DisplayName("GST No")]
         public string GSTNo { get; set; }
@@ -63,5 +53,21 @@ namespace MidCapERP.Dto.Tenant
         [Required]
         [DisplayName("Architect Discount")]
         public decimal? ArchitectDiscount { get; set; }
+        public string IsDeleted { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedDate { get; set; }
+        public string CreatedUTCDate { get; set; }
+        public string? UpdatedBy { get; set; }
+        public string? UpdatedDate { get; set; }
+        public string? UpdatedUTCDate { get; set; }
+        public string? WebsiteURL { get; set; }
+        public string? TwitterURL { get; set; }
+        public string? FacebookURL { get; set; }
+        public string? InstagramURL { get; set; }
+      
+        public TenantBankDetailResponseDto BankDetail { get; set; }
+        
+
+
     }
 }

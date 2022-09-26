@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.TenantBankDetail
 {
 	public class TenantBankDetailResponseDto
     {
-		public long TenantBankDetailId { get; set; }
+		public int TenantBankDetailId { get; set; }
 		public int TenantId { get; set; }
 		[Required]
 		[DisplayName("Bank Name")]
@@ -36,5 +36,6 @@ namespace MidCapERP.Dto.TenantBankDetail
 		public string UpdatedBy { get; set; }
 		public string? UpdatedDate { get; set; }
 		public string? UpdatedUTCDate { get; set; }
+
 	}
 }

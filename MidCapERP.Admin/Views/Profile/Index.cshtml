@@ -1,6 +1,6 @@
-﻿@model MidCapERP.Dto.Tenant.TenantRequestDto
+﻿@model MidCapERP.Dto.Tenant.TenantResponseDto
 @{
-	ViewData["Title"] = (Model != null && Model.TenantId != 0) ? "Update Tenant" : "Add Tenant";
+	ViewData["Title"] = (Model != null && Model.TenantId != 0) ? "Index Profile" : "Add Tenant";
 	var i = 0;
 
 	var tenantId = (Model == null) ? 0 : Model.TenantId;
@@ -11,8 +11,10 @@
 
 	@if (tenantId > 0)
 	{
-		<div id="divTenantInfo"></div>
-		<div id="divTenantBankDetailInfo"></div>
+		<partial name="_TenantDetailPartial" model="@Model" />
+
+		<partial name="_TenantBankDetailTable" model="null" />
+
 	}
 </div>
 
@@ -22,6 +24,7 @@
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 		await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 		await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
 		<script src="~/js/Profile.js" asp-append-version="true"></script>
 	}
 }

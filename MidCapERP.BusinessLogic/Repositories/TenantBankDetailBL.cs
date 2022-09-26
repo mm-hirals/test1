@@ -3,6 +3,8 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.TenantBankDetail;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -26,12 +28,55 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<TenantBankDetailResponseDto>>(data.ToList());
         }
 
+        public async Task<JsonRepsonse<TenantBankDetailResponseDto>> GetFilterTenantBankDetailData(TenantBankDetailDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var tenantBankDetailAllData = await _unitOfWorkDA.TenantBankDetailDA.GetAll(cancellationToken);
+            var tenant = await _unitOfWorkDA.TenantDA.GetAll(cancellationToken);
+            var tenantBankDetailResponseData = (from x in tenantBankDetailAllData
+                                                 join y in tenant on x.TenantId equals y.TenantId
+                                                 where x.TenantId == y.TenantId
+                                                 select new TenantBankDetailResponseDto()
+                                                 {
+                                                     TenantBankDetailId = Convert.ToInt16(x.TenantBankDetailId),
+                                                     TenantId = Convert.ToInt16(x.TenantId),
+                                                     BankName = x.BankName,
+                                                     AccountName = x.AccountName,
+                                                     AccountNo = x.AccountNo,
+                                                     BranchName = x.BranchName,
+                                                     AccountType = x.AccountType,
+                                                     IFSCCode = x.IFSCCode,
+                                                     UPIId = x.UPIId,
+                                                     QRCode = x.QRCode,
+                                                 }).AsQueryable();
+            var tenantBankDetailData = new PagedList<TenantBankDetailResponseDto>(tenantBankDetailResponseData, dataTableFilterDto);
+            return new JsonRepsonse<TenantBankDetailResponseDto>(dataTableFilterDto.Draw, tenantBankDetailData.TotalCount, tenantBankDetailData.TotalCount, tenantBankDetailData);
+        }
 
-        public async Task<TenantBankDetailRequestDto> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<TenantBankDetailResponseDto> CreateCustomerAddresses(TenantBankDetailResponseDto model, CancellationToken cancellationToken)
+        {
+            if (model.IsDefault)
+            {
+                var defualtAddress = await TenantBankDetailResponseDto(model.TenantId, cancellationToken);
+                if (defualtAddress != null)
+                {
+                    defualtAddress.IsDefault = false;
+                    await _unitOfWorkDA.TenantBankDetailDA.UpdateTenantBankDetail(defualtAddress.TenantBankDetailId, defualtAddress, cancellationToken);
+                }
+            }
+            var tenantBankDetail = _mapper.Map<TenantBankDetail>(model);
+            tenantBankDetail.IsDeleted = false;
+            tenantBankDetail.CreatedBy = _currentUser.UserId;
+            tenantBankDetail.CreatedDate = DateTime.Now;
+            tenantBankDetail.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.TenantBankDetailDA.CreateTenantBankDetail(tenantBankDetail, cancellationToken);
+            return _mapper.Map<TenantBankDetailResponseDto>(data);
+        }
+        public async Task<TenantBankDetailResponseDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await TenantGetById(Id, cancellationToken);
-            return _mapper.Map<TenantBankDetailRequestDto>(data);
+            return _mapper.Map<TenantBankDetailResponseDto>(data);
         }
+
 
         public async Task<TenantBankDetailRequestDto> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {

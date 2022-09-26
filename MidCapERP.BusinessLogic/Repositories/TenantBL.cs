@@ -35,10 +35,10 @@ namespace MidCapERP.BusinessLogic.Repositories
 			return new JsonRepsonse<TenantResponseDto>(dataTableFilterDto.Draw, TenantData.TotalCount, TenantData.TotalCount, TenantData);
 		}
 
-		public async Task<TenantRequestDto> GetById(int Id, CancellationToken cancellationToken)
+		public async Task<TenantResponseDto> GetById(int Id, CancellationToken cancellationToken)
 		{
 			var data = await TenantGetById(Id, cancellationToken);
-			return _mapper.Map<TenantRequestDto>(data);
+			return _mapper.Map<TenantResponseDto>(data);
 		}
 
 		public async Task<TenantRequestDto> UpdateTenant(int Id, TenantRequestDto model, CancellationToken cancellationToken)

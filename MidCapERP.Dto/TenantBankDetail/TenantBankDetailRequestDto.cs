@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.TenantBankDetail
 {
 	public class TenantBankDetailRequestDto
     {
-		public long TenantBankDetailId { get; set; }
+		public int TenantBankDetailId { get; set; }
 		public int TenantId { get; set; }
 		[Required]
 		[DisplayName("Bank Name")]
