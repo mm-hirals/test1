@@ -57,6 +57,19 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
 
+        [HttpPut("{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<ApiResponse> Put(int id, [FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerApiRequestDto);
+            var data = await _unitOfWorkBL.CustomersBL.UpdateCustomerApi(id, customerApiRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
         [HttpGet("CheckCustomer")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.Dto.APIResponse;
 using MidCapERP.Infrastructure.Identity.Models;
-using MidCapERP.Infrastructure.Localizer.JsonString;
 using MidCapERP.Infrastructure.Services.Token;
 
 namespace MidCapERP.WebAPI.Controllers

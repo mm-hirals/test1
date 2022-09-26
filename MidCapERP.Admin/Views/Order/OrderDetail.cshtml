@@ -1,494 +1,158 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MidCapERP.Dto.Order.OrderResponseDto
 @{
+    var customerId = (Model == null) ? 0 : Model.CustomerID;
 }
 
+@Html.Hidden("hdnCustomerId", customerId)
 <div class="row">
     <div class="col-9">
         <div class="accordion mb-5" id="accordionExample">
-            <div class="accordion-item c-card--wrapper">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="c-card--header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        <div class="d-flex justify-content-between w-100">
-                            <span class="mb-0 c-card--header-title">
-                                Sofa Set
-                            </span>
-                            <span class="mb-0 c-card--header-title fs-20 ms-auto me-5">
-                                ₹ 39,060
-                            </span>
-                        </div>
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse p-3" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div class="mb-3 c-card--wrapper">
-                        <div class="c-card--header d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0 c-card--header-title">
-                                Sofa
-                            </h5>
-                        </div>
-                        <div class="c-card--wrapper p-3">
-                            <div class="row">
-                                <div class="col-1">
-                                    <div class="product-order--info mb-3">
-                                        <div class="overflow-hidden">
-                                            <div class="avatar-title bg-soft-info">
-                                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                            </div>
-                                        </div>
-                                    </div>
+            @if (@Model.OrderSetResponseDto != null)
+            {
+                @foreach (var orderSet in @Model.OrderSetResponseDto)
+                {
+                    <div class="accordion-item c-card--wrapper">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="c-card--header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="d-flex justify-content-between w-100">
+                                    <span class="mb-0 c-card--header-title">
+                                        @orderSet.SetName
+                                    </span>
+                                    <span class="mb-0 c-card--header-title fs-20 ms-auto me-5">
+                                        @orderSet.TotalAmount
+                                    </span>
                                 </div>
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Model No:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    564
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Fabric:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    10 mt
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Cusion:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    30 cm
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="product-order--info mb-1">
-                                                <label for="" class="form-label mb-1 fs-12">
-                                                    Demensions
-                                                </label>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Width:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    30"
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Height:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    36.25"
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Depth:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    10"
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-3 ms-auto">
-                                            <div class="product-order--info mb-3 text-end">
-                                                <label for="" class="form-label mb-1 fs-12">
-                                                    Price
-                                                </label>
-                                                <div class="order-final-price fw-bold">
-                                                    ₹ 13,000
-                                                </div>
-                                            </div>
-                                        </div>
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse p-3" aria-labelledby="headingOne">
+                            @foreach (var orderSetItem in @orderSet.OrderSetItemResponseDto)
+                            {
+                                <div class="mb-3 c-card--wrapper">
+                                    <div class="c-card--header d-flex align-items-center justify-content-between">
+                                        <h5 class="mb-0 c-card--header-title">
+                                            @orderSetItem.ProductTitle
+                                        </h5>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="product-order--info">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Comment
-                                        </label>
-                                        <div class="form-value">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="mb-3 c-card--wrapper">
-                        <div class="c-card--header d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0 c-card--header-title">
-                                Wood Type (6 mm)
-                            </h5>
-                        </div>
-                        <div class="c-card--wrapper p-3">
-                            <div class="row">
-                                <div class="col-1">
-                                    <div class="product-order--info mb-3">
-                                        <div class="overflow-hidden">
-                                            <div class="avatar-title bg-soft-info">
-                                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Model No:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    568
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="product-order--info mb-1">
-                                                <label for="" class="form-label mb-1 fs-12">
-                                                    Demensions
-                                                </label>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Width:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    16"
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Height:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    20"
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Depth:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    5"
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-3 ms-auto">
-                                            <div class="product-order--info mb-3 text-end">
-                                                <label for="" class="form-label mb-1 fs-12">
-                                                    Price
-                                                </label>
-                                                <div class="order-final-price fw-bold">
-                                                    ₹ 8,520
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="product-order--info">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Comment
-                                        </label>
-                                        <div class="form-value">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="mb-3 c-card--wrapper">
-                        <div class="c-card--header d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0 c-card--header-title">
-                                Polish
-                            </h5>
-                        </div>
-                        <div class="c-card--wrapper p-3">
-                            <div class="row">
-                                <div class="col-1">
-                                    <div class="product-order--info mb-3">
-                                        <div class="overflow-hidden">
-                                            <div class="avatar-title bg-soft-info">
-                                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Model No:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    512
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Polish:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    30 cm
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-3 ms-auto">
-                                            <div class="product-order--info mb-3 text-end">
-                                                <label for="" class="form-label mb-1 fs-12">
-                                                    Price
-                                                </label>
-                                                <div class="order-final-price fw-bold">
-                                                    ₹ 7,420
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="product-order--info">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Comment
-                                        </label>
-                                        <div class="form-value">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="c-card--wrapper">
-                        <div class="c-card--header d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0 c-card--header-title">
-                                Cusion
-                            </h5>
-                        </div>
-                        <div class="c-card--wrapper p-3">
-                            <div class="row">
-                                <div class="col-1">
-                                    <div class="product-order--info mb-3">
-                                        <div class="overflow-hidden">
-                                            <div class="avatar-title bg-soft-info">
-                                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Model No:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    508
-                                                </div>
-                                            </div>
-                                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                                <label for="" class="form-label mb-0">
-                                                    Cusion:
-                                                </label>
-                                                <div class="form-value ms-2">
-                                                    30 cm
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-3 ms-auto">
-                                            <div class="product-order--info mb-3 text-end">
-                                                <label for="" class="form-label mb-1 fs-12">
-                                                    Price
-                                                </label>
-                                                <div class="order-final-price fw-bold">
-                                                    ₹ 10,120
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="product-order--info">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Comment
-                                        </label>
-                                        <div class="form-value">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                </div>
-            </div>
-
-            <div class="accordion-item mt-2 c-card--wrapper">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="c-card--header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                        <div class="d-flex justify-content-between w-100">
-                            <span class="mb-0 c-card--header-title">
-                                Dining Set
-                            </span>
-                            <span class="mb-0 c-card--header-title fs-20 ms-auto me-5">
-                                ₹ 6,500
-                            </span>
-                        </div>
-                    </button>
-
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <div class="c-card--wrapper">
-                            <div class="c-card--header d-flex align-items-center justify-content-between">
-                                <h5 class="mb-0 c-card--header-title">
-                                    Sofa
-                                </h5>
-                            </div>
-                            <div class="c-card--wrapper p-3">
-                                <div class="row">
-                                    <div class="col-1">
-                                        <div class="product-order--info mb-3">
-                                            <div class="overflow-hidden">
-                                                <div class="avatar-title bg-soft-info">
-                                                    <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
+                                    <div class="c-card--wrapper p-3">
                                         <div class="row">
-                                            <div class="col-5">
-                                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                                    <label for="" class="form-label mb-0">
-                                                        Model No:
-                                                    </label>
-                                                    <div class="form-value ms-2">
-                                                        590
-                                                    </div>
-                                                </div>
-                                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                                    <label for="" class="form-label mb-0">
-                                                        Fabric:
-                                                    </label>
-                                                    <div class="form-value ms-2">
-                                                        10 mt
-                                                    </div>
-                                                </div>
-                                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                                    <label for="" class="form-label mb-0">
-                                                        Custion:
-                                                    </label>
-                                                    <div class="form-value ms-2">
-                                                        30 cm
+                                            <div class="col-1">
+                                                <div class="product-order--info mb-3">
+                                                    <div class="overflow-hidden">
+                                                        <div class="avatar-title bg-soft-info">
+                                                            <img class="w-100" src="@orderSetItem.ProductImage" alt="Wood type">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-3 ms-auto">
-                                                <div class="product-order--info mb-3 text-end">
-                                                    <label for="" class="form-label mb-1 fs-20">
-                                                        Price
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Model No:
+                                                            </label>
+                                                            <div class="form-value ms-2">
+                                                                @orderSetItem.ModelNo
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="product-order--info mb-1">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Demensions
+                                                            </label>
+                                                        </div>
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Width:
+                                                            </label>
+                                                            <div class="form-value ms-2">
+                                                                @orderSetItem.Width
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Height:
+                                                            </label>
+                                                            <div class="form-value ms-2">
+                                                                @orderSetItem.Height
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Depth:
+                                                            </label>
+                                                            <div class="form-value ms-2">
+                                                                @orderSetItem.Depth
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3 ms-auto">
+                                                        <div class="product-order--info mb-3 text-end">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Price
+                                                            </label>
+                                                            <div class="order-final-price fw-bold">
+                                                                @orderSetItem.TotalAmount
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="product-order--info">
+                                                    <label for="" class="form-label mb-1 fs-12">
+                                                        Comment
                                                     </label>
-                                                    <div class="order-final-price fw-bold">
-                                                        ₹ 6,500
+                                                    <div class="form-value">
+                                                        @orderSetItem.Comment
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="product-order--info">
-                                            <label for="" class="form-label mb-1 fs-12">
-                                                Comment
-                                            </label>
-                                            <div class="form-value">
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
-                </div>
-            </div>
+                }
+            }
         </div>
 
         <div class="c-card--wrapper order-details-price-section">
             <div class="c-card--header">
                 <h4 class="c-card--header-title">Price Details</h4>
-                @* <div class="c-card--header-action">
-                <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkProductFilter"><i class='bx bx-plus me-1'></i>Filters</a>
-                <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Create New</a>
-                </div>*@
             </div>
             <div class="">
                 <div>
                     <table class="table c-table c-table-stripted">
-                        @*<thead>
-                        <tr>
-                        <th>Category</th>
-                        <th>Product</th>
-                        <th>Model No</th>
-                        <th>Total Price</th>
-                        <th>Retailer Price</th>
-                        <th>Wholesaler Price</th>
-                        <th>Badge</th>
-                        </tr>
-                        </thead>*@
                         <tbody>
                             <tr style="border-bottom: 1px dashed #353535;">
                                 <td colspan="9">Gross Total</td>
-                                <td class="text-end">₹ 45,560</td>
+                                <td class="text-end">@Model.GrossTotal</td>
                             </tr>
                             <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
                                 <td colspan="9">Discount</td>
-                                <td class="text-end"><span class="text-success">- ₹ 5,000</span></td>
+                                <td class="text-end"><span class="text-success">@Model.Discount</span></td>
                             </tr>
                             <tr style="border-top: 2px dashed #353535;border-bottom: 2px dashed #353535;">
                                 <td colspan="9">Total</td>
-                                <td class="text-end">₹ 40,560</td>
+                                <td class="text-end">@Model.TotalAmount</td>
                             </tr>
                             <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
                                 <td colspan="9">GST Tax (18%):</td>
-                                <td class="text-end">+ ₹ 9,000</td>
+                                <td class="text-end">@Model.GSTTaxAmount</td>
                             </tr>
                             <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
                                 <td colspan="9">Delivery Date</td>
-                                <td class="text-end">16/06/2022</td>
+                                <td class="text-end">@Model.DeliveryDate</td>
                             </tr>
                             <tr class="c-card--header-title">
                                 <td colspan="9">Total</td>
-                                <td class="text-end">₹ 49,560</td>
+                                <td class="text-end">@Model.PayableAmount</td>
                             </tr>
 
                         </tbody>
@@ -499,287 +163,15 @@
         </div>
     </div>
     <div class="col-3">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="c-card--wrapper c-card-sm--wrapper price-card--wrapper">
-                    <div class="c-card--header">
-                        <h4 class="c-card--header-title">Customer Details</h4>
-                    </div>
-                    <div class="c-card--body">
-                        <ul class="list-unstyled mb-0 vstack gap-2">
-                            <li>
-                                <div class="d-flex align-items-center">
-                                    <img class="w-25" src="/images/drawer.jpg" alt="Wood type">
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="fs-14 mb-1">John Deo</h6>
-                                        <p class="text-muted mb-0">Customer</p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>johndeo@gmail.com</li>
-                            <li><i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>+(256) 245451 441</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="divCustomerInfo"></div>
     </div>
 </div>
 
-
-@*<div class="order-detail-page--wrapper mt-5">
-    <div class="mb-3 c-card--wrapper">
-        <div class="c-card--header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 c-card--header-title">
-                Sofa
-            </h5>
-        </div>
-        <div class="c-card--wrapper p-3">
-            <div class="row">
-                <div class="col-1">
-                    <div class="product-order--info mb-3">
-                        <div class="overflow-hidden">
-                            <div class="avatar-title bg-soft-info">
-                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Model No:
-                                </label>
-                                <div class="form-value ms-2">
-                                    564
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Fabric:
-                                </label>
-                                <div class="form-value ms-2">
-                                    10 mt
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Cusion:
-                                </label>
-                                <div class="form-value ms-2">
-                                    30 cm
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="product-order--info mb-1">
-                                <label for="" class="form-label mb-1 fs-12">
-                                    Demensions
-                                </label>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Width:
-                                </label>
-                                <div class="form-value ms-2">
-                                    30"
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Height:
-                                </label>
-                                <div class="form-value ms-2">
-                                    36.25"
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Depth:
-                                </label>
-                                <div class="form-value ms-2">
-                                    10"
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 ms-auto">
-                            <div class="product-order--info mb-3 text-end">
-                                <label for="" class="form-label mb-1 fs-12">
-                                    Price
-                                </label>
-                                <div class="order-final-price fw-bold">
-                                    ₹ 13,000
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="product-order--info">
-                        <label for="" class="form-label mb-1 fs-12">
-                            Comment
-                        </label>
-                        <div class="form-value">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mb-3 c-card--wrapper">
-        <div class="c-card--header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 c-card--header-title">
-                Wood Type (6 mm)
-            </h5>
-        </div>
-        <div class="c-card--wrapper p-3">
-            <div class="row">
-                <div class="col-1">
-                    <div class="product-order--info mb-3">
-                        <div class="overflow-hidden">
-                            <div class="avatar-title bg-soft-info">
-                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Model No:
-                                </label>
-                                <div class="form-value ms-2">
-                                    568
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="product-order--info mb-1">
-                                <label for="" class="form-label mb-1 fs-12">
-                                    Demensions
-                                </label>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Width:
-                                </label>
-                                <div class="form-value ms-2">
-                                    16"
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Height:
-                                </label>
-                                <div class="form-value ms-2">
-                                    20"
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Depth:
-                                </label>
-                                <div class="form-value ms-2">
-                                    5"
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 ms-auto">
-                            <div class="product-order--info mb-3 text-end">
-                                <label for="" class="form-label mb-1 fs-12">
-                                    Price
-                                </label>
-                                <div class="order-final-price fw-bold">
-                                    ₹ 8,520
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="product-order--info">
-                        <label for="" class="form-label mb-1 fs-12">
-                            Comment
-                        </label>
-                        <div class="form-value">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="c-card--wrapper">
-        <div class="c-card--header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 c-card--header-title">
-                Polish
-            </h5>
-        </div>
-        <div class="c-card--wrapper p-3">
-            <div class="row">
-                <div class="col-1">
-                    <div class="product-order--info mb-3">
-                        <div class="overflow-hidden">
-                            <div class="avatar-title bg-soft-info">
-                                <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Model No:
-                                </label>
-                                <div class="form-value ms-2">
-                                    512
-                                </div>
-                            </div>
-                            <div class="product-order--info mb-1 d-flex align-items-center">
-                                <label for="" class="form-label mb-0">
-                                    Polish:
-                                </label>
-                                <div class="form-value ms-2">
-                                    30 cm
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 ms-auto">
-                            <div class="product-order--info mb-3 text-end">
-                                <label for="" class="form-label mb-1 fs-12">
-                                    Price
-                                </label>
-                                <div class="order-final-price fw-bold">
-                                    ₹ 7,420
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="product-order--info">
-                        <label for="" class="form-label mb-1 fs-12">
-                            Comment
-                        </label>
-                        <div class="form-value">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+        <script src="~/js/Order.js" asp-append-version="true"></script>
+    }
+}

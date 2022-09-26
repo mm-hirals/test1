@@ -1,18 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MidCapERP.Dto.OrderSet;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Order
 {
     public class OrderResponseDto
     {
-        public Int64 OrderId { get; set; }
+        public long OrderId { get; set; }
 
         [Required]
+        [DisplayName("Order No")]
         public string OrderNo { get; set; }
 
         [Required]
-        public Int64 CustomerID { get; set; }
+        public long CustomerID { get; set; }
+
+        [DisplayName("Customer Name")]
+        public string CustomerName { get; set; }
 
         [Required]
+        [DisplayName("Gross Total")]
         public decimal GrossTotal { get; set; }
 
         [Required]
@@ -22,6 +29,7 @@ namespace MidCapERP.Dto.Order
         public decimal ReferralDiscount { get; set; }
 
         [Required]
+        [DisplayName("Order Amount")]
         public decimal? TotalAmount { get; set; }
 
         [Required]
@@ -39,6 +47,7 @@ namespace MidCapERP.Dto.Order
         public string GSTNo { get; set; }
 
         [Required]
+        [DisplayName("Order Status")]
         public int Status { get; set; }
 
         [Required]
@@ -46,10 +55,20 @@ namespace MidCapERP.Dto.Order
 
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
+
+        [DisplayName("Salesman Name")]
+        public string CreatedByName { get; set; }
+
         public DateTime CreatedDate { get; set; }
+
+        [DisplayName("Order Date")]
+        public string CreatedDateFormat { get; set; }
+
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+
+        public List<OrderSetResponseDto> OrderSetResponseDto { get; set; }
     }
 }
