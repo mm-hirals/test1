@@ -12,10 +12,12 @@ namespace MidCapERP.Admin.Controllers
     public class ProductController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IConfiguration _configuration;
 
-        public ProductController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public ProductController(IUnitOfWorkBL unitOfWorkBL, IConfiguration configuration, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _configuration = configuration;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
@@ -126,6 +128,7 @@ namespace MidCapERP.Admin.Controllers
             }
             else
             {
+                model.HostURL = Convert.ToString(_configuration["AppSettings:HostURL"]);
                 var createProduct = await _unitOfWorkBL.ProductBL.CreateProduct(model, cancellationToken);
                 return RedirectToAction("Update", "Product", new { Id = createProduct.ProductId });
             }

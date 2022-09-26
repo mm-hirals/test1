@@ -16,13 +16,13 @@ namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
             _fileStorageService = fileStorageService;
         }
 
-        public async Task<string> GenerateQRCodeImageAsync(string productIdEnc)
+        public async Task<string> GenerateQRCodeImageAsync(string productIdEnc, string hostURL)
         {
             String QrCode = string.Empty;
             using (MemoryStream ms = new MemoryStream())
             {
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode("https://localhost:44383/Product/Detail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(hostURL + "/Product/Detail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 using (Bitmap bitMap = qrCode.GetGraphic(20))
                 {
