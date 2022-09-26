@@ -13,6 +13,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             _unitOfWorkDA = unitOfWorkDA;
         }
 
+        public async Task<int> GetOrderCount(CancellationToken cancellationToken)
+        {
+            var allOrderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return allOrderData.Count();
+        }
+
         public async Task<int> GetProductCount(CancellationToken cancellationToken)
         {
             var allProductData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);

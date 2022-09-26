@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using MidCapERP.Admin.Models;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.Dto;
 using NToastNotify;
 using System.Diagnostics;
@@ -36,6 +37,9 @@ namespace MidCapERP.Admin.Controllers
 
                 //gu-IN
                 //hi-IN
+
+                var orderCount = await _unitOfWorkBL.DashboardBL.GetOrderCount(cancellationToken);
+                ViewBag.OrderCount = orderCount;
 
                 var customerCount = await _unitOfWorkBL.DashboardBL.GetCustomerCount(cancellationToken);
                 ViewBag.CustomerCount = customerCount;
