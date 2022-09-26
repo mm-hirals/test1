@@ -186,7 +186,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
             {
-                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(productData.ProductId));
                 await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
             }
             return _mappedUser;

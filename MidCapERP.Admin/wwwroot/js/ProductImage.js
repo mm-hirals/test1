@@ -51,7 +51,6 @@ $(document).on("click", ".img-wrap .close", (function () {
         url: "/Product/DeleteProductImage?ProductImageId=" + id,
         type: "GET",
         success: function (response) {
-            alert("Success: ");
         }
     });
 }));

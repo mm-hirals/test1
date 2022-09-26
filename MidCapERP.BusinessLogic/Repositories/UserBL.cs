@@ -148,6 +148,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
             userById.IsActive = false;
             userById.EmailConfirmed = false;
+            userById.IsDeleted = true;
             await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
             return _mapper.Map<UserRequestDto>(userById);
         }

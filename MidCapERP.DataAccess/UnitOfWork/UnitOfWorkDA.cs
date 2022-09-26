@@ -62,6 +62,21 @@ namespace MidCapERP.DataAccess.UnitOfWork
             }
         }
 
+        #region TransactionMethod
+        public async Task BeginTransactionAsync()
+        {
+            await _context.Database.BeginTransactionAsync();
+        }
+        public async Task CommitTransactionAsync()
+        {
+            await _context.Database.CommitTransactionAsync();
+        }
+        public async Task rollbackTransactionAsync()
+        {
+            await _context.Database.RollbackTransactionAsync();
+        }
+        #endregion
+
         #region DisposeMethod
 
         private bool disposed = false;

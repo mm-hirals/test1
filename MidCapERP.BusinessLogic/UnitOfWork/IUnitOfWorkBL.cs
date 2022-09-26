@@ -30,5 +30,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IQRCodeService IQRCodeService { get; }
         IProductBL ProductBL { get; }
         IOrderBL OrderBL { get; }
+        IDashboardBL DashboardBL { get; }
     }
 }

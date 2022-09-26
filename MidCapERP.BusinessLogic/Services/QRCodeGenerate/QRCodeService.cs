@@ -22,11 +22,11 @@ namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
         public async Task<string> GenerateQRCodeImageAsync(string productIdEnc)
         {
             String QrCode = string.Empty;
-            string serverPath = _configuration["QRUrl:ProductDetailPage"];
+            string serverPath = _configuration["AppSettings:HostURL"];
             using (MemoryStream ms = new MemoryStream())
             {
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(serverPath + productIdEnc, QRCodeGenerator.ECCLevel.Q);
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(serverPath + "/Product/Detail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 using (Bitmap bitMap = qrCode.GetGraphic(20))
                 {

@@ -31,12 +31,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var unitAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var unitResponseData = (from x in unitAllData
                                     join y in lookupsAllData
                                          on new { x.LookupId } equals new { y.LookupId }
-                                    where x.LookupId == (int)MasterPagesEnum.Unit
+                                    where x.LookupId == lookupId
                                     select new UnitResponseDto()
                                     {
                                         LookupValueId = x.LookupValueId,
@@ -69,7 +70,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<UnitRequestDto> CreateUnit(UnitRequestDto model, CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var unitToInsert = _mapper.Map<LookupValues>(model);
+            unitToInsert.LookupId = lookupId;
             unitToInsert.IsDeleted = false;
             unitToInsert.CreatedBy = _currentUser.UserId;
             unitToInsert.CreatedDate = DateTime.Now;
@@ -117,6 +120,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("LookupValues not found");
             }
             return unitDataById;
+        }
+
+        private async Task<int> GetLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion PrivateMethods
