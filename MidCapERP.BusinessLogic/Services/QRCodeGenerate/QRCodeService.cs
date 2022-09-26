@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using QRCoder;
@@ -10,19 +11,22 @@ namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
     public class QRCodeService : IQRCodeService
     {
         private readonly IFileStorageService _fileStorageService;
+        private readonly IConfiguration _configuration;
 
-        public QRCodeService(IFileStorageService fileStorageService)
+        public QRCodeService(IFileStorageService fileStorageService, IConfiguration configuration)
         {
             _fileStorageService = fileStorageService;
+            _configuration = configuration;
         }
 
         public async Task<string> GenerateQRCodeImageAsync(string productIdEnc)
         {
             String QrCode = string.Empty;
+            string serverPath = _configuration["QRUrl:ProductDetailPage"];
             using (MemoryStream ms = new MemoryStream())
             {
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode("https://localhost:44383/Product/Detail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(serverPath + productIdEnc, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 using (Bitmap bitMap = qrCode.GetGraphic(20))
                 {

@@ -130,7 +130,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductBasicDetail(int productId, ProductRequestDto model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductBasicDetail(int productId, [FromForm]ProductRequestDto model, CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
             if (productId > 0)

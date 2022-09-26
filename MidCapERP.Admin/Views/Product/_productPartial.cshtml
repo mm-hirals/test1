@@ -4,8 +4,8 @@
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" class="form-control" />
-        <label for="CoverImage" class="card-product--image">
-            <input asp-for="CoverImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
+        <label for="UploadImage" class="card-product--image">
+            <input asp-for="UploadImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
             <div class="product--image" style="cursor:pointer">
                 @if (!string.IsNullOrEmpty(Model?.CoverImage))
                 {
