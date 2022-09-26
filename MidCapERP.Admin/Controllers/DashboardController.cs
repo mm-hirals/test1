@@ -32,11 +32,6 @@ namespace MidCapERP.Admin.Controllers
             try
             {
                 _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
-                var lang = "hi-IN";
-                Response.Headers.AcceptLanguage = new Microsoft.Extensions.Primitives.StringValues(lang);
-
-                //gu-IN
-                //hi-IN
 
                 var orderCount = await _unitOfWorkBL.DashboardBL.GetOrderCount(cancellationToken);
                 ViewBag.OrderCount = orderCount;
