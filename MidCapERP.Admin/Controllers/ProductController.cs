@@ -12,12 +12,10 @@ namespace MidCapERP.Admin.Controllers
     public class ProductController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IConfiguration _configuration;
 
-        public ProductController(IUnitOfWorkBL unitOfWorkBL, IConfiguration configuration, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public ProductController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _configuration = configuration;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
@@ -52,6 +50,20 @@ namespace MidCapERP.Admin.Controllers
             }
             else
                 return PartialView("_productPartial");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductImage(int ProductImageId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.DeleteProductImage(ProductImageId, cancellationToken);
+                return Json(new { result = "success" });
+            }
+            catch (Exception)
+            {
+                throw new Exception("Image not deleted");
+            }
         }
 
         [HttpGet]
@@ -118,7 +130,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductBasicDetail(int productId, ProductRequestDto model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductBasicDetail(int productId, [FromForm]ProductRequestDto model, CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
             if (productId > 0)
@@ -128,7 +140,6 @@ namespace MidCapERP.Admin.Controllers
             }
             else
             {
-                model.HostURL = Convert.ToString(_configuration["AppSettings:HostURL"]);
                 var createProduct = await _unitOfWorkBL.ProductBL.CreateProduct(model, cancellationToken);
                 return RedirectToAction("Update", "Product", new { Id = createProduct.ProductId });
             }

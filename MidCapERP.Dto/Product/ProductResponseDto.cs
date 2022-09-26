@@ -39,15 +39,21 @@ namespace MidCapERP.Dto.Product
         public int TenantId { get; set; }
         public byte? Status { get; set; }
         public int CreatedBy { get; set; }
+        public string CreatedByName { get; set; }
+
+        public DateTime CreatedDate { get; set; }
 
         [DisplayName("Created Date")]
-        public DateTime CreatedDate { get; set; }
+        public string CreatedDateFormat { get; set; }
 
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
+        public string? UpdatedByName { get; set; }
+
+        public DateTime? UpdatedDate { get; set; }
 
         [DisplayName("Updated Date")]
-        public DateTime? UpdatedDate { get; set; }
+        public string UpdatedDateFormat { get; set; }
 
         public DateTime? UpdatedUTCDate { get; set; }
     }
