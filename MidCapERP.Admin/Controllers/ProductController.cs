@@ -98,7 +98,7 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
-
+            await FillViewBags(cancellationToken);
             if (productId > 0)
             {
                 var productMaterial = await _unitOfWorkBL.ProductBL.GetMaterialByProductId(productId, cancellationToken);
@@ -248,6 +248,12 @@ namespace MidCapERP.Admin.Controllers
                                           UnitName = y.LookupValueName
                                       }).ToList();
             ViewBag.PolishDropDownData = polishSelectedList;
+        }
+
+        private async Task FillViewBags(CancellationToken cancellationToken)
+        {
+            ViewBag.RawMaterialSubjectTypeId = await _unitOfWorkBL.ProductBL.GetRawMaterialSubjectTypeId(cancellationToken);
+            ViewBag.PolishSubjectTypeId = await _unitOfWorkBL.ProductBL.GetPolishSubjectTypeId(cancellationToken);
         }
 
         #endregion Private Method

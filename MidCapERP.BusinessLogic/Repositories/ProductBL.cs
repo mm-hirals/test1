@@ -123,6 +123,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
             productMain.RetailerPrice = getProductInfoById.RetailerPrice;
 
+            var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+
             var unitData = await GetAllUnit(cancellationToken);
             var rowMaterial = await GetAllRowMaterial(cancellationToken);
             var polish = await GetAllPolish(cancellationToken);
@@ -150,7 +153,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                             Qty = x.Qty,
                             MaterialPrice = x.MaterialPrice,
                             Comments = x.Comments,
-                            UnitType = x.SubjectTypeId == 2 ? ur.LookupValueName : up.LookupValueName,
+                            UnitType = x.SubjectTypeId == rawMaterialSubjectTypeId ? ur.LookupValueName : up.LookupValueName,
                             CreatedBy = x.CreatedBy,
                             CreatedDate = x.CreatedDate,
                             CreatedUTCDate = x.CreatedUTCDate,
@@ -334,6 +337,20 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task DeleteProductImage(int productImageId, CancellationToken cancellationToken)
         {
             await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
+        }
+
+        public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.RawMaterials)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
         }
 
         #region API Methods

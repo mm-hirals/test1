@@ -38,8 +38,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="2">
-
+                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="@ViewBag.RawMaterialSubjectTypeId">
                                     <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
                                         <option value="" selected>Select Raw Material</option>
                                         @foreach (var item in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
@@ -72,14 +71,14 @@
                                 </td>
                             </tr>
                             @{
-                                var RawMaterial = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == 2).ToList();
+                                var RawMaterial = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == ViewBag.RawMaterialSubjectTypeId).ToList();
                             }
                             @if (RawMaterial != null)
                                 foreach (var item in RawMaterial)
                                 {
                                     <tr>
                                         <td>
-                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="2">
+                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="@ViewBag.RawMaterialSubjectTypeId">
                                             <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
                                                 @foreach (var list in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
                                                 {
@@ -143,8 +142,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="3">
-
+                                    <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="@ViewBag.PolishSubjectTypeId">
                                     <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
                                         <option value="" selected>Select Polish</option>
                                         @foreach (var item in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
@@ -176,14 +174,14 @@
                                 </td>
                             </tr>
                             @{
-                                var Polish = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == 3).ToList();
+                                var Polish = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == ViewBag.RawMaterialSubjectTypeId).ToList();
                             }
                             @if (Polish != null)
                                 foreach (var item in Polish)
                                 {
                                     <tr>
                                         <td>
-                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="3">
+                                            <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="@ViewBag.PolishSubjectTypeId">
                                             <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
                                                 @foreach (var list in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
                                                 {
