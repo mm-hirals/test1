@@ -195,7 +195,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [AllowAnonymous]
         public async Task<IActionResult> Detail(int Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);

@@ -25,8 +25,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<UnitResponseDto>> GetAll(CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<UnitResponseDto>>(lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit).ToList());
+            return _mapper.Map<List<UnitResponseDto>>(lookupValuesAllData.Where(x => x.LookupId == lookupId).ToList());
         }
 
         public async Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

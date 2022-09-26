@@ -25,14 +25,16 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<CategoryResponseDto>> GetAll(CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == (int)MasterPagesEnum.Category).ToList());
+            return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == lookupId).ToList());
         }
 
         public async Task<CategoryResponseDto> GetCategorySearchByCategoryName(string searchName, CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var categoryAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<CategoryResponseDto>(categoryAllData.FirstOrDefault(x => x.LookupId == (int)MasterPagesEnum.Category && x.LookupValueName == searchName));
+            return _mapper.Map<CategoryResponseDto>(categoryAllData.FirstOrDefault(x => x.LookupId == lookupId && x.LookupValueName == searchName));
         }
 
         public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
