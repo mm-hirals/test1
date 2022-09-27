@@ -18,10 +18,10 @@ $(function () {
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             { "data": "productTitle", "name": "ProductTitle", "autoWidth": true },
             { "data": "modelNo", "name": "ModelNo", "autoWidth": true },
-            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
-            { "data": "updatedDateFormat", "name": "UpdatedDateFormat", "autoWidth": true },
-            { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
+            /*{ "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },*/
+            /*{ "data": "createdByName", "name": "CreatedByName", "autoWidth": true },*/
             { "data": "updatedByName", "name": "UpdatedByName", "autoWidth": true },
+            { "data": "updatedDateFormat", "name": "UpdatedDateFormat", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (x) {
