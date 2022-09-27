@@ -8,13 +8,13 @@ namespace MidCapERP.Dto.Tenant
         
         public int TenantId { get; set; }
 		[Required]
-        [DisplayName("Tenant Name")]
+        [DisplayName("Organization Name")]
         public string TenantName { get; set; }
         [Required]
-        [DisplayName("First Name")]
+        [DisplayName("Owner First Name")]
         public string FirstName { get; set; }
         [Required]
-        [DisplayName("Last Name")]
+        [DisplayName("Owner Last Name")]
         public string LastName { get; set; }
         [Required]
         [DisplayName("Email Id")]
@@ -26,7 +26,7 @@ namespace MidCapERP.Dto.Tenant
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; }
         [Required]
-        [DisplayName("LogoPath")]
+        [DisplayName("Logo")]
         public string? LogoPath { get; set; }
         [Required]
         [DisplayName("Street Address1")]

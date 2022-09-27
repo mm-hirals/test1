@@ -12,6 +12,6 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<JsonRepsonse<TenantBankDetailResponseDto>> GetFilterTenantBankDetailData(TenantBankDetailDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
         public Task<TenantBankDetailRequestDto> CreateTenantBankDetail(TenantBankDetailRequestDto model, CancellationToken cancellationToken);
         public Task<TenantBankDetailRequestDto> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken);
-        public Task<TenantBankDetailRequestDto> DeleteTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken);
+        public Task<TenantBankDetailRequestDto> DeleteTenantBankDetail(int Id, CancellationToken cancellationToken);
     }
 }

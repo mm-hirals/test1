@@ -29,10 +29,13 @@ $(function () {
             { "data": "ifscCode", "name": "iFSCCode", "autoWidth": true },
             { "data": "upiId", "name": "uPIId", "autoWidth": true },
             { "data": "qrCode", "name": "qRCode", "autoWidth": true },
-            //{"mRender": function (o) {
-            //    return '<div class="c-action-btn-group justify-content-start"><a  href="/Profile/Update/' + o.tenantBankDetailId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
-            //    }
-            //}
+            {
+                "mData": null, "bSortable": false,
+                "mRender": function (o) {
+                    debugger;
+                return '<div class="c-action-btn-group justify-content-start"><a  href="/Profile/Update/' + o.tenantBankDetailId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                }
+            }
         ]
     });
 });
@@ -42,17 +45,17 @@ TenantBankDetailIModel.onComplete = function () {
     $("#divTenantBankDetailModal").modal('show');
 }
 
-TenantBankDetailModel.onDelete = function () {
+TenantBankDetailIModel.onDelete = function () {
     tblTenantBankDetail.ajax.reload(null, false);
      $("#divTenantBankDetailModal").modal('hide');
 }
 
-TenantBankDetailModel.onSuccess = function (xhr) {
+TenantBankDetailIModel.onSuccess = function (xhr) {
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
 };
 
-TenantBankDetailModel.onFailed = function (xhr) {
+TenantBankDetailIModel.onFailed = function (xhr) {
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
 };

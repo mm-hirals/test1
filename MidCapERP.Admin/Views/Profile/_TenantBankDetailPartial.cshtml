@@ -1,13 +1,12 @@
-﻿@model MidCapERP.Dto.TenantBankDetail.TenantBankDetailResponseDto
+﻿@*@model MidCapERP.Dto.TenantBankDetail.TenantBankDetailRequestDto
 @{
-    string action = (Model != null && Model.TenantBankDetailId != 0) ? "" : "Create";
+    string action = (Model != null && Model.TenantBankDetailId != 0) ? "UpdateTenantBankDetail" : "CreateTenantBankDetail";
 }
-
 <div class="modal right fade" id="divTenantBankDetailModal" tabindex="-1" aria-labelledby="TenantBankDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="TenantBankDetailModalLabel">Customer Address</h5>
+                <h5 class="modal-title" id="TenantBankDetailModalLabel">Bank Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
@@ -130,10 +129,11 @@
                         </div>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>
-@*    @if (Model != null && Model.TenantId != null)
+     @if (Model != null && Model.TenantId != null)
     {
         <nav class="product-nav-tab--sticky">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -148,23 +148,24 @@
                     <div class="c-card--header">
                         <h4 class="c-card--header-title">Address Details</h4>
                         <div class="c-card--header-action">
-                            <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary"
-                           data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.TenantId" data-ajax-update="#divUpdateCustomerAddresses"
+                            <a asp-controller="Profile" asp-action="CreateTenantBankDetail" class="btn btn-primary"
+                           data-ajax-complete="TenantBankDetailModel.onComplete" id="customersId" asp-route-customerId="@Model.TenantId" data-ajax-update="#divUpdateCustomerAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                         </div>
                     </div>
                     <div class="c-card--body">
                         <div class="row">
                             <div class="col-12">
-                                <partial name="_CustomerAddressesTable" model="null" />
-                                <div id="divUpdateCustomerAddresses"></div>
+                                <partial name="_TenantBankDetailTable" model="null" />
+                                <div id="divUpdateTenantBankDetail"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    }*@
+    }
+    
 </div>
 @section Scripts {
     @{
@@ -179,3 +180,4 @@
 
 
 
+*@

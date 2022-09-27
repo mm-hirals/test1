@@ -8,22 +8,22 @@ namespace MidCapERP.Dto.Tenant
     {
         public int TenantId { get; set; }
         [Required]
-        [DisplayName("Tenant Name")]
+        [DisplayName("Organization Name")]
         public string TenantName { get; set; }
         [Required]
-        [DisplayName("First Name")]
+        [DisplayName("Owner First Name")]
         public string FirstName { get; set; }
         [Required]
-        [DisplayName("Last Name")]
+        [DisplayName("Owner Last Name")]
         public string LastName { get; set; }
         [Required]
-        [DisplayName("Last Name")]
+        [DisplayName("Email Id")]
         public string EmailId { get; set; }
         [Required]
         [DisplayName("Phone Number")]
         public string PhoneNumber { get; set; }
         [Required]
-        [DisplayName("LogoPath")]
+        [DisplayName("Logo")]
         public string? LogoPath { get; set; }
         [Required]
         [DisplayName("Street Address1")]
@@ -36,7 +36,7 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("City")]
         public string City { get; set; }
         [Required]
-        [DisplayName("City")]
+        [DisplayName("State")]
         public string State { get; set; }
         [Required]
         [DisplayName("Pincode")]

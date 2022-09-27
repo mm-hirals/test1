@@ -52,31 +52,22 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<TenantBankDetailResponseDto>(dataTableFilterDto.Draw, tenantBankDetailData.TotalCount, tenantBankDetailData.TotalCount, tenantBankDetailData);
         }
 
-        public async Task<TenantBankDetailResponseDto> CreateCustomerAddresses(TenantBankDetailResponseDto model, CancellationToken cancellationToken)
+        public async Task<TenantBankDetailRequestDto> CreateTenantBankDetail(TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {
-            if (model.IsDefault)
-            {
-                var defualtAddress = await TenantBankDetailResponseDto(model.TenantId, cancellationToken);
-                if (defualtAddress != null)
-                {
-                    defualtAddress.IsDefault = false;
-                    await _unitOfWorkDA.TenantBankDetailDA.UpdateTenantBankDetail(defualtAddress.TenantBankDetailId, defualtAddress, cancellationToken);
-                }
-            }
-            var tenantBankDetail = _mapper.Map<TenantBankDetail>(model);
-            tenantBankDetail.IsDeleted = false;
-            tenantBankDetail.CreatedBy = _currentUser.UserId;
-            tenantBankDetail.CreatedDate = DateTime.Now;
-            tenantBankDetail.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.TenantBankDetailDA.CreateTenantBankDetail(tenantBankDetail, cancellationToken);
-            return _mapper.Map<TenantBankDetailResponseDto>(data);
+            var tenantBankDetailoInsert = _mapper.Map<TenantBankDetail>(model);
+            tenantBankDetailoInsert.IsDeleted = true;
+            tenantBankDetailoInsert.TenantId = _currentUser.TenantId;
+            tenantBankDetailoInsert.CreatedBy = _currentUser.UserId;
+            tenantBankDetailoInsert.CreatedDate = DateTime.Now;
+            tenantBankDetailoInsert.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.TenantBankDetailDA.CreateTenantBankDetail(tenantBankDetailoInsert, cancellationToken);
+            return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
         public async Task<TenantBankDetailResponseDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await TenantGetById(Id, cancellationToken);
             return _mapper.Map<TenantBankDetailResponseDto>(data);
         }
-
 
         public async Task<TenantBankDetailRequestDto> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {
@@ -86,6 +77,17 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, ref oldData);
             var data = await _unitOfWorkDA.TenantBankDetailDA.UpdateTenantBankDetail(Id, oldData, cancellationToken);
+            return _mapper.Map<TenantBankDetailRequestDto>(data);
+        }
+
+        public async Task<TenantBankDetailRequestDto> DeleteTenantBankDetail(int Id, CancellationToken cancellationToken)
+        {
+            var deleteTenantBankDetail = await TenantGetById(Id, cancellationToken);
+            deleteTenantBankDetail.IsDeleted = true;
+            deleteTenantBankDetail.UpdatedBy = _currentUser.UserId;
+            deleteTenantBankDetail.UpdatedDate = DateTime.Now;
+            deleteTenantBankDetail.UpdatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.TenantBankDetailDA.UpdateTenantBankDetail(Id, deleteTenantBankDetail, cancellationToken);
             return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
 
