@@ -1,0 +1,35 @@
+﻿@model MidCapERP.Dto.Customers.CustomersRequestDto
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="c-card--wrapper c-card-sm--wrapper price-card--wrapper">
+            <input asp-for="CustomerId" type="hidden" />
+            <div class="c-card--header">
+                <h4 class="c-card--header-title">Customer Details</h4>
+            </div>
+            <div class="c-card--body">
+                <ul class="list-unstyled mb-0 vstack gap-2">
+                    <li>
+                        <div class="d-flex align-items-center">
+                            <img class="w-25" src="/images/drawer.jpg" alt="Wood type">
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="fs-14 mb-1">
+                                    @{
+                                        var name = @Model.FirstName + " " + @Model.LastName;
+                                    }
+                                    @name
+                                </h6>
+                                <p class="text-muted mb-0">Customer</p>
+                            </div>
+                        </div>
+                    </li>
+                    @if (@Model.EmailId != null)
+                    {
+                        <li><i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>@Model.EmailId</li>
+                    }
+                    <li><i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>@Model.PhoneNumber</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

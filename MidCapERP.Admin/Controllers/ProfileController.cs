@@ -25,7 +25,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var Profile = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
-            Profile.BankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetById(_currentUser.TenantId, cancellationToken);
+            //Profile.BankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetById(_currentUser.TenantId, cancellationToken);
             return View("Index", Profile);
         }
         [HttpPost]

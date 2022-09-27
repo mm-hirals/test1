@@ -11912,6 +11912,32 @@ header .btn-check:focus + .btn, header .btn:focus {
   font-weight: 600;
 }
 
+.img-wrap {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #e20000;
+  font-size: 0;
+}
+.img-wrap .close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 100;
+  background-color: #fafafa;
+  padding: 5px 2px 2px;
+  color: #202020;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.2;
+  text-align: center;
+  font-size: 22px;
+  line-height: 10px;
+  border-radius: 50%;
+}
+.img-wrap:hover .close {
+  opacity: 1;
+}
+
 .table-price--input {
   display: flex;
   align-items: center;
@@ -11985,10 +12011,6 @@ header .btn-check:focus + .btn, header .btn:focus {
   position: -webkit-sticky;
   position: sticky;
   bottom: 0;
-}
-
-.mr-3-percent {
-  margin-right: 3%;
 }
 
 .filter-form--wrapper {

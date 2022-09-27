@@ -2,7 +2,7 @@
 
 namespace MidCapERP.Dto.OrderSetItem
 {
-    public class OrderSetItemResponceDto
+    public class OrderSetItemResponseDto
     {
         public long OrderSetItemId { get; set; }
 
@@ -27,6 +27,9 @@ namespace MidCapERP.Dto.OrderSetItem
 
         [Required]
         public int Quantity { get; set; }
+
+        public string ProductTitle { get; set; }
+        public string ModelNo { get; set; }
 
         [Required]
         public decimal UnitPrice { get; set; }
