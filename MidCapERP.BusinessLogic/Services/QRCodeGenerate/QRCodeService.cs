@@ -26,7 +26,7 @@ namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
             using (MemoryStream ms = new MemoryStream())
             {
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(serverPath + "/Product/Detail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(serverPath + "/ProductDetail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 using (Bitmap bitMap = qrCode.GetGraphic(20))
                 {

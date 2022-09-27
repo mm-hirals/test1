@@ -4,6 +4,7 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -20,9 +21,7 @@ namespace MidCapERP.BusinessLogic.Repositories
     public class ProductBL : IProductBL
     {
         private readonly IUnitOfWorkDA _unitOfWorkDA;
-
         public readonly IMapper _mapper;
-
         private readonly CurrentUser _currentUser;
         private readonly IFileStorageService _fileStorageService;
         private readonly IQRCodeService _iQRCodeService;
@@ -67,6 +66,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             try
             {
+                if (_currentUser.TenantId == 0)
+                {
+                    var getProductById = await GetProductById(Id, cancellationToken);
+                    if (getProductById != null)
+                        _currentUser.TenantId = getProductById.TenantId;
+                }
+
                 ProductRequestDto productRequestDto = new ProductRequestDto();
                 var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
@@ -257,6 +263,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Depth = model.Depth * 12;
                     if (model.UploadImage != null)
                         getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
+                    getProductById.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(getProductById.ProductId));
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
