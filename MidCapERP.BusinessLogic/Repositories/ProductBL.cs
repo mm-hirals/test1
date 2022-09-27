@@ -4,6 +4,7 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -20,9 +21,7 @@ namespace MidCapERP.BusinessLogic.Repositories
     public class ProductBL : IProductBL
     {
         private readonly IUnitOfWorkDA _unitOfWorkDA;
-
         public readonly IMapper _mapper;
-
         private readonly CurrentUser _currentUser;
         private readonly IFileStorageService _fileStorageService;
         private readonly IQRCodeService _iQRCodeService;
@@ -38,11 +37,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            int lookupId = await GetCategoryLookupId(cancellationToken);
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Category);
+            var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == lookupId);
             var productResponseData = (from x in productAllData
                                        join y in cateagoryData on x.CategoryId equals y.LookupValueId
+                                       join z in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken) on x.CreatedBy equals z.UserId
                                        select new ProductResponseDto()
                                        {
                                            ProductId = x.ProductId,
@@ -50,10 +51,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
                                            Status = x.Status,
-                                           CreatedBy = x.CreatedBy,
+                                           CreatedByName = z.FullName,
                                            CreatedDate = x.CreatedDate,
-                                           UpdatedBy = x.UpdatedBy,
-                                           UpdatedDate = x.UpdatedDate
+                                           CreatedDateFormat = x.CreatedDate.ToString("dd/MM/yyyy hh:mm"),
+                                           UpdatedByName = z.FullName,
+                                           UpdatedDate = x.UpdatedDate,
+                                           UpdatedDateFormat = x.UpdatedDate != null ? x.UpdatedDate.Value.ToString("dd/MM/yyyy hh:mm") : ""
                                        }).AsQueryable();
             var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -63,6 +66,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             try
             {
+                if (_currentUser.TenantId == 0)
+                {
+                    var getProductById = await GetProductById(Id, cancellationToken);
+                    if (getProductById != null)
+                        _currentUser.TenantId = getProductById.TenantId;
+                }
+
                 ProductRequestDto productRequestDto = new ProductRequestDto();
                 var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
@@ -74,9 +84,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       Width = x.Width/12,
-                                       Height = x.Height/12,
-                                       Depth = x.Depth/12,
+                                       Width = x.Width / 12,
+                                       Height = x.Height / 12,
+                                       Depth = x.Depth / 12,
                                        UsedFabric = x.UsedFabric,
                                        IsVisibleToWholesalers = x.IsVisibleToWholesalers,
                                        TotalDaysToPrepare = x.TotalDaysToPrepare,
@@ -92,8 +102,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CreatedDate = x.CreatedDate,
                                        UpdatedByName = y.FullName,
                                        UpdatedDate = x.UpdatedDate,
-                                       //IsDeleted = x.IsDeleted,
-                                       //IsPublished = x.IsPublished
                                    }).FirstOrDefault();
 
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
@@ -121,23 +129,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMain.WholesalerPrice = getProductInfoById.WholesalerPrice;
             productMain.RetailerPrice = getProductInfoById.RetailerPrice;
 
+            var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+
             var unitData = await GetAllUnit(cancellationToken);
             var rowMaterial = await GetAllRowMaterial(cancellationToken);
             var polish = await GetAllPolish(cancellationToken);
             var data = (from x in productMaterialList
                             //left join start for rawmaterial
                         join y in rowMaterial on x.SubjectId equals y.RawMaterialId into rowM
-                        from rowMat in rowM.DefaultIfEmpty()
+                        from rowMat in rowM.DefaultIfEmpty(new RawMaterial())
                             // inner join on unitdata on rowmaterial
                         join ur in unitData on rowMat.UnitId equals ur.LookupValueId
-                        // left join end
-
-                        //left join start for POlise
-                        join z in polish on x.SubjectId equals z.PolishId into polishM
-                        from polishMat in polishM.DefaultIfEmpty()
-                            // inner join on unitdata on policede
-                        join up in unitData on rowMat.UnitId equals up.LookupValueId
-                        // left join end
+                        where x.SubjectTypeId == rawMaterialSubjectTypeId && rowMat != null
 
                         select new ProductMaterialRequestDto
                         {
@@ -148,7 +152,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                             Qty = x.Qty,
                             MaterialPrice = x.MaterialPrice,
                             Comments = x.Comments,
-                            UnitType = x.SubjectTypeId == 2 ? ur.LookupValueName : up.LookupValueName,
+                            UnitType = ur.LookupValueName,
                             CreatedBy = x.CreatedBy,
                             CreatedDate = x.CreatedDate,
                             CreatedUTCDate = x.CreatedUTCDate,
@@ -156,9 +160,31 @@ namespace MidCapERP.BusinessLogic.Repositories
                             UpdatedDate = x.UpdatedDate,
                             UpdatedUTCDate = x.UpdatedUTCDate,
                             IsDeleted = false
-                        }).OrderBy(p => p.SubjectTypeId).ToList();
+                        }).Union(from x in productMaterialList
+                                 join z in polish on x.SubjectId equals z.PolishId into polishM
+                                 from polishMat in polishM.DefaultIfEmpty(new Polish())
+                                 where x.SubjectTypeId == polishSubjectTypeId && polishMat != null
+                                 join up in unitData on polishMat.UnitId equals up.LookupValueId
+                                 select new ProductMaterialRequestDto
+                                 {
+                                     ProductMaterialID = x.ProductMaterialID,
+                                     ProductId = x.ProductId,
+                                     SubjectTypeId = x.SubjectTypeId,
+                                     SubjectId = x.SubjectId,
+                                     Qty = x.Qty,
+                                     MaterialPrice = x.MaterialPrice,
+                                     Comments = x.Comments,
+                                     UnitType = up.LookupValueName,
+                                     CreatedBy = x.CreatedBy,
+                                     CreatedDate = x.CreatedDate,
+                                     CreatedUTCDate = x.CreatedUTCDate,
+                                     UpdatedBy = x.UpdatedBy,
+                                     UpdatedDate = x.UpdatedDate,
+                                     UpdatedUTCDate = x.UpdatedUTCDate,
+                                     IsDeleted = false
+                                 }).ToList();
 
-            productMain.ProductMaterialRequestDto = data;
+            productMain.ProductMaterialRequestDto = data.OrderByDescending(p => p.SubjectTypeId).ToList();
             return productMain;
         }
 
@@ -185,7 +211,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
             {
-                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(productData.ProductId.ToString());
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(productData.ProductId));
                 await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
             }
             return _mappedUser;
@@ -210,7 +236,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (model.Files != null)
                 {
                     var getImageById = await GetProductImageById(model.ProductId, cancellationToken);
-                    // comented theis code for no need to delete the old images.
+                    // commented these code for no need to delete the old images.
                     //if (getImageById.Count() > 0)
                     //    await DeleteImages(getImageById.ToList(), cancellationToken);
                     await AddImages(model, cancellationToken);
@@ -237,6 +263,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Depth = model.Depth * 12;
                     if (model.UploadImage != null)
                         getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
+                    getProductById.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(getProductById.ProductId));
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
@@ -329,6 +356,25 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task DeleteProductImage(int productImageId, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
+        }
+
+        public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.RawMaterials)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
         #region API Methods
 
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
@@ -345,23 +391,24 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #endregion API Methods
 
-        public async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
+        #region Private Method
+
+        private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
+            var lookupId = await GetUnitLookupId(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
+            return lookupValuesAllData.Where(x => x.LookupId == lookupId);
         }
 
-        public async Task<IQueryable<RawMaterial>> GetAllRowMaterial(CancellationToken cancellationToken)
+        private async Task<IQueryable<RawMaterial>> GetAllRowMaterial(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
         }
 
-        public async Task<IQueryable<Polish>> GetAllPolish(CancellationToken cancellationToken)
+        private async Task<IQueryable<Polish>> GetAllPolish(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
         }
-
-        #region Private Method
 
         private async Task<Product> GetProductById(Int64 Id, CancellationToken cancellationToken)
         {
@@ -473,6 +520,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
+        }
+
+        private async Task<int> GetCategoryLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Category)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
+        }
+
+        private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion Private Method

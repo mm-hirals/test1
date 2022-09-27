@@ -53,6 +53,20 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> DeleteProductImage(int ProductImageId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.DeleteProductImage(ProductImageId, cancellationToken);
+                return Json(new { result = "success" });
+            }
+            catch (Exception)
+            {
+                throw new Exception("Image not deleted");
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CreateProductDetail(int productId, CancellationToken cancellationToken)
         {
             if (productId > 0)
@@ -84,7 +98,7 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillRawMaterialDropDowns(cancellationToken);
             await FillPolishDropDowns(cancellationToken);
-
+            await FillViewBags(cancellationToken);
             if (productId > 0)
             {
                 var productMaterial = await _unitOfWorkBL.ProductBL.GetMaterialByProductId(productId, cancellationToken);
@@ -116,7 +130,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductBasicDetail(int productId, ProductRequestDto model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductBasicDetail(int productId, [FromForm]ProductRequestDto model, CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
             if (productId > 0)
@@ -180,14 +194,6 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        public async Task<IActionResult> Detail(int Id, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
-            return View("Detail", data);
-        }
-
         #region Private Method
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
@@ -234,6 +240,12 @@ namespace MidCapERP.Admin.Controllers
                                           UnitName = y.LookupValueName
                                       }).ToList();
             ViewBag.PolishDropDownData = polishSelectedList;
+        }
+
+        private async Task FillViewBags(CancellationToken cancellationToken)
+        {
+            ViewBag.RawMaterialSubjectTypeId = await _unitOfWorkBL.ProductBL.GetRawMaterialSubjectTypeId(cancellationToken);
+            ViewBag.PolishSubjectTypeId = await _unitOfWorkBL.ProductBL.GetPolishSubjectTypeId(cancellationToken);
         }
 
         #endregion Private Method

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
@@ -18,12 +20,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         public readonly CurrentUser _currentUser;
+        private readonly IFileStorageService _fileStorageService;
 
-        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -77,9 +81,20 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
                     var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
-                                             join y in productData on x.SubjectId equals y.ProductId
+
+                                             join y in productData on x.SubjectId equals y.ProductId into productM
+                                             from productMat in productM.DefaultIfEmpty()
+
+                                             join z in polishData on x.SubjectId equals z.PolishId into polishM
+                                             from polishMat in polishM.DefaultIfEmpty()
+
+                                             join a in fabricData on x.SubjectId equals a.FabricId into fabricM
+                                             from fabricMat in fabricM.DefaultIfEmpty()
+
                                              select new OrderSetItemResponseDto
                                              {
                                                  OrderSetItemId = x.OrderSetItemId,
@@ -92,8 +107,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Height = x.Height,
                                                  Depth = x.Depth,
                                                  Quantity = x.Quantity,
-                                                 ProductTitle = y.ProductTitle,
-                                                 ModelNo = y.ModelNo,
+                                                 ProductTitle = (x.SubjectTypeId == 1 ? productMat.ProductTitle : (x.SubjectTypeId == 3 ? polishMat.Title : fabricMat.Title)),
+                                                 ModelNo = (x.SubjectTypeId == 1 ? productMat.ModelNo : (x.SubjectTypeId == 3 ? polishMat.ModelNo : fabricMat.ModelNo)),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
@@ -136,7 +151,10 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                 foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
-                    var subjectTypes = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+                    var ProductData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                    var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+                    var polish = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
 
                     //Create OrderSetItem Base On OrderSet
                     OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
@@ -144,28 +162,42 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderSetItem.OrderSetId = orderSetData.OrderSetId;
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
-
-                    //var subjectTypeName = (from x in subjectTypes where x.TenantId == data.TenantId && x.SubjectTypeId == itemData.SubjectTypeId select x.SubjectTypeName);
-
-
-
-                    //var productImage = (from x in subjectTypeName where x.)
-                    //orderSetItem.ProductImage = itemData.ProductImage;
-                    //orderSetItem.Width = itemData.Width;
-                    //orderSetItem.Height = itemData.Height;
-                    //orderSetItem.Depth = itemData.Depth;
-                    //orderSetItem.Quantity = itemData.Quantity;
-                    //orderSetItem.UnitPrice = itemData.UnitPrice;
-                    //orderSetItem.DiscountPrice = itemData.DiscountPrice;
-                    //orderSetItem.TotalAmount = itemData.TotalAmount;
-                    //orderSetItem.Comment = itemData.Comment;
-                    //orderSetItem.Status = (byte)ProductStatusEnum.Pending;
-                    //orderSetItem.IsDeleted = false;
-                    //orderSetItem.CreatedBy = _currentUser.UserId;
-                    //orderSetItem.CreatedDate = DateTime.Now;
-                    //orderSetItem.CreatedUTCDate = DateTime.UtcNow;
-                    //var orderSetItemToInsert = _mapper.Map<OrderSetItem>(orderSetItem);
-                    //await _unitOfWorkDA.OrderSetItemDA.CreateOrderSetItem(orderSetItemToInsert, cancellationToken);
+                    
+                    if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
+                    {
+                       var image = ProductData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;
+                        orderSetItem.ProductImage = image;
+                    }
+                    else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.RawMaterials))
+                    {
+                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId).ImagePath;
+                        orderSetItem.ProductImage = image;
+                    }
+                    else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
+                    {
+                        var image = polish.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId).ImagePath;
+                        orderSetItem.ProductImage = image;
+                    }
+                    else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
+                    {
+                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId).ImagePath;
+                        orderSetItem.ProductImage = image;
+                    }
+                    orderSetItem.Width = itemData.Width;
+                    orderSetItem.Height = itemData.Height;
+                    orderSetItem.Depth = itemData.Depth;
+                    orderSetItem.Quantity = itemData.Quantity;
+                    orderSetItem.UnitPrice = itemData.UnitPrice;
+                    orderSetItem.DiscountPrice = itemData.DiscountPrice;
+                    orderSetItem.TotalAmount = itemData.TotalAmount;
+                    orderSetItem.Comment = itemData.Comment;
+                    orderSetItem.Status = (byte)ProductStatusEnum.Pending;
+                    orderSetItem.IsDeleted = false;
+                    orderSetItem.CreatedBy = _currentUser.UserId;
+                    orderSetItem.CreatedDate = DateTime.Now;
+                    orderSetItem.CreatedUTCDate = DateTime.UtcNow;
+                    var orderSetItemToInsert = _mapper.Map<OrderSetItem>(orderSetItem);
+                    await _unitOfWorkDA.OrderSetItemDA.CreateOrderSetItem(orderSetItemToInsert, cancellationToken);
                 }
             }
             return _mapper.Map<OrderApiRequestDto>(data);

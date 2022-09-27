@@ -19,12 +19,24 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderAll(id, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Create)]
-        public async Task<ApiResponse> Post([FromBody] OrderRequestDto orderRequestDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Post([FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
-            ValidationRequest(orderRequestDto);
-            var data = await _unitOfWorkBL.OrderBL.CreateOrder(orderRequestDto, cancellationToken);
+            ValidationRequest(orderRequestApiDto);
+            var data = await _unitOfWorkBL.OrderBL.CreateOrder(orderRequestApiDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
@@ -34,7 +46,7 @@ namespace MidCapERP.WebAPI.Controllers
 
         #region Private Methods
 
-        private void ValidationRequest(OrderRequestDto orderRequestDto)
+        private void ValidationRequest(OrderApiRequestDto orderRequestDto)
         {
             if (!ModelState.IsValid)
             {

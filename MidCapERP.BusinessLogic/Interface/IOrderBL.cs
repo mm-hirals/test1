@@ -12,10 +12,12 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderResponseDto> GetOrderDetailData(long Id, CancellationToken cancellationToken);
 
-        public Task<OrderRequestDto> CreateOrder(OrderRequestDto model, CancellationToken cancellationToken);
+        public Task<OrderApiRequestDto> CreateOrder(OrderApiRequestDto model, CancellationToken cancellationToken);
 
         public Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellation);
 
         public Task<OrderResponseDto> GetOrderForDetailsByOrderNo(string searchText, CancellationToken cancellation);
+
+        public Task<OrderApiResponseDto> GetOrderAll(int id,CancellationToken cancellation);
     }
 }

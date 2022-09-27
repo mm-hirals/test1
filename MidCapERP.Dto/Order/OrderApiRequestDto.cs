@@ -1,14 +1,14 @@
 ﻿using MidCapERP.Dto.OrderSet;
-using MidCapERP.Dto.OrderSetItem;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MidCapERP.Dto.Order
 {
-    public class OrderRequestDto
+    public class OrderApiRequestDto
     {
+        [JsonIgnore]
         public long OrderId { get; set; }
 
-        [Required]
         public string OrderNo { get; set; }
 
         [Required]
@@ -24,7 +24,7 @@ namespace MidCapERP.Dto.Order
         public decimal ReferralDiscount { get; set; }
 
         [Required]
-        public decimal? TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
         [Required]
         public decimal GSTTaxAmount { get; set; }
@@ -46,15 +46,27 @@ namespace MidCapERP.Dto.Order
         [Required]
         public bool IsDraft { get; set; }
 
-        public OrderSetRequestDto? OrderSetRequestDto { get; set; }
+        [Required]
+        public int TenantId { get; set; }
 
-        public OrderSetItemRequestDto? OrderSetItemRequestDto { get; set; }
+        public List<OrderSetRequestDto> OrderSetRequestDto { get; set; }
 
+        [JsonIgnore]
         public int CreatedBy { get; set; }
+
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+
+        [JsonIgnore]
         public DateTime CreatedUTCDate { get; set; }
+
+        [JsonIgnore]
         public int? UpdatedBy { get; set; }
+
+        [JsonIgnore]
         public DateTime? UpdatedDate { get; set; }
+
+        [JsonIgnore]
         public DateTime? UpdatedUTCDate { get; set; }
     }
 }

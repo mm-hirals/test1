@@ -18,8 +18,10 @@ $(function () {
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             { "data": "productTitle", "name": "ProductTitle", "autoWidth": true },
             { "data": "modelNo", "name": "ModelNo", "autoWidth": true },
-            { "data": "createdDate", "name": "CreatedDate", "autoWidth": true },
-            { "data": "updatedDate", "name": "UpdatedDate", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
+            { "data": "updatedDateFormat", "name": "UpdatedDateFormat", "autoWidth": true },
+            { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
+            { "data": "updatedByName", "name": "UpdatedByName", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (x) {
@@ -38,7 +40,16 @@ $(function () {
                         '<a data-ajax-complete="ProductModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Product/Delete/' + o.productId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
-        ]
+        ],
+        //columnDefs: [
+        //    {
+        //        "type": "unix",
+        //        "targets": [3, 4],
+        //        "render": function (data) {
+        //            return moment(data).format('DD/MM/YYYY HH:MM')
+        //        }
+        //    },
+        //]
     });
 });
 

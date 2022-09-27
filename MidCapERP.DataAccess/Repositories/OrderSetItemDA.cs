@@ -16,7 +16,12 @@ namespace MidCapERP.DataAccess.Repositories
             _currentUser = currentUser;
         }
 
-        public async Task<OrderSetItem> CreateOrder(OrderSetItem model, CancellationToken cancellationToken)
+        public async Task<IQueryable<OrderSetItem>> GetAll(CancellationToken cancellationToken)
+        {
+            return await _orderSetItem.GetAsync(cancellationToken);
+        }
+
+        public async Task<OrderSetItem> CreateOrderSetItem(OrderSetItem model, CancellationToken cancellationToken)
         {
             return await _orderSetItem.InsertAsync(model, cancellationToken);
         }

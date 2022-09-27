@@ -49,10 +49,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            var lookupCompanyId = await GetCompanyLookupId(cancellationToken);
+            var lookupUnitId = await GetUnitLookupId(cancellationToken);
             var polishAllData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var companyData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Company);
-            var unitData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
+            var companyData = lookupValuesAllData.Where(x => x.LookupId == lookupCompanyId);
+            var unitData = lookupValuesAllData.Where(x => x.LookupId == lookupUnitId);
             var polishResponseData = (from x in polishAllData
                                       join y in companyData on new { CompanyId = x.CompanyId } equals new { CompanyId = y.LookupValueId }
                                       join z in unitData on new { UnitId = x.UnitId } equals new { UnitId = z.LookupValueId }
@@ -146,6 +148,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UnitId = model.UnitId;
             oldData.UnitPrice = model.UnitPrice;
             oldData.ImagePath = model.ImagePath;
+        }
+
+        private async Task<int> GetCompanyLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Company)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
+        }
+
+        private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion Private Method

@@ -4,6 +4,8 @@ namespace MidCapERP.DataAccess.Interface
 {
     public interface IOrderSetItemDA
     {
-        public Task<OrderSetItem> CreateOrder(OrderSetItem OrderSetItem, CancellationToken cancellationToken);
+        public Task<IQueryable<OrderSetItem>> GetAll(CancellationToken cancellationToken);
+
+        public Task<OrderSetItem> CreateOrderSetItem(OrderSetItem OrderSetItem, CancellationToken cancellationToken);
     }
 }
