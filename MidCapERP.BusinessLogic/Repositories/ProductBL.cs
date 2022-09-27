@@ -132,17 +132,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = (from x in productMaterialList
                             //left join start for rawmaterial
                         join y in rowMaterial on x.SubjectId equals y.RawMaterialId into rowM
-                        from rowMat in rowM.DefaultIfEmpty()
+                        from rowMat in rowM.DefaultIfEmpty(new RawMaterial())
                             // inner join on unitdata on rowmaterial
                         join ur in unitData on rowMat.UnitId equals ur.LookupValueId
-                        // left join end
-
-                        //left join start for POlise
-                        join z in polish on x.SubjectId equals z.PolishId into polishM
-                        from polishMat in polishM.DefaultIfEmpty()
-                            // inner join on unitdata on policede
-                        join up in unitData on rowMat.UnitId equals up.LookupValueId
-                        // left join end
+                        where x.SubjectTypeId == rawMaterialSubjectTypeId && rowMat != null
 
                         select new ProductMaterialRequestDto
                         {
@@ -153,7 +146,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                             Qty = x.Qty,
                             MaterialPrice = x.MaterialPrice,
                             Comments = x.Comments,
-                            UnitType = x.SubjectTypeId == rawMaterialSubjectTypeId ? ur.LookupValueName : up.LookupValueName,
+                            UnitType = ur.LookupValueName,
                             CreatedBy = x.CreatedBy,
                             CreatedDate = x.CreatedDate,
                             CreatedUTCDate = x.CreatedUTCDate,
@@ -161,9 +154,31 @@ namespace MidCapERP.BusinessLogic.Repositories
                             UpdatedDate = x.UpdatedDate,
                             UpdatedUTCDate = x.UpdatedUTCDate,
                             IsDeleted = false
-                        }).OrderBy(p => p.SubjectTypeId).ToList();
+                        }).Union(from x in productMaterialList
+                                 join z in polish on x.SubjectId equals z.PolishId into polishM
+                                 from polishMat in polishM.DefaultIfEmpty(new Polish())
+                                 where x.SubjectTypeId == polishSubjectTypeId && polishMat != null
+                                 join up in unitData on polishMat.UnitId equals up.LookupValueId
+                                 select new ProductMaterialRequestDto
+                                 {
+                                     ProductMaterialID = x.ProductMaterialID,
+                                     ProductId = x.ProductId,
+                                     SubjectTypeId = x.SubjectTypeId,
+                                     SubjectId = x.SubjectId,
+                                     Qty = x.Qty,
+                                     MaterialPrice = x.MaterialPrice,
+                                     Comments = x.Comments,
+                                     UnitType = up.LookupValueName,
+                                     CreatedBy = x.CreatedBy,
+                                     CreatedDate = x.CreatedDate,
+                                     CreatedUTCDate = x.CreatedUTCDate,
+                                     UpdatedBy = x.UpdatedBy,
+                                     UpdatedDate = x.UpdatedDate,
+                                     UpdatedUTCDate = x.UpdatedUTCDate,
+                                     IsDeleted = false
+                                 }).ToList();
 
-            productMain.ProductMaterialRequestDto = data;
+            productMain.ProductMaterialRequestDto = data.OrderByDescending(p => p.SubjectTypeId).ToList();
             return productMain;
         }
 

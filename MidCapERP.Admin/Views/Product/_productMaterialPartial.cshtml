@@ -174,7 +174,7 @@
                                 </td>
                             </tr>
                             @{
-                                var Polish = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == ViewBag.RawMaterialSubjectTypeId).ToList();
+                                var Polish = Model?.ProductMaterialRequestDto.Where(x => x.SubjectTypeId == ViewBag.PolishSubjectTypeId).ToList();
                             }
                             @if (Polish != null)
                                 foreach (var item in Polish)
