@@ -94,19 +94,28 @@ $("#selectall").click(function () {
     }
 });
 
-$("#multiSelectCustomer").click(function () {
-    for (var i = 0; i < $(".case:checked").length; i++) {
-        value_check.push($(".case:checked")[i].id);
+$('#tblCustomer').on('click', 'input[type="checkbox"]', function () {
+    if ($(this).prop("checked")) {
+        value_check.push($(this).val());
     }
+    else {
+        var a = value_check.findIndex(q => q == $(this).val());
+        if (a > -1) {
+            value_check.splice(a, 1);
+        }
+    }
+});
+
+$("#multiSelectCustomer").click(function () {
     $.ajax({
         url: "/Customer/MultipleSendCustomer",
         type: "POST",
         data: { 'value_check': value_check },
         success: function (response) {
-            //if (response == "success")
-            //    alert("Success : ", response);
-            //else
-            //    alert("Error : ", response)
+            if (response == "success")
+                alert("Success : ", response);
+            else
+                alert("Error : ", response)
         }
     });
 });
