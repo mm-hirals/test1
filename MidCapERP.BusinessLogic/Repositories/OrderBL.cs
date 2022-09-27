@@ -79,8 +79,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                     var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
                     var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
                     var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+                    var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+                    var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
 
@@ -105,8 +106,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Height = x.Height,
                                                  Depth = x.Depth,
                                                  Quantity = x.Quantity,
-                                                 ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : fabricMat.Title)),
-                                                 ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : fabricMat.ModelNo)),
+                                                 ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
+                                                 ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
@@ -159,6 +160,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
             var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
             return subjectTypeId;
         }
     }
