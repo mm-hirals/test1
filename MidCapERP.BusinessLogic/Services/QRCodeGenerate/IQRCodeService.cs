@@ -2,6 +2,6 @@
 {
     public interface IQRCodeService
     {
-        public Task<string> GenerateQRCodeImageAsync(string productIdEnc, string hostURL);
+        public Task<string> GenerateQRCodeImageAsync(string productIdEnc);
     }
 }

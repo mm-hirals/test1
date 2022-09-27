@@ -33,8 +33,9 @@
                             @foreach (var item in @Model.ProductImageRequestDto)
                             {
                                 <input type="hidden" asp-for="@item.ProductImageID" value="@item.ImagePath" />
-                                <div class="me-2 c-width-120 img-thumbnail d-flex align-items-center">
-                                    <img src="@item.ImagePath" width="100%" height="100%" class="img-thumbnail p-0 border-0">
+                                <div class="me-2 c-width-120 img-thumbnail d-flex align-items-center img-wrap">
+                                    <span class="close">&times;</span>
+                                    <img src="@item.ImagePath" width="100%" height="100%" class="img-thumbnail p-0 border-0" data-imageId="@item.ProductImageID">
                                 </div>
                             }
                         }

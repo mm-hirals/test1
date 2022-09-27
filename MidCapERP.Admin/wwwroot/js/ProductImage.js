@@ -42,3 +42,15 @@ $("#nav-tab").on("shown.bs.tab", function (e) {
         isDropZoneInit = false;
     }
 })
+
+$(document).on("click", ".img-wrap .close", (function () {
+    var id = $(this).closest('.img-wrap').find('img').data('imageid');
+    $(this).parent().remove();
+
+    $.ajax({
+        url: "/Product/DeleteProductImage?ProductImageId=" + id,
+        type: "GET",
+        success: function (response) {
+        }
+    });
+}));

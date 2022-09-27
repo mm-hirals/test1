@@ -36,5 +36,11 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken);
+
+        public Task DeleteProductImage(int productImageId, CancellationToken cancellationToken);
+
+        public Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken);
+
+        public Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken);
     }
 }
