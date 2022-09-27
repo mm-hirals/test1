@@ -178,7 +178,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                      IsDeleted = false
                                  }).ToList();
 
-            productMain.ProductMaterialRequestDto = data.OrderByDescending(p => p.SubjectTypeId).ToList();
+            productMain.ProductMaterialRequestDto = data.OrderBy(p => p.SubjectTypeId).ToList();
             return productMain;
         }
 
