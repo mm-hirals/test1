@@ -81,6 +81,7 @@ CustomerModel.onFailed = function (xhr) {
     $("#divCustomerModal").modal('hide');
 };
 
+// Check all checkbox values and store it in array
 $("#selectall").click(function () {
     if (this.checked) {
         $('.case').prop('checked', true);
@@ -94,6 +95,7 @@ $("#selectall").click(function () {
     }
 });
 
+// Check single checkbox value and store it in array
 $('#tblCustomer').on('click', 'input[type="checkbox"]', function () {
     if ($(this).prop("checked")) {
         value_check.push($(this).val());
@@ -106,6 +108,7 @@ $('#tblCustomer').on('click', 'input[type="checkbox"]', function () {
     }
 });
 
+// On button click send checkbox values to controller
 $("#multiSelectCustomer").click(function () {
     $.ajax({
         url: "/Customer/MultipleSendCustomer",
