@@ -38,8 +38,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IList<ApplicationRole>> GetAllRoles(CancellationToken cancellationToken)
         {
-            var getUser = await _unitOfWorkDA.UserDA.GetRoles(cancellationToken);
-            var rolesByTenant = getUser.Where(x => x.TenantId == _currentUser.TenantId).ToList();
+            var getRole= await _unitOfWorkDA.UserDA.GetRoles(cancellationToken);
+            var rolesByTenant = getRole.Where(x => x.TenantId == _currentUser.TenantId).ToList();
             return rolesByTenant;
         }
 
@@ -47,6 +47,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var userAllData = await GetAllUsersData(cancellationToken);
             var users = from x in userAllData
+                        join y in await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken)
+                                   on new { x.UserId } equals new { y.UserId }
+                        where y.TenantId == _currentUser.TenantId
                         orderby x.UserId ascending
                         select new UserResponseDto
                         {
@@ -100,6 +103,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             applicationUser.Email = model.Email;
             applicationUser.PhoneNumber = model.PhoneNumber;
             applicationUser.IsActive = true;
+            applicationUser.EmailConfirmed = true;
             await _unitOfWorkDA.UserDA.CreateUser(applicationUser, model.Password);
 
             // Add UserId and TenantId into UserTenantMapping
@@ -143,6 +147,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var userAllData = await GetAllUsersData(cancellationToken);
             var userById = userAllData.Where(x => x.UserId == Id).FirstOrDefault();
             userById.IsActive = false;
+            userById.EmailConfirmed = false;
+            userById.IsDeleted = true;
             await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
             return _mapper.Map<UserRequestDto>(userById);
         }

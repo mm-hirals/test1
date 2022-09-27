@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Frames;
-using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
@@ -14,7 +15,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
 
-        public FrameController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public FrameController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;

@@ -4603,6 +4603,12 @@ textarea.form-control-lg {
   width: 100%;
 }
 
+.tab-content {
+  max-height: calc(100vh - 350px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px 5px 0;
+}
 .tab-content > .tab-pane {
   display: none;
 }
@@ -11385,7 +11391,7 @@ body {
 }
 
 .c-main-content--wrapper {
-  padding: 24px;
+  padding: 24px 24px 0;
   min-height: calc(100vh - 4rem - 54px);
 }
 
@@ -11399,6 +11405,36 @@ body {
 .form-group .dimension-input {
   font-size: 10px;
   font-style: italic;
+}
+.form-group .form-label {
+  font-size: 13px;
+  line-height: 100%;
+  margin: 0 0 5px;
+}
+
+.form-control, .form-select {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.form-control::-moz-placeholder, .form-select::-moz-placeholder {
+  font-size: 12px;
+  text-align: left;
+}
+.form-control:-ms-input-placeholder, .form-select:-ms-input-placeholder {
+  font-size: 12px;
+  text-align: left;
+}
+.form-control::placeholder, .form-select::placeholder {
+  font-size: 12px;
+  text-align: left;
+}
+.form-control option, .form-select option {
+  font-size: 12px;
+}
+.form-control[readonly], .form-select[readonly] {
+  opacity: 0.7;
+  pointer-events: none;
+  background: #e9ecef;
 }
 
 .control-label {
@@ -11500,6 +11536,13 @@ body {
   border-radius: 0.5rem;
 }
 
+.text-danger {
+  font-size: 12px;
+}
+.text-danger > * {
+  font-size: 12px;
+}
+
 .nav-tabs {
   display: flex;
   flex-flow: row;
@@ -11526,7 +11569,7 @@ body {
   width: 100%;
 }
 .nav-tabs .nav-link.active {
-  font-weight: 600;
+  font-weight: 700;
   background-color: transparent;
 }
 .nav-tabs .nav-link + .nav-link {
@@ -11552,7 +11595,7 @@ header .btn-check:focus + .btn, header .btn:focus {
 .c-card--wrapper {
   background: #fafafa;
   border-radius: 6px;
-  box-shadow: 2px 2px 15px 0px rgba(32, 32, 32, 0.1);
+  box-shadow: 2px 2px 12px -1px rgba(32, 32, 32, 0.1);
 }
 .c-card--header {
   padding: 16px;
@@ -11581,9 +11624,9 @@ header .btn-check:focus + .btn, header .btn:focus {
   padding: 0;
 }
 .c-card--header-title {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
-  color: #454545;
+  color: #4b49ac;
   margin-bottom: 0;
 }
 .c-card--header-no-border {
@@ -11651,12 +11694,6 @@ header .btn-check:focus + .btn, header .btn:focus {
   outline: 1px solid transparent !important;
   vertical-align: middle;
 }
-.table tr.even, .table tr:nth-child(even) {
-  background-color: #e6e6f4 !important;
-}
-.table tr.odd, .table tr:nth-child(odd) {
-  background-color: #f0f2f4 !important;
-}
 .table tr td {
   color: #202020 !important;
   border: 0;
@@ -11690,12 +11727,6 @@ header .btn-check:focus + .btn, header .btn:focus {
   border-bottom: 1px solid #d1d1d1;
   color: #4b49ac;
 }
-.table.c-table tr:nth-child(odd) {
-  background-color: transparent !important;
-}
-.table.c-table tr:nth-child(even) {
-  background-color: #f0f2f4 !important;
-}
 .table.c-table .btn {
   padding: 1.6px 12.8px;
   padding: 4px 18px;
@@ -11711,6 +11742,15 @@ header .btn-check:focus + .btn, header .btn:focus {
   align-items: center;
   padding: 0;
   justify-content: center;
+}
+.table.c-table-bordered tr td {
+  border: 1px solid #f1f1f1;
+}
+.table.c-table-stripted tr:nth-child(odd) {
+  background-color: transparent !important;
+}
+.table.c-table-stripted tr:nth-child(even) {
+  background-color: #f0f2f4 !important;
 }
 
 .dataTables_info {
@@ -11815,11 +11855,11 @@ header .btn-check:focus + .btn, header .btn:focus {
 }
 
 .card-product--wrapper {
-  padding: 15px;
+  padding-right: 8px;
   border-radius: 10px;
   background: #fafafa;
   border-radius: 6px;
-  box-shadow: 2px 2px 15px 0px rgba(32, 32, 32, 0.1);
+  box-shadow: 2px 2px 12px -1px rgba(32, 32, 32, 0.1);
   display: flex;
 }
 .card-product--wrapper .card-product--image {
@@ -11829,9 +11869,9 @@ header .btn-check:focus + .btn, header .btn:focus {
 }
 .card-product--wrapper .card-product--image .product--image {
   position: relative;
-  width: 100px;
-  height: 100px;
-  box-shadow: 2px 2px 15px 0px rgba(32, 32, 32, 0.1);
+  width: 100%;
+  height: 100%;
+  box-shadow: 2px 2px 12px -1px rgba(32, 32, 32, 0.1);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -11872,6 +11912,32 @@ header .btn-check:focus + .btn, header .btn:focus {
   font-weight: 600;
 }
 
+.img-wrap {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #e20000;
+  font-size: 0;
+}
+.img-wrap .close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 100;
+  background-color: #fafafa;
+  padding: 5px 2px 2px;
+  color: #202020;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.2;
+  text-align: center;
+  font-size: 22px;
+  line-height: 10px;
+  border-radius: 50%;
+}
+.img-wrap:hover .close {
+  opacity: 1;
+}
+
 .table-price--input {
   display: flex;
   align-items: center;
@@ -11886,7 +11952,7 @@ header .btn-check:focus + .btn, header .btn:focus {
 .price-card--wrapper {
   position: -webkit-sticky;
   position: sticky;
-  top: 80px;
+  top: 0;
 }
 .price-card--wrapper .price-list--wrapper {
   padding: 0;
@@ -11895,7 +11961,6 @@ header .btn-check:focus + .btn, header .btn:focus {
 .price-card--wrapper .price-list--wrapper .price-list--item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   list-style-type: none;
 }
 .price-card--wrapper .price-list--wrapper .price-list--item + .price-list--item {
@@ -11906,14 +11971,27 @@ header .btn-check:focus + .btn, header .btn:focus {
 .price-card--wrapper .price-list--wrapper .price-list--title {
   font-size: 14px;
   color: #202020;
+  flex: 1 0 auto;
+  margin-right: 16px;
+  text-align: right;
 }
 .price-card--wrapper .price-list--wrapper .price-list--input {
   display: flex;
   align-items: center;
+  width: 150px;
 }
 .price-card--wrapper .price-list--wrapper .price-list--input .form-control {
   text-align: right;
   margin-left: 8px;
+}
+.price-card--wrapper .price-list--wrapper .price-list--input .form-control::-moz-placeholder {
+  text-align: right;
+}
+.price-card--wrapper .price-list--wrapper .price-list--input .form-control:-ms-input-placeholder {
+  text-align: right;
+}
+.price-card--wrapper .price-list--wrapper .price-list--input .form-control::placeholder {
+  text-align: right;
 }
 .price-card--wrapper .price-list--wrapper .price-list--value {
   font-size: 18px;
@@ -11932,7 +12010,7 @@ header .btn-check:focus + .btn, header .btn:focus {
 .c-card-footer--btn {
   position: -webkit-sticky;
   position: sticky;
-  bottom: 5px;
+  bottom: 0;
 }
 
 .filter-form--wrapper {
@@ -11960,7 +12038,7 @@ header .btn-check:focus + .btn, header .btn:focus {
   max-width: 1140px;
 }
 .login-main-wrapper .main-cards {
-  box-shadow: 0 0 5px rgba(103, 103, 103, 0.168627451);
+  box-shadow: 0 0 5px rgba(96, 96, 96, 0.17);
 }
 .login-main-wrapper .login-logo-main {
   position: absolute;
@@ -11996,7 +12074,7 @@ header .btn-check:focus + .btn, header .btn:focus {
   height: 100%;
 }
 .login-main-wrapper .form-login-right {
-  background-color: #fff;
+  background-color: #fafafa;
   height: 100%;
   width: 100%;
   padding: 50px;
@@ -12012,12 +12090,12 @@ header .btn-check:focus + .btn, header .btn:focus {
   color: #4b49ac;
 }
 .login-main-wrapper label {
-  color: #000;
+  color: #202020;
 }
 .login-main-wrapper input {
-  color: #000;
+  color: #202020;
   border: 1px solid #ced4da;
-  background-color: #fff;
+  background-color: #fafafa;
 }
 .login-main-wrapper .forgot-password {
   float: right;
@@ -12026,12 +12104,12 @@ header .btn-check:focus + .btn, header .btn:focus {
   width: 100%;
   border-radius: 0px;
   background: #4b49ac;
-  color: #fff;
+  color: #fafafa;
   border-radius: 0.25rem;
   font-size: 1.2rem;
 }
 .login-main-wrapper .back-title {
-  color: rgba(75, 73, 172, 0.6196078431);
+  color: #4b49ac, 0.62;
 }
 .login-main-wrapper .back-title a {
   text-decoration: underline;
@@ -12060,7 +12138,7 @@ header .btn-check:focus + .btn, header .btn:focus {
 .accordion-button::after {
   content: "";
   z-index: 1;
-  border: solid white;
+  border: solid #fafafa;
   border-width: 0 3px 3px 0;
   display: inline-block;
   padding: 5px;

@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.RawMaterial;
-using MidCapERP.Infrastructure.Constants;
 using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class RawMaterialController : Controller
+    public class RawMaterialController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly IToastNotification _toastNotification;
 
-        public RawMaterialController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification)
+        public RawMaterialController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _toastNotification = toastNotification;

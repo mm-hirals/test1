@@ -4,6 +4,7 @@ namespace MidCapERP.Infrastructure.Constants
     {
         public static readonly string DefaultPassword = "Password@1";
         public static readonly string TenantCookieName = "TenantId";
+        public static readonly string TenantHeaderName = "TenantId";
         public static readonly string EncryptionSecret = "MAGNUSMINDS_SAB_KA_BAAP";
 
         public static class Roles
@@ -58,6 +59,7 @@ namespace MidCapERP.Infrastructure.Constants
                 .Union(GeneratePermissionsForModule("Product"))
                 .Union(GeneratePermissionsForModule("RolePermission"))
                 .Union(GeneratePermissionsForModule("Product"))
+                .Union(GeneratePermissionsForModule("Order"))
                 .ToList();
             }
 
@@ -256,13 +258,19 @@ namespace MidCapERP.Infrastructure.Constants
             {
                 public const string View = "Permissions.CustomerTypes.View";
             }
-            
+
             public static class Product
             {
                 public const string View = "Permissions.Product.View";
                 public const string Create = "Permissions.Product.Create";
                 public const string Update = "Permissions.Product.Update";
                 public const string Delete = "Permissions.Product.Delete";
+            }
+
+            public static class Order
+            {
+                public const string View = "Permissions.Order.View";
+                public const string Create = "Permissions.Order.Create";
             }
         }
     }

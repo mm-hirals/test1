@@ -1,21 +1,24 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class SubjectTypesDA : ISubjectTypesDA
     {
         private readonly ISqlRepository<SubjectTypes> _subjectTypes;
+        private readonly CurrentUser _currentUser;
 
-        public SubjectTypesDA(ISqlRepository<SubjectTypes> subjectTypes)
+        public SubjectTypesDA(ISqlRepository<SubjectTypes> subjectTypes, CurrentUser currentUser)
         {
             _subjectTypes = subjectTypes;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<SubjectTypes>> GetAll(CancellationToken cancellationToken)
         {
-            return await _subjectTypes.GetAsync(cancellationToken);
+            return await _subjectTypes.GetAsync(cancellationToken, x => x.TenantId == _currentUser.TenantId && x.IsDeleted == false);
         }
 
         public async Task<SubjectTypes> GetById(int Id, CancellationToken cancellationToken)

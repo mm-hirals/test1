@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Role;
 using MidCapERP.Dto.RolePermission;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class RoleController : Controller
+    public class RoleController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public RoleController(IUnitOfWorkBL unitOfWorkBL)
+        public RoleController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
@@ -35,9 +36,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Role.Create)]
         public async Task<IActionResult> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
-            RoleRequestDto insertedRole = new RoleRequestDto();
-
-            insertedRole = await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
+            await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
             var roleData = await _unitOfWorkBL.RoleBL.GetAllRoles(cancellationToken);
             var insertedRoleData = roleData.Where(x => x.Name == roleRequestDto.Name).FirstOrDefault();
 

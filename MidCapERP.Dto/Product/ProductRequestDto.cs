@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Product
@@ -55,17 +56,21 @@ namespace MidCapERP.Dto.Product
         public decimal WholesalerPrice { get; set; }
 
         public string? CoverImage { get; set; }
+        public IFormFile? UploadImage { get; set; }
 
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
 
         public int TenantId { get; set; }
-        public bool IsDeleted { get; set; }
+        public byte? Status { get; set; }
         public int CreatedBy { get; set; }
+        public string CreatedByName { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
+        public string? UpdatedByName { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+        public string HostURL { get; set; }
     }
 }

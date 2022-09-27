@@ -1,5 +1,5 @@
 .card-product--wrapper {
-    padding: 15px;
+    padding-right: spacing(0.5);
     border-radius: 10px;
     background: $white;
     border-radius: $defaultRadius;
@@ -11,8 +11,8 @@
         position: relative;
         .product--image {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 100%;
             box-shadow: $defaulShaodw;
             border-radius: 10px;
             overflow: hidden;
@@ -66,6 +66,33 @@
         }
     }
 }
+.img-wrap {
+    position: relative;
+    display: inline-block;
+    border: 1px solid $errorColor;
+    font-size: 0;
+    .close{
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        z-index: 100;
+        background-color: $white;
+        padding: 5px 2px 2px;
+        color: $black;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: .2;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 50%;
+    }
+    &:hover{
+        .close{
+            opacity: 1;
+        }
+    }
+}    
 
 .table-price--input {
     display: flex;
@@ -80,14 +107,14 @@
 
 .price-card--wrapper {
     position: sticky;
-    top: 80px;
+    top: 0;
     .price-list--wrapper {
         padding: 0;
         margin: 0;
         .price-list--item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            // justify-content: space-between;
             list-style-type: none;
             +.price-list--item {
                 padding-top: 10px;
@@ -98,13 +125,20 @@
         .price-list--title {
             font-size: 14px;
             color: $black;
+            flex: 1 0 auto;
+            margin-right: spacing();
+            text-align: right;
         }
         .price-list--input {
             display: flex;
             align-items: center;
+            width: 150px;
             .form-control {
                 text-align: right;
                 margin-left: 8px;
+                &::placeholder{
+                    text-align: right;
+                }
             }
         }
         .price-list--value {
@@ -124,5 +158,5 @@
 
 .c-card-footer--btn {
     position: sticky;
-    bottom: 5px;
+    bottom: 0;
 }

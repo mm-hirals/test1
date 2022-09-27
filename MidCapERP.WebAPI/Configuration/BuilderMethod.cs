@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using MidCapERP.Infrastructure.ServiceDependency;
 using Serilog;
+using System.Reflection;
 
 namespace MidCapERP.WebAPI.Configuration
 {
@@ -41,10 +42,12 @@ namespace MidCapERP.WebAPI.Configuration
                             new string[]{}
                         }
                     });
+                    opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"), true);
                 });
             }
 
             builder.Services.ConfigureEmail(configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            builder.Services.AddCors();
             builder.Services.SetupControllers();
             builder.Services.SetupIdentityDatabase(configuration);
             builder.Services.SetupDIServices(configuration, "Bearer");

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using MidCapERP.Infrastructure.Constants;
+using MidCapERP.Core.Constants;
 
 namespace MidCapERP.Admin.Middleware
 {

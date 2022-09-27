@@ -7,9 +7,9 @@ using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Polish;
-using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -34,25 +34,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<PolishResponseDto>>(data.ToList());
         }
 
-        public async Task<IList<ProductForDorpDownByModuleNoResponseDto>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IList<MegaSearchResponse>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-            return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new ProductForDorpDownByModuleNoResponseDto(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish")).ToList();
+            return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish")).Take(10).ToList();
         }
 
         public async Task<PolishResponseDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-            var data = polishAlldata.FirstOrDefault(x => x.ModelNo.StartsWith(modelno));
+            var data = polishAlldata.Where(x => x.ModelNo == modelno);
             return _mapper.Map<PolishResponseDto>(data);
         }
 
         public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            var lookupCompanyId = await GetCompanyLookupId(cancellationToken);
+            var lookupUnitId = await GetUnitLookupId(cancellationToken);
             var polishAllData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var companyData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Company);
-            var unitData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
+            var companyData = lookupValuesAllData.Where(x => x.LookupId == lookupCompanyId);
+            var unitData = lookupValuesAllData.Where(x => x.LookupId == lookupUnitId);
             var polishResponseData = (from x in polishAllData
                                       join y in companyData on new { CompanyId = x.CompanyId } equals new { CompanyId = y.LookupValueId }
                                       join z in unitData on new { UnitId = x.UnitId } equals new { UnitId = z.LookupValueId }
@@ -146,6 +148,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UnitId = model.UnitId;
             oldData.UnitPrice = model.UnitPrice;
             oldData.ImagePath = model.ImagePath;
+        }
+
+        private async Task<int> GetCompanyLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Company)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
+        }
+
+        private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion Private Method

@@ -1,14 +1,16 @@
 ﻿@model IEnumerable<MidCapERP.Dto.Product.ProductResponseDto>
 
-<table class="table c-table" id="tblProduct">
+<table class="table c-table c-table-stripted" id="tblProduct">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.CategoryName)</th>
             <th>@Html.DisplayNameFor(model => model.ProductTitle)</th>
             <th>@Html.DisplayNameFor(model => model.ModelNo)</th>
-            <th>@Html.DisplayNameFor(model => model.CostPrice)</th>
-            <th>@Html.DisplayNameFor(model => model.RetailerPrice)</th>
-            <th>@Html.DisplayNameFor(model => model.WholesalerPrice)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedDateFormat)</th>
+            <th>@Html.DisplayNameFor(model => model.UpdatedDateFormat)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedByName)</th>
+            <th>@Html.DisplayNameFor(model => model.UpdatedByName)</th>
+            <th>@Html.DisplayNameFor(model => model.Status)</th>
             <th>Action</th>
         </tr>
     </thead>

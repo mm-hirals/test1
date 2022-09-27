@@ -16,6 +16,7 @@ namespace MidCapERP.Admin.Configuration
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<CurrentUserActionFilter>();
+            services.AddSingleton<LocalizationMiddleware>();
             services.AddMvc(options =>
             {
                 options.Filters.AddService<CurrentUserActionFilter>();
