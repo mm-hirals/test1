@@ -53,10 +53,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            Status = x.Status,
                                            CreatedByName = z.FullName,
                                            CreatedDate = x.CreatedDate,
-                                           CreatedDateFormat = x.CreatedDate.ToString("dd/MM/yyyy hh:mm"),
                                            UpdatedByName = z.FullName,
                                            UpdatedDate = x.UpdatedDate,
-                                           UpdatedDateFormat = x.UpdatedDate != null ? x.UpdatedDate.Value.ToString("dd/MM/yyyy hh:mm") : ""
                                        }).AsQueryable();
             var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -135,6 +133,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var unitData = await GetAllUnit(cancellationToken);
             var rowMaterial = await GetAllRowMaterial(cancellationToken);
             var polish = await GetAllPolish(cancellationToken);
+
             var data = (from x in productMaterialList
                             //left join start for rawmaterial
                         join y in rowMaterial on x.SubjectId equals y.RawMaterialId into rowM

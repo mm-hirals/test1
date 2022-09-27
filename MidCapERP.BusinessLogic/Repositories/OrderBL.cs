@@ -43,7 +43,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                      {
                                          OrderId = x.OrderId,
                                          OrderNo = x.OrderNo,
-                                         CreatedDateFormat = x.CreatedDate.ToString("dd/MM/yyyy hh:mm"),
                                          CustomerName = y.FirstName,
                                          Status = x.Status,
                                          GrossTotal = x.GrossTotal,
