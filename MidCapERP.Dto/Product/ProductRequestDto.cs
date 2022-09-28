@@ -9,7 +9,7 @@ namespace MidCapERP.Dto.Product
         public Int64 ProductId { get; set; }
 
         [DisplayName("Product Category")]
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         [Required]
         [DisplayName("Product Title")]
@@ -38,7 +38,7 @@ namespace MidCapERP.Dto.Product
         public string DepthNumeric { get; set; }
 
         [DisplayName("Fabric")]
-        public decimal? UsedFabric { get; set; }
+        public decimal? FabricNeeded { get; set; }
 
         [Required]
         [DisplayName("Only for wholesalers")]
@@ -55,22 +55,11 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Cost Price")]
         public decimal CostPrice { get; set; }
 
-        [Required]
-        [DisplayName("Retailer Price")]
-        public decimal RetailerPrice { get; set; }
-
-        [Required]
-        [DisplayName("Wholesaler Price")]
-        public decimal WholesalerPrice { get; set; }
-
-        public string? CoverImage { get; set; }
-        public IFormFile? UploadImage { get; set; }
-
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
 
         public int TenantId { get; set; }
-        public byte? Status { get; set; }
+        public int Status { get; set; }
         public int CreatedBy { get; set; }
         public string CreatedByName { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -79,6 +68,5 @@ namespace MidCapERP.Dto.Product
         public string? UpdatedByName { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
-        public string HostURL { get; set; }
     }
 }
