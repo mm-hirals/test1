@@ -59,13 +59,13 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("GST No")]
         public string GSTNo { get; set; }
         [Required]
-        [DisplayName("Retailer Percentage")]
+        [DisplayName("Retailer SP %")]
         public decimal? RetailerPercentage { get; set; }
         [Required]
-        [DisplayName("WholeSeller Percentage")]
+        [DisplayName("WholeSaler SP %")]
         public decimal? WholeSellerPercentage { get; set; }
         [Required]
-        [DisplayName("Architect Discount")]
+        [DisplayName("Architect Discount % ")]
         public decimal? ArchitectDiscount { get; set; }
     }
 }

@@ -7,14 +7,37 @@
 }
 
 @Html.Hidden("hdnTenantId", tenantId)
-<div id="content">
-
+<div class="">
 	@if (tenantId > 0)
 	{
 		<partial name="_TenantDetailPartial" model="@Model" />
-
-		<partial name="_TenantBankDetailTable" model="null" />
-
+		@*<nav class="product-nav-tab--sticky">
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Bank Details</button>
+			</div>
+		</nav>*@
+		@*<div class="tab-content" id="nav-tabContent">
+			<div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+				<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+					<div class="c-card--header">
+						<h4 class="c-card--header-title">Bank Details</h4>
+						<div class="c-card--header-action">
+							<a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary"
+						   data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.TenantId" data-ajax-update="#divUpdateCustomerAddresses"
+						   data-ajax="true" data-ajax-mode="replace">Create New</a>
+						</div>
+					</div>
+					<div class="c-card--body">
+						<div class="row">
+							<div class="col-12">
+								<partial name="_TenantBankDetailTable" model="null" />
+								<div id="divUpdateCustomerAddresses"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>*@
 	}
 </div>
 
@@ -27,4 +50,4 @@
 
 		<script src="~/js/Profile.js" asp-append-version="true"></script>
 	}
-}
+	}

@@ -27,7 +27,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IPolishBL PolishBL { get; }
         public IUserTenantMappingBL UserTenantMappingBL { get; }
         public IUserBL UserBL { get; }
-
         public ICustomerAddressesBL CustomerAddressesBL { get; }
         public IProductBL ProductBL { get; }
         public IRoleBL RoleBL { get; }

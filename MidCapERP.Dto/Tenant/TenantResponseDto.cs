@@ -45,13 +45,13 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("GST No")]
         public string GSTNo { get; set; }
         [Required]
-        [DisplayName("Retailer Percentage")]
+        [DisplayName("Retailer SP %")]
         public decimal? RetailerPercentage { get; set; }
         [Required]
-        [DisplayName("WholeSeller Percentage")]
+        [DisplayName("WholeSaler SP %")]
         public decimal? WholeSellerPercentage { get; set; }
         [Required]
-        [DisplayName("Architect Discount")]
+        [DisplayName("Architect Discount %")]
         public decimal? ArchitectDiscount { get; set; }
         public string IsDeleted { get; set; }
         public string CreatedBy { get; set; }
@@ -65,9 +65,7 @@ namespace MidCapERP.Dto.Tenant
         public string? FacebookURL { get; set; }
         public string? InstagramURL { get; set; }
       
-        public TenantBankDetailResponseDto BankDetail { get; set; }
+        public List<TenantBankDetailResponseDto> BankDetail { get; set; }
         
-
-
     }
 }

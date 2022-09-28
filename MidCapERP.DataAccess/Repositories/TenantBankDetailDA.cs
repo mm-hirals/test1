@@ -1,26 +1,29 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class TenantBankDetailDA : ITenantBankDetailDA
     {
         private readonly ISqlRepository<TenantBankDetail> _tenantBankDetail;
+        private readonly CurrentUser _currentUser;
 
-        public TenantBankDetailDA(ISqlRepository<TenantBankDetail> tenantBankDetail)
+        public TenantBankDetailDA(ISqlRepository<TenantBankDetail> tenantBankDetail,CurrentUser currentUser)
         {
             _tenantBankDetail = tenantBankDetail;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<TenantBankDetail>> GetAll(CancellationToken cancellationToken)
         {
-            return await _tenantBankDetail.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _tenantBankDetail.GetAsync(cancellationToken, x => x.IsDeleted == false && x.TenantId == _currentUser.TenantId);
         }
 
         public async Task<TenantBankDetail> GetById(int Id, CancellationToken cancellationToken)
         {
-            return await _tenantBankDetail.GetByIdAsync(Convert.ToInt64(Id), cancellationToken);
+            return (await _tenantBankDetail.GetAsync( cancellationToken,x=>x.TenantId == _currentUser.TenantId)).FirstOrDefault();
         }
 
         public async Task<TenantBankDetail> CreateTenantBankDetail(TenantBankDetail model, CancellationToken cancellationToken)
