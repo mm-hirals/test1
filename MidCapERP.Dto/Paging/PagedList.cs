@@ -28,7 +28,7 @@ namespace MidCapERP.Dto.Paging
 
             if (dataTableFilterDto.Order != null && dataTableFilterDto.Order.Any())
             {
-                string sortBy = dataTableFilterDto.Columns[dataTableFilterDto.Order[0].column].name;
+                string sortBy = dataTableFilterDto.Columns[dataTableFilterDto.Order[0].column].data;
                 string sortDirection = dataTableFilterDto.Order[0].dir.ToLower();
                 source = source.OrderBy(sortBy + " " + sortDirection);
             }

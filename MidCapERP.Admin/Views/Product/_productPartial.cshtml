@@ -66,17 +66,17 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label">
-                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth)</span>
+                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth) </span>In inches
                             </label>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input asp-for="Width" type="text" class="form-control" placeholder="Width">
+                                    <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width">
                                 </div>
                                 <div class="col-md-4">
-                                    <input asp-for="Height" type="text" class="form-control" placeholder="Height">
+                                    <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height">
                                 </div>
                                 <div class="col-md-4">
-                                    <input asp-for="Depth" type="text" class="form-control" placeholder="Depth">
+                                    <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth">
                                 </div>
                                 <span asp-validation-for="Width" class="text-danger"></span>
                                 <span asp-validation-for="Height" class="text-danger"></span>
@@ -85,47 +85,18 @@
                         </div>
                     </div>
                 </div>
+
                 @if (Model?.ProductId > 0)
                 {
-                    <div class="col-md-3">
-                        <div class="product-info--item">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    Created Name/Date
-                                </label>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <label class="form-control">This Product is created by @Model.CreatedByName</label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input asp-for="CreatedByName" class="form-control" readonly="readonly" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-8">
+                        <small>Product has been created by <strong>@Model.CreatedByName</strong> on <strong>@Model.CreatedDate</strong></small>
+                        @if (@Model.UpdatedDate != null && @Model.UpdatedByName != null)
+                        {
+                            <small class="ms-3">Product has been updated by <strong>@Model.UpdatedByName</strong> on <strong>@Model.UpdatedDate</strong></small>
+                        }
                     </div>
-                    @if (@Model.UpdatedDate != null && @Model.UpdatedByName != null)
-                    {
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Updated Name/Date
-                                    </label>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input asp-for="UpdatedDate" type="date" class="form-control" readonly="readonly" />
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input asp-for="UpdatedByName" class="form-control" readonly="readonly" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
                 }
-                <div class="col-12">
+                <div class="@(Model?.ProductId > 0 ? "col-4" : "col-12")">
                     <div class="text-end pb-2">
                         @*<input type="file" asp-for="UploadImage" class="form-control" />*@
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">

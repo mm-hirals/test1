@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities;
 using MidCapERP.DataEntities.Models;
@@ -22,7 +23,11 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             if (dataBaseEnvironment == "MSSQL")
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MidCapERP.DataEntities")));
+                {
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                        options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MidCapERP.DataEntities"));
+                });
             }
 
             if (dataBaseEnvironment == "MYSQL")

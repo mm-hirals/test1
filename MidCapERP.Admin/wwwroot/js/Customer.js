@@ -29,21 +29,22 @@ $(function () {
         ],
         "columns": [
             {
-                "render": function (data, type, row) {
+                "bSortable": false,
+                "mRender": (data, type, row) => {
                     return '<div class="c-action-btn-group justify-content-start"><input type="checkbox" class="case" value="' + row.customerId + '" id="' + row.customerId + '" /></div>';
                 }
             },
             {
-                "render": (data, type, full) => {
-                    return full.firstName + " " + full.lastName;
+                "render": (data, type, row) => {
+                    return row.firstName + " " + row.lastName;
                 }
             },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
             {
-                "mData": null, "bSortable": false,
-                "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + o.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                "bSortable": false,
+                "mRender": (data, type, row) => {
+                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Customer/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
                 }
             }
         ]
