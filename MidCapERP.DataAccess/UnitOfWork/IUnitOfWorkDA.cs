@@ -32,5 +32,6 @@ namespace MidCapERP.DataAccess.UnitOfWork
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
         Task rollbackTransactionAsync();
+        ITenantBankDetailDA TenantBankDetailDA { get; }
     }
 }
