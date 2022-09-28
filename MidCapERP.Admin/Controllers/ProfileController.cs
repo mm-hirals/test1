@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
@@ -15,7 +14,7 @@ namespace MidCapERP.Admin.Controllers
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly CurrentUser _currentUser;
 
-        public ProfileController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser): base(localizer)
+        public ProfileController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _currentUser = currentUser;
@@ -29,14 +28,13 @@ namespace MidCapERP.Admin.Controllers
             //var BankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetAll(cancellationToken);
             return View("Index", Profile);
         }
-       
+
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
         public async Task<IActionResult> GetFilterTenantBankDetailData([FromForm] TenantBankDetailDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.TenantBankDetailBL.GetFilterTenantBankDetailData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
-        
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
@@ -67,7 +65,6 @@ namespace MidCapERP.Admin.Controllers
         //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
         //public async Task<IActionResult> UpdateTenantBankDetail(int Id, CancellationToken cancellationToken)
         //{
-
         //    var customers = await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
         //    return View("Index");
         //}
@@ -79,6 +76,5 @@ namespace MidCapERP.Admin.Controllers
         //    await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
         //    return RedirectToAction("Index");
         //}
-
     }
 }

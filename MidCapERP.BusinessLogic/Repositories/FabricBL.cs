@@ -10,7 +10,6 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
-using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {

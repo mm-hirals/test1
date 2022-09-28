@@ -33,21 +33,21 @@ namespace MidCapERP.BusinessLogic.Repositories
             var tenantBankDetailAllData = await _unitOfWorkDA.TenantBankDetailDA.GetAll(cancellationToken);
             var tenant = await _unitOfWorkDA.TenantDA.GetAll(cancellationToken);
             var tenantBankDetailResponseData = (from x in tenantBankDetailAllData
-                                                 join y in tenant on x.TenantId equals y.TenantId
-                                                 where x.TenantId == y.TenantId
-                                                 select new TenantBankDetailResponseDto()
-                                                 {
-                                                     TenantBankDetailId = Convert.ToInt16(x.TenantBankDetailId),
-                                                     TenantId = Convert.ToInt16(x.TenantId),
-                                                     BankName = x.BankName,
-                                                     AccountName = x.AccountName,
-                                                     AccountNo = x.AccountNo,
-                                                     BranchName = x.BranchName,
-                                                     AccountType = x.AccountType,
-                                                     IFSCCode = x.IFSCCode,
-                                                     UPIId = x.UPIId,
-                                                     QRCode = x.QRCode,
-                                                 }).AsQueryable();
+                                                join y in tenant on x.TenantId equals y.TenantId
+                                                where x.TenantId == y.TenantId
+                                                select new TenantBankDetailResponseDto()
+                                                {
+                                                    TenantBankDetailId = Convert.ToInt16(x.TenantBankDetailId),
+                                                    TenantId = Convert.ToInt16(x.TenantId),
+                                                    BankName = x.BankName,
+                                                    AccountName = x.AccountName,
+                                                    AccountNo = x.AccountNo,
+                                                    BranchName = x.BranchName,
+                                                    AccountType = x.AccountType,
+                                                    IFSCCode = x.IFSCCode,
+                                                    UPIId = x.UPIId,
+                                                    QRCode = x.QRCode,
+                                                }).AsQueryable();
             var tenantBankDetailData = new PagedList<TenantBankDetailResponseDto>(tenantBankDetailResponseData, dataTableFilterDto);
             return new JsonRepsonse<TenantBankDetailResponseDto>(dataTableFilterDto.Draw, tenantBankDetailData.TotalCount, tenantBankDetailData.TotalCount, tenantBankDetailData);
         }
@@ -63,12 +63,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.TenantBankDetailDA.CreateTenantBankDetail(tenantBankDetailoInsert, cancellationToken);
             return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
+
         public async Task<TenantBankDetailResponseDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await TenantGetById(Id, cancellationToken);
             return _mapper.Map<TenantBankDetailResponseDto>(data);
         }
-        
+
         public async Task<TenantBankDetailRequestDto> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await TenantGetById(Id, cancellationToken);
