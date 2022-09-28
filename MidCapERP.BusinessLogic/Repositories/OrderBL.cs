@@ -131,6 +131,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<OrderApiRequestDto> CreateOrder(OrderApiRequestDto model, CancellationToken cancellationToken)
         {
             var orderToInsert = _mapper.Map<Order>(model);
+            orderToInsert.TenantId = _currentUser.TenantId;
             orderToInsert.Status = (byte)ProductStatusEnum.Pending;
             orderToInsert.CreatedBy = _currentUser.UserId;
             orderToInsert.CreatedDate = DateTime.Now;
@@ -171,7 +172,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderSetItem.OrderSetId = orderSetData.OrderSetId;
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
-
+                    orderSetItem.ProductImage =String.Empty;
+                        /*
                     if (itemData.SubjectTypeId == ProductSubjectTypeId)
                     {
                         var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;
@@ -195,7 +197,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     else
                     {
                         orderSetItem.ProductImage = string.Empty;
-                    }
+                    }*/
                     orderSetItem.Width = itemData.Width;
                     orderSetItem.Height = itemData.Height;
                     orderSetItem.Depth = itemData.Depth;
@@ -236,6 +238,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 OrderApiResponseDto orderApiResponseDto = new OrderApiResponseDto();
                 // Get Order data by OrderId
                 var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+
+                if(orderById == null)
+                {
+                    throw new Exception("Order not found");
+                }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
 
                 // Get Order Sets Data
@@ -315,7 +322,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             foreach(var  set in model.OrderSetRequestDto)
             {
-                foreach(var item in set.OrderSetItemRequestDto)
+                foreach (var item in set.OrderSetItemRequestDto)
                 {
                     if (item.SubjectTypeId == ProductSubjectTypeId)
                     {
@@ -338,10 +345,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                         item.ProductImage = image;
                     }
                     MapToDbObject(model, oldData, set, item);
+                    var orderSetItem = _mapper.Map<OrderSetItem>(item);
 
-                    /*await _unitOfWorkDA.OrderSetDA.UpdateOrder(item.OrderSetId, item, cancellationToken);*/
+                    await _unitOfWorkDA.OrderSetItemDA.UpdateOrder(50, orderSetItem, cancellationToken);
                 }
+                var orderSet = _mapper.Map<OrderSet>(set);
+                await _unitOfWorkDA.OrderSetDA.UpdateOrder(14, orderSet, cancellationToken);
             }
+
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
             return _mapper.Map<OrderApiRequestDto>(data);
         }

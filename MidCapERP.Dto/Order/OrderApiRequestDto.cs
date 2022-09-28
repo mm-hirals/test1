@@ -6,7 +6,7 @@ namespace MidCapERP.Dto.Order
 {
     public class OrderApiRequestDto
     {
-        [JsonIgnore]
+        
         public long OrderId { get; set; }
 
         public string OrderNo { get; set; }
@@ -46,6 +46,7 @@ namespace MidCapERP.Dto.Order
         [Required]
         public bool IsDraft { get; set; }
 
+        [JsonIgnore]
         [Required]
         public int TenantId { get; set; }
 
