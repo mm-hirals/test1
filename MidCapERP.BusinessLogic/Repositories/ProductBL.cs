@@ -4,7 +4,6 @@ using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -41,9 +40,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == lookupId);
+            var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var productResponseData = (from x in productAllData
                                        join y in cateagoryData on x.CategoryId equals y.LookupValueId
-                                       join z in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken) on x.CreatedBy equals z.UserId
+                                       join z in allUsers on x.CreatedBy equals z.UserId
+                                       join u in allUsers on x.UpdatedBy equals (int?)u.UserId into updated
+                                       from updatedMat in updated.DefaultIfEmpty()
                                        select new ProductResponseDto()
                                        {
                                            ProductId = x.ProductId,
@@ -53,8 +55,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            Status = x.Status,
                                            CreatedByName = z.FullName,
                                            CreatedDate = x.CreatedDate,
-                                           UpdatedByName = z.FullName,
-                                           UpdatedDate = x.UpdatedDate,
+                                           CreatedDateFormat = x.CreatedDate.ToString("dd/MM/yyyy hh:mm"),
+                                           UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : z.FullName,
+                                           UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : x.CreatedDate,
+                                           UpdatedDateFormat = x.UpdatedDate != null ? x.UpdatedDate.Value.ToString("dd/MM/yyyy hh:mm") : x.CreatedDate.ToString("dd/MM/yyyy hh:mm")
                                        }).AsQueryable();
             var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -72,19 +76,24 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
 
                 ProductRequestDto productRequestDto = new ProductRequestDto();
+                var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
                 var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
-                                   join y in await _unitOfWorkDA.UserDA.GetUsers(cancellationToken)
-                                   on x.CreatedBy equals y.UserId
+                                   join y in allUsers on x.CreatedBy equals y.UserId
+                                   join z in allUsers on x.UpdatedBy equals (int?)z.UserId into updated
+                                   from updatedMat in updated.DefaultIfEmpty()
                                    select new ProductRequestDto()
                                    {
                                        ProductId = Id,
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       Width = x.Width / 12,
-                                       Height = x.Height / 12,
-                                       Depth = x.Depth / 12,
+                                       WidthNumeric = Convert.ToString(Math.Floor(x.Width)),
+                                       HeightNumeric = Convert.ToString(Math.Floor(x.Height)),
+                                       DepthNumeric = Convert.ToString(Math.Floor(x.Depth)),
+                                       Width = x.Width,
+                                       Height = x.Height,
+                                       Depth = x.Depth,
                                        UsedFabric = x.UsedFabric,
                                        IsVisibleToWholesalers = x.IsVisibleToWholesalers,
                                        TotalDaysToPrepare = x.TotalDaysToPrepare,
@@ -98,8 +107,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        TenantId = x.TenantId,
                                        CreatedByName = y.FullName,
                                        CreatedDate = x.CreatedDate,
-                                       UpdatedByName = y.FullName,
-                                       UpdatedDate = x.UpdatedDate,
+                                       UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : y.FullName,
+                                       UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : x.CreatedDate,
                                    }).FirstOrDefault();
 
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
@@ -183,7 +192,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                      IsDeleted = false
                                  }).ToList();
 
-            productMain.ProductMaterialRequestDto = data.OrderByDescending(p => p.SubjectTypeId).ToList();
+            productMain.ProductMaterialRequestDto = data.OrderBy(p => p.SubjectTypeId).ToList();
             return productMain;
         }
 
@@ -195,9 +204,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
         {
-            model.Width = model.Width * 12;
-            model.Height = model.Height * 12;
-            model.Depth = model.Depth * 12;
+            model.Width = Convert.ToDecimal(model.WidthNumeric);
+            model.Height = Convert.ToDecimal(model.HeightNumeric);
+            model.Depth = Convert.ToDecimal(model.DepthNumeric);
             var productToInsert = _mapper.Map<Product>(model);
             if (model.UploadImage != null)
                 productToInsert.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
@@ -257,12 +266,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                     UpdateData(getProductById);
                     getProductById.ProductTitle = model.ProductTitle;
                     getProductById.ModelNo = model.ModelNo;
-                    getProductById.Width = model.Width * 12;
-                    getProductById.Height = model.Height * 12;
-                    getProductById.Depth = model.Depth * 12;
+                    getProductById.Width = Convert.ToDecimal(model.WidthNumeric);
+                    getProductById.Height = Convert.ToDecimal(model.HeightNumeric);
+                    getProductById.Depth = Convert.ToDecimal(model.DepthNumeric);
                     if (model.UploadImage != null)
                         getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-                    getProductById.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(getProductById.ProductId));
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 

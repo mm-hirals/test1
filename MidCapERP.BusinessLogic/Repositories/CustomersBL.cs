@@ -138,10 +138,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             customerToInsert.CreatedUTCDate = DateTime.UtcNow;
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber));
-            if(customerExistOrNot != null)
+            if (customerExistOrNot != null)
             {
                 customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-                var  data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
             else
@@ -156,12 +156,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 refferedCustomer.CreatedUTCDate = DateTime.UtcNow;
                 var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
                 customerToInsert.RefferedBy = customer.CustomerId;
-                var  data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
         }
 
-        public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id,CustomerApiRequestDto model, CancellationToken cancellationToken)
+        public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerGetById(Id, cancellationToken);
             oldData.UpdatedBy = _currentUser.UserId;

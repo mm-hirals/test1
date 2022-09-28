@@ -19,6 +19,8 @@ namespace MidCapERP.Infrastructure.Constants
 
         public static class Permissions
         {
+            //public const object TenantBankDetail;
+
             public static List<string> GeneratePermissionsForModule(string module)
             {
                 return new List<string>()
@@ -59,6 +61,8 @@ namespace MidCapERP.Infrastructure.Constants
                 .Union(GeneratePermissionsForModule("Product"))
                 .Union(GeneratePermissionsForModule("RolePermission"))
                 .Union(GeneratePermissionsForModule("Product"))
+                .Union(GeneratePermissionsForModule("Tenant"))
+                .Union(GeneratePermissionsForModule("TenantBankDetail"))
                 .Union(GeneratePermissionsForModule("Order"))
                 .ToList();
             }
@@ -272,6 +276,17 @@ namespace MidCapERP.Infrastructure.Constants
                 public const string View = "Permissions.Order.View";
                 public const string Create = "Permissions.Order.Create";
                 public const string Update = "Permissions.Order.Update";
+            }
+
+            public static class Tenant
+            {
+                public const string View = "Permissions.Tenant.View";
+                public const string Update = "Permissions.Tenant.Update";
+            }
+            public static class TenantBankDetail
+            {
+                public const string View = "Permissions.TenantBankDetail.View";
+                public const string Update = "Permissions.TenantBankDetail.Update";
             }
         }
     }

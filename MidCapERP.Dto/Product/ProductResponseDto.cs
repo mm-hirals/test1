@@ -37,23 +37,30 @@ namespace MidCapERP.Dto.Product
         public string? CoverImage { get; set; }
         public string? QRImage { get; set; }
         public int TenantId { get; set; }
+
+        [DisplayName("Publish")]
         public byte? Status { get; set; }
+
         public int CreatedBy { get; set; }
+
+        [DisplayName("Created By")]
         public string CreatedByName { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Created Date")]
-        public string CreatedDateFormat => CreatedDate.ToLongDateString();
+        public string CreatedDateFormat { get; set; }
 
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
+
+        [DisplayName("Last Modified By")]
         public string? UpdatedByName { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
 
-        [DisplayName("Updated Date")]
-        public string UpdatedDateFormat => UpdatedDate.HasValue ? UpdatedDate.Value.ToLongDateString() : ""; 
+        [DisplayName("Last Modified On")]
+        public string UpdatedDateFormat { get; set; }
 
         public DateTime? UpdatedUTCDate { get; set; }
     }

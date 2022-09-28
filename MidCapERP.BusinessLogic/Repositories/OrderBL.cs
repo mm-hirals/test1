@@ -131,11 +131,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<OrderApiRequestDto> CreateOrder(OrderApiRequestDto model, CancellationToken cancellationToken)
         {
             var orderToInsert = _mapper.Map<Order>(model);
+            orderToInsert.TenantId = _currentUser.TenantId;
             orderToInsert.Status = (byte)ProductStatusEnum.Pending;
             orderToInsert.CreatedBy = _currentUser.UserId;
             orderToInsert.CreatedDate = DateTime.Now;
             orderToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.OrderDA.CreateOrder(orderToInsert, cancellationToken);
+           
 
             //Create Orderset Base On Order
             foreach (var setData in model.OrderSetRequestDto)
@@ -159,32 +161,43 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
                     var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
 
+                    var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+                    var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+                    var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+
+                    var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+
                     OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
                     orderSetItem.OrderId = data.OrderId;
                     orderSetItem.OrderSetId = orderSetData.OrderSetId;
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
-
-                    if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
+                    orderSetItem.ProductImage =String.Empty;
+                        /*
+                    if (itemData.SubjectTypeId == ProductSubjectTypeId)
                     {
                         var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
                         orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
-                    else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.RawMaterials))
+                    else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
                     {
                         var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
                         orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
-                    else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
+                    else if (itemData.SubjectTypeId == polishSubjectTypeId)
                     {
                         var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
                         orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
-                    else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
+                    else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
                     {
                         var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
                         orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
+                    else
+                    {
+                        orderSetItem.ProductImage = string.Empty;
+                    }*/
                     orderSetItem.Width = itemData.Width;
                     orderSetItem.Height = itemData.Height;
                     orderSetItem.Depth = itemData.Depth;
@@ -225,6 +238,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 OrderApiResponseDto orderApiResponseDto = new OrderApiResponseDto();
                 // Get Order data by OrderId
                 var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+
+                if(orderById == null)
+                {
+                    throw new Exception("Order not found");
+                }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
 
                 // Get Order Sets Data
@@ -294,6 +312,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
             var oldData = await OrderGetById(Id, cancellationToken);
 
+            var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+            var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+            var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -301,28 +324,33 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 foreach (var item in set.OrderSetItemRequestDto)
                 {
-                    if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
+                    if (item.SubjectTypeId == ProductSubjectTypeId)
                     {
                         var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
                         item.ProductImage = image;
                     }
-                    else if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.RawMaterials))
+                    else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
                     {
                         var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == item.SubjectId).ImagePath;
                         item.ProductImage = image;
                     }
-                    else if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
+                    else if (item.SubjectTypeId == polishSubjectTypeId)
                     {
                         var image = polishData.FirstOrDefault(p => p.PolishId == item.SubjectId).ImagePath;
                         item.ProductImage = image;
                     }
-                    else if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
+                    else if (item.SubjectTypeId == FrabriSubjectTypeId)
                     {
                         var image = fabricData.FirstOrDefault(p => p.FabricId == item.SubjectId).ImagePath;
                         item.ProductImage = image;
                     }
                     MapToDbObject(model, oldData, set, item);
+                    var orderSetItem = _mapper.Map<OrderSetItem>(item);
+
+                    await _unitOfWorkDA.OrderSetItemDA.UpdateOrder(50, orderSetItem, cancellationToken);
                 }
+                var orderSet = _mapper.Map<OrderSet>(set);
+                await _unitOfWorkDA.OrderSetDA.UpdateOrder(14, orderSet, cancellationToken);
             }
 
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
@@ -350,6 +378,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return subjectTypeId;
         }
 
+        public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.RawMaterials)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+
         #region Private Method
 
         private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
@@ -362,7 +398,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data;
         }
 
-        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet, OrderSetItemRequestDto orderSetItem)
+        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet ,OrderSetItemRequestDto orderSetItem)
         {
             oldData.OrderNo = model.OrderNo;
             oldData.CustomerID = model.CustomerID;
