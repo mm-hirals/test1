@@ -176,23 +176,23 @@ namespace MidCapERP.BusinessLogic.Repositories
                     /*
                     if (itemData.SubjectTypeId == ProductSubjectTypeId)
                     {
-                        var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;
-                        orderSetItem.ProductImage = image;
+                        var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
                     {
-                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId).ImagePath;
-                        orderSetItem.ProductImage = image;
+                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (itemData.SubjectTypeId == polishSubjectTypeId)
                     {
-                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId).ImagePath;
-                        orderSetItem.ProductImage = image;
+                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
                     {
-                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId).ImagePath;
-                        orderSetItem.ProductImage = image;
+                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else
                     {
@@ -320,7 +320,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            foreach(var  set in model.OrderSetRequestDto)
+            foreach (var set in model.OrderSetRequestDto)
             {
                 foreach (var item in set.OrderSetItemRequestDto)
                 {
