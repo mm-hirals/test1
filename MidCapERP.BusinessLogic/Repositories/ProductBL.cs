@@ -271,7 +271,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Depth = Convert.ToDecimal(model.DepthNumeric);
                     if (model.UploadImage != null)
                         getProductById.CoverImage = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.Product);
-                    getProductById.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(getProductById.ProductId));
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
 
