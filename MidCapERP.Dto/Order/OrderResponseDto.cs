@@ -62,7 +62,7 @@ namespace MidCapERP.Dto.Order
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Order Date")]
-        public string CreatedDateFormat { get; set; }
+        public string CreatedDateFormat => CreatedDate.ToLongDateString();
 
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
