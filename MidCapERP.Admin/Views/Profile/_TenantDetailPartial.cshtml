@@ -1,0 +1,174 @@
+﻿@model MidCapERP.Dto.Tenant.TenantResponseDto
+
+<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+	<form asp-action="UpdateTenant" asp-controller="Profile" method="post">
+		<div class="c-card--body  p-0">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+						<div class="c-card--header">
+							<h4 class="c-card--header-title">Organization Details</h4>
+						</div>
+						<div class="c-card--body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<input asp-for="TenantId" hidden class="form-control" />
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="TenantName" class="form-label"></label>
+												<input asp-for="TenantName" type="text" class="form-control" placeholder="Tenant Name">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="FirstName" class="form-label"></label>
+												<input asp-for="FirstName" type="text" class="form-control fabric" placeholder="FirstName">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="LastName" class="form-label"></label>
+												<input asp-for="LastName" type="text" class="form-control" placeholder="LastName">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="EmailId" class="form-label"></label>
+												<input asp-for="EmailId" type="text" class="form-control fabric" placeholder="EmailId">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="PhoneNumber" class="form-label"></label>
+												<input asp-for="PhoneNumber" type="number" class="form-control" placeholder="Phonetext">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="LogoPath" class="form-label"></label>
+												<input asp-for="LogoPath" type="text" class="form-control fabric" placeholder="LogoPath">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="GSTNo" class="form-label"></label>
+												<input asp-for="GSTNo" type="number" class="form-control" placeholder="GSTNo">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+						<div class="c-card--header">
+							<h4 class="c-card--header-title">Address Details</h4>
+						</div>
+						<div class="c-card--body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="StreetAddress1" class="form-label"></label>
+												<input asp-for="StreetAddress1" type="text" class="form-control" placeholder="StreetAddress1">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="StreetAddress2" class="form-label"></label>
+												<input asp-for="StreetAddress2" type="text" class="form-control fabric" placeholder="StreetAddress2">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="Landmark" class="form-label"></label>
+												<input asp-for="Landmark" type="text" class="form-control" placeholder="Landmark">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="City" class="form-label"></label>
+												<input asp-for="City" type="text" class="form-control" placeholder="City">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="State" class="form-label"></label>
+												<input asp-for="State" type="text" class="form-control fabric" placeholder="State">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="Pincode" class="form-label"></label>
+												<input asp-for="Pincode" type="number" class="form-control" placeholder="Pincode">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+						<div class="c-card--header">
+							<h4 class="c-card--header-title">Other Configurations</h4>
+						</div>
+						<div class="c-card--body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="RetailerPercentage" class="form-label"></label>
+												<input asp-for="RetailerPercentage" type="number" class="form-control" placeholder="Retailer SP %">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="WholeSellerPercentage" class="form-label"></label>
+												<input asp-for="WholeSellerPercentage" type="number" class="form-control" placeholder="WholeSaler SP %">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="ArchitectDiscount" class="form-label"></label>
+												<input asp-for="ArchitectDiscount" type="number" class="form-control" placeholder="Architect Discount %">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row c-card-footer--btn">
+				<div class="col-12">
+					<div class="c-card--wrapper c-card-sm--wrapper">
+						<div class="c-card--footer">
+							<a class="btn btn-danger" asp-action="Index" asp-controller="Tenant">
+								Cancel
+							</a>
+							<input type="submit" value="Save" class="btn btn-primary ms-2" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+@section Scripts {
+	@{
+		<script src="~/js/Profile.js" asp-append-version="true"></script>
+	}
+	}
