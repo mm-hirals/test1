@@ -38,8 +38,11 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("GST No")]
         public string? GSTNo { get; set; }
 
-        [DisplayName("Reffered By")]
-        public long? RefferedBy { get; set; }
+        [DisplayName("Reffered Number")]
+        public string? RefferedNumber { get; set; }
+
+        [DisplayName("Reffered Name")]
+        public string? RefferedName { get; set; }
 
         public CustomerAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
 
