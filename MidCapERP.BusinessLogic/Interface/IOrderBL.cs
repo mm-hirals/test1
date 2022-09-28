@@ -18,6 +18,8 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderResponseDto> GetOrderForDetailsByOrderNo(string searchText, CancellationToken cancellation);
 
-        public Task<OrderApiResponseDto> GetOrderAll(int id,CancellationToken cancellation);
+        public Task<OrderApiResponseDto> GetOrderAll(int id, CancellationToken cancellation);
+
+        public Task<OrderApiRequestDto> UpdateOrderApi(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken);
     }
 }

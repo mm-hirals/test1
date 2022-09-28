@@ -12,6 +12,7 @@ namespace MidCapERP.Dto.OrderSetItem
         [Required]
         public long OrderId { get; set; }
 
+        [JsonIgnore]
         [Required]
         public long OrderSetId { get; set; }
 

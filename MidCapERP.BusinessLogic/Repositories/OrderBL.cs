@@ -149,23 +149,23 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var orderSetToInsert = _mapper.Map<OrderSet>(orderSet);
                 var orderSetData = await _unitOfWorkDA.OrderSetDA.CreateOrderSet(orderSetToInsert, cancellationToken);
 
+                //Create OrderSetItem Base On OrderSet
                 foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
-                    var ProductData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                     var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
                     var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
                     var polish = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
 
-                    //Create OrderSetItem Base On OrderSet
                     OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
                     orderSetItem.OrderId = data.OrderId;
                     orderSetItem.OrderSetId = orderSetData.OrderSetId;
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
-                    
+
                     if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
                     {
-                       var image = ProductData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;
+                        var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;
                         orderSetItem.ProductImage = image;
                     }
                     else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.RawMaterials))
@@ -238,12 +238,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                     var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
                     var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+                    var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
                                              join y in productData on x.SubjectId equals y.ProductId into productM
 
                                              from productMat in productM.DefaultIfEmpty()
                                              join z in polishData on x.SubjectId equals z.PolishId into polishM
+
+                                             from rawMaterial in rawMaterialData.DefaultIfEmpty()
+                                             join b in fabricData on x.SubjectId equals b.FabricId into rawMateria
 
                                              from polishMat in polishM.DefaultIfEmpty()
                                              join a in fabricData on x.SubjectId equals a.FabricId into fabricM
@@ -279,5 +283,72 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw;
             }
         }
+
+        public async Task<OrderApiRequestDto> UpdateOrderApi(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
+        {
+            var oldData = await OrderGetById(Id, cancellationToken);
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            foreach(var  set in model.OrderSetRequestDto)
+            {
+                foreach(var item in set.OrderSetItemRequestDto)
+                {
+                    MapToDbObject(model, oldData, set, item);
+                }
+            }
+            var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
+            return _mapper.Map<OrderApiRequestDto>(data);
+        }
+
+        #region Private Method
+
+        private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Order not found");
+            }
+            return data;
+        }
+
+        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet, OrderSetItemRequestDto orderSetItem)
+        {
+            oldData.OrderNo = model.OrderNo;
+            oldData.CustomerID = model.CustomerID;
+            oldData.GrossTotal = model.GrossTotal;
+            oldData.Discount = model.Discount;
+            oldData.ReferralDiscount =model.ReferralDiscount;
+            oldData.TotalAmount = model.TotalAmount;
+            oldData.GSTTaxAmount = model.GSTTaxAmount;
+            oldData.PayableAmount = model.PayableAmount;
+            oldData.DeliveryDate = model.DeliveryDate;
+            oldData.Comments = model.Comments;
+            oldData.GSTNo = model.GSTNo;
+            oldData.Status = model.Status;
+            oldData.IsDraft = model.IsDraft;
+            foreach (var set in model.OrderSetRequestDto)
+            {
+                orderSet.SetName = set.SetName;
+                orderSet.TotalAmount = set.TotalAmount;
+                foreach (var item in set.OrderSetItemRequestDto)
+                {
+                    orderSetItem.SubjectTypeId = item.SubjectTypeId;
+                    orderSetItem.SubjectId = item.SubjectId;
+                    orderSetItem.Width = item.Width;
+                    orderSetItem.Height = item.Height;
+                    orderSetItem.Depth = item.Depth;
+                    orderSetItem.Quantity = item.Quantity;
+                    orderSetItem.UnitPrice = item.UnitPrice;
+                    orderSetItem.DiscountPrice = item.DiscountPrice;
+                    orderSetItem.TotalAmount = item.TotalAmount;
+                    orderSetItem.Comment = item.Comment;
+                    orderSetItem.Status = (byte)ProductStatusEnum.Pending;
+                }
+            }
+        }
+
+        #endregion Private Method
     }
 }
