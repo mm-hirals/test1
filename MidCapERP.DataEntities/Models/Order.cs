@@ -18,8 +18,8 @@ namespace MidCapERP.DataEntities.Models
         public decimal GSTTaxAmount { get; set; }
         public decimal PayableAmount { get; set; }
         public DateTime DeliveryDate { get; set; }
-        public string Comments { get; set; }
-        public string GSTNo { get; set; }
+        public string? Comments { get; set; }
+        public string? GSTNo { get; set; }
         public int Status { get; set; }
         public bool IsDraft { get; set; }
         public int TenantId { get; set; }
