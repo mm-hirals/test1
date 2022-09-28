@@ -10,41 +10,36 @@ using MidCapERP.Dto.TenantBankDetail;
 
 namespace MidCapERP.Admin.Controllers
 {
-    public class ProfileController : Controller
+    public class ProfileController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly CurrentUser _currentUser;
 
-        public ProfileController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser)
+        public ProfileController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser): base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _currentUser = currentUser;
         }
 
         [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var Profile = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
-            var BankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetAll(cancellationToken);
+            //var BankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetAll(cancellationToken);
             return View("Index", Profile);
         }
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.View)]
+       
+        [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
         public async Task<IActionResult> GetFilterTenantBankDetailData([FromForm] TenantBankDetailDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.TenantBankDetailBL.GetFilterTenantBankDetailData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
-        public async Task<IActionResult> UpdateTenant(int Id, CancellationToken cancellationToken)
-        {
-            var tenant = await _unitOfWorkBL.TenantBL.GetById(Id, cancellationToken);
-            return View("Index");
-        }
+        
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
         public async Task<IActionResult> UpdateTenant(int Id, TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
         {
             Id = tenantRequestDto.TenantId;

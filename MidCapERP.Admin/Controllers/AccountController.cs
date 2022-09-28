@@ -100,12 +100,6 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Profile(CancellationToken cancellationToken)
-        {
-            return RedirectToAction("index", "Profile");
-        }
-
         /// <summary>
         /// Logout Method
         /// </summary>
