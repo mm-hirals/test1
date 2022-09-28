@@ -22,11 +22,20 @@ namespace MidCapERP.Dto.Product
         [Required]
         public decimal Width { get; set; }
 
+        [DisplayName("Width Numeric")]
+        public string WidthNumeric { get; set; }
+
         [Required]
         public decimal Height { get; set; }
 
+        [DisplayName("Height Numeric")]
+        public string HeightNumeric { get; set; }
+
         [Required]
         public decimal Depth { get; set; }
+
+        [DisplayName("Depth Numeric")]
+        public string DepthNumeric { get; set; }
 
         [DisplayName("Fabric")]
         public decimal? UsedFabric { get; set; }
@@ -35,7 +44,6 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Only for wholesalers")]
         public bool IsVisibleToWholesalers { get; set; }
 
-        [Required]
         [DisplayName("Total days to prepare")]
         public decimal TotalDaysToPrepare { get; set; }
 

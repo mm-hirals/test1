@@ -52,5 +52,8 @@ namespace MidCapERP.DataEntities
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderSet> OrderSet { get; set; }
         public DbSet<OrderSetItem> OrderSetItem { get; set; }
+        public DbSet<OrderSet> OrderSets { get; set; }
+        public DbSet<OrderSetItem> OrderSetItems { get; set; }
+        public DbSet<TenantBankDetail> TenantBankDetail { get; set; }
     }
 }

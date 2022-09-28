@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Core.Constants;
+using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 
 namespace MidCapERP.Admin.Controllers
@@ -49,6 +49,6 @@ namespace MidCapERP.Admin.Controllers
             Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
         }
 
-        #endregion PrivateMethod
+        #endregion PrivateMethod             
     }
 }
