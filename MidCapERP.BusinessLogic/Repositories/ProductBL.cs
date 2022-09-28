@@ -142,6 +142,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var unitData = await GetAllUnit(cancellationToken);
             var rowMaterial = await GetAllRowMaterial(cancellationToken);
             var polish = await GetAllPolish(cancellationToken);
+
             var data = (from x in productMaterialList
                             //left join start for rawmaterial
                         join y in rowMaterial on x.SubjectId equals y.RawMaterialId into rowM

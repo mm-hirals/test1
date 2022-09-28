@@ -12,12 +12,6 @@ namespace MidCapERP.WebAPI.Middleware
         /// <param name="app"></param>
         public static void UseLocalizationMiddleware(this IApplicationBuilder app)
         {
-            var options = new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US"))
-            };
-            app.UseRequestLocalization(options);
-            app.UseStaticFiles();
             app.UseMiddleware<LocalizationMiddleware>();
         }
     }
