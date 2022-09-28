@@ -19,7 +19,7 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
         {

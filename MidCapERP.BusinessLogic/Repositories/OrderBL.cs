@@ -167,23 +167,23 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
                     {
-                        var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;
-                        orderSetItem.ProductImage = image;
+                        var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.RawMaterials))
                     {
-                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId).ImagePath;
-                        orderSetItem.ProductImage = image;
+                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
                     {
-                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId).ImagePath;
-                        orderSetItem.ProductImage = image;
+                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
                     {
-                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId).ImagePath;
-                        orderSetItem.ProductImage = image;
+                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     orderSetItem.Width = itemData.Width;
                     orderSetItem.Height = itemData.Height;
@@ -293,13 +293,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
             var oldData = await OrderGetById(Id, cancellationToken);
-            
+
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            foreach(var  set in model.OrderSetRequestDto)
+            foreach (var set in model.OrderSetRequestDto)
             {
-                foreach(var item in set.OrderSetItemRequestDto)
+                foreach (var item in set.OrderSetItemRequestDto)
                 {
                     if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
                     {
@@ -324,7 +324,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     MapToDbObject(model, oldData, set, item);
                 }
             }
-            
+
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
             return _mapper.Map<OrderApiRequestDto>(data);
         }
