@@ -157,7 +157,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                     var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
                     var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var polish = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
 
                     OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
                     orderSetItem.OrderId = data.OrderId;
@@ -177,7 +177,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     }
                     else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
                     {
-                        var image = polish.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId).ImagePath;
+                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId).ImagePath;
                         orderSetItem.ProductImage = image;
                     }
                     else if (itemData.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
@@ -288,7 +288,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<OrderApiRequestDto> UpdateOrderApi(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
         {
+            var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+            var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
             var oldData = await OrderGetById(Id, cancellationToken);
+            
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -296,62 +301,33 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 foreach(var item in set.OrderSetItemRequestDto)
                 {
+                    if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
+                    {
+                        var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
+                        item.ProductImage = image;
+                    }
+                    else if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.RawMaterials))
+                    {
+                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == item.SubjectId).ImagePath;
+                        item.ProductImage = image;
+                    }
+                    else if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
+                    {
+                        var image = polishData.FirstOrDefault(p => p.PolishId == item.SubjectId).ImagePath;
+                        item.ProductImage = image;
+                    }
+                    else if (item.SubjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
+                    {
+                        var image = fabricData.FirstOrDefault(p => p.FabricId == item.SubjectId).ImagePath;
+                        item.ProductImage = image;
+                    }
                     MapToDbObject(model, oldData, set, item);
                 }
             }
+            
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
             return _mapper.Map<OrderApiRequestDto>(data);
         }
-
-        #region Private Method
-
-        private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Order not found");
-            }
-            return data;
-        }
-
-        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet, OrderSetItemRequestDto orderSetItem)
-        {
-            oldData.OrderNo = model.OrderNo;
-            oldData.CustomerID = model.CustomerID;
-            oldData.GrossTotal = model.GrossTotal;
-            oldData.Discount = model.Discount;
-            oldData.ReferralDiscount =model.ReferralDiscount;
-            oldData.TotalAmount = model.TotalAmount;
-            oldData.GSTTaxAmount = model.GSTTaxAmount;
-            oldData.PayableAmount = model.PayableAmount;
-            oldData.DeliveryDate = model.DeliveryDate;
-            oldData.Comments = model.Comments;
-            oldData.GSTNo = model.GSTNo;
-            oldData.Status = model.Status;
-            oldData.IsDraft = model.IsDraft;
-            foreach (var set in model.OrderSetRequestDto)
-            {
-                orderSet.SetName = set.SetName;
-                orderSet.TotalAmount = set.TotalAmount;
-                foreach (var item in set.OrderSetItemRequestDto)
-                {
-                    orderSetItem.SubjectTypeId = item.SubjectTypeId;
-                    orderSetItem.SubjectId = item.SubjectId;
-                    orderSetItem.Width = item.Width;
-                    orderSetItem.Height = item.Height;
-                    orderSetItem.Depth = item.Depth;
-                    orderSetItem.Quantity = item.Quantity;
-                    orderSetItem.UnitPrice = item.UnitPrice;
-                    orderSetItem.DiscountPrice = item.DiscountPrice;
-                    orderSetItem.TotalAmount = item.TotalAmount;
-                    orderSetItem.Comment = item.Comment;
-                    orderSetItem.Status = (byte)ProductStatusEnum.Pending;
-                }
-            }
-        }
-
-        #endregion Private Method
 
         public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
         {
@@ -373,5 +349,56 @@ namespace MidCapERP.BusinessLogic.Repositories
             var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
             return subjectTypeId;
         }
+
+        #region Private Method
+
+        private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Order not found");
+            }
+            return data;
+        }
+
+        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet, OrderSetItemRequestDto orderSetItem)
+        {
+            oldData.OrderNo = model.OrderNo;
+            oldData.CustomerID = model.CustomerID;
+            oldData.GrossTotal = model.GrossTotal;
+            oldData.Discount = model.Discount;
+            oldData.ReferralDiscount = model.ReferralDiscount;
+            oldData.TotalAmount = model.TotalAmount;
+            oldData.GSTTaxAmount = model.GSTTaxAmount;
+            oldData.PayableAmount = model.PayableAmount;
+            oldData.DeliveryDate = model.DeliveryDate;
+            oldData.Comments = model.Comments;
+            oldData.GSTNo = model.GSTNo;
+            oldData.Status = model.Status;
+            oldData.IsDraft = model.IsDraft;
+            foreach (var set in model.OrderSetRequestDto)
+            {
+                orderSet.SetName = set.SetName;
+                orderSet.TotalAmount = set.TotalAmount;
+                foreach (var item in set.OrderSetItemRequestDto)
+                {
+                    orderSetItem.SubjectTypeId = item.SubjectTypeId;
+                    orderSetItem.SubjectId = item.SubjectId;
+                    orderSetItem.ProductImage = item.ProductImage;
+                    orderSetItem.Width = item.Width;
+                    orderSetItem.Height = item.Height;
+                    orderSetItem.Depth = item.Depth;
+                    orderSetItem.Quantity = item.Quantity;
+                    orderSetItem.UnitPrice = item.UnitPrice;
+                    orderSetItem.DiscountPrice = item.DiscountPrice;
+                    orderSetItem.TotalAmount = item.TotalAmount;
+                    orderSetItem.Comment = item.Comment;
+                    orderSetItem.Status = (byte)ProductStatusEnum.Pending;
+                }
+            }
+        }
+
+        #endregion Private Method
     }
 }
