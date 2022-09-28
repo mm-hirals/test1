@@ -49,7 +49,7 @@ namespace MidCapERP.Dto.Product
         public DateTime CreatedDate { get; set; }
 
         [DisplayName("Created Date")]
-        public string CreatedDateFormat => CreatedDate.ToLongDateString();
+        public string CreatedDateFormat { get; set; }
 
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
