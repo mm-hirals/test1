@@ -19,7 +19,7 @@
                                         <label asp-for="CustomerTypeId" class="form-label"></label>
                                     </label>
                                     <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType"
-                                            asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
+                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
                                         <option value="" hidden disabled selected>Select Customer Type</option>
                                     </select>
                                 </div>

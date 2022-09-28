@@ -130,8 +130,8 @@ namespace MidCapERP.Admin.Controllers
             IEnumerable<SelectListItem> customerTypesSelectedList = from value in customerTypesData
                                                                     select new SelectListItem()
                                                                     {
-                                                                        Text = value.ToString(),
-                                                                        Value = value.ToString(),
+                                                                        Text = Convert.ToString(value),
+                                                                        Value = Convert.ToString((int)value),
                                                                     };
             ViewBag.CustomerType = customerTypesSelectedList;
         }
