@@ -122,3 +122,11 @@ $("#multiSelectCustomer").click(function () {
         }
     });
 });
+
+$(document).on("change", "select.customerType", (function () {
+    var val = $(this).val();
+    if ($(this).val() == 3) {
+        $(".refferedNumber").prop('disabled', true);
+        $(".refferedName").prop('disabled', true);
+    }
+}));

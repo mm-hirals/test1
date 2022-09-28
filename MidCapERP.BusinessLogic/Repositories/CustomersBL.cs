@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -140,10 +141,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             customerToInsert.CreatedUTCDate = DateTime.UtcNow;
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber));
-            if(customerExistOrNot != null)
+            if (customerExistOrNot != null)
             {
                 customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-                var  data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
             else
@@ -158,12 +159,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 refferedCustomer.CreatedUTCDate = DateTime.UtcNow;
                 var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
                 customerToInsert.RefferedBy = customer.CustomerId;
-                var  data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
         }
 
-        public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id,CustomerApiRequestDto model, CancellationToken cancellationToken)
+        public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await CustomerGetById(Id, cancellationToken);
             oldData.UpdatedBy = _currentUser.UserId;
@@ -187,11 +188,50 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedBy = _currentUser.UserId;
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+
+                if (model.CustomerTypeId == (int)CustomerTypeEnum.Architect)
+                {
+                    customerToInsert.RefferedBy = 0;
+                    data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                }
+                else
+                {
+                    if (model.RefferedNumber != null)
+                    {
+                        var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                        var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
+                        if (customerExistOrNot != null)
+                        {
+                            customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
+                            data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                        }
+                        else
+                        {
+                            Customers refferedCustomer = new Customers();
+                            refferedCustomer.TenantId = _currentUser.TenantId;
+                            refferedCustomer.LastName = String.Empty;
+                            refferedCustomer.FirstName = model.RefferedName != null ? model.RefferedName : "";
+                            refferedCustomer.PhoneNumber = model.RefferedNumber;
+                            refferedCustomer.CustomerTypeId = (int)CustomerTypeEnum.Architect;
+                            refferedCustomer.RefferedBy = 0;
+                            refferedCustomer.CreatedBy = _currentUser.UserId;
+                            refferedCustomer.CreatedDate = DateTime.Now;
+                            refferedCustomer.CreatedUTCDate = DateTime.UtcNow;
+                            var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
+                            customerToInsert.RefferedBy = customer.CustomerId;
+                            data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                        }
+                    }
+                    else
+                    {
+                        customerToInsert.RefferedBy = 0;
+                        data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                    }
+                }
 
                 CustomerAddresses catDto = new CustomerAddresses();
                 catDto.CustomerId = data.CustomerId;
-                catDto.AddressType = model.CustomerAddressesRequestDto.AddressType;
+                catDto.AddressType = "Home";
                 catDto.Street1 = model.CustomerAddressesRequestDto.Street1;
                 catDto.Street2 = model.CustomerAddressesRequestDto.Street2;
                 catDto.Landmark = model.CustomerAddressesRequestDto.Landmark;
@@ -199,7 +239,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 catDto.City = model.CustomerAddressesRequestDto.City;
                 catDto.State = model.CustomerAddressesRequestDto.State;
                 catDto.ZipCode = model.CustomerAddressesRequestDto.ZipCode;
-                catDto.IsDefault = model.CustomerAddressesRequestDto.IsDefault;
+                catDto.IsDefault = true;
                 catDto.CreatedDate = DateTime.Now;
                 catDto.CreatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(catDto, cancellationToken);
@@ -257,7 +297,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
-            oldData.RefferedBy = model.RefferedBy;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
