@@ -1,0 +1,47 @@
+.dashboard-card{
+    background-color: $primary;
+    background-image: url("https://themesbrand.com/lexa/layouts/purple/assets/images/bg-1.png");
+    background-size: 550px;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    box-shadow: 0px 0px 10px rgba($secondary, 0.2);
+    .dashboard-icon{
+        background: rgba($secondary, 0.2);
+        padding: 20px;
+        border-radius: 50px;
+        color: $white;
+        font-size: 30px;
+    }
+    h2{
+        font-size: 30px;
+    }
+}
+.Recent-order-box{
+    .recent-avtar{
+        background: rgba($primary, 0.7);
+        border-radius: 7px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        color: $white;
+    }
+    .dash-titles h6{
+        font-size: 16px;
+        margin: 0;
+    }
+    .dash-titles {
+        font-size: 13px;
+    }
+    .recent-box-right{
+        font-size: 20px;
+        font-weight: 700;;
+    }
+    .recent-avtar-danger{
+        background-color: $tertiary;
+        border-radius: 7px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        color: $white;
+    }
+}

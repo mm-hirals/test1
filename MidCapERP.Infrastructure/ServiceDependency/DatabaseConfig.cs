@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities;
 using MidCapERP.DataEntities.Models;
 
@@ -16,9 +18,32 @@ namespace MidCapERP.Infrastructure.ServiceDependency
         /// <param name="configuration"></param>
         public static void SetupIdentityDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MidCapERP.DataEntities")));
+            string dataBaseEnvironment = configuration.GetConnectionString("DataBaseEnvironment");
 
+            if (dataBaseEnvironment == "MSSQL")
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                {
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                        options.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MidCapERP.DataEntities"));
+                });
+            }
+
+            if (dataBaseEnvironment == "MYSQL")
+            {
+                services.AddDbContextPool<ApplicationDbContext>(options =>
+                {
+                    options.UseMySql(
+                        configuration.GetConnectionString("DefaultConnection"),
+                        ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection")),
+                        options => options.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null)
+                        );
+                });
+            }
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                     .AddDefaultTokenProviders()
                     .AddUserManager<UserManager<ApplicationUser>>()
@@ -27,8 +52,8 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.Configure<IdentityOptions>(
                 options =>
                 {
-                    //options.ClaimsIdentity.UserIdClaimType = TokenEnum.UserId.ToString();
-                    //options.ClaimsIdentity.UserNameClaimType = TokenEnum.Name.ToString();
+                    options.ClaimsIdentity.UserIdClaimType = TokenEnum.UserId.ToString();
+                    options.ClaimsIdentity.UserNameClaimType = TokenEnum.Name.ToString();
                     options.SignIn.RequireConfirmedEmail = true;
                     options.User.RequireUniqueEmail = true;
                     options.User.AllowedUserNameCharacters =

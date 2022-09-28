@@ -1,41 +1,39 @@
-﻿@model IEnumerable<MidCapERP.Dto.Categories.CategoriesResponseDto>
-
+﻿@model IEnumerable<MidCapERP.Dto.Category.CategoryResponseDto>
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
 }
 
-<h1>Index</h1>
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Categories</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCategoryFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+            <a asp-controller="Category" asp-action="Create"
+               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="CategoryModel.onComplete" data-ajax-update="#divUpdateCategory">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Category Name</label>
+                        <input type="text" class="form-control" placeholder="Category Name" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_CategoryTable" model="@Model" />
+        <div id="divUpdateCategory"></div>
+    </div>
+</div>
 
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.CategoryID)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CategoryName)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.CategoryID)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.CategoryName)
-				</td>
-				<td>
-					@Html.ActionLink("Update", "Update", new {id=item.CategoryID  }) |
-					@Html.ActionLink("Delete", "Delete", new { id=item.CategoryID })
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Category.js" asp-append-version="true"></script>
+    }
+}

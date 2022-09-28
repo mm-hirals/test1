@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+@*<div>
+    @if (_currentUser != null)
+    {
+    <text>
+    @_currentUser.Name
+    @_currentUser.EmailAddress
+    </text>
+    }
+
+    <h1 class="display-4">Welcome</h1>
+</div>*@
+<div class="row">
+    <div class="col-md-7 ps-4">
+        <div class="row c-card--wrapper p-3">
+            <div class="col-md-6">
+                <div class="dashboard-card d-flex justify-content-between p-3 align-items-center">
+                    <div>
+                        <i class='bx bx-cube dashboard-icon'></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Total Order</h6>
+                        <h2 class="mb-0 text-white pt-1">2,187</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="dashboard-card d-flex justify-content-between p-3 align-items-center">
+                    <div>
+                        <i class='bx bx-user-circle dashboard-icon'></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Total Customer</h6>
+                        <h2 class="mb-0 text-white pt-1">5,257</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-3">
+                <div class="dashboard-card d-flex justify-content-between p-3 align-items-center">
+                    <div>
+                        <i class='bx bx-grid-alt dashboard-icon'></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Categories</h6>
+                        <h2 class="mb-0 text-white pt-1">16</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-3">
+                <div class="dashboard-card d-flex justify-content-between p-3 align-items-center">
+                    <div>
+                        <i class='bx bxl-product-hunt dashboard-icon'></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Total Products</h6>
+                        <h2 class="mb-0 text-white pt-1">135</h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 c-card--wrapper p-0 mt-3">
+                <div class="c-card--header">
+                    <h4 class="c-card--header-title">Orders Analytics</h4>
+                </div>
+                <div class="c-card--body">
+                    <canvas id="myChart" width="800px" height="200px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="Recent-order-box c-card--wrapper h-100">
+            <div class="c-card--header">
+                <h4 class="c-card--header-title">Recent Orders</h4>
+            </div>
+            <div class="c-card--body">
+                <canvas id="myCharts" width="100%"></canvas>
+                <div class="py-3 pb-0">
+
+                    <div class="d-flex">
+                        <div class="recent-avtar me-3 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-check'></i>
+                        </div>
+                        <div class="dash-titles pt-1">
+                            <h6>Delivered Orders</h6>
+                            <p class="text-black">
+                                <span class="text-success pe-2">3.5%</span>increased
+                            </p>
+                        </div>
+                        <div class=" ms-auto my-auto">
+                            <p class="recent-box-right">1,575</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mt-3">
+                        <div class="recent-avtar-danger me-3 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-x'></i>
+                        </div>
+                        <div class="dash-titles pt-1">
+                            <h6>Cancelled Orders</h6>
+                            <p class="text-black">
+                                <span class="text-success pe-2">0.5%</span>increased
+                            </p>
+                        </div>
+                        <div class=" ms-auto my-auto">
+                            <p class="recent-box-right">100</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="c-card--wrapper p-0 mt-3">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Product Sales</h4>
+    </div>
+    <div class="c-card--body">
+        <div class="card">
+            <table class="table c-table c-table-stripted">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Model No</th>
+                        <th>Total Price</th>
+                        <th>Retailer Price</th>
+                        <th>Wholesaler Price</th>
+                        <th>Badge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-primary">Primary</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-secondary">Secondary</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-success">Success</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-info">Info</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-warning">Warning</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-danger">Danger</span></td>
+                    </tr>
+                    <tr>
+                        <td>Sofa</td>
+                        <td>Longer</td>
+                        <td>SFT123</td>
+                        <td>142250</td>
+                        <td>152250</td>
+                        <td>145250</td>
+                        <td><span class="badge bg-dark">Dark</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/chart.js"></script>

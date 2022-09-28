@@ -276,29 +276,38 @@ namespace MidCapERP.DataAccess.Generic
         /// <returns></returns>
         public async Task<IQueryable<TEntity>> GetAsync(CancellationToken cancellationToken, Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<TEntity> query = GetEntities();
-
-            if (!filter.CheckIsNull())
+            try
             {
-                query = query.Where(filter);
-            }
+                IQueryable<TEntity> query = GetEntities();
 
-            if (!includeProperties.CheckIsNull())
-            {
-                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                if (!filter.CheckIsNull())
                 {
-                    query = query.Include(includeProperty);
+                    query = query.Where(filter);
+                }
+
+                if (!includeProperties.CheckIsNull())
+                {
+                    foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        query = query.Include(includeProperty);
+                    }
+                }
+
+                if (!orderBy.CheckIsNull())
+                {
+                    return orderBy(query);
+                }
+                else
+                {
+                    return query;
                 }
             }
+            catch (Exception e)
+            {
 
-            if (!orderBy.CheckIsNull())
-            {
-                return orderBy(query);
+                throw;
             }
-            else
-            {
-                return query;
-            }
+            
         }
 
         /// <summary>

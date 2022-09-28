@@ -1,0 +1,18 @@
+// Transition
+@mixin transition($target:all, $time:0.5s, $type:ease) {
+    transition: $target $time $type;
+}
+
+// Flexbox
+@mixin flexbox($hAlign:center, $vAlign:center) {
+    display: flex;
+    justify-content: $hAlign;
+    align-items: $vAlign;
+}
+
+//Custom Width
+@for $i from 1 through 200 {
+    .c-width-#{$i} {
+        width: $i * 1px;
+    }
+}

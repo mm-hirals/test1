@@ -1,0 +1,12 @@
+body {
+    background-color: $layoutBgColor;
+}
+
+.c-main-content--wrapper {
+    padding: spacing(1.5) spacing(1.5) 0;
+    min-height: calc(100vh - #{$headerHeight} - #{$footerHeight});
+    // overflow-y: auto;
+}
+.c-width-820{
+    width: 820px;
+}

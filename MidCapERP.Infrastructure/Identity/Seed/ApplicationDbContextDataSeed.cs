@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 using System.Security.Claims;
 
 namespace MidCapERP.Infrastructure.Identity.Seed
@@ -42,10 +42,17 @@ namespace MidCapERP.Infrastructure.Identity.Seed
             var administratorRole = await roleManager.FindByNameAsync(ApplicationIdentityConstants.Roles.Administrator);
 
             //GIVE ALL PERMISSIONS TO THE ADMINISTRATOR USER
-            await AddPermissionClaim(roleManager, administratorRole, "Users");
-            await AddPermissionClaim(roleManager, administratorRole, "Role");
-            await AddPermissionClaim(roleManager, administratorRole, "Dashboard");
-            await AddPermissionClaim(roleManager, administratorRole, "Category");
+            await GrantPermissionToAdminUser(roleManager, administratorRole);
+        }
+
+        private static async Task GrantPermissionToAdminUser(RoleManager<ApplicationRole> roleManager, ApplicationRole administratorRole)
+        {
+            var collection = new List<string>() { "Users", "Role", "Dashboard", "Lookup", "Status", "Contractor", "SubjectType", "LookupValues", "ContractorCategoryMapping", "Customer", "ErrorLogs", "Category", "Company", "Unit", "FrameType", "AccessoriesType", "RawMaterial", "Accessories", "Fabric", "Frame", "Polish", "RolePermission", "Product", "Order"
+                };
+            foreach (var item in collection)
+            {
+                await AddPermissionClaim(roleManager, administratorRole, item);
+            }
         }
 
         /// <summary>

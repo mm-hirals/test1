@@ -1,0 +1,13 @@
+.c-action-btn-group {
+    >*+* {
+        margin-left: spacing();
+    }
+}
+header{
+    .btn-check:focus + .btn, .btn:focus{
+        box-shadow: none;
+    }
+}
+.btn{
+    border-radius: 4px;
+}

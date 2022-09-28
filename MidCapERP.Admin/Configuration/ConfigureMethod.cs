@@ -11,26 +11,34 @@ namespace MidCapERP.Admin.Configuration
             // seed the default data
             app.Services.SeedIdentityDataAsync().Wait();
 
+            // Set Common DateTime Format Globally
+            app.ConfigureCulture();
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Dashboard/Error");
                 app.UseHsts();
             }
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseNToastNotify();
+
             //app.UseMiddleware<UseExceptionHandlerMiddleware>();
             app.UseExceptionHandlerMiddleware();
             app.UseRouting();
+
+            // Localization implemented for message response
+            app.UseLocalizationMiddleware();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
             app.Run();
         }

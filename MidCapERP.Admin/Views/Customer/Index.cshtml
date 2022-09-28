@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MidCapERP.Dto.Customers.CustomersResponseDto>
+@{
+    ViewData["Title"] = "Customers";
+    Layout = "_Layout";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Customers</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectCustomer">Send</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerFilter"><i class='bx bx-plus me-2'></i>Filters</a>
+            <a asp-controller="Customer" asp-action="Create" class="btn btn-primary">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input id="customerName" type="text" class="form-control" placeholder="Customer Name" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input id="customerMobileNo" type="text" class="form-control" placeholder="Customer PhoneNumber" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">From Date</label>
+                        <input id="customerFromDate" type="date" class="form-control" placeholder="From Date" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">To Date</label>
+                        <input id="customerToDate" type="date" class="form-control" placeholder="To Date" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_CustomerTable" />
+        <div id="divUpdateCustomer"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Customer.js" asp-append-version="true"></script>
+    }
+    } 

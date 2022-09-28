@@ -1,0 +1,162 @@
+.card-product--wrapper {
+    padding-right: spacing(0.5);
+    border-radius: 10px;
+    background: $white;
+    border-radius: $defaultRadius;
+    box-shadow: $defaulShaodw;
+    display: flex;
+    .card-product--image {
+        flex: 1 0 120px;
+        max-width: 120px;
+        position: relative;
+        .product--image {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            box-shadow: $defaulShaodw;
+            border-radius: 10px;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        .edit--image {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: $primary;
+            color: $white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 13px;
+        }
+    }
+    .card-prpoduct-cotent--wrapper {
+        flex: 1 0 calc(100% - 120px);
+        max-width: calc(100% - 120px);
+        padding-left: 25px;
+        // .product-info--wrapper {
+        //     flex: 0 1 auto;
+        //     display: flex;
+        //     align-items: center;
+        // }
+        .product-info--item {
+            // padding: 10px 15px;
+            // margin: 0 15px;
+            +.product-info--item {
+                // margin-left: 30px;
+            }
+        }
+        .product--label {
+            display: block;
+            font-size: 14px;
+            color: $formLabelColor;
+        }
+        .product--value {
+            font-size: 18px;
+            color: $primary;
+            font-weight: 600;
+        }
+    }
+}
+.img-wrap {
+    position: relative;
+    display: inline-block;
+    border: 1px solid $errorColor;
+    font-size: 0;
+    .close{
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        z-index: 100;
+        background-color: $white;
+        padding: 5px 2px 2px;
+        color: $black;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: .2;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 50%;
+    }
+    &:hover{
+        .close{
+            opacity: 1;
+        }
+    }
+}    
+
+.table-price--input {
+    display: flex;
+    align-items: center;
+    .form-label {
+        margin: 0 5px 0 0;
+    }
+    .form-control {
+        width: 200px;
+    }
+}
+
+.price-card--wrapper {
+    position: sticky;
+    top: 0;
+    .price-list--wrapper {
+        padding: 0;
+        margin: 0;
+        .price-list--item {
+            display: flex;
+            align-items: center;
+            // justify-content: space-between;
+            list-style-type: none;
+            +.price-list--item {
+                padding-top: 10px;
+                margin-top: 10px;
+                border-top: 1px dashed rgba($gray, 0.2);
+            }
+        }
+        .price-list--title {
+            font-size: 14px;
+            color: $black;
+            flex: 1 0 auto;
+            margin-right: spacing();
+            text-align: right;
+        }
+        .price-list--input {
+            display: flex;
+            align-items: center;
+            width: 150px;
+            .form-control {
+                text-align: right;
+                margin-left: 8px;
+                &::placeholder{
+                    text-align: right;
+                }
+            }
+        }
+        .price-list--value {
+            font-size: 18px;
+            color: $primary;
+            font-weight: 600;
+        }
+    }
+}
+
+.product-nav-tab--sticky {
+    position: sticky;
+    top: -25px;
+    background-color: $layoutBgColor;
+    z-index: 1;
+}
+
+.c-card-footer--btn {
+    position: sticky;
+    bottom: 0;
+}

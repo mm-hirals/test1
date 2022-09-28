@@ -1,0 +1,279 @@
+body {
+    position: relative;
+    margin: $headerHeight 0 0 0;
+    @include media(">md") {
+        // margin: calc(#{$headerHeight} + 1rem) 0 0 0;
+        margin: $headerHeight 0 0 0;
+        padding-left: $navWidth;
+    }
+}
+
+.header {
+    width: 100%;
+    height: $headerHeight;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 0 1rem;
+    background-color: $offWhite;
+    z-index: $sideBarZindex;
+    box-shadow: $headerShadow;
+    @include flexbox($hAlign: space-between);
+    @include transition();
+    @include media(">md") {
+        // height: calc(#{$headerHeight} + 1rem);
+        height: $headerHeight;
+        padding: 0 2rem 0 calc(#{$navWidth} + 2rem);
+    }
+    .exchange-icon{
+        font-size: 20px;
+    }
+}
+
+.header_toggle {
+    color: $primary;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.header_img {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    .header_profile_img{
+        display: inline-block;
+    }
+    img {
+        width: 40px;
+        @include media(">md") {
+            width: 45px;
+        }
+    }
+    @include media(">md") {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+.l-navbar {
+    position: fixed;
+    top: 0;
+    left: -30%;
+    width: $navWidth;
+    height: 100vh;
+    // overflow-y: auto;
+    background-color: $primary;
+    // padding: 0.5rem 1rem 0 0;
+    padding: 0.5rem 0;
+    @include transition();
+    z-index: $sideBarZindex;
+    @include media(">md") {
+        left: 0;
+        // padding: 1rem 1rem 0 0;
+    }
+    .nav {
+        overflow: visible;
+        .nav_list {
+            padding: 0;
+        }
+        .nav-item {
+            list-style-type: none;
+        }
+    }
+    .nav_logo {
+        .nav_logo-name {
+            display: none;
+        }
+    }
+    &.collapsed {
+        // overflow-y: auto;
+        // overflow-x: hidden;
+        .nav-item {
+            position: relative;
+            .nav_link {
+                .nav_name {
+                    display: none;
+                    line-height: 100%;
+                }
+                &.submenu-link {
+                    position: relative;
+                }
+                .sub-menu {
+                    display: none;
+                    
+                }
+            }
+            &.submenu-item{
+                position: relative;
+                .sub-menu{
+                    margin-left: $navWidth;
+                    display: none !important;
+                    position: fixed;
+                    left: 68px;
+                    margin: 0px;
+                    visibility: visible;
+                    overflow-y: auto;
+                    max-height: 400px;
+                    .nav_link{
+                        width: 220px;
+                        padding: spacing(0.5) spacing(0.5) spacing(0.5) spacing(1);
+                    }
+
+                }
+            }
+            @include media(">md") {
+                &:hover {
+                    .nav_link {
+                        background-color: $primary;
+                        width: calc(#{$navWidth} + 220px);
+                        .nav_name {
+                            display: block;
+                            padding-left: spacing();
+                        }
+                    }
+                    .sub-menu {
+                        display: block !important;
+                    }
+                }
+            }
+        }
+    }
+    &.navbar-show {
+        .nav_logo {
+            .nav_logo-name {
+                display: block;
+            }
+        }
+        .nav {
+            .nav-item {
+                &:hover {
+                    .nav_link {
+                        width: auto;
+                    }
+                    .nav_name {
+                        padding-left: 0;
+                    }
+                }
+                .nav_name {
+                    display: block;
+                }
+            }
+        }
+        .submenu-link {
+            &::after {
+                position: absolute;
+                content: "\ea4a";
+                font-family: boxicons!important;
+                top: calc(50% - 13px);
+                right: 20px;
+                bottom: auto;
+                left: auto;
+                font-size: 26px;
+                line-height: 100%;
+            }
+        }
+        .sub-menu{
+            .nav-item{
+                .nav_link{
+                    // padding: spacing(0.5) spacing(0.5) spacing(0.5) spacing(1);
+                }
+            }
+        }
+    }
+    .sub-menu {
+        padding: 0;
+        display: none;
+        .nav-item {
+            .nav_link {
+                padding: spacing(0.5) spacing(0.5) spacing(0.5) spacing(3.5);
+                margin: 0;
+            }
+        }
+    }
+}
+
+.nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    flex-wrap: nowrap;
+}
+
+.nav_logo,
+.nav_link {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    column-gap: 1rem;
+    padding: spacing() spacing(0.5) spacing() spacing(1.5);
+}
+
+.nav_logo {
+    margin-bottom: 1rem;
+}
+
+.nav_logo-icon {
+    font-size: 1.25rem;
+    color: $white;
+}
+
+.nav_logo-name {
+    color: $white;
+    font-weight: 700;
+}
+
+.nav_link {
+    position: relative;
+    color: $secondary;
+    transition: 0.3s;
+}
+
+.nav_link:hover {
+    color: $white;
+}
+
+.nav_icon {
+    font-size: 1.25rem;
+}
+
+.navbar-show {
+    left: 0;
+    overflow-y: auto;
+    @include media(">md") {
+        width: calc(#{$navWidth} + 156px);
+    }
+    
+}
+
+.active {
+    color: $white;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 2px;
+        height: 32px;
+        background-color: $white;
+    }
+}
+
+.height-100 {
+    height: 100vh;
+}
+
+.body-pd {
+    padding-left: $navWidth;
+    @include media(">md") {
+        padding-left: calc(#{$navWidth} + 158px);
+    }
+}
+
+
+
+
+

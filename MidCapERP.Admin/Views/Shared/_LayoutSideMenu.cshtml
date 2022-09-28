@@ -1,0 +1,148 @@
+﻿<!-- Start Topbar -->
+<header class="header" id="header">
+    <div class="header_toggle">
+        <i class="bx bx-menu" id="header-toggle"></i>
+    </div>
+    <div class="ms-2 me-auto">
+        <span>@_currentUser.TenantName</span>
+    </div>
+    <div class="header-right-section d-flex align-items-center">
+        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center">
+                @if (_currentUser.IsMultipleTenant)
+                {
+                    <a href="/Tenant" class="btn btn-primary d-flex align-items-center d-flex align-items-center"><i class='bx bx-transfer exchange-icon pe-3'></i> Change Tenant</a>
+                }
+            </div>
+        </div>
+        <div class="dropdown">
+            <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="d-flex align-items-center">
+                    <img class="rounded-circle header-profile-user img-fluid" src="https://picsum.photos/200/300?random=1" alt="Header Avatar" style="width: 40px; height: 40px;">
+                    <span class="text-start ms-xl-2">
+                        <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">@_currentUser.FullName</span>
+                        <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">@_currentUser.Role</span>
+                    </span>
+                </span>
+            </button>
+
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-user-dropdown" data-popper-placement="bottom-end">
+                <h6 class="dropdown-header">Welcome @_currentUser.Name!</h6>
+                <a class="dropdown-item" href="/Account/Profile"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
+                <a class="dropdown-item" href="/Account/Logout"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
+            </div>
+        </div>
+    </div>
+
+</header>
+<!-- End Topbar -->
+<!-- Start Sidebar -->
+<div class="l-navbar collapsed" id="nav-bar">
+    <nav class="nav">
+        <div>
+            <a href="/" class="nav_logo">
+                <i class="bx bx-shape-square nav_logo-icon"></i>
+                <span class="nav_logo-name">MidCap-ERP</span>
+            </a>
+            <ul class="nav_list">
+                <li class="nav-item">
+                    <a href="/Dashboard" class="nav_link active">
+                        <i class="bx bxs-dashboard nav_icon"></i>
+                        <span class="nav_name">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Product" class="nav_link">
+                        <i class="bx bx-package nav_icon"></i>
+                        <span class="nav_name">Products</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Order" class="nav_link">
+                        <i class="bx bx-cart-alt nav_icon"></i>
+                        <span class="nav_name">Orders</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Customer" class="nav_link">
+                        <i class="bx bx-user-circle nav_icon"></i>
+                        <span class="nav_name">Customers</span>
+                    </a>
+                </li>
+                <li class="nav-item submenu-item">
+                    <a href="javascipt:void(0)" class="nav_link submenu-link">
+                        <i class="bx bx-cog nav_icon"></i>
+                        <span class="nav_name">Master Settings</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a class="nav_link" href="/Category">
+                                Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/Company">
+                                Companies
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/Unit">
+                                Units
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/RawMaterial">
+                                Raw Materials
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/Fabric">
+                                Fabrics
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/Polish">
+                                Polish
+                            </a>
+                        </li>
+                        @*                        <li class="nav-item">
+                        <a class="nav_link" href="/FrameType">
+                        Frame Types
+                        </a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav_link" href="/Frame">
+                        Frames
+                        </a>
+                        </li>*@
+                    </ul>
+                </li>
+                <li class="nav-item submenu-item">
+                    <a href="javascipt:void(0)" class="nav_link submenu-link">
+                        <i class="bx bxs-user-account nav_icon"></i>
+                        <span class="nav_name">Users Management</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item">
+                            <a class="nav_link" href="/User">
+                                Users
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav_link" href="/Role">
+                                Roles &amp; Permissions
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="nav-item">
+            <a href="/Account/Logout" class="nav_link">
+                <i class="bx bx-log-out nav_icon"></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </div>
+    </nav>
+</div>
+<!-- End Sidebar -->

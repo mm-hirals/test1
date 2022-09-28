@@ -1,0 +1,39 @@
+.nav-tabs {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+    border-bottom: 1px solid $primary;
+    margin: 0 0 15px;
+    padding: 0 0 0 15px;
+    .nav-link {
+        padding: 10px 0;
+        border: 0;
+        position: relative;
+        &::before {
+            bottom: 0;
+            width: 0;
+            height: 3px;
+            background-color: $primary;
+        }
+        &.active,
+        &:hover {
+            border: 0;
+            &::before {
+                width: 100%;
+            }
+        }
+        &.active {
+            font-weight: 700;
+            background-color: transparent;
+        }
+        +.nav-link {
+            margin-left: 20px;
+        }
+    }
+}
+
+.tab-pane {
+    &.active {
+        color: $black;
+    }
+}

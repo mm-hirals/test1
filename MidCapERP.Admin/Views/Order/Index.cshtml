@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Orders</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkOrderFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Order #</label>
+                        <input type="text" class="form-control" placeholder="Order Number" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_OrderTable" />
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Order.js" asp-append-version="true"></script>
+    }
+}

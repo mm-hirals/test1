@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataEntities.Models;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Infrastructure.Identity.Authorization
 {
@@ -43,6 +43,10 @@ namespace MidCapERP.Infrastructure.Identity.Authorization
                 {
                     context.Succeed(requirement);
                     return;
+                }
+                else
+                {
+                    //throw new ForbiddenAccessException();
                 }
             }
         }

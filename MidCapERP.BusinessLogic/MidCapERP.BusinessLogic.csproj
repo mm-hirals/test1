@@ -10,12 +10,17 @@
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="MagnusMinds.Utility" Version="5.0.6" />
+    <PackageReference Include="QRCoder" Version="1.4.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MidCapERP.Core\MidCapERP.Core.csproj" />
     <ProjectReference Include="..\MidCapERP.DataAccess\MidCapERP.DataAccess.csproj" />
     <ProjectReference Include="..\MidCapERP.DataEntities\MidCapERP.DataEntities.csproj" />
     <ProjectReference Include="..\MidCapERP.Dto\MidCapERP.Dto.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 </Project>
