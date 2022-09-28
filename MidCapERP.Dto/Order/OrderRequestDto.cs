@@ -22,7 +22,7 @@ namespace MidCapERP.Dto.Order
         public decimal ReferralDiscount { get; set; }
 
         [Required]
-        public decimal? TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
         [Required]
         public decimal GSTTaxAmount { get; set; }
@@ -33,10 +33,9 @@ namespace MidCapERP.Dto.Order
         [Required]
         public DateTime DeliveryDate { get; set; }
 
-        public string Comments { get; set; }
+        public string? Comments { get; set; }
 
-        [Required]
-        public string GSTNo { get; set; }
+        public string? GSTNo { get; set; }
 
         [Required]
         public int Status { get; set; }
