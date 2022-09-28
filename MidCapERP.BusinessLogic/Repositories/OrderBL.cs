@@ -173,7 +173,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
                     orderSetItem.ProductImage =String.Empty;
-                        /*
+                    /*
                     if (itemData.SubjectTypeId == ProductSubjectTypeId)
                     {
                         var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId).CoverImage;

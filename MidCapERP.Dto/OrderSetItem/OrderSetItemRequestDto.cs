@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.OrderSetItem
 {
     public class OrderSetItemRequestDto
     {
-        [JsonIgnore]
+        
         public long OrderSetItemId { get; set; }
 
         [JsonIgnore]
