@@ -41,14 +41,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 			return _mapper.Map<TenantResponseDto>(data);
 		}
 
-		public async Task<TenantRequestDto> UpdateTenant(int Id, TenantRequestDto model, CancellationToken cancellationToken)
+		public async Task<TenantRequestDto> UpdateTenant(TenantRequestDto model, CancellationToken cancellationToken)
 		{
-			var oldData = await TenantGetById(Id, cancellationToken);
+			var oldData = await TenantGetById(model.TenantId, cancellationToken);
 			oldData.UpdatedBy = _currentUser.UserId;
 			oldData.UpdatedDate = DateTime.Now;
 			oldData.UpdatedUTCDate = DateTime.UtcNow;
 			MapToDbObject(model, ref oldData);
-			var data = await _unitOfWorkDA.TenantDA.UpdateTenant(Id, oldData, cancellationToken);
+			var data = await _unitOfWorkDA.TenantDA.UpdateTenant(model.TenantId, oldData, cancellationToken);
 			return _mapper.Map<TenantRequestDto>(data);
 		}
 

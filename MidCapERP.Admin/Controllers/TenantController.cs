@@ -47,53 +47,7 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-        //[HttpGet]
-        //[Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
-        //public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
-        //{
-        //    var tenant = await _unitOfWorkBL.TenantBL.GetById(Id, cancellationToken);
-        //    return View("Views/Account/ProfileMain.cshtml", tenant);
-        //}
-
-        //[HttpPost]
-        //[Authorize(ApplicationIdentityConstants.Permissions.Tenant.Update)]
-        //public async Task<IActionResult> Update(int Id, TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
-        //{
-        //    Id = tenantRequestDto.TenantId;
-        //    await _unitOfWorkBL.TenantBL.UpdateTenant(Id, tenantRequestDto, cancellationToken);
-        //    return RedirectToAction("Update");
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetTenantDetail(int Id, CancellationToken cancellationToken)
-        //{
-        //    var tenant = await _unitOfWorkBL.TenantBL.GetById(Id, cancellationToken);
-        //    return PartialView("_TenantDetailPartial", tenant);
-        //}
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetTenantBankDetail(int Id, CancellationToken cancellationToken)
-        //{
-        //    var tenantBankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
-        //    return PartialView("_TenantBankDetailPartial", tenantBankDetail);
-        //}
-
-        //[HttpGet]
-        //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
-        //public async Task<IActionResult> updateBankDetail(int Id, CancellationToken cancellationToken)
-        //{
-        //    var tenantBankDetail = await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
-        //    return View("Views/Account/ProfileMain.cshtml", tenantBankDetail);
-        //}
-
-        //[HttpPost]
-        //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
-        //public async Task<IActionResult> updateBankDetail(int Id, TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
-        //{
-        //    Id = tenantBankDetailRequestDto.TenantId;
-        //    await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
-        //    return RedirectToAction("Update", "Tenant");
-        //}
+        
 
         #region PrivateMethod
 

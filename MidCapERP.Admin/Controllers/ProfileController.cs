@@ -40,45 +40,45 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
-        public async Task<IActionResult> UpdateTenant(int Id, TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateTenant(TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
         {
-            Id = tenantRequestDto.TenantId;
-            await _unitOfWorkBL.TenantBL.UpdateTenant(Id, tenantRequestDto, cancellationToken);
+            //Id = tenantRequestDto.TenantId;
+            await _unitOfWorkBL.TenantBL.UpdateTenant(tenantRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
-        //        [HttpGet]
-        //        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Create)]
-        //        public async Task<IActionResult> CreateTenantBankDetail(int TenantId, CancellationToken cancellationToken)
-        //        {
-        //            TenantBankDetailRequestDto dto = new();
-        //            dto.TenantId = TenantId;
-        //            return View("Index");
-        //        }
+        //[HttpGet]
+        //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Create)]
+        //public async Task<IActionResult> CreateTenantBankDetail(int TenantId, CancellationToken cancellationToken)
+        //{
+        //    TenantBankDetailRequestDto dto = new();
+        //    dto.TenantId = TenantId;
+        //    return View("Index");
+        //}
 
-        //        [HttpPost]
-        //        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Create)]
-        //        public async Task<IActionResult> CreateTenantBankDetail(TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
-        //        {
-        //            await _unitOfWorkBL.TenantBankDetailBL.CreateTenantBankDetail(tenantBankDetailRequestDto, cancellationToken);
-        //            return View("Index");
-        //        }
-        //        [HttpGet]
-        //        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
-        //        public async Task<IActionResult> UpdateTenantBankDetail(int Id, CancellationToken cancellationToken)
-        //        {
+        //[HttpPost]
+        //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Create)]
+        //public async Task<IActionResult> CreateTenantBankDetail(TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
+        //{
+        //    await _unitOfWorkBL.TenantBankDetailBL.CreateTenantBankDetail(tenantBankDetailRequestDto, cancellationToken);
+        //    return View("Index");
+        //}
+        //[HttpGet]
+        //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
+        //public async Task<IActionResult> UpdateTenantBankDetail(int Id, CancellationToken cancellationToken)
+        //{
 
-        //            var customers = await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
-        //            return View("Index");
-        //        }
+        //    var customers = await _unitOfWorkBL.TenantBankDetailBL.GetById(Id, cancellationToken);
+        //    return View("Index");
+        //}
 
-        //        [HttpPost]
-        //        [Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
-        //        public async Task<IActionResult> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
-        //        {
-        //            await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
-        //            return RedirectToAction("Index");
-        //        }
+        //[HttpPost]
+        //[Authorize(ApplicationIdentityConstants.Permissions.TenantBankDetail.Update)]
+        //public async Task<IActionResult> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
+        //{
+        //    await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
+        //    return RedirectToAction("Index");
+        //}
 
     }
 }
