@@ -20,7 +20,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var userData = await _unitOfWorkBL.UserTenantMappingBL.GetAll(cancellationToken);
@@ -39,7 +39,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(ApplicationIdentityConstants.Permissions.Tenant.View)]
         public async Task<IActionResult> Index([FromForm] SelectTenant selectTenant, CancellationToken cancellationToken)
         {
             var encValue = MagnusMinds.Utility.Encryption.Encrypt(selectTenant.TenantId, true, ApplicationIdentityConstants.EncryptionSecret);
@@ -56,6 +56,6 @@ namespace MidCapERP.Admin.Controllers
             Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
         }
 
-        #endregion PrivateMethod
+        #endregion PrivateMethod             
     }
 }
