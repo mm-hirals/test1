@@ -11,7 +11,7 @@
 	@if (tenantId > 0)
 	{
 		<partial name="_TenantDetailPartial" model="@Model" />
-		@*<nav class="product-nav-tab--sticky">
+		<nav class="product-nav-tab--sticky">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Bank Details</button>
 			</div>
@@ -22,8 +22,8 @@
 					<div class="c-card--header">
 						<h4 class="c-card--header-title">Bank Details</h4>
 						<div class="c-card--header-action">
-							<a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary"
-						   data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.TenantId" data-ajax-update="#divUpdateCustomerAddresses"
+							<a asp-controller="Profile" asp-action="CreateTenantBankDetail" class="btn btn-primary"
+						   data-ajax-complete="TenantBankDetailModel.onComplete" id="tenantId" asp-route-tenantId="@tenantId" data-ajax-update="#divUpdateTenantBankDetail"
 						   data-ajax="true" data-ajax-mode="replace">Create New</a>
 						</div>
 					</div>
@@ -31,13 +31,13 @@
 						<div class="row">
 							<div class="col-12">
 								<partial name="_TenantBankDetailTable" model="null" />
-								<div id="divUpdateCustomerAddresses"></div>
+								<div id="divUpdateTenantBankDetail"></div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>*@
+		</div>
 	}
 </div>
 

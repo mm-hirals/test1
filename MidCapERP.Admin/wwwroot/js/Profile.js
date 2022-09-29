@@ -5,7 +5,7 @@ $(document).ready(function () {
 });
 
 
-var TenantBankDetailIModel = {};
+var TenantBankDetailModel = {};
 var tblTenantBankDetail;
 
 $(function () {
@@ -17,7 +17,10 @@ $(function () {
         "ajax": {
             "url": "/Profile/GetFilterTenantBankDetailData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.tenantId = $('#hdnTenantId').val().trim()
+            }
         },
         "columns": [
            
@@ -32,8 +35,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    debugger;
-                return '<div class="c-action-btn-group justify-content-start"><a  href="/Profile/Update/' + o.tenantBankDetailId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="TenantBankDetailModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateTenantBankDetail"  href="/Profile/UpdateTenantBankDetail/' + o.tenantId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' + '<a data-ajax-complete="TenantBankDetailModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Profile/DeleteTenantBankDetail/' + o.tenantBankDetailId + '"><i class="bx bxs-trash"></i></a></div>';
+
                 }
             }
         ]
@@ -41,21 +44,21 @@ $(function () {
 });
 
 
-TenantBankDetailIModel.onComplete = function () {
+TenantBankDetailModel.onComplete = function () {
     $("#divTenantBankDetailModal").modal('show');
 }
 
-TenantBankDetailIModel.onDelete = function () {
+TenantBankDetailModel.onDelete = function () {
     tblTenantBankDetail.ajax.reload(null, false);
      $("#divTenantBankDetailModal").modal('hide');
 }
 
-TenantBankDetailIModel.onSuccess = function (xhr) {
+TenantBankDetailModel.onSuccess = function (xhr) {
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
 };
 
-TenantBankDetailIModel.onFailed = function (xhr) {
+TenantBankDetailModel.onFailed = function (xhr) {
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
 };

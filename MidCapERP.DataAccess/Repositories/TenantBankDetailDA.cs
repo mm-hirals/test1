@@ -23,7 +23,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<TenantBankDetail> GetById(int Id, CancellationToken cancellationToken)
         {
-            return (await _tenantBankDetail.GetAsync( cancellationToken,x=>x.TenantId == _currentUser.TenantId)).FirstOrDefault();
+            return (await _tenantBankDetail.GetAsync( cancellationToken,x=>x.TenantBankDetailId == Id)).FirstOrDefault();
         }
 
         public async Task<TenantBankDetail> CreateTenantBankDetail(TenantBankDetail model, CancellationToken cancellationToken)

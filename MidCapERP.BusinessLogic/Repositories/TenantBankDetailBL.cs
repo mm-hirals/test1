@@ -63,10 +63,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.TenantBankDetailDA.CreateTenantBankDetail(tenantBankDetailoInsert, cancellationToken);
             return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
-        public async Task<TenantBankDetailResponseDto> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<TenantBankDetailRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await TenantGetById(Id, cancellationToken);
-            return _mapper.Map<TenantBankDetailResponseDto>(data);
+            return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
         
         public async Task<TenantBankDetailRequestDto> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken)
