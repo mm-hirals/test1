@@ -84,12 +84,20 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            customerAllData = FilterCustomerData(dataTableFilterDto, customerAllData);
-            var customerData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerAllData).AsQueryable(), dataTableFilterDto);
-            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerData.TotalCount, customerData.TotalCount, customerData);
+            var customerData = customerAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Customer || x.CustomerTypeId == (int)CustomerTypeEnum.Wholesaler);
+            var customerFilteredData = FilterCustomerData(dataTableFilterDto, customerData);
+            var customerGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerFilteredData).AsQueryable(), dataTableFilterDto);
+            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerGridData.TotalCount, customerGridData.TotalCount, customerGridData);
         }
 
-     
+        public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterArchitectsData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
+            var architectFilteredData = FilterCustomerData(dataTableFilterDto, architectData);
+            var architectGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(architectFilteredData).AsQueryable(), dataTableFilterDto);
+            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, architectGridData.TotalCount, architectGridData.TotalCount, architectGridData);
+        }
 
         public async Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken)
         {
@@ -161,12 +169,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
 
-                if (model.CustomerTypeId == (int)CustomerTypeEnum.Architect)
-                {
-                    customerToInsert.RefferedBy = 0;
-                    data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-                }
-                else
+                if (model.CustomerTypeId == (int)CustomerTypeEnum.Customer || model.CustomerTypeId == (int)CustomerTypeEnum.Wholesaler)
                 {
                     if (model.RefferedNumber != null)
                     {
@@ -176,6 +179,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                     {
                         customerToInsert.RefferedBy = 0;
                     }
+                    data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                }
+                else
+                {
+                    customerToInsert.RefferedBy = 0;
+                    customerToInsert.CustomerTypeId = (int)ArchitectTypeEnum.Architect;
                     data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 }
                 await SaveCustomerAddress(model, data, cancellationToken);
@@ -242,10 +251,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
         }
+
         private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
+            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
             if (customerExistOrNot != null)
             {
                 customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
@@ -258,7 +268,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     LastName = String.Empty,
                     FirstName = model.RefferedName != null ? model.RefferedName : "",
                     PhoneNumber = model.RefferedNumber,
-                    CustomerTypeId = (int)CustomerTypeEnum.Architect,
+                    CustomerTypeId = (int)ArchitectTypeEnum.Architect,
                     RefferedBy = 0,
                     CreatedBy = _currentUser.UserId,
                     CreatedDate = DateTime.Now,
@@ -289,6 +299,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(catDto, cancellationToken);
             await _unitOfWorkDA.CommitTransactionAsync();
         }
+
         private static IQueryable<Customers> FilterCustomerData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<Customers> customerAllData)
         {
             if (dataTableFilterDto != null)
@@ -316,8 +327,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             return customerAllData;
         }
-        
-        
+
         #endregion PrivateMethods
     }
 }

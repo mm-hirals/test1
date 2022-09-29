@@ -121,6 +121,19 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("CustomerEdit");
         }
 
+        [HttpPost]
+        public async Task<JsonResult> MultipleSendCustomer(long?[] value_check)
+        {
+            try
+            {
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
         #region Private Method
 
         private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
