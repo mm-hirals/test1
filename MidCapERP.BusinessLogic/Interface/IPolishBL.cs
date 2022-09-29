@@ -17,7 +17,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IList<MegaSearchResponse>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellation);
 
-        public Task<PolishResponseDto> GetPolishForDetailsByModuleNo(string detailsModelNo, CancellationToken cancellation);
+        public Task<IList<PolishApiResponseDto>> GetPolishForDetailsByModuleNo(string detailsModelNo, CancellationToken cancellation);
 
         public Task<PolishRequestDto> CreatePolish(PolishRequestDto model, CancellationToken cancellationToken);
 

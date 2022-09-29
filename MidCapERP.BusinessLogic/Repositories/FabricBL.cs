@@ -40,11 +40,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).Take(10).ToList();
         }
 
-        public async Task<FabricResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IList<FabricApiResponseDto>> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
+            var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);  
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-            var data = frabricAlldata.FirstOrDefault(x => x.ModelNo == modelno);
-            return _mapper.Map<FabricResponseDto>(data);
+            return frabricAlldata.Where(x => x.ModelNo == modelno).Select(x => new FabricApiResponseDto(x.FabricId, x.Title, x.ModelNo, x.CompanyId, x.UnitId, x.UnitPrice, x.ImagePath, fabricSubjectTypeId)).ToList();
         }
 
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -164,6 +164,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             return lookupId;
         }
 
+        public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
         #endregion Private Method
     }
 }
