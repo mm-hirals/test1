@@ -18,7 +18,7 @@
                                     <label class="form-label">
                                         <label asp-for="CustomerTypeId" class="form-label"></label>
                                     </label>
-                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control"
+                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType"
                                             asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
                                         <option value="" hidden disabled selected>Select Customer Type</option>
                                     </select>
@@ -80,6 +80,31 @@
                                 </div>
                             </div>
                         </div>
+                        @if (@action == "Create")
+                        {
+                            <div class="col-md-3">
+                                <div class="product-info--item">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <label asp-for="RefferedNumber" class="form-label"></label>
+                                        </label>
+                                        <input asp-for="RefferedNumber" class="form-control refferedNumber" />
+                                        <span asp-validation-for="RefferedNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="product-info--item">
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <label asp-for="RefferedName" class="form-label"></label>
+                                        </label>
+                                        <input asp-for="RefferedName" class="form-control refferedName" />
+                                        <span asp-validation-for="RefferedName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         <div class="col-md-3">
                             <div class="product-info--item">
                                 <div class="form-group">
@@ -91,42 +116,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="RefferedBy" class="form-label"></label>
-                                    </label>
-                                    <input asp-for="RefferedBy" class="form-control" />
-                                    <span asp-validation-for="RefferedBy" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="Discount" class="form-label"></label>
-                                    </label>
-                                    <input asp-for="Discount" class="form-control" />
-                                    <span asp-validation-for="Discount" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
                         @if (Model == null)
                         {
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.AddressType" class="form-label"></label>
-                                    <select asp-for="CustomerAddressesRequestDto.AddressType" id="AddressTypeId" data-val="true" class="form-control">
-                                        <option value="" hidden disabled>Select Address Type</option>
-                                        <option value="Home" selected>Home</option>
-                                        <option value="Office">Office</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <span asp-validation-for="CustomerAddressesRequestDto.AddressType" class="text-danger"></span>
-                                </div>
-                            </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
@@ -174,17 +165,6 @@
                                     <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
                                     <input asp-for="CustomerAddressesRequestDto.ZipCode" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <div class="custom-control custom-switch">
-                                        <label class="form-label">
-                                            IsDefault
-                                        </label>
-                                        <input asp-for="CustomerAddressesRequestDto.IsDefault" type="checkbox" class="custom-control-input" id="isDefualtCheck" data-val="true" checked>
-                                        <label class="custom-control-label" for="isDefualtCheck">Active</label>
-                                    </div>
                                 </div>
                             </div>
                         }
@@ -246,4 +226,4 @@
         <script src="~/js/Customer.js" asp-append-version="true"></script>
         <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
-} 
+    } 
