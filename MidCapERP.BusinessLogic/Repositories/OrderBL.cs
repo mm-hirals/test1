@@ -137,7 +137,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderToInsert.CreatedDate = DateTime.Now;
             orderToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.OrderDA.CreateOrder(orderToInsert, cancellationToken);
-           
+            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerAddressData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+
 
             //Create Orderset Base On Order
             foreach (var setData in model.OrderSetRequestDto)
@@ -173,7 +175,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
                     orderSetItem.ProductImage =String.Empty;
-                    /*
+
                     if (itemData.SubjectTypeId == ProductSubjectTypeId)
                     {
                         var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
@@ -197,7 +199,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     else
                     {
                         orderSetItem.ProductImage = string.Empty;
-                    }*/
+                    }
                     orderSetItem.Width = itemData.Width;
                     orderSetItem.Height = itemData.Height;
                     orderSetItem.Depth = itemData.Depth;
@@ -304,12 +306,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<OrderApiRequestDto> UpdateOrderApi(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
+        /*public async Task<OrderApiRequestDto> UpdateOrderApi(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
         {
             var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+            var orderSetData = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
             var oldData = await OrderGetById(Id, cancellationToken);
 
             var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
@@ -327,34 +330,97 @@ namespace MidCapERP.BusinessLogic.Repositories
                     if (item.SubjectTypeId == ProductSubjectTypeId)
                     {
                         var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
-                        item.ProductImage = image;
+                        item.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
                     {
                         var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == item.SubjectId).ImagePath;
-                        item.ProductImage = image;
+                        item.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (item.SubjectTypeId == polishSubjectTypeId)
                     {
                         var image = polishData.FirstOrDefault(p => p.PolishId == item.SubjectId).ImagePath;
-                        item.ProductImage = image;
+                        item.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     else if (item.SubjectTypeId == FrabriSubjectTypeId)
                     {
                         var image = fabricData.FirstOrDefault(p => p.FabricId == item.SubjectId).ImagePath;
-                        item.ProductImage = image;
+                        item.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
                     }
                     MapToDbObject(model, oldData, set, item);
                     var orderSetItem = _mapper.Map<OrderSetItem>(item);
-
-                    await _unitOfWorkDA.OrderSetItemDA.UpdateOrder(50, orderSetItem, cancellationToken);
+               
+                    await _unitOfWorkDA.OrderSetItemDA.UpdateOrder(OrderSetItemId, orderSetItem, cancellationToken);
                 }
+
                 var orderSet = _mapper.Map<OrderSet>(set);
-                await _unitOfWorkDA.OrderSetDA.UpdateOrder(14, orderSet, cancellationToken);
+                await _unitOfWorkDA.OrderSetDA.UpdateOrder(OrderSetId, orderSet, cancellationToken);
             }
 
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
             return _mapper.Map<OrderApiRequestDto>(data);
+        }*/
+
+        public async Task<OrderApiRequestDto> UpdateOrderApi(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
+        {
+            var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+            var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+            var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+            var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+            var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+
+                var oldData = await OrderGetById(model.OrderId, cancellationToken);
+                oldData.IsDraft = true;
+                oldData.Status = model.Status;
+                oldData.UpdatedBy = model.UpdatedBy;
+                oldData.UpdatedDate = model.UpdatedDate;
+                var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id,oldData, cancellationToken);
+                //Start Update OrderSet
+                foreach (var orderSet in model.OrderSetRequestDto)
+                {
+                    if (!orderSet.IsDeleted)
+                    {
+                        var oldOrderSet = await OrderSetGetById(Id, cancellationToken);
+                        if (oldOrderSet != null)
+                        {
+                            oldOrderSet.SetName = orderSet.SetName;
+                            oldOrderSet.UpdatedBy = orderSet.UpdatedBy;
+                            oldOrderSet.UpdatedDate = orderSet.UpdatedDate;
+                            await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(orderSet.OrderSetId, oldOrderSet, cancellationToken);
+                            //Start Update OrderSetItem
+                            foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
+                            {
+                                if (!orderSetItem.IsDeleted)
+                                {
+                                    var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
+                                    if (oldOrderSetItem != null)
+                                    {
+                                        oldOrderSetItem.SubjectTypeId = orderSetItem.SubjectTypeId;
+                                        oldOrderSetItem.SubjectId = orderSetItem.SubjectId;
+                                        oldOrderSetItem.Height = orderSetItem.Height;
+                                        oldOrderSetItem.Width = orderSetItem.Width;
+                                        oldOrderSetItem.Depth = orderSetItem.Depth;
+                                        oldOrderSetItem.Quantity = orderSetItem.Quantity;
+                                        oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
+                                        oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
+                                        oldOrderSetItem.TotalAmount = orderSetItem.TotalAmount;
+                                        oldOrderSetItem.Comment = orderSetItem.Comment;
+                                        oldOrderSetItem.Status = orderSetItem.Status;
+                                        oldOrderSetItem.UpdatedDate = DateTime.Now;
+                                        oldOrderSetItem.UpdatedBy = orderSetItem.CreatedBy;
+                                        await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem.OrderSetItemId, oldOrderSetItem, cancellationToken);
+                                    }
+                                }
+                            }
+                        }
+                        //End Update OrderSetItem
+                    }
+                }
+            return _mapper.Map<OrderApiRequestDto>(data);
+            //End Update OrderSet 
         }
 
         public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
@@ -394,6 +460,26 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (data == null)
             {
                 throw new Exception("Order not found");
+            }
+            return data;
+        }
+
+        private async Task<OrderSet> OrderSetGetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Order Set not found");
+            }
+            return data;
+        }
+
+        private async Task<OrderSetItem> OrderSetItemGetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Order Set Item not found");
             }
             return data;
         }

@@ -51,7 +51,7 @@ namespace MidCapERP.Dto.OrderSetItem
         public bool IsDeleted { get; set; }
 
         [JsonIgnore]
-        public long CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }

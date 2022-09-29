@@ -32,8 +32,7 @@ namespace MidCapERP.Dto.Order
         [Required]
         public decimal PayableAmount { get; set; }
 
-        [Required]
-        public DateTime DeliveryDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
 
         public string Comments { get; set; }
 

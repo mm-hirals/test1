@@ -27,7 +27,7 @@ namespace MidCapERP.Dto.OrderSet
         public DateTime CreatedUTCDate { get; set; }
 
         [JsonIgnore]
-        public long? UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
 
         [JsonIgnore]
         public DateTime? UpdatedDate { get; set; }
