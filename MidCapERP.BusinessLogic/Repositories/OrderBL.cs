@@ -326,8 +326,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     if (item.SubjectTypeId == ProductSubjectTypeId)
                     {
-                        var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
-                        item.ProductImage = image;
+                        //var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
+                        //item.ProductImage = image;
                     }
                     else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
                     {
