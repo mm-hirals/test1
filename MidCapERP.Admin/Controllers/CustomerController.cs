@@ -121,30 +121,18 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("CustomerEdit");
         }
 
-        [HttpPost]
-        public async Task<JsonResult> MultipleSendCustomer(long?[] value_check)
-        {
-            try
-            {
-                return Json("success");
-            }
-            catch (Exception ex)
-            {
-                return Json(ex.Message);
-            }
-        }
-
         #region Private Method
 
         private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
         {
-            var customerTypesData = await _unitOfWorkBL.CustomersBL.CustomersTypesGetAll(cancellationToken);
-            var customerTypesSelectedList = customerTypesData.Select(a =>
-                                 new SelectListItem
-                                 {
-                                     Value = Convert.ToString(a.CustomerTypeId),
-                                     Text = a.Name
-                                 }).ToList();
+            IEnumerable<CustomerTypeEnum> customerTypesData = Enum.GetValues(typeof(CustomerTypeEnum))
+                                        .Cast<CustomerTypeEnum>();
+            IEnumerable<SelectListItem> customerTypesSelectedList = from value in customerTypesData
+                                                                    select new SelectListItem()
+                                                                    {
+                                                                        Text = value.ToString(),
+                                                                        Value = value.ToString(),
+                                                                    };
             ViewBag.CustomerType = customerTypesSelectedList;
         }
 

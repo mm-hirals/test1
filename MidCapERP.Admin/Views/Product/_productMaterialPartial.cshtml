@@ -53,7 +53,7 @@
                                     <input type="text" data-readonly="readonly" class="form-control Unit" placeholder="Unit Type">
                                 </td>
                                 <td>
-                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
+                                    <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
                                 </td>
                                 <td>
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
@@ -62,8 +62,6 @@
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
                                     <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
                                 </td>
-                                @*<td>
-                                </td>*@
                                 <td>
                                     <div class="add-icon ms-auto">
                                         <i class="bx bx-plus"></i>
@@ -90,14 +88,14 @@
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].UnitType" data-readonly="readonly" class="form-control Unit" placeholder="Unit Type" readonly>
                                         </td>
                                         <td>
-                                            <input type="text" asp-for="ProductMaterialRequestDto[i].MaterialPrice" readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
+                                            <input type="text" readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
                                         </td>
                                         <td>
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" placeholder="Qty" readonly />
                                         </td>
                                         <td>
                                             @{
-                                                var costPrice = item.Qty * item.MaterialPrice;
+                                                var costPrice = item.Qty;
                                             }
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" readonly="readonly" class="form-control isDeleted" value="false">
@@ -156,7 +154,7 @@
                                     <input type="text" data-readonly="readonly" class="form-control Unit" placeholder="Unit Type" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].MaterialPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
+                                    <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
                                 </td>
                                 <td>
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
@@ -165,8 +163,6 @@
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
                                     <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
                                 </td>
-                                @*<td>
-                                </td>*@
                                 <td>
                                     <div class="add-icon ms-auto">
                                         <i class="bx bx-plus"></i>
@@ -193,20 +189,18 @@
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].UnitType" data-readonly="readonly" class="form-control Unit" placeholder="Unit Type" readonly>
                                         </td>
                                         <td>
-                                            <input type="text" asp-for="ProductMaterialRequestDto[i].MaterialPrice" readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
+                                            <input type="text" readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
                                         </td>
                                         <td>
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" placeholder="Qty" readonly />
                                         </td>
                                         <td>
                                             @{
-                                                var costPrice = item.Qty * item.MaterialPrice;
+                                                var costPrice = item.Qty;
                                             }
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" readonly="readonly" class="form-control isDeleted" value="false">
                                         </td>
-                                        @*<td>
-                                </td>*@
                                         <td>
                                             <div class="minus-icon">
                                                 <i class="bx bx-minus"></i>
@@ -241,7 +235,7 @@
                                 <span asp-validation-for="ProductRequestDto.CostPrice" class="text-danger"></span>
                             </div>
                         </li>
-                        <li class="price-list--item">
+                        @*<li class="price-list--item">
                             <span class="price-list--title">
                                 Retailers Price
                             </span>
@@ -264,7 +258,7 @@
                                 <input asp-for="WholesalerPrice" type="text" class="form-control" placeholder="Enter Wholesalers Price">
                                 <span asp-validation-for="ProductRequestDto.WholesalerPrice" class="text-danger"></span>
                             </div>
-                        </li>
+                        </li>*@
                     </ul>
                 </div>
             </div>
