@@ -342,6 +342,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
         }
 
+        public async Task UpdateProductImageMarkAsCover(int productImageId, bool IsCover, CancellationToken cancellationToken)
+        {
+            var getProductImage = await _unitOfWorkDA.ProductImageDA.GetById(productImageId, cancellationToken);
+            if (getProductImage != null)
+            {
+                getProductImage.IsCover = IsCover;
+                await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
+            }
+        }
+
         public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
         {
             var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
@@ -460,6 +470,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
             }
         }
+
 
         private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
         {

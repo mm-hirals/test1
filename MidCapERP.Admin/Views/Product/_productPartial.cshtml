@@ -66,7 +66,7 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label">
-                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth) </span>In inches
+                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth) </span>in inches
                             </label>
                             <div class="row">
                                 <div class="col-md-4">
@@ -86,18 +86,20 @@
                     </div>
                 </div>
 
+            </div>
+            <div class="row align-items-end">
                 @if (Model?.ProductId > 0)
                 {
                     <div class="col-8">
-                        <small>Product has been created by <strong>@Model.CreatedByName</strong> on <strong>@Model.CreatedDate.ToLongDateString()</strong></small>
                         @if (@Model.UpdatedDate != null && @Model.UpdatedByName != null)
                         {
-                            <small class="ms-3">Product has been updated by <strong>@Model.UpdatedByName</strong> on <strong>@Model.UpdatedDate.Value.ToLongDateString()</strong></small>
+                            <small class="text-muted">Last updated by @Model.UpdatedByName on @Model.UpdatedDate.Value.ToLongDateString() - </small>
                         }
+                        <small class="text-muted">Created by @Model.CreatedByName on @Model.CreatedDate.ToLongDateString()</small>
                     </div>
                 }
                 <div class="@(Model?.ProductId > 0 ? "col-4" : "col-12")">
-                    <div class="text-end pb-2">
+                    <div class="text-end">
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                             Cancel
                         </a>

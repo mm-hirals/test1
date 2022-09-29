@@ -1,10 +1,10 @@
 .card-product--wrapper {
-    padding-right: spacing(0.5);
+    // padding-right: spacing(0.5);
     border-radius: 10px;
     background: $white;
     border-radius: $defaultRadius;
     box-shadow: $defaulShaodw;
-    display: flex;
+    // display: flex;
     .card-product--image {
         flex: 1 0 120px;
         max-width: 120px;
@@ -39,9 +39,10 @@
         }
     }
     .card-prpoduct-cotent--wrapper {
-        flex: 1 0 calc(100% - 120px);
-        max-width: calc(100% - 120px);
-        padding-left: 25px;
+        padding: 15px;
+        // flex: 1 0 calc(100% - 120px);
+        // max-width: calc(100% - 120px);
+        // padding-left: 25px;
         // .product-info--wrapper {
         //     flex: 0 1 auto;
         //     display: flex;
@@ -90,6 +91,14 @@
     &:hover{
         .close{
             opacity: 1;
+        }
+    }
+    .custom-checkbox{
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        input{
+            cursor: pointer;
         }
     }
 }    

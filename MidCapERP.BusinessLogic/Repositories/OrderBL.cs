@@ -270,6 +270,29 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     if (!orderSetItem.IsDeleted)
                     {
+                        var image = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(item.SubjectId, cancellationToken);
+                        string imagePath = string.Empty;
+                        if (image.Where(x => x.IsCover == true).Any())
+                            imagePath = image.FirstOrDefault(x => x.IsCover == true).ImagePath;
+                        item.ProductImage = imagePath;
+                    }
+                    else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
+                    {
+                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == item.SubjectId).ImagePath;
+                        item.ProductImage = image;
+                    }
+                    else if (item.SubjectTypeId == polishSubjectTypeId)
+                    {
+                        var image = polishData.FirstOrDefault(p => p.PolishId == item.SubjectId).ImagePath;
+                        item.ProductImage = image;
+                    }
+                    else if (item.SubjectTypeId == FrabriSubjectTypeId)
+                    {
+                        var image = fabricData.FirstOrDefault(p => p.FabricId == item.SubjectId).ImagePath;
+                        item.ProductImage = image;
+                    }
+                    MapToDbObject(model, oldData, set, item);
+                    var orderSetItem = _mapper.Map<OrderSetItem>(item);
                         var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
                         if (oldOrderSetItem != null)
                         {

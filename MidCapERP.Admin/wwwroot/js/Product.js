@@ -2,6 +2,17 @@
 window.counter = 0;
 var ProductModel = {};
 
+$(document).ready(function () {
+    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
+
+    if ($("#hdnProductId").val() > 0) {
+        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+        //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
+    }
+});
+
 $(document).on("#lnkProductFilter", "click", (function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
@@ -23,14 +34,31 @@ $(document).on("click", ".add-icon", (function () {
         //$("span.materialErrorMsg").text("Please select value");
     }
 }));
+
 function calculateCostPrice() {
     var sum = 0;
     $(".costPrice").each(function () {
         if ($(this).parent().parent().find("input.isDeleted").val() == 'false')
             sum += +this.value;
     });
-    $("#CostPrice").val(sum);
+    $("#CostPrice").val(Math.round(sum).toFixed(2));
     $("#ProductRequestDto_CostPrice-error").hide();
+    calculateRetailerSP(sum);
+    calculateWholesalerSP(sum);
+}
+
+function calculateRetailerSP(costPrice) {
+    var retailerSP = $("#hdnRetailerSP").val();
+    if (retailerSP > 0) {
+        $("#RetailerPrice").val(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2));
+    }
+}
+
+function calculateWholesalerSP(costPrice) {
+    var retailerSP = $("#hdnWholesalerSP").val();
+    if (retailerSP > 0) {
+        $("#WholesalerPrice").val(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2));
+    }
 }
 
 function emptyFields(trRow) {
@@ -79,16 +107,6 @@ $(document).on("click", ".minus-icon", function () {
     htmlStringToAppend.hide();
 
     calculateCostPrice();
-});
-$(document).ready(function () {
-    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
-
-    if ($("#hdnProductId").val() > 0) {
-        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
-        //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
-    }
 });
 
 ProductModel.onSuccess = function (xhr) {
