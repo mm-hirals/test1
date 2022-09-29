@@ -343,18 +343,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             //GetAll Customer Data
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            if (customerData == null)
-            {
-                throw new Exception("Customer not found");
-            }
-
+          
             //GetAll Customer Addresses
             var customerAddressData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
-            if (customerAddressData == null)
-            {
-                throw new Exception("Customer Address not found");
-            }
-
             var customer = customerData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID);
             if (customer == null)
             {
