@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MidCapERP.Dto.Customers.CustomersResponseDto>
+@{
+    ViewData["Title"] = "Architects";
+    Layout = "_Layout";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Architects</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectArchitect">Send</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkArchitectFilter"><i class='bx bx-plus me-2'></i>Filters</a>
+            <a asp-controller="Architect" asp-action="Create" class="btn btn-primary">Create New</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input id="architectName" type="text" class="form-control" placeholder="Customer Name" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input id="architectMobileNo" type="text" class="form-control" placeholder="Customer PhoneNumber" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">From Date</label>
+                        <input id="architectFromDate" type="date" class="form-control" placeholder="From Date" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">To Date</label>
+                        <input id="architectToDate" type="date" class="form-control" placeholder="To Date" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_ArchitectTable" />
+        <div id="divUpdateArchitect"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script src="~/js/Architect.js" asp-append-version="true"></script>
+    }
+} 

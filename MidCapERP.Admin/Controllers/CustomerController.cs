@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -121,18 +121,33 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("CustomerEdit");
         }
 
+        [HttpPost]
+        public async Task<JsonResult> MultipleSendCustomer(long?[] value_check)
+        {
+            try
+            {
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
         #region Private Method
 
         private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
         {
             IEnumerable<CustomerTypeEnum> customerTypesData = Enum.GetValues(typeof(CustomerTypeEnum))
                                         .Cast<CustomerTypeEnum>();
+
             List<SelectListItem> customerTypesSelectedList = (from value in customerTypesData
                                                               select new SelectListItem()
                                                               {
                                                                   Text = value.ToString(),
                                                                   Value = value.ToString(),
                                                               }).ToList();
+
             ViewBag.CustomerType = customerTypesSelectedList;
         }
 
