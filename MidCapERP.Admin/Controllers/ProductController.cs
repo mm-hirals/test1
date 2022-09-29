@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Product;
 
@@ -12,10 +13,12 @@ namespace MidCapERP.Admin.Controllers
     public class ProductController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly CurrentUser _currentUser;
 
-        public ProductController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public ProductController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _currentUser = currentUser;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
@@ -194,6 +197,20 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ProductImageMarkAsCover(int ProductImageId, bool IsCover, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.UpdateProductImageMarkAsCover(ProductImageId, IsCover, cancellationToken);
+                return Json(new { result = "success" });
+            }
+            catch (Exception)
+            {
+                throw new Exception("Image not deleted");
+            }
+        }
+
         #region Private Method
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
@@ -246,6 +263,9 @@ namespace MidCapERP.Admin.Controllers
         {
             ViewBag.RawMaterialSubjectTypeId = await _unitOfWorkBL.ProductBL.GetRawMaterialSubjectTypeId(cancellationToken);
             ViewBag.PolishSubjectTypeId = await _unitOfWorkBL.ProductBL.GetPolishSubjectTypeId(cancellationToken);
+            var tenantDetails = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+            ViewBag.RetailerSP = tenantDetails != null && tenantDetails?.RetailerPercentage > 0 ? tenantDetails.RetailerPercentage : 0;
+            ViewBag.WholesalerSP = tenantDetails != null && tenantDetails?.WholeSellerPercentage > 0 ? tenantDetails.WholeSellerPercentage : 0;
         }
 
         #endregion Private Method

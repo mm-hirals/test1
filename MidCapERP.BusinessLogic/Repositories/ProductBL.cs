@@ -187,8 +187,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
         {
+            var productSubjectTypeId = await GetProductsSubjectTypeId(cancellationToken);
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.FabricNeeded, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice)).ToList();
+            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.FabricNeeded, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice, productSubjectTypeId)).ToList();
         }
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
@@ -342,6 +343,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
         }
 
+        public async Task UpdateProductImageMarkAsCover(int productImageId, bool IsCover, CancellationToken cancellationToken)
+        {
+            var getProductImage = await _unitOfWorkDA.ProductImageDA.GetById(productImageId, cancellationToken);
+            if (getProductImage != null)
+            {
+                getProductImage.IsCover = IsCover;
+                await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
+            }
+        }
+
         public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
         {
             var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
@@ -353,6 +364,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
             var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        public async Task<int> GetProductsSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products)).Select(x => x.SubjectTypeId).FirstOrDefault();
             return subjectTypeId;
         }
 
@@ -460,6 +478,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
             }
         }
+
 
         private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
         {

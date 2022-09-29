@@ -26,6 +26,8 @@ namespace MidCapERP.Dto.RawMaterial
         [DisplayName("IsDeleted")]
         public bool IsDeleted { get; set; }
 
+        public int SubjectTypeId { get; set; }
+
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
