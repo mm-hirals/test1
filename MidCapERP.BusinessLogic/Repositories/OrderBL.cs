@@ -173,31 +173,34 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
                     orderSetItem.ProductImage = String.Empty;
-                    /*
-                if (itemData.SubjectTypeId == ProductSubjectTypeId)
-                {
-                    var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
-                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                }
-                else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
-                {
-                    var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
-                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                }
-                else if (itemData.SubjectTypeId == polishSubjectTypeId)
-                {
-                    var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
-                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                }
-                else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
-                {
-                    var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
-                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                }
-                else
-                {
-                    orderSetItem.ProductImage = string.Empty;
-                }*/
+
+                    if (itemData.SubjectTypeId == ProductSubjectTypeId)
+                    {
+                        var image = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(orderSetItem.SubjectId, cancellationToken);
+                        string imagePath = string.Empty;
+                        if (image.Where(x => x.IsCover == true).Any())
+                            imagePath = image.FirstOrDefault(x => x.IsCover == true).ImagePath;
+                        orderSetItem.ProductImage = imagePath;
+                    }
+                    else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
+                    {
+                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                    }
+                    else if (itemData.SubjectTypeId == polishSubjectTypeId)
+                    {
+                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                    }
+                    else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
+                    {
+                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
+                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                    }
+                    else
+                    {
+                        orderSetItem.ProductImage = string.Empty;
+                    }
                     orderSetItem.Width = itemData.Width;
                     orderSetItem.Height = itemData.Height;
                     orderSetItem.Depth = itemData.Depth;
@@ -326,8 +329,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     if (item.SubjectTypeId == ProductSubjectTypeId)
                     {
-                        //var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
-                        //item.ProductImage = image;
+                        var image = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(item.SubjectId, cancellationToken);
+                        string imagePath = string.Empty;
+                        if (image.Where(x => x.IsCover == true).Any())
+                            imagePath = image.FirstOrDefault(x => x.IsCover == true).ImagePath;
+                        item.ProductImage = imagePath;
                     }
                     else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
                     {

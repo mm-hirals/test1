@@ -33,6 +33,8 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductImageRequestDto> CreateProductImages(ProductMainRequestDto model, CancellationToken cancellationToken);
 
+        public Task UpdateProductImageMarkAsCover(int productImageId, bool IsCover, CancellationToken cancellationToken);
+
         public Task<ProductMainRequestDto> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken);
 
         public Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken);

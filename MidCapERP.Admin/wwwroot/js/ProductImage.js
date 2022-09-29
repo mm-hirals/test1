@@ -54,3 +54,15 @@ $(document).on("click", ".img-wrap .close", (function () {
         }
     });
 }));
+
+$(document).on("click", ".img-wrap .custom-control-input", (function () {
+    var id = $(this).closest('.img-wrap').find('img').data('imageid');
+    console.log(id);
+
+    $.ajax({
+        url: "/Product/ProductImageMarkAsCover?ProductImageId=" + id + "&IsCover=" + $(this).prop('checked'),
+        type: "GET",
+        success: function (response) {
+        }
+    });
+}));

@@ -50,7 +50,7 @@
                                     <span class="text-danger materialErrorMsg"></span>
                                 </td>
                                 <td>
-                                    <input type="text" data-readonly="readonly" class="form-control Unit" placeholder="Unit Type">
+                                    <input type="text" data-readonly="readonly" class="form-control Unit" placeholder="Unit Type" readonly>
                                 </td>
                                 <td>
                                     <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
@@ -59,7 +59,7 @@
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
                                 </td>
                                 <td>
-                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly>
                                     <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
                                 </td>
                                 <td>
@@ -160,7 +160,7 @@
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
                                 </td>
                                 <td>
-                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price">
+                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly>
                                     <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].IsDeleted" data-readonly="readonly" class="isDeleted" value="false">
                                 </td>
                                 <td>
@@ -231,11 +231,13 @@
                                 <span class="price--icon">
                                     ₹
                                 </span>
+                                <input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
+                                <input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
                                 <input asp-for="CostPrice" type="text" class="form-control" placeholder="Enter Cost Price">
                                 <span asp-validation-for="ProductRequestDto.CostPrice" class="text-danger"></span>
                             </div>
                         </li>
-                        @*<li class="price-list--item">
+                        <li class="price-list--item">
                             <span class="price-list--title">
                                 Retailers Price
                             </span>
@@ -243,8 +245,15 @@
                                 <span class="price--icon">
                                     ₹
                                 </span>
-                                <input asp-for="RetailerPrice" type="text" class="form-control" placeholder="Enter Retailers Price">
-                                <span asp-validation-for="ProductRequestDto.RetailerPrice" class="text-danger"></span>
+                                @{
+                                    var TotalRetailerPrice = Model.CostPrice;
+                                    if (ViewBag.RetailerSP > 0)
+                                    {
+                                        TotalRetailerPrice = Model.CostPrice + Math.Round(((Model.CostPrice * ViewBag.RetailerSP) / 100));
+                                    }
+                                    TotalRetailerPrice = Math.Round(TotalRetailerPrice, 2);
+                                }
+                                <input type="text" id="RetailerPrice" class="form-control" readonly value="@TotalRetailerPrice" />
                             </div>
                         </li>
                         <li class="price-list--item">
@@ -255,10 +264,17 @@
                                 <span class="price--icon">
                                     ₹
                                 </span>
-                                <input asp-for="WholesalerPrice" type="text" class="form-control" placeholder="Enter Wholesalers Price">
-                                <span asp-validation-for="ProductRequestDto.WholesalerPrice" class="text-danger"></span>
+                                @{
+                                    var TotalWholesalerPrice = Model.CostPrice;
+                                    if (ViewBag.WholesalerSP > 0)
+                                    {
+                                        TotalWholesalerPrice = Model.CostPrice + Math.Round(((Model.CostPrice * ViewBag.WholesalerSP) / 100));
+                                    }
+                                    TotalWholesalerPrice = Math.Round(TotalWholesalerPrice, 2);
+                                }
+                                <input type="text" id="WholesalerPrice" class="form-control" readonly value="@TotalWholesalerPrice" />
                             </div>
-                        </li>*@
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -279,7 +295,7 @@
 </form>
 
 <script>
-    $(function() {
+    $(function () {
         window.counter = @i;
     });
 </script>
