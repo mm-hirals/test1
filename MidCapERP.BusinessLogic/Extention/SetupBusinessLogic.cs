@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Repositories;
+using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.BusinessLogic.UnitOfWork;
@@ -38,7 +39,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<ITenantBankDetailBL, TenantBankDetailBL>();
             services.AddScoped<IOrderBL, OrderBL>();
             services.AddScoped<IDashboardBL, DashboardBL>();
-
+            services.AddScoped<IActivityLogsService, ActivityLogsService>();
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }
