@@ -1,13 +1,20 @@
 ﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace MidCapERP.Dto.Customers
 {
     public class CustomersResponseDto
     {
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
-        [DisplayName("Customer Name")]
-        public string CustomerName { get; set; }
+        [DisplayName("Customer Type")]
+        public int CustomerTypeId { get; set; }
+
+        [DisplayName("First Name")]
+        public string FirstName { get; set; }
+
+        [DisplayName("Last Name")]
+        public string LastName { get; set; }
 
         [DisplayName("Email Address")]
         public string EmailId { get; set; }
@@ -15,23 +22,17 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [DisplayName("Alternate Phone Number")]
+        [DisplayName("Alt. Phone Number")]
         public string AltPhoneNumber { get; set; }
 
-        public string BillingStreet1 { get; set; }
-        public string BillingStreet2 { get; set; }
-        public string BillingLandmark { get; set; }
-        public string BillingArea { get; set; }
-        public string BillingCity { get; set; }
-        public string BillingState { get; set; }
-        public string BillingZipCode { get; set; }
-        public string ShippingStreet1 { get; set; }
-        public string ShippingStreet2 { get; set; }
-        public string ShippingLandmark { get; set; }
-        public string ShippingArea { get; set; }
-        public string ShippingCity { get; set; }
-        public string ShippingState { get; set; }
-        public string ShippingZipCode { get; set; }
+        [DisplayName("GST No")]
+        public string? GSTNo { get; set; }
+
+        public long? RefferedBy { get; set; }
+
+        [JsonIgnore]
+        public decimal Discount { get; set; }
+
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

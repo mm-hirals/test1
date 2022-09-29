@@ -31,6 +31,7 @@ namespace MidCapERP.Dto.User
 
         public int TenantId { get; set; }
 
+        [DisplayName("User Role")]
         public string AspNetRole { get; set; } = string.Empty;
 
         public string NormalizedName { get; set; } = string.Empty;

@@ -1,13 +1,15 @@
 ﻿@model IEnumerable<MidCapERP.Dto.Customers.CustomersResponseDto>
 
-<table class="table c-table" id="tblCustomer">
+<table class="table c-table c-table-stripted" id="tblCustomer">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.CustomerName)</th>
+            <th>
+                <input type="checkbox" id="selectall" />
+            </th>
+            <th>Name</th>
             <th>@Html.DisplayNameFor(model => model.EmailId)</th>
             <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.AltPhoneNumber)</th>
-            <th></th>
+            <th>Action</th>
         </tr>
     </thead>
 </table> 

@@ -25,18 +25,20 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<CompanyResponseDto>> GetAll(CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var lookUpValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<CompanyResponseDto>>(lookUpValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Company).ToList());
+            return _mapper.Map<List<CompanyResponseDto>>(lookUpValuesAllData.Where(x => x.LookupId == lookupId).ToList());
         }
 
         public async Task<JsonRepsonse<CompanyResponseDto>> GetFilterCompanyData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var companyAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var companyResponseData = (from x in companyAllData
                                        join y in lookupsAllData
                                             on new { x.LookupId } equals new { y.LookupId }
-                                       where x.LookupId == (int)MasterPagesEnum.Company
+                                       where x.LookupId == lookupId
                                        select new CompanyResponseDto()
                                        {
                                            LookupValueId = x.LookupValueId,
@@ -69,7 +71,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CompanyRequestDto> CreateCompany(CompanyRequestDto model, CancellationToken cancellationToken)
         {
+            int lookupId = await GetLookupId(cancellationToken);
             var companyToInsert = _mapper.Map<LookupValues>(model);
+            companyToInsert.LookupId = lookupId;
             companyToInsert.IsDeleted = false;
             companyToInsert.CreatedBy = _currentUser.UserId;
             companyToInsert.CreatedDate = DateTime.Now;
@@ -119,6 +123,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("LookupValues not found");
             }
             return companyDataById;
+        }
+
+        private async Task<int> GetLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Company)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion PrivateMethods

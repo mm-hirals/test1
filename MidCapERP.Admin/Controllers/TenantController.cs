@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Infrastructure.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
@@ -10,7 +11,7 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public TenantController(IUnitOfWorkBL unitOfWorkBL)
+        public TenantController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
@@ -48,6 +49,6 @@ namespace MidCapERP.Admin.Controllers
             Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
         }
 
-        #endregion PrivateMethod
+        #endregion PrivateMethod             
     }
 }

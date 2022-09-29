@@ -1,70 +1,53 @@
-﻿using System.ComponentModel;
+﻿using MidCapERP.Dto.CustomerAddresses;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MidCapERP.Dto.Customers
 {
     public class CustomersRequestDto
     {
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
-        [DisplayName("Customer Name")]
-        public string CustomerName { get; set; }
+        [DisplayName("Customer Type")]
+        public int CustomerTypeId { get; set; }
+
+        [DisplayName("First Name")]
+        [Required]
+        public string FirstName { get; set; }
+
+        [DisplayName("Last Name")]
+        [Required]
+        public string LastName { get; set; }
 
         [DisplayName("Email Address")]
         [EmailAddress(ErrorMessage = "Please enter valid email address")]
         public string? EmailId { get; set; }
 
         [DisplayName("Phone Number")]
+        [Required]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string PhoneNumber { get; set; }
 
-        [DisplayName("Alt Phone Number")]
+        [DisplayName("Alt. Phone Number")]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits")]
         public string? AltPhoneNumber { get; set; }
 
-        [DisplayName("Billing Street1")]
-        public string BillingStreet1 { get; set; }
+        [DisplayName("GST No")]
+        public string? GSTNo { get; set; }
 
-        [DisplayName("Billing Street2")]
-        public string? BillingStreet2 { get; set; }
+        [DisplayName("Reffered Number")]
+        public string? RefferedNumber { get; set; }
 
-        [DisplayName("Billing Landmark")]
-        public string? BillingLandmark { get; set; }
+        [DisplayName("Reffered Name")]
+        public string? RefferedName { get; set; }
 
-        [DisplayName("Billing Area")]
-        public string BillingArea { get; set; }
+        public CustomerAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
 
-        [DisplayName("Billing City")]
-        public string BillingCity { get; set; }
-
-        [DisplayName("Billing State")]
-        public string BillingState { get; set; }
-
-        [DisplayName("Billing Zip Code")]
-        public string BillingZipCode { get; set; }
-
-        [DisplayName("Shipping Street1")]
-        public string ShippingStreet1 { get; set; }
-
-        [DisplayName("Shipping Street2")]
-        public string? ShippingStreet2 { get; set; }
-
-        [DisplayName("Shipping Landmark")]
-        public string? ShippingLandmark { get; set; }
-
-        [DisplayName("Shipping Area")]
-        public string ShippingArea { get; set; }
-
-        [DisplayName("Shipping City")]
-        public string ShippingCity { get; set; }
-
-        [DisplayName("Shipping State")]
-        public string ShippingState { get; set; }
-
-        [DisplayName("Shipping Zip Code")]
-        public string ShippingZipCode { get; set; }
+        [JsonIgnore]
+        public decimal Discount { get; set; }
 
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }

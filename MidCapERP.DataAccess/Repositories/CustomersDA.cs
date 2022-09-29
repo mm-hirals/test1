@@ -1,24 +1,27 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class CustomersDA : ICustomersDA
     {
         private readonly ISqlRepository<Customers> _customers;
+        private readonly CurrentUser _currentUser;
 
-        public CustomersDA(ISqlRepository<Customers> customers)
+        public CustomersDA(ISqlRepository<Customers> customers, CurrentUser currentUser)
         {
             _customers = customers;
+            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<Customers>> GetAll(CancellationToken cancellationToken)
         {
-            return await _customers.GetAsync(cancellationToken, x => x.IsDeleted == false);
+            return await _customers.GetAsync(cancellationToken, x => x.IsDeleted == false && x.TenantId == _currentUser.TenantId);
         }
 
-        public async Task<Customers> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<Customers> GetById(Int64 Id, CancellationToken cancellationToken)
         {
             return await _customers.GetByIdAsync(Id, cancellationToken);
         }
@@ -28,19 +31,9 @@ namespace MidCapERP.DataAccess.Repositories
             return await _customers.InsertAsync(model, cancellationToken);
         }
 
-        public async Task<Customers> UpdateCustomers(int Id, Customers model, CancellationToken cancellationToken)
+        public async Task<Customers> UpdateCustomers(Int64 Id, Customers model, CancellationToken cancellationToken)
         {
             return await _customers.UpdateAsync(model, cancellationToken);
-        }
-
-        public async Task<Customers> DeleteCustomers(int Id, CancellationToken cancellationToken)
-        {
-            var entity = await _customers.GetByIdAsync(Id, cancellationToken);
-            if (entity != null)
-            {
-                return await _customers.UpdateAsync(entity, cancellationToken);
-            }
-            return entity;
         }
     }
 }

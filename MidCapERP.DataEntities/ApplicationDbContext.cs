@@ -43,5 +43,17 @@ namespace MidCapERP.DataEntities
         public DbSet<Polish> Polish { get; set; }
         public DbSet<Tenant> Tenant { get; set; }
         public DbSet<UserTenantMapping> UserTenantMapping { get; set; }
+        public DbSet<CustomerAddresses> CustomerAddresses { get; set; }
+        public DbSet<CustomerTypes> CustomerTypes { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImage { get; set; }
+        public DbSet<ProductMaterial> ProductMaterial { get; set; }
+        public DbSet<OTPLogin> LoginToken { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderSet> OrderSet { get; set; }
+        public DbSet<OrderSetItem> OrderSetItem { get; set; }
+        public DbSet<OrderSet> OrderSets { get; set; }
+        public DbSet<OrderSetItem> OrderSetItems { get; set; }
+        public DbSet<TenantBankDetail> TenantBankDetail { get; set; }
     }
 }

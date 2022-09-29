@@ -8,6 +8,7 @@ using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
+using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -33,12 +34,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<FabricResponseDto>>(data.ToList());
         }
 
+        public async Task<IEnumerable<MegaSearchResponse>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).Take(10).ToList();
+        }
+
+        public async Task<FabricResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var data = frabricAlldata.FirstOrDefault(x => x.ModelNo == modelno);
+            return _mapper.Map<FabricResponseDto>(data);
+        }
+
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
+            var lookupCompanyId = await GetCompanyLookupId(cancellationToken);
+            var lookupUnitId = await GetUnitLookupId(cancellationToken);
             var fabricAllData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var companyData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Company);
-            var unitData = lookupValuesAllData.Where(x => x.LookupId == (int)MasterPagesEnum.Unit);
+            var companyData = lookupValuesAllData.Where(x => x.LookupId == lookupCompanyId);
+            var unitData = lookupValuesAllData.Where(x => x.LookupId == lookupUnitId);
             var fabricResponseData = (from x in fabricAllData
                                       join y in companyData on new { CompanyId = x.CompanyId } equals new { CompanyId = y.LookupValueId }
                                       join z in unitData on new { UnitId = x.UnitId } equals new { UnitId = z.LookupValueId }
@@ -132,6 +148,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UnitId = model.UnitId;
             oldData.UnitPrice = model.UnitPrice;
             oldData.ImagePath = model.ImagePath;
+        }
+
+        private async Task<int> GetCompanyLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Company)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
+        }
+
+        private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)
+        {
+            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
+            return lookupId;
         }
 
         #endregion Private Method

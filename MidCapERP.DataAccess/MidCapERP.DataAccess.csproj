@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MidCapERP.Core\MidCapERP.Core.csproj" />
     <ProjectReference Include="..\MidCapERP.DataEntities\MidCapERP.DataEntities.csproj" />
+    <ProjectReference Include="..\MidCapERP.Dto\MidCapERP.Dto.csproj" />
     <!--<ProjectReference Include="..\MidCapERP.Dto\MidCapERP.Dto.csproj" />-->
   </ItemGroup>
 

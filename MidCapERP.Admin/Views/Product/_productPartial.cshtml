@@ -1,0 +1,110 @@
+﻿@model MidCapERP.Dto.Product.ProductRequestDto
+
+<form asp-action="CreateProductBasicDetail" asp-controller="Product"
+      method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
+    <div class="card-product--wrapper mb-2">
+        <input type="hidden" asp-for="ProductId" class="form-control" />
+        @*<label for="UploadImage" class="card-product--image">
+            <input asp-for="UploadImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
+            <div class="product--image" style="cursor:pointer">
+                @if (!string.IsNullOrEmpty(Model?.CoverImage))
+                {
+                    <img src="@Model.CoverImage" id="editProductImage" alt="Product Image" />
+                }
+                else
+                {
+                    <img src="~/images/No_Image.jpg" alt="Product Image" />
+                }
+                <div class="edit--image">
+                    <i class="bx bx-pencil"></i>
+                </div>
+            </div>
+        </label>*@
+        <div class="card-prpoduct-cotent--wrapper">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            @if (Model?.ProductId > 0)
+                            {
+                                <select asp-for="CategoryId" data-val="true" class="form-control" readonly="readonly"
+                                    asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                                    <option value="" selected>Select Category</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select asp-for="CategoryId" data-val="true" class="form-control"
+                                    asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                                    <option value="" selected>Select Category</option>
+                                </select>
+                            }
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label asp-for="ProductTitle" class="form-label"></label>&nbsp;<span class="required">*</span>
+                            <input asp-for="ProductTitle" type="text" class="form-control" placeholder="Product Title">
+                            <span asp-validation-for="ProductTitle" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label asp-for="ModelNo" class="form-label"></label>&nbsp;<span class="required">*</span>
+                            <input asp-for="ModelNo" type="text" class="form-control" placeholder="Product Code">
+                            <span asp-validation-for="ModelNo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="product-info--item">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth) </span>In inches
+                            </label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width">
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height">
+                                </div>
+                                <div class="col-md-4">
+                                    <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth">
+                                </div>
+                                <span asp-validation-for="Width" class="text-danger"></span>
+                                <span asp-validation-for="Height" class="text-danger"></span>
+                                <span asp-validation-for="Depth" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model?.ProductId > 0)
+                {
+                    <div class="col-8">
+                        <small>Product has been created by <strong>@Model.CreatedByName</strong> on <strong>@Model.CreatedDate.ToLongDateString()</strong></small>
+                        @if (@Model.UpdatedDate != null && @Model.UpdatedByName != null)
+                        {
+                            <small class="ms-3">Product has been updated by <strong>@Model.UpdatedByName</strong> on <strong>@Model.UpdatedDate.Value.ToLongDateString()</strong></small>
+                        }
+                    </div>
+                }
+                <div class="@(Model?.ProductId > 0 ? "col-4" : "col-12")">
+                    <div class="text-end pb-2">
+                        <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
+                            Cancel
+                        </a>
+                        <input type="submit" value="Save" class="btn btn-primary ms-2 productSubmit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

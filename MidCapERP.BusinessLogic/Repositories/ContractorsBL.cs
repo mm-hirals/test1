@@ -97,7 +97,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             catDto.CreatedDate = DateTime.Now;
             catDto.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ContractorCategoryMappingDA.CreateContractorCategoryMapping(catDto, cancellationToken);
-            
+
             return _mapper.Map<ContractorsRequestDto>(contractor);
         }
 
@@ -133,7 +133,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             contractorCategoryMapping.IsDeleted = true;
             UpdateContractorCategory(contractorCategoryMapping);
             await _unitOfWorkDA.ContractorCategoryMappingDA.DeleteContractorCategoryMapping(Id, cancellationToken);
-            
+
             return _mapper.Map<ContractorsRequestDto>(contractorData);
         }
 

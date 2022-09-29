@@ -27,6 +27,18 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<ITenantDA, TenantDA>();
             services.AddScoped<IUserTenantMappingDA, UserTenantMappingDA>();
             services.AddScoped<IUserDA, UserDA>();
+            services.AddScoped<ICustomerAddressesDA, CustomerAddressesDA>();
+            services.AddScoped<ICustomerTypesDA, CustomerTypesDA>();
+            services.AddScoped<IProductDA, ProductDA>();
+            services.AddScoped<IProductImageDA, ProductImageDA>();
+            services.AddScoped<IProductMaterialDA, ProductMaterialDA>();
+            services.AddScoped<IRoleDA, RoleDA>();
+            services.AddScoped<IRolePermissionDA, RolePermissionDA>();
+            services.AddScoped<IOTPLoginDA, OTPLoginDA>();
+            services.AddScoped<IOrderDA, OrderDA>();
+            services.AddScoped<ITenantBankDetailDA, TenantBankDetailDA>();
+            services.AddScoped<IOrderSetDA, OrderSetDA>();
+            services.AddScoped<IOrderSetItemDA, OrderSetItemDA>();
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }

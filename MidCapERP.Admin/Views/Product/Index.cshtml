@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<MidCapERP.Dto.Product.ProductResponseDto>
+
+@{
     ViewData["Title"] = "Products";
 }
 
@@ -31,6 +33,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script src="~/js/Product.js" asp-append-version="true"></script>
+        <script src="~/js/ProductTable.js" asp-append-version="true"></script>
     }
 }
