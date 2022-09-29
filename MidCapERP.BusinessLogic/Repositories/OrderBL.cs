@@ -48,6 +48,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                      {
                                          OrderId = x.OrderId,
                                          OrderNo = x.OrderNo,
+                                         CreatedDate = x.CreatedDate,
                                          CustomerName = y.FirstName,
                                          Status = x.Status,
                                          GrossTotal = x.GrossTotal,
@@ -137,7 +138,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderToInsert.CreatedDate = DateTime.Now;
             orderToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.OrderDA.CreateOrder(orderToInsert, cancellationToken);
-           
 
             //Create Orderset Base On Order
             foreach (var setData in model.OrderSetRequestDto)
@@ -172,32 +172,32 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderSetItem.OrderSetId = orderSetData.OrderSetId;
                     orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
                     orderSetItem.SubjectId = itemData.SubjectId;
-                    orderSetItem.ProductImage =String.Empty;
-                        /*
-                    if (itemData.SubjectTypeId == ProductSubjectTypeId)
-                    {
-                        var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
-                    {
-                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else if (itemData.SubjectTypeId == polishSubjectTypeId)
-                    {
-                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
-                    {
-                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else
-                    {
-                        orderSetItem.ProductImage = string.Empty;
-                    }*/
+                    orderSetItem.ProductImage = String.Empty;
+                    /*
+                if (itemData.SubjectTypeId == ProductSubjectTypeId)
+                {
+                    var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.CoverImage;
+                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                }
+                else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
+                {
+                    var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
+                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                }
+                else if (itemData.SubjectTypeId == polishSubjectTypeId)
+                {
+                    var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
+                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                }
+                else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
+                {
+                    var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
+                    orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+                }
+                else
+                {
+                    orderSetItem.ProductImage = string.Empty;
+                }*/
                     orderSetItem.Width = itemData.Width;
                     orderSetItem.Height = itemData.Height;
                     orderSetItem.Depth = itemData.Depth;
@@ -239,7 +239,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 // Get Order data by OrderId
                 var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
 
-                if(orderById == null)
+                if (orderById == null)
                 {
                     throw new Exception("Order not found");
                 }
@@ -326,8 +326,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     if (item.SubjectTypeId == ProductSubjectTypeId)
                     {
-                        var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
-                        item.ProductImage = image;
+                        //var image = productData.FirstOrDefault(p => p.ProductId == item.SubjectId).CoverImage;
+                        //item.ProductImage = image;
                     }
                     else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
                     {
@@ -385,7 +385,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return subjectTypeId;
         }
 
-
         #region Private Method
 
         private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
@@ -398,7 +397,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data;
         }
 
-        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet ,OrderSetItemRequestDto orderSetItem)
+        private static void MapToDbObject(OrderApiRequestDto model, Order oldData, OrderSetRequestDto orderSet, OrderSetItemRequestDto orderSetItem)
         {
             oldData.OrderNo = model.OrderNo;
             oldData.CustomerID = model.CustomerID;
