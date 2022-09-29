@@ -41,7 +41,7 @@ namespace MidCapERP.Dto.Order
         [Required]
         public DateTime? DeliveryDate { get; set; }
 
-        public string? DeliveryDateFormat => DeliveryDate != null ? DeliveryDate.Value.ToLongDateString() : "";
+        public string? DeliveryDateFormat => DeliveryDate != null ? DeliveryDate.Value.ToShortDateString() : "";
 
         public string? Comments { get; set; }
 
