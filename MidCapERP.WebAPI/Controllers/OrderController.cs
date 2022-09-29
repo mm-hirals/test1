@@ -44,7 +44,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
 
-        [HttpPut("{id}/{orderSetId}/{orderSetItemId}")]
+        [HttpPut("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
         public async Task<ApiResponse> Put(int id, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {

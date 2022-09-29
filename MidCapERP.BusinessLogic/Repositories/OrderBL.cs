@@ -141,11 +141,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             foreach (var setData in model.OrderSetRequestDto)
             {
                 setData.OrderId = saveOrder.OrderId;
-                await SaveOrderSet(setData, cancellationToken);
+               var saveOrderData =  await SaveOrderSet(setData, cancellationToken);
                 //Create OrderSetItem Base On OrderSet
                 foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
                     itemData.OrderId = saveOrder.OrderId;
+                    itemData.OrderSetId = saveOrderData.OrderSetId;
                     await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
@@ -249,7 +250,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
             var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
 
-            var oldData = await OrderGetById(model.OrderId, cancellationToken);
+            var oldData = await OrderGetById(Id, cancellationToken);
             oldData.IsDraft = true;
             oldData.Status = model.Status;
             oldData.UpdatedBy = model.UpdatedBy;
@@ -258,42 +259,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             //Start Update OrderSet
             foreach (var orderSet in model.OrderSetRequestDto)
             {
-                if (!orderSet.IsDeleted)
+                var oldOrderSet = await OrderSetGetById(Id, cancellationToken);
+                oldOrderSet.SetName = orderSet.SetName;
+                oldOrderSet.UpdatedBy = orderSet.UpdatedBy;
+                oldOrderSet.UpdatedDate = orderSet.UpdatedDate;
+                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(orderSet.OrderSetId, oldOrderSet, cancellationToken);
+                //Start Update OrderSetItem
+                foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
                 {
-                    var oldOrderSet = await OrderSetGetById(Id, cancellationToken);
-                    if (oldOrderSet != null)
+                    if (!orderSetItem.IsDeleted)
                     {
-                        oldOrderSet.SetName = orderSet.SetName;
-                        oldOrderSet.UpdatedBy = orderSet.UpdatedBy;
-                        oldOrderSet.UpdatedDate = orderSet.UpdatedDate;
-                        await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(orderSet.OrderSetId, oldOrderSet, cancellationToken);
-                        //Start Update OrderSetItem
-                        foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
+                        var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
+                        if (oldOrderSetItem != null)
                         {
-                            if (!orderSetItem.IsDeleted)
-                            {
-                                var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
-                                if (oldOrderSetItem != null)
-                                {
-                                    oldOrderSetItem.SubjectTypeId = orderSetItem.SubjectTypeId;
-                                    oldOrderSetItem.SubjectId = orderSetItem.SubjectId;
-                                    oldOrderSetItem.Height = orderSetItem.Height;
-                                    oldOrderSetItem.Width = orderSetItem.Width;
-                                    oldOrderSetItem.Depth = orderSetItem.Depth;
-                                    oldOrderSetItem.Quantity = orderSetItem.Quantity;
-                                    oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
-                                    oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
-                                    oldOrderSetItem.TotalAmount = orderSetItem.TotalAmount;
-                                    oldOrderSetItem.Comment = orderSetItem.Comment;
-                                    oldOrderSetItem.Status = orderSetItem.Status;
-                                    oldOrderSetItem.UpdatedDate = DateTime.Now;
-                                    oldOrderSetItem.UpdatedBy = orderSetItem.CreatedBy;
-                                    await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem.OrderSetItemId, oldOrderSetItem, cancellationToken);
-                                }
-                            }
+                            oldOrderSetItem.SubjectTypeId = orderSetItem.SubjectTypeId;
+                            oldOrderSetItem.SubjectId = orderSetItem.SubjectId;
+                            oldOrderSetItem.Height = orderSetItem.Height;
+                            oldOrderSetItem.Width = orderSetItem.Width;
+                            oldOrderSetItem.Depth = orderSetItem.Depth;
+                            oldOrderSetItem.Quantity = orderSetItem.Quantity;
+                            oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
+                            oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
+                            oldOrderSetItem.TotalAmount = orderSetItem.TotalAmount;
+                            oldOrderSetItem.Comment = orderSetItem.Comment;
+                            oldOrderSetItem.Status = orderSetItem.Status;
+                            oldOrderSetItem.UpdatedDate = DateTime.Now;
+                            oldOrderSetItem.UpdatedBy = orderSetItem.CreatedBy;
+                            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem.OrderSetItemId, oldOrderSetItem, cancellationToken);
                         }
+
                     }
-                    //End Update OrderSetItem
                 }
             }
             return _mapper.Map<OrderApiRequestDto>(data);
