@@ -29,6 +29,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IFileStorageService FileStorageService { get; }
         IQRCodeService IQRCodeService { get; }
         IProductBL ProductBL { get; }
+        ITenantBL TenantBL { get; }
+        ITenantBankDetailBL TenantBankDetailBL { get; }
         IOrderBL OrderBL { get; }
         IDashboardBL DashboardBL { get; }
     }

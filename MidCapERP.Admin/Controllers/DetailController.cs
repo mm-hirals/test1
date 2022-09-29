@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 
 namespace MidCapERP.Admin.Controllers

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MidCapERP.Dto.OrderSet;
+using MidCapERP.Dto.OrderSetItem;
+using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Order
 {
@@ -43,7 +45,10 @@ namespace MidCapERP.Dto.Order
         [Required]
         public bool IsDraft { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public OrderSetRequestDto? OrderSetRequestDto { get; set; }
+
+        public OrderSetItemRequestDto? OrderSetItemRequestDto { get; set; }
+
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }

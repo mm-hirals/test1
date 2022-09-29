@@ -18,8 +18,8 @@
                         <input type="hidden" asp-for="ProductId" />
                         <div class="col-3">
                             <div class="form-group">
-                                <label asp-for="UsedFabric" class="form-label"></label>
-                                <input asp-for="UsedFabric" type="number" class="form-control fabric" placeholder="Fabric in meter">
+                                <label asp-for="FabricNeeded" class="form-label"></label>
+                                <input asp-for="FabricNeeded" type="number" class="form-control fabric" placeholder="Fabric in meter">
                             </div>
                         </div>
                         <div class="col-3">
@@ -64,7 +64,6 @@
                             <label asp-for="QRImage" class="form-label"></label>
                             <div class="product--image">
                                 <img src="@Model.QRImage" alt="Product Image" width="250" height="250" />
-                                @*<img src="~/images/qr-code.png" alt="Product Name" class="w-100"/>*@
                             </div>
                         </div>
                     </div>

@@ -21,7 +21,7 @@ namespace MidCapERP.DataEntities.Models
         public decimal UnitPrice { get; set; }
         public decimal DiscountPrice { get; set; }
         public decimal TotalAmount { get; set; }
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
         public int Status { get; set; }
     }
 }

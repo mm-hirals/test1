@@ -75,7 +75,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             accessoriesTypeToInsert.CreatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.AccessoriesTypeDA.CreateAccessoriesType(accessoriesTypeToInsert, cancellationToken);
             return _mapper.Map<AccessoriesTypeRequestDto>(data);
-
         }
 
         public async Task<AccessoriesTypeRequestDto> UpdateAccessoriesType(int Id, AccessoriesTypeRequestDto model, CancellationToken cancellationToken)

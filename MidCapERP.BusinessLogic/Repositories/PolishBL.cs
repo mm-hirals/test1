@@ -43,7 +43,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<PolishResponseDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-            var data = polishAlldata.Where(x => x.ModelNo == modelno);
+            var data = polishAlldata.FirstOrDefault(x => x.ModelNo == modelno);
             return _mapper.Map<PolishResponseDto>(data);
         }
 
