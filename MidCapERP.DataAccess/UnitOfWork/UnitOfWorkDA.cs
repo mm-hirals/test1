@@ -30,11 +30,12 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IRoleDA RoleDA { get; }
         public IRolePermissionDA RolePermissionDA { get; }
         public IOrderDA OrderDA { get; }
-        public ITenantBankDetailDA TenantBankDetailDA{ get; }
+        public ITenantBankDetailDA TenantBankDetailDA { get; }
         public IOrderSetDA OrderSetDA { get; }
         public IOrderSetItemDA OrderSetItemDA { get; }
+        public IOrderAddressDA OrderAddressDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IOrderAddressDA orderAddressDA)
         {
             {
                 this._context = context;
@@ -65,23 +66,29 @@ namespace MidCapERP.DataAccess.UnitOfWork
                 this.TenantBankDetailDA = tenantBankDetailDA;
                 this.OrderSetDA = orderSetDA;
                 this.OrderSetItemDA = orderSetItemDA;
+                this.OrderAddressDA = orderAddressDA;
             }
+            OrderAddressDA = orderAddressDA;
         }
 
         #region TransactionMethod
+
         public async Task BeginTransactionAsync()
         {
             await _context.Database.BeginTransactionAsync();
         }
+
         public async Task CommitTransactionAsync()
         {
             await _context.Database.CommitTransactionAsync();
         }
+
         public async Task rollbackTransactionAsync()
         {
             await _context.Database.RollbackTransactionAsync();
         }
-        #endregion
+
+        #endregion TransactionMethod
 
         #region DisposeMethod
 

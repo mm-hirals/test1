@@ -46,7 +46,7 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPut("{id}/{orderSetId}/{orderSetItemId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
-        public async Task<ApiResponse> Put(int id,int orderSetId,int orderSetItemId, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Put(int id, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
             ValidationRequest(orderRequestApiDto);
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderApi(id, orderRequestApiDto, cancellationToken);

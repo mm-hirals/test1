@@ -6,7 +6,6 @@ namespace MidCapERP.Dto.Order
 {
     public class OrderApiRequestDto
     {
-        
         public long OrderId { get; set; }
 
         public string OrderNo { get; set; }
@@ -32,6 +31,7 @@ namespace MidCapERP.Dto.Order
         [Required]
         public decimal PayableAmount { get; set; }
 
+        [JsonIgnore]
         public DateTime? DeliveryDate { get; set; }
 
         public string Comments { get; set; }
@@ -39,7 +39,7 @@ namespace MidCapERP.Dto.Order
         [Required]
         public string GSTNo { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public int Status { get; set; }
 
         [Required]
