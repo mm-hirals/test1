@@ -1,14 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MidCapERP.Dto.OrderSetItem
 {
     public class OrderSetItemRequestDto
     {
+        [JsonIgnore]
         public long OrderSetItemId { get; set; }
 
+        [JsonIgnore]
         [Required]
         public long OrderId { get; set; }
 
+        [JsonIgnore]
         [Required]
         public long OrderSetId { get; set; }
 
@@ -43,12 +47,25 @@ namespace MidCapERP.Dto.OrderSetItem
         [Required]
         public int Status { get; set; }
 
+        [JsonIgnore]
         public bool IsDeleted { get; set; }
+
+        [JsonIgnore]
         public long CreatedBy { get; set; }
+
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+
+        [JsonIgnore]
         public DateTime CreatedUTCDate { get; set; }
+
+        [JsonIgnore]
         public long? UpdatedBy { get; set; }
+
+        [JsonIgnore]
         public DateTime? UpdatedDate { get; set; }
+
+        [JsonIgnore]
         public DateTime? UpdatedUTCDate { get; set; }
     }
 }

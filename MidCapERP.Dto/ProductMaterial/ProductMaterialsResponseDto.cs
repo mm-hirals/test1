@@ -7,7 +7,6 @@
         public int SubjectTypeId { get; set; }
         public int SubjectId { get; set; }
         public int Qty { get; set; }
-        public decimal MaterialPrice { get; set; }
         public string? Comments { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -19,18 +19,10 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Cost Price")]
         public decimal CostPrice { get; set; }
 
-        [DisplayName("Retailer Price")]
-        public decimal RetailerPrice { get; set; }
-
-        [DisplayName("Wholesaler Price")]
-        public decimal WholesalerPrice { get; set; }
-
         public string Status { get; set; }
-
         public ProductRequestDto ProductRequestDto { get; set; }
         public List<ProductImageRequestDto> ProductImageRequestDto { get; set; }
         public List<ProductMaterialRequestDto> ProductMaterialRequestDto { get; set; }
-
         public List<IFormFile> Files { get; set; }
     }
 }
