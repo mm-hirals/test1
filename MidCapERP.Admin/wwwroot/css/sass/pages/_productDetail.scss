@@ -83,6 +83,11 @@
                     margin: 0 0 10px;
                     padding: 0 0 10px;
                     border-bottom: 1px solid rgba($gray, 0.17);
+                    @include media("<sm") {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
                 }
 
                 .product-name {
@@ -95,7 +100,10 @@
                 .model-label {
                     font-size: 16px;
                     color: $darkGray;
-                    font-weight: 600;                    
+                    font-weight: 600;    
+                    @include media("<sm") {
+                        margin: 15px 0 10px;
+                    }                
                 }
 
                 .model-number {
@@ -112,6 +120,9 @@
                 .product-price {
                     font-size: 32px;
                     font-weight: 700;
+                    @include media("<sm") {
+                        font-size: 28px;
+                    }
                 }
 
             }
@@ -120,6 +131,10 @@
 
         .main-product-details {
             margin: 15px 0 0;
+            @include media("<sm"){
+                border: 1px solid #f1f2f3;
+                box-shadow: none;
+            }
 
             .main-product-title {
                 // font-size: 18px;
@@ -140,6 +155,17 @@
                     // margin-bottom: 20px;
                     border-bottom: 1px solid rgba($darkGray, 0.1);
                     padding: 8px 16px;
+                    @include media("<sm"){
+                        flex-wrap: wrap;
+                        padding: 0;
+                        // margin: 10px 0;
+                        box-shadow: 2px 2px 12px -1px rgb(32 32 32 / 10%);
+                    }
+                    + .product-deatils-sublist{
+                        @include media("<sm"){
+                            margin-top: 16px;
+                        }
+                    }
 
                     // flex-shrink: 0
                     &:last-child {
@@ -151,12 +177,38 @@
                         font-size: 15px;
                         font-weight: 500;
                         color: $darkGray;
+                        @include media("<sm"){
+                            min-width: 100%;
+                            padding: 5px 10px;
+                            background-color: #f1f2f3;
+                        }
                     }
-
+                    
                     .product-details-value {
                         color: $black;
                         font-size: 16px;
                         font-weight: 600;
+                        position: relative;
+                        padding-left: 15px;
+                        @include media("<sm"){
+                            min-width: 100%;
+                            padding: 5px 10px;
+                        }
+                        @include media("<sm"){
+                            min-width: 100%;
+                        }
+                        &::before{
+                            position: absolute;
+                            content: "";
+                            left: 0;
+                            background-color: $darkGray;                                                        
+                            width: 10px;
+                            height: 2px;
+                            top: calc(50% - 1px);
+                            @include media("<sm"){
+                                display: none;
+                            }
+                        }
                     }
                 }
             }
