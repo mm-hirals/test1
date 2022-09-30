@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataAccess.Repositories;
@@ -39,7 +39,9 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<ITenantBankDetailDA, TenantBankDetailDA>();
             services.AddScoped<IOrderSetDA, OrderSetDA>();
             services.AddScoped<IOrderSetItemDA, OrderSetItemDA>();
+            services.AddScoped<IActivityLogsDA, ActivityLogsDA>();
             services.AddScoped<IOrderAddressDA, OrderAddressDA>();
+ 
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }
