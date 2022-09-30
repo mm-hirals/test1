@@ -1,4 +1,4 @@
-﻿using MidCapERP.DataAccess.Interface;
+using MidCapERP.DataAccess.Interface;
 
 namespace MidCapERP.DataAccess.UnitOfWork
 {
@@ -30,12 +30,11 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IOrderDA OrderDA { get; }
         IOrderSetDA OrderSetDA { get; }
         IOrderSetItemDA OrderSetItemDA { get; }
+        IActivityLogsDA ActivityLogsDA { get; }
         IOrderAddressDA OrderAddressDA { get; }
 
         Task BeginTransactionAsync();
-
         Task CommitTransactionAsync();
-
         Task rollbackTransactionAsync();
 
         ITenantBankDetailDA TenantBankDetailDA { get; }

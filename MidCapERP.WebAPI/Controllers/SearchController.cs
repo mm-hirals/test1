@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.Product;
 
 namespace MidCapERP.WebAPI.Controllers
 {

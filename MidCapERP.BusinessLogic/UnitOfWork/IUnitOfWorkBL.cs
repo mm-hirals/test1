@@ -1,4 +1,5 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 
@@ -35,5 +36,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         ITenantBankDetailBL TenantBankDetailBL { get; }
         IOrderBL OrderBL { get; }
         IDashboardBL DashboardBL { get; }
+        IActivityLogsService ActivityLogsService { get; }
     }
 }
