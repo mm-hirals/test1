@@ -17,7 +17,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IEnumerable<MegaSearchResponse>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellation);
 
-        public Task<IList<FabricApiResponseDto>> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellation);
+        public Task<FabricApiResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellation);
 
         public Task<FabricRequestDto> CreateFabric(FabricRequestDto model, CancellationToken cancellationToken);
 

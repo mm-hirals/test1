@@ -40,11 +40,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).Take(10).ToList();
         }
 
-        public async Task<IList<FabricApiResponseDto>> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<FabricApiResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);  
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-            return frabricAlldata.Where(x => x.ModelNo == modelno).Select(x => new FabricApiResponseDto(x.FabricId, x.Title, x.ModelNo, x.CompanyId, x.UnitId, x.UnitPrice, x.ImagePath, fabricSubjectTypeId)).ToList();
+            var fabricData = frabricAlldata.FirstOrDefault(x => x.ModelNo == modelno);
+            if(fabricData == null)
+            {
+                throw new Exception("Fabric data not found");
+            }
+            return  new FabricApiResponseDto(fabricData.FabricId, fabricData.Title, fabricData.ModelNo, fabricData.CompanyId, fabricData.UnitId, fabricData.UnitPrice, fabricData.ImagePath, fabricSubjectTypeId);
         }
 
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

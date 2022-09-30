@@ -185,11 +185,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             return productMain;
         }
 
-        public async Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
+        public async Task<ProductForDetailsByModuleNoResponceDto> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
         {
             var productSubjectTypeId = await GetProductsSubjectTypeId(cancellationToken);
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.FabricNeeded, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice, productSubjectTypeId)).ToList();
+            var productData = productAlldata.FirstOrDefault(x => x.ModelNo == modelNo);
+            if(productData == null)
+            {
+                throw new Exception("Product is not found");
+            }
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productSubjectTypeId);
         }
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)

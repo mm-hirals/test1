@@ -47,7 +47,7 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> GetDetails(string modelNo, CancellationToken cancellationToken)
         {
             var productDetailsData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
-            if (productDetailsData == null || productDetailsData.Count == 0)
+            if (productDetailsData == null)
             {
                 return new ApiResponse(message: "No Data found", result: productDetailsData, statusCode: 404);
             }
@@ -65,21 +65,21 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, string productType, CancellationToken cancellationToken)
         {
-            if (productType == "Product")
+            if (productType == "product")
             {
-                IList<ProductForDetailsByModuleNoResponceDto> productData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
-                if (productData == null || productData.Count == 0)
+                var productData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
+                if (productData == null)
                     return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
                 return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             }
-            else if (productType == "Fabric")
+            else if (productType == "fabric")
             {
                 var frabricData = await _unitOfWorkBL.FabricBL.GetFabricForDetailsByModuleNo(modelNo, cancellationToken);
                 if (frabricData == null)
                     return new ApiResponse(message: "No Data Found", result: frabricData, statusCode: 200);
                 return new ApiResponse(message: "Data Found", result: frabricData, statusCode: 200);
             }
-            else if (productType == "Polish")
+            else if (productType == "polish")
             {
                 var polishData = await _unitOfWorkBL.PolishBL.GetPolishForDetailsByModuleNo(modelNo, cancellationToken);
                 if (polishData == null)
