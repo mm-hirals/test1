@@ -118,8 +118,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
-
-        <script src="~/js/RolePermission.js" asp-append-version="true"></script>
-
+        <script asp-src-include="~/js/RolePermission.js" ></script>
     }
-    }
+}

@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MidCapERP.Admin</title>
     <!-- Start CSS -->
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" asp-href-include="~/css/style.css"  />
     <!-- End CSS -->
 </head>
 <body class="login-body-page--wrapper">
@@ -53,11 +53,11 @@
     </footer>
     <!-- End Footer -->
     <!-- Start JS -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script asp-src-include="~/lib/jquery/dist/jquery.min.js"></script>
+    <script asp-src-include="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- End JS -->
     <!-- Start Custom JS -->
-    <script src="~/js/custom.js" asp-append-version="true"></script>
+    <script asp-src-include="~/js/custom.js" ></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("NToastNotify")
     <!-- End Custom JS -->

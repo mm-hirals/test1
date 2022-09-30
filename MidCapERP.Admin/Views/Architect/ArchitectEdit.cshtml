@@ -185,7 +185,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script src="~/js/Customer.js" asp-append-version="true"></script>
-        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
+        <script asp-src-include="~/js/Customer.js" ></script>
+        <script asp-src-include="~/js/CustomerAddresses.js" ></script>
     }
     } 

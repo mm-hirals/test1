@@ -33,6 +33,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script src="~/js/ProductTable.js" asp-append-version="true"></script>
+        <script asp-src-include="~/js/ProductTable.js" ></script>
     }
 }

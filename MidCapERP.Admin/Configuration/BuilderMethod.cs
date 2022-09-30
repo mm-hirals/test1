@@ -1,4 +1,7 @@
 ﻿using MagnusMinds.Utility.EmailService;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using MidCapERP.Admin.Middleware.TagHelper;
 using MidCapERP.Infrastructure.ServiceDependency;
 using Serilog;
 
@@ -17,6 +20,8 @@ namespace MidCapERP.Admin.Configuration
             builder.Services.SetupIdentityDatabase(configuration);
             builder.Services.SetupDIServices(configuration);
             builder.Services.AddRazorPages().AddNToastNotifyToastr();
+            builder.Services.AddSingleton<ITagHelperInitializer<ScriptTagHelper>, AppendVersionTagHelperInitializer>();
+            builder.Services.AddSingleton<ITagHelperInitializer<LinkTagHelper>, AppendVersionTagHelperInitializer>();
         }
     }
 }

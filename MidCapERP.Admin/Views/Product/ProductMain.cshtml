@@ -40,6 +40,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-        <script src="~/js/Product.js" asp-append-version="true"></script>
+        <script asp-src-include="~/js/Product.js" ></script>
     }
 }

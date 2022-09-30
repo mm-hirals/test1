@@ -53,6 +53,6 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script src="~/js/Architect.js" asp-append-version="true"></script>
+        <script asp-src-include="~/js/Architect.js" ></script>
     }
 } 
