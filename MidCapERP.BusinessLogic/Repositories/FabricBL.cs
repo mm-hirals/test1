@@ -8,8 +8,8 @@ using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
-using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
+using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -34,22 +34,23 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<FabricResponseDto>>(data.ToList());
         }
 
-        public async Task<IEnumerable<MegaSearchResponse>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SearchResponse>> GetFabricForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
+            var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-            return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric")).Take(10).ToList();
+            return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric", fabricSubjectTypeId)).Take(10).ToList();
         }
 
         public async Task<FabricApiResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
-            var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);  
+            var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             var fabricData = frabricAlldata.FirstOrDefault(x => x.ModelNo == modelno);
-            if(fabricData == null)
+            if (fabricData == null)
             {
                 throw new Exception("Fabric data not found");
             }
-            return  new FabricApiResponseDto(fabricData.FabricId, fabricData.Title, fabricData.ModelNo, fabricData.CompanyId, fabricData.UnitId, fabricData.UnitPrice, fabricData.ImagePath, fabricSubjectTypeId);
+            return new FabricApiResponseDto(fabricData.FabricId, fabricData.Title, fabricData.ModelNo, fabricData.CompanyId, fabricData.UnitId, fabricData.UnitPrice, fabricData.ImagePath, fabricSubjectTypeId);
         }
 
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -175,6 +176,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
             return subjectTypeId;
         }
+
         #endregion Private Method
     }
 }

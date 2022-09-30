@@ -7,9 +7,9 @@ using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Polish;
+using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -34,10 +34,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<PolishResponseDto>>(data.ToList());
         }
 
-        public async Task<IList<MegaSearchResponse>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IList<SearchResponse>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
+            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-            return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish")).Take(10).ToList();
+            return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish", polishSubjectTypeId)).Take(10).ToList();
         }
 
         public async Task<PolishApiResponseDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
@@ -45,11 +46,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             var polishdata = polishAlldata.FirstOrDefault(x => x.ModelNo == modelno);
-            if(polishdata == null)
+            if (polishdata == null)
             {
-                throw new Exception("Polish not found");
+                throw new Exception("Polish Data not found");
             }
-            return new PolishApiResponseDto(polishdata.PolishId, polishdata.Title, polishdata.ModelNo, polishdata.CompanyId, polishdata.UnitId, polishdata.UnitPrice, polishdata.ImagePath,  polishSubjectTypeId);
+            return new PolishApiResponseDto(polishdata.PolishId, polishdata.Title, polishdata.ModelNo, polishdata.CompanyId, polishdata.UnitId, polishdata.UnitPrice, polishdata.ImagePath, polishSubjectTypeId);
         }
 
         public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
