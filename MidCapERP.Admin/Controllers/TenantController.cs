@@ -49,6 +49,7 @@ namespace MidCapERP.Admin.Controllers
             Response.Cookies.Append(ApplicationIdentityConstants.TenantCookieName, encValue);
         }
 
-        #endregion PrivateMethod             
+        #endregion PrivateMethod
+
     }
 }
