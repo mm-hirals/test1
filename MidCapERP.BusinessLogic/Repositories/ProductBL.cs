@@ -397,7 +397,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<SearchResponse>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
-            var productSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+            var productSubjectTypeId = await GetProductsSubjectTypeId(cancellationToken);
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             return productAlldata.Where(x => x.Status == (int)ProductStatusEnum.Published && x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.ProductId, x.ProductTitle, x.ModelNo, "", "Product", productSubjectTypeId)).Take(10).ToList();
         }
