@@ -1,1 +1,117 @@
-﻿<h1>Product Detail</h1>
+﻿<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css">
+<div class="product-details-wrapper mb-3">
+    <div class="container">
+        <div class="row c-card--wrapper pt-4 pb-4 pl-3 pr-3">
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="view-product-main">
+                    <div class="gallery">
+                        <div class="swiper-container gallery-slider">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide"><img src="/images/round-chair.jpg" alt=""></div>
+                                <div class="swiper-slide"><img src="/images/lamp.jpg" alt=""></div>
+                                <div class="swiper-slide"><img src="/images/drawer.jpg" alt=""></div>
+                                <div class="swiper-slide"><img src="/images/chair.jpg" alt=""></div>
+                            </div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+
+                        <div class="swiper-container gallery-thumbs">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide"><img src="/images/round-chair.jpg" alt=""></div>
+                                <div class="swiper-slide"><img src="/images/lamp.jpg" alt=""></div>
+                                <div class="swiper-slide"><img src="/images/drawer.jpg" alt=""></div>
+                                <div class="swiper-slide"><img src="/images/chair.jpg" alt=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 mt-lg-0 mt-md-5 mt-sm-5 mt-5">
+                <div class="view-product-mian">
+                    <div class="product-details ">
+                        <div class="product-name--wrapper">
+                            <h2 class="product-name">Dining Chair</h2>
+                            <p class="model-label">Model No. <span class="model-number">SFT123</span></p>
+                        </div>
+                        <span class="product-price">₹ 25,800 /-</span>
+
+                    </div>
+                    <div class="main-product-details c-card--wrapper">
+                        <div class="c-card--header">
+                            <h2 class="c-card--header-title text-primary">Product Details</h2>
+                        </div>
+                        @*<h2 class="main-product-title">Product Details</h2>*@
+                        <div class="c-card--body p-0">
+                        <ul class="product-details-list mb-0">
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Fabric</span>
+                                <span class="product-details-value">05</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Polish </span>
+                                <span class="product-details-value">Mast Polish</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Product Demensions</span>
+                                <span class="product-details-value">10x10x10</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Total days to prepare </span>
+                                <span class="product-details-value">5 days</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Features</span>
+                                <span class="product-details-value">Features</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Comments</span>
+                                <span class="product-details-value">Comments</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Frame Type</span>
+                                <span class="product-details-value">Ash Wood</span>
+                            </li>
+                            <li class="product-deatils-sublist">
+                                <span class="product-deatails-name">Raw Materials</span>
+                                <span class="product-details-value">Gum</span>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
+<script type="text/javascript">
+
+    var slider = new Swiper(".gallery-slider", {
+        slidesPerView: 1,
+        centeredSlides: true,
+        loop: true,
+        loopedSlides: 6,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+        }
+    });
+
+
+    var thumbs = new Swiper(".gallery-thumbs", {
+        slidesPerView: "auto",
+        spaceBetween: 10,
+        centeredSlides: true,
+        loop: true,
+        slideToClickedSlide: true
+    });
+
+
+    //slider.params.control = thumbs;
+    //thumbs.params.control = slider;
+
+
+    slider.controller.control = thumbs;
+    thumbs.controller.control = slider;
+</script>

@@ -5,7 +5,6 @@ namespace MidCapERP.Dto.OrderSetItem
 {
     public class OrderSetItemRequestDto
     {
-        [JsonIgnore]
         public long OrderSetItemId { get; set; }
 
         [JsonIgnore]
@@ -22,8 +21,8 @@ namespace MidCapERP.Dto.OrderSetItem
         [Required]
         public long SubjectId { get; set; }
 
-        [Required]
-        public string ProductImage { get; set; }
+        [JsonIgnore]
+        public string? ProductImage { get; set; }
 
         public decimal? Width { get; set; }
         public decimal? Height { get; set; }
@@ -44,6 +43,7 @@ namespace MidCapERP.Dto.OrderSetItem
         [Required]
         public string Comment { get; set; }
 
+        [JsonIgnore]
         [Required]
         public int Status { get; set; }
 
@@ -51,7 +51,7 @@ namespace MidCapERP.Dto.OrderSetItem
         public bool IsDeleted { get; set; }
 
         [JsonIgnore]
-        public long CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }

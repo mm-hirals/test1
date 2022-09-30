@@ -16,19 +16,6 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="CustomerTypeId" class="form-label"></label>
-                                    </label>
-                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType"
-                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
-                                        <option value="" hidden disabled selected>Select Customer Type</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
                                         <label asp-for="FirstName" class="form-label"></label>
                                     </label>
                                     <input asp-for="FirstName" class="form-control" />
@@ -80,31 +67,6 @@
                                 </div>
                             </div>
                         </div>
-                        @if (@action == "Create")
-                        {
-                            <div class="col-md-3">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="RefferedNumber" class="form-label"></label>
-                                        </label>
-                                        <input asp-for="RefferedNumber" class="form-control refferedNumber" />
-                                        <span asp-validation-for="RefferedNumber" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="RefferedName" class="form-label"></label>
-                                        </label>
-                                        <input asp-for="RefferedName" class="form-control refferedName" />
-                                        <span asp-validation-for="RefferedName" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        }
                         <div class="col-md-3">
                             <div class="product-info--item">
                                 <div class="form-group">
@@ -173,7 +135,7 @@
                         <div class="col-12">
                             <div class="c-card--wrapper c-card-sm--wrapper">
                                 <div class="c-card--footer">
-                                    <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
+                                    <a class="btn btn-danger" href="/Architect/Index">Cancel</a>
                                     <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
                                 </div>
                             </div>
@@ -206,7 +168,7 @@
                     <div class="c-card--body">
                         <div class="row">
                             <div class="col-12">
-                                <partial name="_CustomerAddressesTable" model="null" />
+                                <partial name="~/Views/Customer/_CustomerAddressesTable.cshtml" model="null" />
                                 <div id="divUpdateCustomerAddresses"></div>
                             </div>
                         </div>

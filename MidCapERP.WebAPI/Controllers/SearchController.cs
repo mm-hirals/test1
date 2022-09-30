@@ -20,7 +20,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Search by Product, Fabric and Police for binding into the dropdown 
+        /// Search by Product, Fabric and Polish for binding into the dropdown
         /// </summary>
         /// <param name="modelNo">Model No of Product or Fabric or Police</param>
         /// <param name="cancellationToken"></param>
