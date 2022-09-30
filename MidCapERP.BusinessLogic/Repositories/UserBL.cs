@@ -38,7 +38,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IList<ApplicationRole>> GetAllRoles(CancellationToken cancellationToken)
         {
-            var getRole= await _unitOfWorkDA.UserDA.GetRoles(cancellationToken);
+            var getRole = await _unitOfWorkDA.UserDA.GetRoles(cancellationToken);
             var rolesByTenant = getRole.Where(x => x.TenantId == _currentUser.TenantId).ToList();
             return rolesByTenant;
         }
