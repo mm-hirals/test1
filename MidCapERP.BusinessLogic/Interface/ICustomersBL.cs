@@ -19,8 +19,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
-        public Task<JsonRepsonse<CustomersResponseDto>> GetFilterArchitectsData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
-
         public Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellation);
 
         public Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellation);

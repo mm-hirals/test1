@@ -11,6 +11,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IContractorsBL ContractorsBL { get; }
         public ISubjectTypesBL SubjectTypesBL { get; }
         public IContractorCategoryMappingBL ContractorCategoryMappingBL { get; }
+        public IArchitectsBL ArchitectsBL { get; }
         public ICustomersBL CustomersBL { get; }
         public IErrorLogsBL ErrorLogsBL { get; }
         public ICategoryBL CategoryBL { get; }
@@ -27,6 +28,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IPolishBL PolishBL { get; }
         public IUserTenantMappingBL UserTenantMappingBL { get; }
         public IUserBL UserBL { get; }
+        public IArchitectAddressesBL ArchitectAddressesBL { get; }
         public ICustomerAddressesBL CustomerAddressesBL { get; }
         public IProductBL ProductBL { get; }
         public IRoleBL RoleBL { get; }
@@ -36,12 +38,13 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ITenantBL TenantBL { get; }
         public ITenantBankDetailBL TenantBankDetailBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IArchitectsBL architectsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IArchitectAddressesBL architectAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
             this.SubjectTypesBL = subjectTypesBL;
             this.ContractorCategoryMappingBL = contractorCategoryMapping;
+            this.ArchitectsBL = architectsBL;
             this.CustomersBL = customersBL;
             this.ErrorLogsBL = errorLogsBL;
             this.CategoryBL = categoryBL;
@@ -60,6 +63,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.UserBL = userBL;
             this.CustomerAddressesBL = customerAddressesBL;
             this.ProductBL = productBL;
+            this.ArchitectAddressesBL = architectAddressesBL;
             this.RoleBL = roleBL;
             this.RolePermissionBL = rolePermissionBL;
             this.OrderBL = orderBL;
