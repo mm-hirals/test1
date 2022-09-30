@@ -59,7 +59,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> CreateTenantBankDetail(TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBankDetailBL.CreateTenantBankDetail(tenantBankDetailRequestDto, cancellationToken);
-            return View("_TenantBankDetailPartial");
+            return View("Index");
         }
 		[HttpGet]
 		public async Task<IActionResult> UpdateTenantBankDetail(int Id, CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
-            return RedirectToAction("_TenantBankDetailPartial");
+            return RedirectToAction("Index");
         }
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.Delete)]
