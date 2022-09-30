@@ -2,6 +2,7 @@
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
+using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -17,7 +18,9 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
 
-        public Task<IEnumerable<MegaSearchResponse>> GetProductForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
+        public Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
+
+        public Task<IEnumerable<SearchResponse>> GetProductForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
 
         public Task<ProductForDetailsByModuleNoResponceDto> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellation);
 
