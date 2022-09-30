@@ -15,6 +15,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IContractorsBL, ContractorsBL>();
             services.AddScoped<ISubjectTypesBL, SubjectTypesBL>();
             services.AddScoped<IContractorCategoryMappingBL, ContractorCategoryMappingBL>();
+            services.AddScoped<IArchitectsBL, ArchitectsBL>();
             services.AddScoped<ICustomersBL, CustomersBL>();
             services.AddScoped<IErrorLogsBL, ErrorLogsBL>();
             services.AddScoped<ICategoryBL, CategoryBL>();
@@ -31,6 +32,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IPolishBL, PolishBL>();
             services.AddScoped<IUserTenantMappingBL, UserTenantMappingBL>();
             services.AddScoped<IUserBL, UserBL>();
+            services.AddScoped<IArchitectAddressesBL, ArchitectAddressesBL>();
             services.AddScoped<ICustomerAddressesBL, CustomerAddressesBL>();
             services.AddScoped<IProductBL, ProductBL>();
             services.AddScoped<IRoleBL, RoleBL>();

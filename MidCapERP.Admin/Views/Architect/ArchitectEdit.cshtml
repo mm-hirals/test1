@@ -11,6 +11,7 @@
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
+                    <input asp-for="CustomerTypeId" hidden class="form-control" />
                     <div class="row">
                         <div class="col-md-3">
                             <div class="product-info--item">
@@ -160,16 +161,16 @@
                     <div class="c-card--header">
                         <h4 class="c-card--header-title">Address Details</h4>
                         <div class="c-card--header-action">
-                            <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary"
-                           data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
+                            <a asp-controller="Architect" asp-action="CreateArchitectAddress" class="btn btn-primary"
+                           data-ajax-complete="ArchitectAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateArchitectAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                         </div>
                     </div>
                     <div class="c-card--body">
                         <div class="row">
                             <div class="col-12">
-                                <partial name="~/Views/Customer/_CustomerAddressesTable.cshtml" model="null" />
-                                <div id="divUpdateCustomerAddresses"></div>
+                                <partial name="_ArchitectAddressesTable" model="null" />
+                                <div id="divUpdateArchitectAddresses"></div>
                             </div>
                         </div>
                     </div>
@@ -185,7 +186,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Customer.js" ></script>
-        <script asp-src-include="~/js/CustomerAddresses.js" ></script>
+        <script asp-src-include="~/js/Architect.js" ></script>
+        <script asp-src-include="~/js/ArchitectAddresses.js" ></script>
     }
     } 

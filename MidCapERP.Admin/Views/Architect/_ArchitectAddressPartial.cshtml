@@ -1,21 +1,21 @@
 ﻿@model MidCapERP.Dto.CustomerAddresses.CustomerAddressesRequestDto
 @{
-    string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateCustomerAddresses" : "CreateCustomerAddress";
+    string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateArchitectAddresses" : "CreateArchitectAddress";
 }
 <!-- Modal -->
-<div class="modal right fade" id="divCustomerAddressModal" tabindex="-1" aria-labelledby="ContractorAddressModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divArchitectAddressModal" tabindex="-1" aria-labelledby="ArchitectAddressModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ContractorAddressModalLabel">Customer Address</h5>
+                <h5 class="modal-title" id="ArchitectAddressModalLabel">Architect Address</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                   data-ajax="true" data-ajax-method="post"
-                  data-ajax-complete="CustomerAddressesModel.onSuccess"
-                  data-ajax-failure="CustomerAddressesModel.onFailed">
+                  data-ajax-complete="ArchitectAddressesModel.onSuccess"
+                  data-ajax-failure="ArchitectAddressesModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerAddressId" hidden class="form-control" />
@@ -112,6 +112,6 @@
 
 @section Scripts {
     @{
-        <script asp-src-include="~/js/CustomerAddresses.js" ></script>
+        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
-    } 
+} 

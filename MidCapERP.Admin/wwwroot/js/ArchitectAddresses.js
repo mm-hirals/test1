@@ -1,16 +1,16 @@
 ﻿'use strict';
 
-var CustomerAddressesModel = {};
-var tblCustomerAddresses;
+var ArchitectAddressesModel = {};
+var tblArchitectAddresses;
 
 $(function () {
-    tblCustomerAddresses = $("#tblCustomerAddresses").DataTable({
+    tblArchitectAddresses = $("#tblArchitectAddresses").DataTable({
         "searching": false,
         "processing": true,
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "/Customer/GetCustomerAddressesData",
+            "url": "/Architect/GetArchitectAddressesData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
@@ -50,33 +50,33 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCustomerAddresses" href="/Customer/UpdateCustomerAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CustomerAddressesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Customer/DeleteCustomerAddresses/' + o.customerAddressId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="ArchitectAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateArchitectAddresses" href="/Architect/UpdateArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="ArchitectAddressesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Architect/DeleteArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
     });
 });
 
-$("#lnkCustemerAddressFilter").click(function () {
+$("#lnkArchitectAddressFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
 
-CustomerAddressesModel.onComplete = function () {
-    $("#divCustomerAddressModal").modal('show');
+ArchitectAddressesModel.onComplete = function () {
+    $("#divArchitectAddressModal").modal('show');
 }
 
-CustomerAddressesModel.onDelete = function () {
-    tblCustomerAddresses.ajax.reload(null, false);
+ArchitectAddressesModel.onDelete = function () {
+    tblArchitectAddresses.ajax.reload(null, false);
 }
 
-CustomerAddressesModel.onSuccess = function (xhr) {
-    tblCustomerAddresses.ajax.reload(null, false);
-    $("#divCustomerAddressModal").modal('hide');
+ArchitectAddressesModel.onSuccess = function (xhr) {
+    tblArchitectAddresses.ajax.reload(null, false);
+    $("#divArchitectAddressModal").modal('hide');
 };
 
-CustomerAddressesModel.onFailed = function (xhr) {
-    tblCustomerAddresses.ajax.reload(null, false);
-    $("#divCustomerAddressModal").modal('hide');
+ArchitectAddressesModel.onFailed = function (xhr) {
+    tblArchitectAddresses.ajax.reload(null, false);
+    $("#divArchitectAddressModal").modal('hide');
 };

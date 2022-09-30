@@ -101,7 +101,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var customersAddress = await _unitOfWorkBL.CustomerAddressesBL.GetById(Id, cancellationToken);
-            return View("_CustomerAddressPartial", customersAddress);
+            return PartialView("_CustomerAddressPartial", customersAddress);
         }
 
         [HttpPost]
@@ -132,6 +132,10 @@ namespace MidCapERP.Admin.Controllers
             {
                 return Json(ex.Message);
             }
+        }
+
+        public async Task Import_Export_Customer(CancellationToken cancellationToken)
+        {
         }
 
         #region Private Method
