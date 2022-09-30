@@ -31,7 +31,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<TenantBankDetailResponseDto>> GetFilterTenantBankDetailData(TenantBankDetailDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var tenantBankDetailAllData = await _unitOfWorkDA.TenantBankDetailDA.GetAll(cancellationToken);
-            var tenant = await _unitOfWorkDA.TenantDA.GetAll(cancellationToken);
             var tenantBankDetailResponseData = (from x in tenantBankDetailAllData
                                                 select new TenantBankDetailResponseDto()
                                                 {

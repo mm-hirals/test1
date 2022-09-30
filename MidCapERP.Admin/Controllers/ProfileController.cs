@@ -47,7 +47,6 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.Create)]
         public async Task<IActionResult> CreateTenantBankDetail(CancellationToken cancellationToken)
         {
-            TenantBankDetailRequestDto dto = new();
             return PartialView("_TenantBankDetailPartial");
         }
 
