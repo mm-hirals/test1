@@ -22,7 +22,7 @@ namespace MidCapERP.WebAPI.Controllers
         /// <summary>
         /// Search by Product, Fabric and Polish for binding into the dropdown
         /// </summary>
-        /// <param name="modelNo">Model No of Product or Fabric or Police</param>
+        /// <param name="modelNo">Model No of Product or Fabric or Polish</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{modelNo}")]
@@ -43,7 +43,7 @@ namespace MidCapERP.WebAPI.Controllers
         /// Get Product Details for Product, Fabric and Polish
         /// </summary>
         /// <param name="modelNo">Porduct ModelNo</param>
-        /// <param name="productType">Product OR Fabric OR Polish</param>
+        /// <param name="subjectTypeId">Product OR Fabric OR Polish</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{modelNo}/{subjectTypeId}")]
