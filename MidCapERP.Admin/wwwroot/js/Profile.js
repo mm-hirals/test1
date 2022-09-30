@@ -23,7 +23,7 @@ $(function () {
             }
         },
         "columns": [
-           
+
             { "data": "bankName", "name": "bankName", "autoWidth": true },
             { "data": "accountName", "name": "accountName", "autoWidth": true },
             { "data": "accountNo", "name": "accountNo", "autoWidth": true },
@@ -50,7 +50,7 @@ TenantBankDetailModel.onComplete = function () {
 
 TenantBankDetailModel.onDelete = function () {
     tblTenantBankDetail.ajax.reload(null, false);
-     $("#divTenantBankDetailModal").modal('hide');
+    $("#divTenantBankDetailModal").modal('hide');
 }
 
 TenantBankDetailModel.onSuccess = function (xhr) {

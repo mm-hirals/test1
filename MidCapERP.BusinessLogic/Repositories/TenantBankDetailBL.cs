@@ -33,8 +33,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             var tenantBankDetailAllData = await _unitOfWorkDA.TenantBankDetailDA.GetAll(cancellationToken);
             var tenant = await _unitOfWorkDA.TenantDA.GetAll(cancellationToken);
             var tenantBankDetailResponseData = (from x in tenantBankDetailAllData
-                                                join y in tenant on x.TenantId equals y.TenantId
-                                                where x.TenantId == y.TenantId
                                                 select new TenantBankDetailResponseDto()
                                                 {
                                                     TenantBankDetailId = Convert.ToInt16(x.TenantBankDetailId),
@@ -55,7 +53,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<TenantBankDetailRequestDto> CreateTenantBankDetail(TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {
             var tenantBankDetailoInsert = _mapper.Map<TenantBankDetail>(model);
-            tenantBankDetailoInsert.IsDeleted = true;
+            tenantBankDetailoInsert.IsDeleted = false;
             tenantBankDetailoInsert.TenantId = _currentUser.TenantId;
             tenantBankDetailoInsert.CreatedBy = _currentUser.UserId;
             tenantBankDetailoInsert.CreatedDate = DateTime.Now;
@@ -109,6 +107,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         private async Task<TenantBankDetail> TenantGetById(int Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.TenantBankDetailDA.GetById(Id, cancellationToken);
+
             if (data == null)
             {
                 throw new Exception("Tenant not found");

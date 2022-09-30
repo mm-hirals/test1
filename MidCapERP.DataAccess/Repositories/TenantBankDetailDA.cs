@@ -10,7 +10,7 @@ namespace MidCapERP.DataAccess.Repositories
         private readonly ISqlRepository<TenantBankDetail> _tenantBankDetail;
         private readonly CurrentUser _currentUser;
 
-        public TenantBankDetailDA(ISqlRepository<TenantBankDetail> tenantBankDetail,CurrentUser currentUser)
+        public TenantBankDetailDA(ISqlRepository<TenantBankDetail> tenantBankDetail, CurrentUser currentUser)
         {
             _tenantBankDetail = tenantBankDetail;
             _currentUser = currentUser;
@@ -23,7 +23,7 @@ namespace MidCapERP.DataAccess.Repositories
 
         public async Task<TenantBankDetail> GetById(int Id, CancellationToken cancellationToken)
         {
-            return (await _tenantBankDetail.GetAsync( cancellationToken,x=>x.TenantBankDetailId == Id)).FirstOrDefault();
+            return (await _tenantBankDetail.GetAsync(cancellationToken, x => x.TenantBankDetailId == Id && x.TenantId == _currentUser.TenantId)).FirstOrDefault();
         }
 
         public async Task<TenantBankDetail> CreateTenantBankDetail(TenantBankDetail model, CancellationToken cancellationToken)

@@ -16,13 +16,6 @@
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 					<input asp-for="TenantId" id="TenantId" hidden class="form-control" />
 					<div class="row">
-						 <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="TenantId" class="form-label" hidden></label>
-                                <input asp-for="TenantId" class="form-control" data-val="true" hidden/>
-                                <span asp-validation-for="TenantId" class="text-danger" ></span>
-                            </div>
-                        </div>
 						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
@@ -73,7 +66,7 @@
 									<label class="form-label">
 										<label asp-for="AccountType" class="form-label"></label>
 									</label>
-									<input asp-for="AccountType" class="form-control"  />
+									<input asp-for="AccountType" class="form-control" />
 									<span asp-validation-for="AccountType" class="text-danger"></span>
 								</div>
 							</div>
