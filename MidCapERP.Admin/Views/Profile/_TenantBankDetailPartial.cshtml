@@ -1,6 +1,6 @@
 ﻿@model MidCapERP.Dto.TenantBankDetail.TenantBankDetailRequestDto
 @{
-	string action = (Model != null && Model.TenantBankDetailId != 0) ? "UpdateTenantBankDetail" : "CreateTenantBankDetail";
+	string action = (Model != null && Model.TenantId != 0) ? "UpdateTenantBankDetail" : "CreateTenantBankDetail";
 }
 <div class="modal right fade" id="divTenantBankDetailModal" tabindex="-1" aria-labelledby="TenantBankDetailModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-md">
@@ -16,19 +16,7 @@
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 					<input asp-for="TenantId" id="TenantId" hidden class="form-control" />
 					<div class="row">
-						<div class="col-md-3">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="TenantId" class="form-label"></label>
-									</label>
-									<input asp-for="TenantId" hidden class="form-control" />
-									<label asp-for="BankName" class="form-label"></label>
-									<input asp-for="BankName" type="text" class="form-control" placeholder="BankName">
-								</div>
-							</div>
-						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -39,7 +27,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -50,7 +38,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -61,7 +49,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -72,18 +60,18 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
 										<label asp-for="AccountType" class="form-label"></label>
 									</label>
-									<input asp-for="AccountType" class="form-control" type="number" />
+									<input asp-for="AccountType" class="form-control" />
 									<span asp-validation-for="AccountType" class="text-danger"></span>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -94,7 +82,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -105,7 +93,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-12">
 							<div class="product-info--item">
 								<div class="form-group">
 									<label class="form-label">
@@ -116,65 +104,16 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
-					<div class="row c-card-footer--btn">
-						<div class="col-12">
-							<div class="c-card--wrapper c-card-sm--wrapper">
-								<div class="c-card--footer">
-									<a class="btn btn-danger" href="/Customer/Index">Cancle</a>
-									<input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
-								</div>
-							</div>
-						</div>
+					<div class="modal-footer justify-content-between">
+						<input type="submit" value="Save" class="btn btn-primary" />
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					</div>
 				</div>
-
 			</form>
 		</div>
 	</div>
-	@if (Model != null && Model.TenantId != null)
-	{
-		<nav class="product-nav-tab--sticky">
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-					Addresses
-				</button>
-			</div>
-		</nav>
-		<div class="tab-content" id="nav-tabContent">
-			<div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
-				<div class="c-card--wrapper c-card-sm--wrapper mb-3">
-					<div class="c-card--header">
-						<h4 class="c-card--header-title">Address Details</h4>
-						<div class="c-card--header-action">
-							<a asp-controller="Profile" asp-action="CreateTenantBankDetail" class="btn btn-primary"
-						   data-ajax-complete="TenantBankDetailModel.onComplete" id="customersId" asp-route-customerId="@Model.TenantId" data-ajax-update="#divUpdateCustomerAddresses"
-						   data-ajax="true" data-ajax-mode="replace">Create New</a>
-						</div>
-					</div>
-					<div class="c-card--body">
-						<div class="row">
-							<div class="col-12">
-								<partial name="_TenantBankDetailTable" model="null" />
-								<div id="divUpdateTenantBankDetail"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	}
-
 </div>
-@section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-		await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
-		await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-		<script asp-src-include="~/js/Profile.js"></script>
-	}
-}
 
 
 

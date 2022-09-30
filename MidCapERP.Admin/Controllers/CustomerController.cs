@@ -141,13 +141,12 @@ namespace MidCapERP.Admin.Controllers
             IEnumerable<CustomerTypeEnum> customerTypesData = Enum.GetValues(typeof(CustomerTypeEnum))
                                         .Cast<CustomerTypeEnum>();
 
-            List<SelectListItem> customerTypesSelectedList = (from value in customerTypesData
-                                                              select new SelectListItem()
-                                                              {
-                                                                  Text = value.ToString(),
-                                                                  Value = value.ToString(),
-                                                              }).ToList();
-
+            IEnumerable<SelectListItem> customerTypesSelectedList = from value in customerTypesData
+                                                                    select new SelectListItem()
+                                                                    {
+                                                                        Text = Convert.ToString(value),
+                                                                        Value = Convert.ToString((int)value),
+                                                                    };
             ViewBag.CustomerType = customerTypesSelectedList;
         }
 
