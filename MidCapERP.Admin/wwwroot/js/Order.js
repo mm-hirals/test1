@@ -16,13 +16,16 @@ $(function () {
         },
         "columns": [
             { "data": "orderNo", "name": "OrderNo", "autoWidth": true },
-            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
-            { "data": "customerName", "name": "CustomerName", "autoWidth": true },
-            { "data": "status", "name": "Status", "autoWidth": true },
-            { "data": "grossTotal", "name": "GrossTotal", "autoWidth": true },
-            { "data": "discount", "name": "Discount", "autoWidth": true },
-            { "data": "totalAmount", "name": "TotalAmount", "autoWidth": true },
             { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
+            { "data": "customerName", "name": "CustomerName", "autoWidth": true },
+            { "data": "payableAmount", "name": "PayableAmount", "autoWidth": true },
+            { "data": "status", "name": "Status", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
+            { "data": "deliveryDateFormat", "name": "DeliveryDateFormat", "autoWidth": true },
+            //{ "data": "grossTotal", "name": "GrossTotal", "autoWidth": true },
+            //{ "data": "discount", "name": "Discount", "autoWidth": true },
+            //{ "data": "totalAmount", "name": "TotalAmount", "autoWidth": true },
+            //{ "data": "gstTaxAmount", "name": "GSTTaxAmount", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {

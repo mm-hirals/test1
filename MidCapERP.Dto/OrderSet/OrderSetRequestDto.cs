@@ -12,10 +12,6 @@ namespace MidCapERP.Dto.OrderSet
         public long OrderId { get; set; }
 
         public string SetName { get; set; }
-        public decimal TotalAmount { get; set; }
-
-        [JsonIgnore]
-        public bool IsDeleted { get; set; }
 
         [JsonIgnore]
         public long CreatedBy { get; set; }

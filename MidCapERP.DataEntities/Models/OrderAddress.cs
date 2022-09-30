@@ -10,11 +10,11 @@ namespace MidCapERP.DataEntities.Models
         public long OrderAddressId { get; set; }
 
         public long? OrderId { get; set; }
+        public string AddressType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? EmailId { get; set; }
         public string PhoneNumber { get; set; }
-        public string AddressType { get; set; }
         public string Street1 { get; set; }
         public string? Street2 { get; set; }
         public string? Landmark { get; set; }

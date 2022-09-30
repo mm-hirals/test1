@@ -8,7 +8,8 @@ namespace MidCapERP.Dto.Order
     {
         public long OrderId { get; set; }
 
-        public string OrderNo { get; set; }
+        [JsonIgnore]
+        public string? OrderNo { get; set; }
 
         [Required]
         public long CustomerID { get; set; }
@@ -20,30 +21,18 @@ namespace MidCapERP.Dto.Order
         public decimal Discount { get; set; }
 
         [Required]
-        public decimal ReferralDiscount { get; set; }
-
-        [Required]
         public decimal TotalAmount { get; set; }
 
         [Required]
         public decimal GSTTaxAmount { get; set; }
-
-        [Required]
-        public decimal PayableAmount { get; set; }
 
         [JsonIgnore]
         public DateTime? DeliveryDate { get; set; }
 
         public string Comments { get; set; }
 
-        [Required]
-        public string GSTNo { get; set; }
-
         [JsonIgnore]
         public int Status { get; set; }
-
-        [Required]
-        public bool IsDraft { get; set; }
 
         [JsonIgnore]
         [Required]
