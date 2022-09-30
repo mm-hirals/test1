@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Repositories;
+using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.BusinessLogic.UnitOfWork;
@@ -14,6 +15,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IContractorsBL, ContractorsBL>();
             services.AddScoped<ISubjectTypesBL, SubjectTypesBL>();
             services.AddScoped<IContractorCategoryMappingBL, ContractorCategoryMappingBL>();
+            services.AddScoped<IArchitectsBL, ArchitectsBL>();
             services.AddScoped<ICustomersBL, CustomersBL>();
             services.AddScoped<IErrorLogsBL, ErrorLogsBL>();
             services.AddScoped<ICategoryBL, CategoryBL>();
@@ -30,6 +32,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IPolishBL, PolishBL>();
             services.AddScoped<IUserTenantMappingBL, UserTenantMappingBL>();
             services.AddScoped<IUserBL, UserBL>();
+            services.AddScoped<IArchitectAddressesBL, ArchitectAddressesBL>();
             services.AddScoped<ICustomerAddressesBL, CustomerAddressesBL>();
             services.AddScoped<IProductBL, ProductBL>();
             services.AddScoped<IRoleBL, RoleBL>();
@@ -38,7 +41,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<ITenantBankDetailBL, TenantBankDetailBL>();
             services.AddScoped<IOrderBL, OrderBL>();
             services.AddScoped<IDashboardBL, DashboardBL>();
-
+            services.AddScoped<IActivityLogsService, ActivityLogsService>();
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }
