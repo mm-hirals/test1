@@ -3,7 +3,7 @@
     public class ProductForDetailsByModuleNoResponceDto
     {
         public ProductForDetailsByModuleNoResponceDto(long productId, int? categoryId, string productTitle, string modelNo, decimal width, decimal height, decimal depth,
-            decimal? usedFabric, bool isVisibleToWholesalers, decimal totalDaysToPrepare, string features, string comment, decimal costPrice,int subjectTypeId)
+            decimal? usedFabric, bool isVisibleToWholesalers, decimal totalDaysToPrepare, string features, string comment, decimal costPrice, string qrImage, int subjectTypeId)
         {
             ProductId = productId;
             CategoryId = categoryId;
@@ -18,6 +18,7 @@
             Features = features;
             Comments = comment;
             CostPrice = costPrice;
+            QRImage = qrImage;
             SubjectTypeId = subjectTypeId;
         }
 
@@ -34,6 +35,7 @@
         public string Features { get; set; }
         public string Comments { get; set; }
         public decimal CostPrice { get; set; }
+        public string QRImage { get; set; }
         public int SubjectTypeId { get; set; }
     }
 }

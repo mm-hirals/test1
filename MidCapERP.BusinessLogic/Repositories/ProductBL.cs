@@ -16,6 +16,7 @@ using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
+using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -189,11 +190,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             return productMain;
         }
 
-        public async Task<IList<ProductForDetailsByModuleNoResponceDto>> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
+        public async Task<ProductForDetailsByModuleNoResponceDto> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
         {
             var productSubjectTypeId = await GetProductsSubjectTypeId(cancellationToken);
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            return productAlldata.Where(x => x.ModelNo == modelNo).Select(x => new ProductForDetailsByModuleNoResponceDto(x.ProductId, x.CategoryId, x.ProductTitle, x.ModelNo, x.Width, x.Height, x.Depth, x.FabricNeeded, x.IsVisibleToWholesalers, x.TotalDaysToPrepare, x.Features, x.Comments, x.CostPrice, productSubjectTypeId)).ToList();
+            var productData = productAlldata.FirstOrDefault(x => x.ModelNo == modelNo);
+            if (productData == null)
+            {
+                throw new Exception("Product is not found");
+            }
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
         }
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
@@ -394,10 +400,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<ProductRequestDto>(produdctData);
         }
 
-        public async Task<IEnumerable<MegaSearchResponse>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
+            var productSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             return productAlldata.Where(x => x.Status == (int)ProductStatusEnum.Published && x.ModelNo.StartsWith(modelno)).Select(x => new MegaSearchResponse(x.ProductId, x.ProductTitle, x.ModelNo, "", "Product")).Take(10).ToList();
+        }
+
+        public async Task<IEnumerable<SearchResponse>> GetProductForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
+        {
+            var productSubjectTypeId = await GetProductsSubjectTypeId(cancellationToken);
+            var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            return productAlldata.Where(x => x.Status == (int)ProductStatusEnum.Published && x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.ProductId, x.ProductTitle, x.ModelNo, "", "Product", productSubjectTypeId)).Take(10).ToList();
         }
 
         #endregion API Methods
@@ -491,7 +505,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _activityLogsService.PerformActivityLog(1, Convert.ToString(model.ProductId), "Image Added", ActivityLogStringConstant.Create, cancellationToken);
             }
         }
-
 
         private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
         {

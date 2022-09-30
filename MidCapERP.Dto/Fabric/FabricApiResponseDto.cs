@@ -10,8 +10,8 @@ namespace MidCapERP.Dto.Fabric
             Title = title;
             ModelNo = modelNo;
             CompanyId = companyId;
-            UnitId =  unitId;
-            UnitPrice  = unitPrice;
+            UnitId = unitId;
+            UnitPrice = unitPrice;
             ImagePath = imagePath;
             SubjectTypeId = subjectTypeId;
         }
@@ -25,9 +25,6 @@ namespace MidCapERP.Dto.Fabric
         public int CompanyId { get; set; }
 
         public int UnitId { get; set; }
-
-        [DisplayName("Unit Name")]
-        public string UnitName { get; set; }
 
         [DisplayName("Unit Price")]
         public decimal UnitPrice { get; set; }

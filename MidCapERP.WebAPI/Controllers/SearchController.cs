@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
-using MidCapERP.Dto.MegaSearch;
-using MidCapERP.Dto.Product;
+using MidCapERP.Dto.Constants;
+using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -22,14 +22,14 @@ namespace MidCapERP.WebAPI.Controllers
         /// <summary>
         /// Search by Product, Fabric and Polish for binding into the dropdown
         /// </summary>
-        /// <param name="modelNo">Model No of Product or Fabric or Police</param>
+        /// <param name="modelNo">Model No of Product or Fabric or Polish</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{modelNo}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
         {
-            List<MegaSearchResponse> productData = new List<MegaSearchResponse>();
+            List<SearchResponse> productData = new List<SearchResponse>();
             productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductForDropDownByModuleNo(modelNo, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.FabricBL.GetFabricForDropDownByModuleNo(modelNo, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.PolishBL.GetPolishForDropDownByModuleNo(modelNo, cancellationToken));
@@ -38,32 +38,38 @@ namespace MidCapERP.WebAPI.Controllers
             else
                 return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
         }
-           
-        [HttpGet("{modelNo}/{productType}")]
+
+        /// <summary>
+        /// Get Product Details for Product, Fabric and Polish
+        /// </summary>
+        /// <param name="modelNo">Porduct ModelNo</param>
+        /// <param name="subjectTypeId">Product OR Fabric OR Polish</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("{modelNo}/{subjectTypeId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
-        public async Task<ApiResponse> GetDetails(string modelNo, string productType, CancellationToken cancellationToken)
+        public async Task<ApiResponse> GetDetails(string modelNo, int subjectTypeId, CancellationToken cancellationToken)
         {
-            if (productType.ToLower() == "product")
+            if (subjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
             {
-                IList<ProductForDetailsByModuleNoResponceDto> productData = new List<ProductForDetailsByModuleNoResponceDto>();
-                productData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
-                if (productData == null || productData.Count == 0)
+                var productData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
+                if (productData == null)
                     return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
                 return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             }
-            else if (productType.ToLower() == "fabric")
-            {
-                var frabricData = await _unitOfWorkBL.FabricBL.GetFabricForDetailsByModuleNo(modelNo, cancellationToken);
-                if (frabricData == null)
-                    return new ApiResponse(message: "No Data Found", result: frabricData, statusCode: 200);
-                return new ApiResponse(message: "Data Found", result: frabricData, statusCode: 200);
-            }
-            else if (productType.ToLower() == "polish")
+            else if (subjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
             {
                 var polishData = await _unitOfWorkBL.PolishBL.GetPolishForDetailsByModuleNo(modelNo, cancellationToken);
                 if (polishData == null)
                     return new ApiResponse(message: "No Data Found", result: polishData, statusCode: 200);
                 return new ApiResponse(message: "Data Found", result: polishData, statusCode: 200);
+            }
+            else if (subjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
+            {
+                var frabricData = await _unitOfWorkBL.FabricBL.GetFabricForDetailsByModuleNo(modelNo, cancellationToken);
+                if (frabricData == null)
+                    return new ApiResponse(message: "No Data Found", result: frabricData, statusCode: 200);
+                return new ApiResponse(message: "Data Found", result: frabricData, statusCode: 200);
             }
             else
                 return new ApiResponse(message: "No Data found", statusCode: 404);
