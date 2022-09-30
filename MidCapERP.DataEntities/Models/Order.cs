@@ -11,17 +11,14 @@ namespace MidCapERP.DataEntities.Models
 
         public string OrderNo { get; set; }
         public long CustomerID { get; set; }
+        public long? RefferedBy { get; set; }
         public decimal GrossTotal { get; set; }
         public decimal Discount { get; set; }
-        public decimal ReferralDiscount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal GSTTaxAmount { get; set; }
-        public decimal PayableAmount { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string? Comments { get; set; }
-        public string? GSTNo { get; set; }
         public int Status { get; set; }
-        public bool IsDraft { get; set; }
         public int TenantId { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

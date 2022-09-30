@@ -36,7 +36,7 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> Post([FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
             ValidationRequest(orderRequestApiDto);
-            var data = await _unitOfWorkBL.OrderBL.CreateOrder(orderRequestApiDto, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.CreateOrderAPI(orderRequestApiDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
@@ -49,7 +49,7 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> Put(int id, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
             ValidationRequest(orderRequestApiDto);
-            var data = await _unitOfWorkBL.OrderBL.UpdateOrderApi(id, orderRequestApiDto, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderAPI(id, orderRequestApiDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);

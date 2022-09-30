@@ -45,10 +45,7 @@ namespace MidCapERP.Dto.OrderSetItem
 
         [JsonIgnore]
         [Required]
-        public int Status { get; set; }
-
-        [JsonIgnore]
-        public bool IsDeleted { get; set; }
+        public int MakingStatus { get; set; }
 
         [JsonIgnore]
         public int CreatedBy { get; set; }

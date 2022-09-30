@@ -26,35 +26,29 @@ namespace MidCapERP.Dto.Order
         public decimal Discount { get; set; }
 
         [Required]
-        public decimal ReferralDiscount { get; set; }
-
-        [Required]
         [DisplayName("Order Amount")]
         public decimal TotalAmount { get; set; }
 
         [Required]
+        [DisplayName("TAX")]
         public decimal GSTTaxAmount { get; set; }
 
         [Required]
+        [DisplayName("Total Amount")]
         public decimal PayableAmount { get; set; }
 
         [Required]
         public DateTime? DeliveryDate { get; set; }
 
+        [DisplayName("Delivery Date")]
         public string? DeliveryDateFormat => DeliveryDate != null ? DeliveryDate.Value.ToShortDateString() : "";
 
         public string? Comments { get; set; }
-
-        public string? GSTNo { get; set; }
 
         [Required]
         [DisplayName("Order Status")]
         public int Status { get; set; }
 
-        [Required]
-        public bool IsDraft { get; set; }
-
-        public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
 
         [DisplayName("Salesman Name")]
