@@ -46,20 +46,20 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomersRequestDto> CreateArchitects(CustomersRequestDto model, CancellationToken cancellationToken)
         {
-            var customerToInsert = _mapper.Map<Customers>(model);
+            var architectToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
             await _unitOfWorkDA.BeginTransactionAsync();
 
             try
             {
-                customerToInsert.RefferedBy = 0;
-                customerToInsert.CustomerTypeId = (int)ArchitectTypeEnum.Architect;
-                customerToInsert.IsDeleted = false;
-                customerToInsert.TenantId = _currentUser.TenantId;
-                customerToInsert.CreatedBy = _currentUser.UserId;
-                customerToInsert.CreatedDate = DateTime.Now;
-                customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                architectToInsert.RefferedBy = 0;
+                architectToInsert.CustomerTypeId = (int)ArchitectTypeEnum.Architect;
+                architectToInsert.IsDeleted = false;
+                architectToInsert.TenantId = _currentUser.TenantId;
+                architectToInsert.CreatedBy = _currentUser.UserId;
+                architectToInsert.CreatedDate = DateTime.Now;
+                architectToInsert.CreatedUTCDate = DateTime.UtcNow;
+                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(architectToInsert, cancellationToken);
 
                 await SaveArchitectAddress(model, data, cancellationToken);
             }
@@ -127,32 +127,32 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.CommitTransactionAsync();
         }
 
-        private static IQueryable<Customers> FilterArchitectData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<Customers> customerAllData)
+        private static IQueryable<Customers> FilterArchitectData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<Customers> architectAllData)
         {
             if (dataTableFilterDto != null)
             {
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
                 {
-                    customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
+                    architectAllData = architectAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
                 }
 
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerMobileNo))
                 {
-                    customerAllData = customerAllData.Where(p => p.PhoneNumber.StartsWith(dataTableFilterDto.customerMobileNo));
+                    architectAllData = architectAllData.Where(p => p.PhoneNumber.StartsWith(dataTableFilterDto.customerMobileNo));
                 }
 
                 if (dataTableFilterDto.customerFromDate != DateTime.MinValue)
                 {
-                    customerAllData = customerAllData.Where(p => p.CreatedDate > dataTableFilterDto.customerFromDate || p.UpdatedDate > dataTableFilterDto.customerFromDate);
+                    architectAllData = architectAllData.Where(p => p.CreatedDate > dataTableFilterDto.customerFromDate || p.UpdatedDate > dataTableFilterDto.customerFromDate);
                 }
 
                 if (dataTableFilterDto.customerToDate != DateTime.MinValue)
                 {
-                    customerAllData = customerAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate > dataTableFilterDto.customerToDate);
+                    architectAllData = architectAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate > dataTableFilterDto.customerToDate);
                 }
             }
 
-            return customerAllData;
+            return architectAllData;
         }
 
         #endregion PrivateMethods
