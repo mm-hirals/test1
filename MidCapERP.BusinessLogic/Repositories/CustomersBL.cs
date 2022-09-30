@@ -90,15 +90,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerGridData.TotalCount, customerGridData.TotalCount, customerGridData);
         }
 
-        public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterArchitectsData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var architectFilteredData = FilterCustomerData(dataTableFilterDto, architectData);
-            var architectGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(architectFilteredData).AsQueryable(), dataTableFilterDto);
-            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, architectGridData.TotalCount, architectGridData.TotalCount, architectGridData);
-        }
-
         public async Task<CustomersTypesResponseDto> CustomersTypesGetDetailsById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await CustomerTypesGetById(Id, cancellationToken);
@@ -169,24 +160,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
 
-                if (model.CustomerTypeId == (int)CustomerTypeEnum.Customer || model.CustomerTypeId == (int)CustomerTypeEnum.Wholesaler)
+                if (model.RefferedNumber != null)
                 {
-                    if (model.RefferedNumber != null)
-                    {
-                        await AddCustomerAndReferralUser(model, customerToInsert, cancellationToken);
-                    }
-                    else
-                    {
-                        customerToInsert.RefferedBy = 0;
-                    }
-                    data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                    await AddCustomerAndReferralUser(model, customerToInsert, cancellationToken);
                 }
                 else
                 {
                     customerToInsert.RefferedBy = 0;
-                    customerToInsert.CustomerTypeId = (int)ArchitectTypeEnum.Architect;
-                    data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 }
+                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+
                 await SaveCustomerAddress(model, data, cancellationToken);
             }
             catch (Exception e)
