@@ -9,6 +9,7 @@ using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
+using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
@@ -131,94 +132,26 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<OrderApiRequestDto> CreateOrder(OrderApiRequestDto model, CancellationToken cancellationToken)
         {
-            var orderToInsert = _mapper.Map<Order>(model);
-            orderToInsert.TenantId = _currentUser.TenantId;
-            orderToInsert.Status = (byte)ProductStatusEnum.Pending;
-            orderToInsert.CreatedBy = _currentUser.UserId;
-            orderToInsert.CreatedDate = DateTime.Now;
-            orderToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.OrderDA.CreateOrder(orderToInsert, cancellationToken);
+            var saveOrder = await SaveOrder(model, cancellationToken);
+            OrderAddressesApiRequestDto orderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
+            orderAddressesApiRequestDto.OrderId = saveOrder.OrderId;
+            //Create OrderAddress Base On Address
+            await SaveOrderAddress(orderAddressesApiRequestDto, model, cancellationToken);
 
             //Create Orderset Base On Order
             foreach (var setData in model.OrderSetRequestDto)
             {
-                OrderSetRequestDto orderSet = new OrderSetRequestDto();
-                orderSet.OrderId = data.OrderId;
-                orderSet.SetName = setData.SetName;
-                orderSet.TotalAmount = model.TotalAmount;
-                orderSet.IsDeleted = false;
-                orderSet.CreatedBy = _currentUser.UserId;
-                orderSet.CreatedDate = DateTime.Now;
-                orderSet.CreatedUTCDate = DateTime.UtcNow;
-                var orderSetToInsert = _mapper.Map<OrderSet>(orderSet);
-                var orderSetData = await _unitOfWorkDA.OrderSetDA.CreateOrderSet(orderSetToInsert, cancellationToken);
-
+                setData.OrderId = saveOrder.OrderId;
+                var saveOrderData = await SaveOrderSet(setData, cancellationToken);
                 //Create OrderSetItem Base On OrderSet
                 foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
-                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                    var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
-                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-
-                    var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                    var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
-                    var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-
-                    var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
-
-                    OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
-                    orderSetItem.OrderId = data.OrderId;
-                    orderSetItem.OrderSetId = orderSetData.OrderSetId;
-                    orderSetItem.SubjectTypeId = itemData.SubjectTypeId;
-                    orderSetItem.SubjectId = itemData.SubjectId;
-                    orderSetItem.ProductImage = String.Empty;
-
-                    if (itemData.SubjectTypeId == ProductSubjectTypeId)
-                    {
-                        var image = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(orderSetItem.SubjectId, cancellationToken);
-                        string imagePath = string.Empty;
-                        if (image.Where(x => x.IsCover == true).Any())
-                            imagePath = image.FirstOrDefault(x => x.IsCover == true).ImagePath;
-                        orderSetItem.ProductImage = imagePath;
-                    }
-                    else if (itemData.SubjectTypeId == rawMaterialSubjectTypeId)
-                    {
-                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else if (itemData.SubjectTypeId == polishSubjectTypeId)
-                    {
-                        var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else if (itemData.SubjectTypeId == FrabriSubjectTypeId)
-                    {
-                        var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
-                        orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
-                    }
-                    else
-                    {
-                        orderSetItem.ProductImage = string.Empty;
-                    }
-                    orderSetItem.Width = itemData.Width;
-                    orderSetItem.Height = itemData.Height;
-                    orderSetItem.Depth = itemData.Depth;
-                    orderSetItem.Quantity = itemData.Quantity;
-                    orderSetItem.UnitPrice = itemData.UnitPrice;
-                    orderSetItem.DiscountPrice = itemData.DiscountPrice;
-                    orderSetItem.TotalAmount = itemData.TotalAmount;
-                    orderSetItem.Comment = itemData.Comment;
-                    orderSetItem.Status = (byte)ProductStatusEnum.Pending;
-                    orderSetItem.IsDeleted = false;
-                    orderSetItem.CreatedBy = _currentUser.UserId;
-                    orderSetItem.CreatedDate = DateTime.Now;
-                    orderSetItem.CreatedUTCDate = DateTime.UtcNow;
-                    var orderSetItemToInsert = _mapper.Map<OrderSetItem>(orderSetItem);
-                    await _unitOfWorkDA.OrderSetItemDA.CreateOrderSetItem(orderSetItemToInsert, cancellationToken);
+                    itemData.OrderId = saveOrder.OrderId;
+                    itemData.OrderSetId = saveOrderData.OrderSetId;
+                    await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
-            return _mapper.Map<OrderApiRequestDto>(data);
+            return _mapper.Map<OrderApiRequestDto>(saveOrder);
         }
 
         public async Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
@@ -313,54 +246,54 @@ namespace MidCapERP.BusinessLogic.Repositories
             var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
             var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
-            var oldData = await OrderGetById(Id, cancellationToken);
-
             var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
             var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
             var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
             var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
 
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
-            foreach (var set in model.OrderSetRequestDto)
-            {
-                foreach (var item in set.OrderSetItemRequestDto)
-                {
-                    if (item.SubjectTypeId == ProductSubjectTypeId)
-                    {
-                        var image = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(item.SubjectId, cancellationToken);
-                        string imagePath = string.Empty;
-                        if (image.Where(x => x.IsCover == true).Any())
-                            imagePath = image.FirstOrDefault(x => x.IsCover == true).ImagePath;
-                        item.ProductImage = imagePath;
-                    }
-                    else if (item.SubjectTypeId == rawMaterialSubjectTypeId)
-                    {
-                        var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == item.SubjectId).ImagePath;
-                        item.ProductImage = image;
-                    }
-                    else if (item.SubjectTypeId == polishSubjectTypeId)
-                    {
-                        var image = polishData.FirstOrDefault(p => p.PolishId == item.SubjectId).ImagePath;
-                        item.ProductImage = image;
-                    }
-                    else if (item.SubjectTypeId == FrabriSubjectTypeId)
-                    {
-                        var image = fabricData.FirstOrDefault(p => p.FabricId == item.SubjectId).ImagePath;
-                        item.ProductImage = image;
-                    }
-                    MapToDbObject(model, oldData, set, item);
-                    var orderSetItem = _mapper.Map<OrderSetItem>(item);
-
-                    await _unitOfWorkDA.OrderSetItemDA.UpdateOrder(50, orderSetItem, cancellationToken);
-                }
-                var orderSet = _mapper.Map<OrderSet>(set);
-                await _unitOfWorkDA.OrderSetDA.UpdateOrder(14, orderSet, cancellationToken);
-            }
-
+            var oldData = await OrderGetById(Id, cancellationToken);
+            oldData.IsDraft = true;
+            oldData.Status = model.Status;
+            oldData.UpdatedBy = model.UpdatedBy;
+            oldData.UpdatedDate = model.UpdatedDate;
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
+            //Start Update OrderSet
+            foreach (var orderSet in model.OrderSetRequestDto)
+            {
+                var oldOrderSet = await OrderSetGetById(Id, cancellationToken);
+                oldOrderSet.SetName = orderSet.SetName;
+                oldOrderSet.UpdatedBy = orderSet.UpdatedBy;
+                oldOrderSet.UpdatedDate = orderSet.UpdatedDate;
+                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(orderSet.OrderSetId, oldOrderSet, cancellationToken);
+                //Start Update OrderSetItem
+                foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
+                {
+                    if (!orderSetItem.IsDeleted)
+                    {
+                        var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
+                        if (oldOrderSetItem != null)
+                        {
+                            oldOrderSetItem.SubjectTypeId = orderSetItem.SubjectTypeId;
+                            oldOrderSetItem.SubjectId = orderSetItem.SubjectId;
+                            oldOrderSetItem.Height = orderSetItem.Height;
+                            oldOrderSetItem.Width = orderSetItem.Width;
+                            oldOrderSetItem.Depth = orderSetItem.Depth;
+                            oldOrderSetItem.Quantity = orderSetItem.Quantity;
+                            oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
+                            oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
+                            oldOrderSetItem.TotalAmount = orderSetItem.TotalAmount;
+                            oldOrderSetItem.Comment = orderSetItem.Comment;
+                            oldOrderSetItem.Status = orderSetItem.Status;
+                            oldOrderSetItem.UpdatedDate = DateTime.Now;
+                            oldOrderSetItem.UpdatedBy = orderSetItem.CreatedBy;
+                            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem.OrderSetItemId, oldOrderSetItem, cancellationToken);
+                        }
+
+                    }
+                }
+            }
             return _mapper.Map<OrderApiRequestDto>(data);
+            //End Update OrderSet
         }
 
         public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
@@ -393,12 +326,177 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #region Private Method
 
+        private async Task<OrderApiRequestDto> SaveOrder(OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
+        {
+            var orderToInsert = _mapper.Map<Order>(orderRequestDto);
+            orderToInsert.TenantId = _currentUser.TenantId;
+            orderToInsert.Status = (byte)ProductStatusEnum.Pending;
+            orderToInsert.CreatedBy = _currentUser.UserId;
+            orderToInsert.CreatedDate = DateTime.Now;
+            orderToInsert.CreatedUTCDate = DateTime.Now;
+
+            var data = await _unitOfWorkDA.OrderDA.CreateOrder(orderToInsert, cancellationToken);
+            return _mapper.Map<OrderApiRequestDto>(data);
+        }
+
+        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(OrderAddressesApiRequestDto orderAddressApiRequestDto, OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
+        {
+            //GetAll Customer Data
+            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+          
+            //GetAll Customer Addresses
+            var customerAddressData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+            var customer = customerData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID);
+            if (customer == null)
+            {
+                throw new Exception("Customer Id Not Valid");
+            }
+
+            //Find Customer Address Base On Customer Id
+            var customerAddress = customerAddressData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID && x.AddressType == "Home");
+            if (customerAddress == null)
+            {
+                throw new Exception("Customer Address not found");
+            }
+
+            //Create Order Address Base On Customer and Customer Address
+            OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
+            orderAddressesToInsert.OrderId = orderAddressApiRequestDto.OrderId;
+            orderAddressesToInsert.FirstName = customer.FirstName;
+            orderAddressesToInsert.LastName = customer.LastName;
+            orderAddressesToInsert.EmailId = customer.EmailId;
+            orderAddressesToInsert.PhoneNumber = customer.PhoneNumber;
+            orderAddressesToInsert.AddressType = customerAddress.AddressType;
+            orderAddressesToInsert.Street1 = customerAddress.Street1;
+            orderAddressesToInsert.Street2 = customerAddress.Street2;
+            orderAddressesToInsert.Landmark = customerAddress.Landmark;
+            orderAddressesToInsert.Area = customerAddress.Area;
+            orderAddressesToInsert.City = customerAddress.City;
+            orderAddressesToInsert.State = customerAddress.State;
+            orderAddressesToInsert.ZipCode = customerAddress.ZipCode;
+            orderAddressesToInsert.CreatedBy = customerAddress.CreatedBy;
+            orderAddressesToInsert.CreatedDate = customerAddress.CreatedDate;
+            orderAddressesToInsert.CreatedUTCDate = customerAddress.CreatedUTCDate;
+            var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
+            var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
+            return _mapper.Map<OrderAddressesApiRequestDto>(data);
+        }
+
+        private async Task<OrderSetRequestDto> SaveOrderSet(OrderSetRequestDto orderSetRequestDto, CancellationToken cancellationToken)
+        {
+            OrderSetRequestDto orderSet = new OrderSetRequestDto();
+            orderSet.OrderId = orderSetRequestDto.OrderId;
+            orderSet.SetName = orderSetRequestDto.SetName;
+            orderSet.TotalAmount = orderSetRequestDto.TotalAmount;
+            orderSet.IsDeleted = false;
+            orderSet.CreatedBy = _currentUser.UserId;
+            orderSet.CreatedDate = DateTime.Now;
+            orderSet.CreatedUTCDate = DateTime.UtcNow;
+            var orderSetToInsert = _mapper.Map<OrderSet>(orderSet);
+
+            var data = await _unitOfWorkDA.OrderSetDA.CreateOrderSet(orderSetToInsert, cancellationToken);
+            return _mapper.Map<OrderSetRequestDto>(data);
+        }
+
+        private async Task<OrderSetItemRequestDto> SaveOrderSetItem(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
+        {
+            var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+            var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+
+            var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+            var rawMaterialSubjectTypeId = await GetRawMaterialSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+            var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+
+            OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
+            orderSetItem.OrderId = orderSetItemRequestDto.OrderId;
+            orderSetItem.OrderSetId = orderSetItemRequestDto.OrderSetId;
+            orderSetItem.SubjectTypeId = orderSetItemRequestDto.SubjectTypeId;
+            orderSetItem.SubjectId = orderSetItemRequestDto.SubjectId;
+
+            if (orderSetItemRequestDto.SubjectTypeId == ProductSubjectTypeId)
+            {
+                var image = productData.FirstOrDefault(p => p.ProductId == orderSetItem.SubjectId)?.QRImage;
+                if (image == null)
+                {
+                    throw new Exception("Product Image not found");
+                }
+                orderSetItem.ProductImage = image;
+            }
+            else if (orderSetItemRequestDto.SubjectTypeId == rawMaterialSubjectTypeId)
+            {
+                var image = rawMaterialData.FirstOrDefault(p => p.RawMaterialId == orderSetItem.SubjectId)?.ImagePath;
+                if (image == null)
+                {
+                    throw new Exception("Product Image not found");
+                }
+                orderSetItem.ProductImage = string.IsNullOrEmpty(image) ? String.Empty : image;
+            }
+            else if (orderSetItemRequestDto.SubjectTypeId == polishSubjectTypeId)
+            {
+                var image = polishData.FirstOrDefault(p => p.PolishId == orderSetItem.SubjectId)?.ImagePath;
+                if (image == null)
+                {
+                    throw new Exception("Product Image not found");
+                }
+                orderSetItem.ProductImage = image;
+            }
+            else if (orderSetItemRequestDto.SubjectTypeId == FrabriSubjectTypeId)
+            {
+                var image = fabricData.FirstOrDefault(p => p.FabricId == orderSetItem.SubjectId)?.ImagePath;
+                if (image == null)
+                {
+                    throw new Exception("Product Image not found");
+                }
+                orderSetItem.ProductImage = image;
+            }
+            orderSetItem.Width = orderSetItemRequestDto.Width;
+            orderSetItem.Height = orderSetItemRequestDto.Height;
+            orderSetItem.Depth = orderSetItemRequestDto.Depth;
+            orderSetItem.Quantity = orderSetItemRequestDto.Quantity;
+            orderSetItem.UnitPrice = orderSetItemRequestDto.UnitPrice;
+            orderSetItem.DiscountPrice = orderSetItemRequestDto.DiscountPrice;
+            orderSetItem.TotalAmount = orderSetItemRequestDto.TotalAmount;
+            orderSetItem.Comment = orderSetItemRequestDto.Comment;
+            orderSetItem.Status = (byte)ProductStatusEnum.Pending;
+            orderSetItem.IsDeleted = false;
+            orderSetItem.CreatedBy = _currentUser.UserId;
+            orderSetItem.CreatedDate = DateTime.Now;
+            orderSetItem.CreatedUTCDate = DateTime.UtcNow;
+            var orderSetItemToInsert = _mapper.Map<OrderSetItem>(orderSetItem);
+            var data = await _unitOfWorkDA.OrderSetItemDA.CreateOrderSetItem(orderSetItemToInsert, cancellationToken);
+
+            return _mapper.Map<OrderSetItemRequestDto>(data);
+        }
+
         private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
             if (data == null)
             {
                 throw new Exception("Order not found");
+            }
+            return data;
+        }
+
+        private async Task<OrderSet> OrderSetGetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Order Set not found");
+            }
+            return data;
+        }
+
+        private async Task<OrderSetItem> OrderSetItemGetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("Order Set Item not found");
             }
             return data;
         }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using MidCapERP.DataEntities.Models;
@@ -56,5 +56,6 @@ namespace MidCapERP.DataEntities
         public DbSet<OrderSetItem> OrderSetItems { get; set; }
         public DbSet<TenantBankDetail> TenantBankDetail { get; set; }
         public DbSet<ActivityLogs> ActivityLogs { get; set; }
-    }
+        public DbSet<OrderAddress> OrderAddress { get; set; }
+     }
 }
