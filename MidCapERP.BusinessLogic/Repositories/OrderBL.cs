@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -13,6 +14,7 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
+using static MagnusMinds.Utility.ApiDefaultResponseModel;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -147,7 +149,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderResponseDto>(data);
         }
 
-        public async Task<OrderApiResponseDto> GetOrderAll(int Id, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> GetOrderAll(Int64 Id, CancellationToken cancellationToken)
         {
             try
             {
@@ -252,6 +254,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
+
             return _mapper.Map<OrderApiResponseDto>(saveOrder);
         }
 
@@ -265,7 +268,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
+            var data = await _unitOfWorkDA.OrderDA.UpdateOrder(oldData, cancellationToken);
             //Start Update OrderSet
             foreach (var orderSet in model.OrderSetRequestDto)
             {
@@ -274,7 +277,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 oldOrderSet.UpdatedBy = _currentUser.UserId;
                 oldOrderSet.UpdatedDate = DateTime.Now;
                 oldOrderSet.UpdatedUTCDate = DateTime.UtcNow;
-                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(orderSet.OrderSetId, oldOrderSet, cancellationToken);
+                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(oldOrderSet, cancellationToken);
                 //Start Update OrderSetItem
                 foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
                 {
@@ -292,7 +295,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         oldOrderSetItem.UpdatedBy = _currentUser.UserId;
                         oldOrderSetItem.UpdatedDate = DateTime.Now;
                         oldOrderSetItem.UpdatedUTCDate = DateTime.UtcNow;
-                        await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem.OrderSetItemId, oldOrderSetItem, cancellationToken);
+                        await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(oldOrderSetItem, cancellationToken);
                     }
                 }
             }
@@ -300,7 +303,122 @@ namespace MidCapERP.BusinessLogic.Repositories
             //End Update OrderSet
         }
 
+        public async Task DeleteOrder(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkDA.BeginTransactionAsync();
+                if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.Order)
+                {
+                    var data = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
+                    var orderSetList = data.Where(p => p.OrderId == orderDeleteApiRequestDto.OrderId).Select(p => p.OrderSetId).ToList();
+
+                    foreach (Int64 orderSetId in orderSetList)
+                    {
+                        var orderSetItem = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+                        var orderSetItemList = orderSetItem.Where(p => p.OrderSetId == orderSetId).Select(p => p.OrderSetItemId).ToList();
+
+                        foreach (Int64 orderItemId in orderSetItemList)
+                        {
+                            await DeleteOrderSetItem(orderItemId, cancellationToken);
+                        }
+                        await DeleteOrderSet(orderSetId, cancellationToken);
+                    }
+                    await DeleteOrder(orderDeleteApiRequestDto.OrderId, cancellationToken);
+                }
+                else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSet)
+                {
+                    var orderSetItem = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+                    var orderSetItemList = orderSetItem.Where(p => p.OrderSetId == orderDeleteApiRequestDto.OrderSetId).Select(p => p.OrderSetItemId).ToList();
+
+                    foreach (Int64 orderItemId in orderSetItemList)
+                    {
+                        await DeleteOrderSetItem(orderItemId, cancellationToken);
+                    }
+                    await DeleteOrderSet(orderDeleteApiRequestDto.OrderSetId, cancellationToken);
+                }
+                else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSetItem)
+                {
+                    await DeleteOrderSetItem(orderDeleteApiRequestDto.OrderSetItemId, cancellationToken);
+                }
+                else
+                {
+                    throw new Exception("No Data Deleted");
+                }
+                await _unitOfWorkDA.CommitTransactionAsync();
+            }catch(Exception e)
+            {
+                await _unitOfWorkDA.rollbackTransactionAsync();
+                throw new Exception("No Data Deleted");
+            }
+        }
+
+        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId,decimal discountPrice,CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if(data == null)
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+
+            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice + discountPrice;
+            data.DiscountPrice = discountPrice;
+            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
+
+            var orderData = await GetOrderAll(data.OrderId, cancellationToken);
+
+            //var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            //orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+            //orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
+            //orderById.TotalAmount = orderData.GrossTotal - orderData.Discount;
+            //orderById.GSTTaxAmount = (orderData.TotalAmount * 18) / 100;
+            //orderById.UpdatedBy = _currentUser.UserId;
+            //orderById.UpdatedDate = DateTime.Now;
+            //orderById.UpdatedUTCDate = DateTime.UtcNow;
+            //await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return orderData;
+        }
+
         #region Private Method
+
+        private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            if(order != null)
+            {
+                await _unitOfWorkDA.OrderDA.DeleteOrder(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order not found");
+            }
+        }
+
+        private async Task DeleteOrderSet(Int64 orderSetId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderSetDA.GetById(orderSetId, cancellationToken);
+            if (order != null)
+            {
+                await _unitOfWorkDA.OrderSetDA.DeleteOrderSet(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("OrderSet not found");
+            }
+        }
+
+        private async Task DeleteOrderSetItem(Int64 orderSetItemId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if (order != null)
+            {
+                await _unitOfWorkDA.OrderSetItemDA.DeleteOrderSetItem(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+        }
 
         private async Task<OrderApiRequestDto> SaveOrder(OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
         {
