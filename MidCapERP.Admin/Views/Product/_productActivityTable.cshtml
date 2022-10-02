@@ -1,0 +1,17 @@
+﻿@model IEnumerable<MidCapERP.DataEntities.Models.ActivityLogs>
+
+<table class="table c-table c-table-stripted" id="tblFrame">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@item.Description</th>
+            </tr>
+        }
+    </tbody>
+</table>
