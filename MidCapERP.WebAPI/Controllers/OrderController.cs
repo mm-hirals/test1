@@ -24,7 +24,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<ApiResponse> Get(long id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.GetOrderAll(id, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.GetOrderDetailByOrderIdAPI(id, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);

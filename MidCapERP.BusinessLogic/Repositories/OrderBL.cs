@@ -82,16 +82,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
 
                 // Get Order Set Items Data
+                var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+                var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
                 foreach (var item in orderResponseDto.OrderSetResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                    var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-                    var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
 
@@ -149,7 +149,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderResponseDto>(data);
         }
 
-        public async Task<OrderApiResponseDto> GetOrderAll(Int64 Id, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> GetOrderDetailByOrderIdAPI(int Id, CancellationToken cancellationToken)
         {
             try
             {
@@ -162,6 +162,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     throw new Exception("Order not found");
                 }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
+                orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
 
                 // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
@@ -169,23 +170,23 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderApiResponseDto.OrderSetApiResponseDto = _mapper.Map<List<OrderSetApiResponseDto>>(orderSetDataByOrderId);
 
                 // Get Order Set Items Data
+                var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+                var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
+                
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
                                              join y in productData on x.SubjectId equals y.ProductId into productM
 
                                              from productMat in productM.DefaultIfEmpty()
                                              join z in polishData on x.SubjectId equals z.PolishId into polishM
-
-                                             from rawMaterial in rawMaterialData.DefaultIfEmpty()
-                                             join b in fabricData on x.SubjectId equals b.FabricId into rawMateria
 
                                              from polishMat in polishM.DefaultIfEmpty()
                                              join a in fabricData on x.SubjectId equals a.FabricId into fabricM
@@ -203,8 +204,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Height = x.Height,
                                                  Depth = x.Depth,
                                                  Quantity = x.Quantity,
-                                                 ProductTitle = (x.SubjectTypeId == 1 ? productMat.ProductTitle : (x.SubjectTypeId == 3 ? polishMat.Title : fabricMat.Title)),
-                                                 ModelNo = (x.SubjectTypeId == 1 ? productMat.ModelNo : (x.SubjectTypeId == 3 ? polishMat.ModelNo : fabricMat.ModelNo)),
+                                                 ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
+                                                 ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
@@ -213,6 +214,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              }).ToList();
 
                     item.OrderSetItemResponseDto = orderSetItemsData;
+                    item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
                 }
                 return orderApiResponseDto;
             }
