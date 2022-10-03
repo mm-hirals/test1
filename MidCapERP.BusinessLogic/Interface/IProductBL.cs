@@ -13,6 +13,8 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
 
+        public Task<ProductDetailResponseDto> GetProductDetailById(Int64 Id, CancellationToken cancellationToken);
+
         public Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken);
 
         public Task<ProductMainRequestDto> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
@@ -48,6 +50,10 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken);
+
+        public Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken);
+
+        public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<IEnumerable<ActivityLogs>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
     }
