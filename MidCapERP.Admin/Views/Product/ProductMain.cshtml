@@ -18,6 +18,7 @@
                 <button class="nav-link" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
                 <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Cost Analyzer</button>
                 <button class="nav-link disabled" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Workflow</button>
+                <button class="nav-link" id="nav-productActivity-tab" data-bs-toggle="tab" data-bs-target="#nav-productActivity" type="button" role="tab" aria-controls="nav-productActivity" aria-selected="false">Product Activity</button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -31,6 +32,9 @@
                 <div id="divProductMaterialPartial"></div>
             </div>
             <div id="divProductWorkflowPartial"></div>
+            <div class="tab-pane fade" id="nav-productActivity" role="tabpanel" aria-labelledby="nav-productActivity-tab">
+                <div id="divProductActivityPartial"></div>
+            </div>
         </div>
     }
 </div>
@@ -40,6 +44,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-        <script asp-src-include="~/js/Product.js" ></script>
+        <script asp-src-include="~/js/Product.js"></script>
     }
-}
+    }
