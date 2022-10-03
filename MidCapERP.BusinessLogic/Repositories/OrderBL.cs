@@ -149,7 +149,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderResponseDto>(data);
         }
 
-        public async Task<OrderApiResponseDto> GetOrderDetailByOrderIdAPI(int Id, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> GetOrderDetailByOrderIdAPI(long Id, CancellationToken cancellationToken)
         {
             try
             {
@@ -367,7 +367,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             
             await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
 
-            var orderData = await GetOrderAll(data.OrderId, cancellationToken);
+            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
 
             var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
             orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
