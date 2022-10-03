@@ -111,6 +111,13 @@ namespace MidCapERP.Admin.Controllers
                 return PartialView("_productMaterialPartial");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProductActivity(int productId,CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetProductActivityByProductId(productId,cancellationToken);
+            return PartialView("_productActivityTable", data);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateProductMaterial(ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {

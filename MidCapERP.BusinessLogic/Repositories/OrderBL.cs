@@ -230,7 +230,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             model.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
             model.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
             model.TotalAmount = model.GrossTotal - model.Discount;
-            model.GSTTaxAmount = (model.TotalAmount * 18) / 100;
+            model.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
 
             var saveOrder = await SaveOrder(model, cancellationToken);
             OrderAddressesApiRequestDto orderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
@@ -264,7 +264,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
             oldData.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
             oldData.TotalAmount = model.GrossTotal - model.Discount;
-            oldData.GSTTaxAmount = (model.TotalAmount * 18) / 100;
+            oldData.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
