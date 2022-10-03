@@ -272,7 +272,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             //Start Update OrderSet
             foreach (var orderSet in model.OrderSetRequestDto)
             {
-                var oldOrderSet = await OrderSetGetById(Id, cancellationToken);
+                var oldOrderSet = await OrderSetGetById(orderSet.OrderSetId, cancellationToken);
                 oldOrderSet.SetName = orderSet.SetName;
                 oldOrderSet.UpdatedBy = _currentUser.UserId;
                 oldOrderSet.UpdatedDate = DateTime.Now;
@@ -281,7 +281,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 //Start Update OrderSetItem
                 foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
                 {
-                    var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
+                    var oldOrderSetItem = await OrderSetItemGetById(orderSetItem.OrderSetItemId, cancellationToken);
                     if (oldOrderSetItem != null)
                     {
                         oldOrderSetItem.Height = orderSetItem.Height;
@@ -290,7 +290,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         oldOrderSetItem.Quantity = orderSetItem.Quantity;
                         oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
                         oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
-                        oldOrderSetItem.TotalAmount = orderSetItem.TotalAmount;
+                        oldOrderSetItem.TotalAmount = (orderSetItem.UnitPrice * orderSetItem.Quantity) - orderSetItem.DiscountPrice;
                         oldOrderSetItem.Comment = orderSetItem.Comment;
                         oldOrderSetItem.UpdatedBy = _currentUser.UserId;
                         oldOrderSetItem.UpdatedDate = DateTime.Now;
@@ -360,22 +360,22 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("OrderSetItem not found");
             }
-
-            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice + discountPrice;
             data.DiscountPrice = discountPrice;
+            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
+            
             await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
 
             var orderData = await GetOrderAll(data.OrderId, cancellationToken);
 
-            //var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
-            //orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
-            //orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
-            //orderById.TotalAmount = orderData.GrossTotal - orderData.Discount;
-            //orderById.GSTTaxAmount = (orderData.TotalAmount * 18) / 100;
-            //orderById.UpdatedBy = _currentUser.UserId;
-            //orderById.UpdatedDate = DateTime.Now;
-            //orderById.UpdatedUTCDate = DateTime.UtcNow;
-            //await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
+            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
             return orderData;
         }
 
