@@ -30,7 +30,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CompanyResponseDto>>(lookUpValuesAllData.Where(x => x.LookupId == lookupId).ToList());
         }
 
-        public async Task<JsonRepsonse<CompanyResponseDto>> GetFilterCompanyData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<CompanyResponseDto>> GetFilterCompanyData(CompanyDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             int lookupId = await GetLookupId(cancellationToken);
             var companyAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
@@ -53,7 +53,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            UpdatedDate = x.UpdatedDate,
                                            UpdatedUTCDate = x.UpdatedUTCDate
                                        }).AsQueryable();
-            var companyData = new PagedList<CompanyResponseDto>(companyResponseData, dataTableFilterDto);
+
+            var companyFilteredData = FilterCompanyData(dataTableFilterDto, companyResponseData);
+            var companyData = new PagedList<CompanyResponseDto>(companyFilteredData, dataTableFilterDto);
             return new JsonRepsonse<CompanyResponseDto>(dataTableFilterDto.Draw, companyData.TotalCount, companyData.TotalCount, companyData);
         }
 
@@ -130,6 +132,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Company)).Select(x => x.LookupId).FirstOrDefault();
             return lookupId;
+        }
+
+        private static IQueryable<CompanyResponseDto> FilterCompanyData(CompanyDataTableFilterDto companyDataTableFilterDto, IQueryable<CompanyResponseDto> companyResponseDtos)
+        {
+            if (companyDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(companyDataTableFilterDto.CompanyName))
+                {
+                    companyResponseDtos = companyResponseDtos.Where(p => p.LookupValueName.StartsWith(companyDataTableFilterDto.CompanyName));
+                }
+            }
+
+            return companyResponseDtos;
         }
 
         #endregion PrivateMethods

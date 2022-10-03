@@ -12,7 +12,11 @@ $(function () {
         "ajax": {
             "url": "/RawMaterial/GetRawMaterialData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.title = $("#title").val().trim(),
+                    d.unitName = $("#unitName").val().trim()
+            }
         },
         "columns": [
             { "data": "title", "name": "title", "autoWidth": true },
@@ -32,6 +36,14 @@ $(function () {
 $("#lnkRawMaterialFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#title").on("input", function () {
+    tblRawMaterial.ajax.reload(null, false);
+});
+
+$("#unitName").on("input", function () {
+    tblRawMaterial.ajax.reload(null, false);
 });
 
 RawMaterialModel.onComplete = function () {

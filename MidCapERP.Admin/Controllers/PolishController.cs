@@ -26,7 +26,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Polish.View)]
-        public async Task<IActionResult> GetPolishData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPolishData([FromForm] PolishDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.PolishBL.GetFilterPolishData(dataTableFilterDto, cancellationToken);
             return Ok(data);

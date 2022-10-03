@@ -12,7 +12,12 @@ $(function () {
         "ajax": {
             "url": "/Fabric/GetFabricData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.title = $("#title").val().trim(),
+                d.model = $("#modelNo").val().trim(),
+                d.company = $("#companyName").val().trim()
+            }
         },
         "columns": [
             { "data": "title", "name": "title", "autoWidth": true },
@@ -35,6 +40,18 @@ $(function () {
 $("#lnkFabricFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$('#title').keyup(function () {
+    tblFabric.ajax.reload(null, false);
+});
+
+$("#modelNo").on("input", function () {
+    tblFabric.ajax.reload(null, false);
+});
+
+$("#companyName").on("input", function () {
+    tblFabric.ajax.reload(null, false);
 });
 
 FabricModel.onComplete = function () {

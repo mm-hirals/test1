@@ -12,7 +12,10 @@ $(function () {
         "ajax": {
             "url": "/Category/GetCategoryData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.categoryName = $("#categoryName").val().trim()
+            }
         },
         "columns": [
             { "data": "lookupValueName", "name": "LookupValueName", "autoWidth": true },
@@ -30,6 +33,10 @@ $(function () {
 $("#lnkCategoryFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#categoryName").on("input", function () {
+    tblCategory.ajax.reload(null, false);
 });
 
 CategoryModel.onComplete = function () {

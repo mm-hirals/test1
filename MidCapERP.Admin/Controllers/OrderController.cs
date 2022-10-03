@@ -25,7 +25,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<IActionResult> GetOrderData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrderData([FromForm] OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetFilterOrderData(dataTableFilterDto, cancellationToken);
             return Ok(data);

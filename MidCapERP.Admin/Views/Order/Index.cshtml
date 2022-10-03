@@ -12,10 +12,48 @@
     <div class="c-card--body">
         <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label">Order #</label>
-                        <input type="text" class="form-control" placeholder="Order Number" />
+                 <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Reffered</label>
+                            <input id="reffered" type="text" class="form-control" placeholder="Reffered By" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Customer Name</label>
+                            <input id="customerName" type="text" class="form-control" placeholder="Customer Name" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">From Date</label>
+                            <input id="phoneNumber" type="text" class="form-control" placeholder="Phone Number" />
+                        </div>
+                    </div>
+                    <!--Status-->
+                    <div class="col-md-3">
+                       <div class="form-group">
+                           <select id="status">
+                                <option value="0">Pending</option>
+                                <option value="1">In Progress</option>
+                                <option value="2">Completed</option>
+                                <option value="3">Cancelled</option>
+                                <option value="4">Archieved</option>
+                           </select>
+                       </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Order Date</label>
+                            <input id="orderDate" type="date" class="form-control" placeholder="From Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Delivery Date</label>
+                            <input id="deliveryDate" type="date" class="form-control" placeholder="To Date" />
+                        </div>
                     </div>
                 </div>
             </div>
