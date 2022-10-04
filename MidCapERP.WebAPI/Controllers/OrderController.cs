@@ -62,7 +62,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Delete)]
         public async Task<ApiResponse> DeleteOrder([FromBody] OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.OrderBL.DeleteOrder(orderDeleteApiRequestDto, cancellationToken);
+            await _unitOfWorkBL.OrderBL.DeleteOrderAPI(orderDeleteApiRequestDto, cancellationToken);
             if (orderDeleteApiRequestDto.DeleteType != (int)OrderDeleteTypeEnum.Order)
             {
                 return await Get(orderDeleteApiRequestDto.OrderId, cancellationToken);
@@ -74,7 +74,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
         public async Task<ApiResponse> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.UpdateOrderDiscountAmount(orderSetItemId, discountPrice, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderDiscountAmountAPI(orderSetItemId, discountPrice, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -83,27 +83,19 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Calculate product price based on dimension 
+        /// Calculate product price based on dimension
         /// </summary>
         /// <param name="orderCalculationApiRequestDto"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet("{subjectTypeId}/{subjectId}/{width}/{height}/{depth}/{quantity}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<ApiResponse> CalculateProductDimensionPrice([FromBody] OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
-            // Get product by productId
-            var productData = await _unitOfWorkBL.ProductBL.GetByIdAPI(orderCalculationApiRequestDto.SubjectId, cancellationToken);
-            if (productData == null)
-            {
-                return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
-            }
-
-            // Calculate product dimension price
-            var data = await _unitOfWorkBL.OrderBL.CalculateProductDimensionPriceAPI(productData, orderCalculationApiRequestDto, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.CalculateProductDimensionPriceAPI(orderCalculationApiRequestDto, cancellationToken);
             if (data == null)
             {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }

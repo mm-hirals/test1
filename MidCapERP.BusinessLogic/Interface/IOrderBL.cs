@@ -2,8 +2,6 @@
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
 using MidCapERP.Dto.OrderCalculation;
-using MidCapERP.Dto.OrderSetItem;
-using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -25,8 +23,10 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken);
 
-        public Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
-        public Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(ProductRequestDto productData, OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
-        public Task DeleteOrder(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
+        public Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
+
+        public Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
+
+        public Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
@@ -14,7 +13,6 @@ using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
-using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -23,14 +21,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         public readonly CurrentUser _currentUser;
-        private readonly IFileStorageService _fileStorageService;
 
-        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
+        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
-            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -305,7 +301,57 @@ namespace MidCapERP.BusinessLogic.Repositories
             //End Update OrderSet
         }
 
-        public async Task DeleteOrder(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+            data.DiscountPrice = discountPrice;
+            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
+
+            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
+
+            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
+
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
+            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return orderData;
+        }
+
+        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
+        {
+            OrderCalculationApiResponseDto orderCalculationData = new OrderCalculationApiResponseDto();
+            var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+            if (productSubjectTypeId == orderCalculationApiRequestDto.SubjectTypeId)
+            {
+                var productData = await _unitOfWorkDA.ProductDA.GetById(orderCalculationApiRequestDto.SubjectId, cancellationToken);
+                if (productData != null)
+                {
+                    var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
+                    decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
+                    decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
+                    decimal newCostPrice = totalCubic * costPerCubic;
+                    decimal retailerPrice = tenantData.RetailerPercentage > 0 ? newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : newCostPrice;
+                    decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                    orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
+                    orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
+                    orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
+                    orderCalculationData.TotalAmount = totalPrice;
+                }
+            }
+            return _mapper.Map<OrderCalculationApiResponseDto>(orderCalculationData);
+        }
+
+        public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
         {
             try
             {
@@ -354,52 +400,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.rollbackTransactionAsync();
                 throw new Exception("No Data Deleted");
             }
-        }
-
-        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("OrderSetItem not found");
-            }
-            data.DiscountPrice = discountPrice;
-            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
-
-            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
-
-            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
-
-            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
-            orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
-            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
-            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
-            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
-            orderById.UpdatedBy = _currentUser.UserId;
-            orderById.UpdatedDate = DateTime.Now;
-            orderById.UpdatedUTCDate = DateTime.UtcNow;
-            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
-            return orderData;
-        }
-
-        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(ProductRequestDto productData, OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
-        {
-            OrderCalculationApiResponseDto orderCalculationData = new OrderCalculationApiResponseDto();
-            
-            // get retailer percentage from tenant
-            var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-            decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
-            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
-            decimal newCostPrice = totalCubic * costPerCubic;
-            decimal retailerPrice = newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100);
-            decimal totalPrice = Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2);
-
-            orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
-            orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
-            orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
-            orderCalculationData.TotalAmount = totalPrice;
-            return _mapper.Map<OrderCalculationApiResponseDto>(orderCalculationData);
-
         }
 
         #region Private Method
