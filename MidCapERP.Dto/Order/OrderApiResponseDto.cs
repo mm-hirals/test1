@@ -5,10 +5,8 @@ namespace MidCapERP.Dto.Order
 {
     public class OrderApiResponseDto
     {
-        [JsonIgnore]
         public long OrderId { get; set; }
-
-        public string OrderNo { get; set; }
+        public string? OrderNo { get; set; }
         public long CustomerID { get; set; }
 
         public decimal GrossTotal { get; set; }
@@ -18,7 +16,6 @@ namespace MidCapERP.Dto.Order
         public decimal PayableAmount { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string Comments { get; set; }
-        public string GSTNo { get; set; }
         public int Status { get; set; }
 
         public List<OrderSetApiResponseDto> OrderSetApiResponseDto { get; set; }
