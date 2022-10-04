@@ -10,9 +10,11 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
 using MidCapERP.Dto.OrderAddressesApi;
+using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
+using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -175,7 +177,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
                 var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
-                
+
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
@@ -346,23 +348,24 @@ namespace MidCapERP.BusinessLogic.Repositories
                     throw new Exception("No Data Deleted");
                 }
                 await _unitOfWorkDA.CommitTransactionAsync();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 await _unitOfWorkDA.rollbackTransactionAsync();
                 throw new Exception("No Data Deleted");
             }
         }
 
-        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId,decimal discountPrice,CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
-            if(data == null)
+            if (data == null)
             {
                 throw new Exception("OrderSetItem not found");
             }
             data.DiscountPrice = discountPrice;
             data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
-            
+
             await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
 
             var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
@@ -379,12 +382,32 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
+        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(ProductRequestDto productData, OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
+        {
+            OrderCalculationApiResponseDto orderCalculationData = new OrderCalculationApiResponseDto();
+            
+            // get retailer percentage from tenant
+            var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
+            decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
+            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
+            decimal newCostPrice = totalCubic * costPerCubic;
+            decimal retailerPrice = newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100);
+            decimal totalPrice = Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2);
+
+            orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
+            orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
+            orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
+            orderCalculationData.TotalAmount = totalPrice;
+            return _mapper.Map<OrderCalculationApiResponseDto>(orderCalculationData);
+
+        }
+
         #region Private Method
 
         private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)
         {
             var order = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
-            if(order != null)
+            if (order != null)
             {
                 await _unitOfWorkDA.OrderDA.DeleteOrder(order, cancellationToken);
             }

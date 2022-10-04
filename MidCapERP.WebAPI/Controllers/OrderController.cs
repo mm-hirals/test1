@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
+using MidCapERP.Dto.OrderCalculation;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -79,6 +80,32 @@ namespace MidCapERP.WebAPI.Controllers
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        /// <summary>
+        /// Calculate product price based on dimension 
+        /// </summary>
+        /// <param name="orderCalculationApiRequestDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("{subjectTypeId}/{subjectId}/{width}/{height}/{depth}/{quantity}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        public async Task<ApiResponse> CalculateProductDimensionPrice([FromBody] OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
+        {
+            // Get product by productId
+            var productData = await _unitOfWorkBL.ProductBL.GetByIdAPI(orderCalculationApiRequestDto.SubjectId, cancellationToken);
+            if (productData == null)
+            {
+                return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
+            }
+
+            // Calculate product dimension price
+            var data = await _unitOfWorkBL.OrderBL.CalculateProductDimensionPriceAPI(productData, orderCalculationApiRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
         #region Private Methods
