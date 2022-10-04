@@ -382,21 +382,21 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
-        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(ProductRequestDto productData, int subjectTypeId, int subjectId, decimal width, decimal height, decimal depth, int quantity, CancellationToken cancellationToken)
+        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(ProductRequestDto productData, OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
             OrderCalculationApiResponseDto orderCalculationData = new OrderCalculationApiResponseDto();
             
             // get retailer percentage from tenant
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
-            decimal totalCubic = width * height * depth;
+            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
             decimal newCostPrice = totalCubic * costPerCubic;
             decimal retailerPrice = newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100);
-            decimal totalPrice = Math.Round(retailerPrice * quantity, 2);
+            decimal totalPrice = Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2);
 
-            orderCalculationData.SubjectId = subjectId;
-            orderCalculationData.SubjectTypeId = subjectTypeId;
-            orderCalculationData.Quantity = quantity;
+            orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
+            orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
+            orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
             orderCalculationData.TotalAmount = totalPrice;
             return _mapper.Map<OrderCalculationApiResponseDto>(orderCalculationData);
 
