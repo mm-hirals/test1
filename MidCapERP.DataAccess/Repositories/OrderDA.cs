@@ -11,13 +11,15 @@ namespace MidCapERP.DataAccess.Repositories
         private readonly ISqlRepository<OrderSet> _orderSet;
         private readonly ISqlRepository<OrderSetItem> _orderSetItem;
         private readonly CurrentUser _currentUser;
+        private readonly ISqlRepository<fnGetOrderNumber> _getOrderNumber;
 
-        public OrderDA(ISqlRepository<Order> order, ISqlRepository<OrderSet> orderSet, ISqlRepository<OrderSetItem> orderSetItem, CurrentUser currentUser)
+        public OrderDA(ISqlRepository<fnGetOrderNumber> getOrderNumber, ISqlRepository<Order> order, ISqlRepository<OrderSet> orderSet, ISqlRepository<OrderSetItem> orderSetItem, CurrentUser currentUser)
         {
             _order = order;
             _orderSet = orderSet;
             _orderSetItem = orderSetItem;
             _currentUser = currentUser;
+            _getOrderNumber = getOrderNumber;
         }
 
         public async Task<IQueryable<Order>> GetAll(CancellationToken cancellationToken)
@@ -53,6 +55,12 @@ namespace MidCapERP.DataAccess.Repositories
         public async Task<Order> DeleteOrder(Order model, CancellationToken cancellationToken)
         {
             return await _order.DeleteAsync(model, cancellationToken);
+        }
+
+        public async Task<string?> CreateOrderNo(string type, CancellationToken cancellationToken)
+        {
+            var orderData = await _getOrderNumber.GetWithRawSqlAsync($"SELECT OrderNo = dbo.GetOrderNumber('{type}') ", cancellationToken);
+            return orderData.FirstOrDefault()?.OrderNo;
         }
     }
 }

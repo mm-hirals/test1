@@ -21,12 +21,15 @@ namespace MidCapERP.DataEntities
                 b.Property(x => x.UserId).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
+            builder.Entity<fnGetOrderNumber>().HasNoKey();
+
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
 
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<fnGetOrderNumber> GetOrderNumber { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<Lookups> Lookups { get; set; }
         public DbSet<Contractors> Contractors { get; set; }
@@ -57,5 +60,5 @@ namespace MidCapERP.DataEntities
         public DbSet<TenantBankDetail> TenantBankDetail { get; set; }
         public DbSet<ActivityLogs> ActivityLogs { get; set; }
         public DbSet<OrderAddress> OrderAddress { get; set; }
-     }
+    }
 }

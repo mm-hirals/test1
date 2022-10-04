@@ -223,7 +223,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             //Cost Calculation
             Random generator = new Random();
-            model.OrderNo = Convert.ToString(DateTime.Now.Year) + "-" + "R" + generator.Next(1, 99999).ToString("D5");
+            model.OrderNo = await _unitOfWorkDA.OrderDA.CreateOrderNo("R", cancellationToken); ;
+            //model.OrderNo = Convert.ToString(DateTime.Now.Year) + "-" + "R" + generator.Next(1, 99999).ToString("D5");
             model.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
             model.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
             model.TotalAmount = model.GrossTotal - model.Discount;
@@ -375,6 +376,32 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.rollbackTransactionAsync();
                 throw new Exception("No Data Deleted");
             }
+        }
+
+        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+            data.DiscountPrice = discountPrice;
+            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
+
+            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
+
+            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
+
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
+            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return orderData;
         }
 
         #region Private Method
