@@ -16,11 +16,11 @@ namespace MidCapERP.Infrastructure.Identity.Seed
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             // Add roles supported
-            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.Administrator));
-            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.StoreManager));
-            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.Supervisor));
-            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.SalesRepresentative));
-            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.Contractor));
+            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.Administrator, 1));
+            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.StoreManager, 1));
+            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.Supervisor, 1));
+            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.SalesRepresentative, 1));
+            await roleManager.CreateAsync(new ApplicationRole(ApplicationIdentityConstants.Roles.Contractor, 1));
 
             // New admin user
             string adminUserName = "kparmar@magnusminds.net";
@@ -34,15 +34,16 @@ namespace MidCapERP.Infrastructure.Identity.Seed
                 LastName = "Parmar"
             };
 
-            // Add new user and their role
-            await userManager.CreateAsync(adminUser, ApplicationIdentityConstants.DefaultPassword);
             adminUser = await userManager.FindByNameAsync(adminUserName);
-            await userManager.AddToRoleAsync(adminUser, ApplicationIdentityConstants.Roles.Administrator);
-
-            var administratorRole = await roleManager.FindByNameAsync(ApplicationIdentityConstants.Roles.Administrator);
-
-            //GIVE ALL PERMISSIONS TO THE ADMINISTRATOR USER
-            await GrantPermissionToAdminUser(roleManager, administratorRole);
+            // Add new user and their role
+            if (adminUser == null)
+            {
+                await userManager.CreateAsync(adminUser, ApplicationIdentityConstants.DefaultPassword);
+                await userManager.AddToRoleAsync(adminUser, ApplicationIdentityConstants.Roles.Administrator);
+                var administratorRole = await roleManager.FindByNameAsync(ApplicationIdentityConstants.Roles.Administrator);
+                //GIVE ALL PERMISSIONS TO THE ADMINISTRATOR USER
+                await GrantPermissionToAdminUser(roleManager, administratorRole);
+            }
         }
 
         private static async Task GrantPermissionToAdminUser(RoleManager<ApplicationRole> roleManager, ApplicationRole administratorRole)
