@@ -5,13 +5,13 @@ namespace MidCapERP.Dto.Fabric
 {
     public class FabricDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("Title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonProperty("Model")]
+        [JsonProperty("model")]
         public string Model { get; set; }
 
-        [JsonProperty("Company")]
+        [JsonProperty("company")]
         public string Company { get; set; }
     }
 }

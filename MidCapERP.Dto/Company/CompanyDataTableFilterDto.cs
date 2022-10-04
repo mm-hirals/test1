@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.Company
 {
     public class CompanyDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("Company Name")]
+        [JsonProperty("companyName")]
         public string CompanyName { get; set; }
 
     }

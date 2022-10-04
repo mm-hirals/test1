@@ -501,7 +501,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 if (orderDataTableFilterDto.DeliveryFromDate != DateTime.MinValue)
                 {
-                    
                     orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate > orderDataTableFilterDto.DeliveryFromDate);
                 }
                 if (orderDataTableFilterDto.DeliveryToDate != DateTime.MinValue)
@@ -509,7 +508,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate < orderDataTableFilterDto.DeliveryToDate);
                 }
             }
-
             return orderResponseDto;
         }
 

@@ -5,11 +5,10 @@ namespace MidCapERP.Dto.RawMaterial
 {
     public class RawMaterialDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("Title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonProperty("Unit Name")]
+        [JsonProperty("unit Name")]
         public string UnitName { get; set; }
-
     }
 }
