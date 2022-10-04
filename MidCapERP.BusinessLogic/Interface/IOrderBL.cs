@@ -23,6 +23,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken);
 
         public Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
+
         public Task DeleteOrder(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
     }
 }

@@ -272,7 +272,10 @@
 
             public static class Order
             {
-                public const string View = "Permissions.Product.View";
+                public const string View = "Permissions.Order.View";
+                public const string Create = "Permissions.Order.Create";
+                public const string Update = "Permissions.Order.Update";
+                public const string Delete = "Permissions.Order.Delete";
             }
 
             public static class Tenant

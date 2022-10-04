@@ -2,7 +2,6 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -14,7 +13,6 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
-using static MagnusMinds.Utility.ApiDefaultResponseModel;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
-using ApplicationIdentityConstants = MidCapERP.Infrastructure.Constants.ApplicationIdentityConstants;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -72,7 +71,7 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpGet("{orderSetItemId}/{discountPrice}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
-        public async Task<ApiResponse> UpdateOrderDiscountAmount(Int64 orderSetItemId,decimal discountPrice, CancellationToken cancellationToken)
+        public async Task<ApiResponse> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderDiscountAmount(orderSetItemId, discountPrice, cancellationToken);
             if (data == null)
