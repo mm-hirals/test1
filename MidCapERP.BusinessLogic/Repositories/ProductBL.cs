@@ -5,13 +5,13 @@ using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Polish;
 using MidCapERP.Dto.Product;
@@ -474,6 +474,30 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
             var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
             return data.Where(p => p.SubjectTypeId == productSubjectTypeId && p.SubjectId == Convert.ToString(productId)).OrderByDescending(p => p.ActivityLogID).ToList();
+        }
+
+        public async Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
+        {
+            ProductDimensionsApiResponseDto orderCalculationData = new ProductDimensionsApiResponseDto();
+            var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
+            if (productSubjectTypeId == orderCalculationApiRequestDto.SubjectTypeId)
+            {
+                var productData = await _unitOfWorkDA.ProductDA.GetById(orderCalculationApiRequestDto.SubjectId, cancellationToken);
+                if (productData != null)
+                {
+                    var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
+                    decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
+                    decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
+                    decimal newCostPrice = totalCubic * costPerCubic;
+                    decimal retailerPrice = tenantData.RetailerPercentage > 0 ? newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : newCostPrice;
+                    decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                    orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
+                    orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
+                    orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
+                    orderCalculationData.TotalAmount = totalPrice;
+                }
+            }
+            return _mapper.Map<ProductDimensionsApiResponseDto>(orderCalculationData);
         }
 
         #region API Methods

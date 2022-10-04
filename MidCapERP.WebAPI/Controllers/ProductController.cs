@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto.OrderCalculation;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -39,6 +40,18 @@ namespace MidCapERP.WebAPI.Controllers
                 return new ApiResponse(message: "No Data found", result: productDetailsData, statusCode: 404);
             }
             return new ApiResponse(message: "Data Found", result: productDetailsData, statusCode: 200);
+        }
+
+        [HttpGet("GetPriceByDimensions")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        public async Task<ApiResponse> GetPriceByDimensions([FromBody] ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetPriceByDimensionsAPI(orderCalculationApiRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
     }
 }

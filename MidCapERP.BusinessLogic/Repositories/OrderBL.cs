@@ -9,7 +9,6 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
 using MidCapERP.Dto.OrderAddressesApi;
-using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
@@ -325,30 +324,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderById.UpdatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
             return orderData;
-        }
-
-        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
-        {
-            OrderCalculationApiResponseDto orderCalculationData = new OrderCalculationApiResponseDto();
-            var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-            if (productSubjectTypeId == orderCalculationApiRequestDto.SubjectTypeId)
-            {
-                var productData = await _unitOfWorkDA.ProductDA.GetById(orderCalculationApiRequestDto.SubjectId, cancellationToken);
-                if (productData != null)
-                {
-                    var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-                    decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
-                    decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
-                    decimal newCostPrice = totalCubic * costPerCubic;
-                    decimal retailerPrice = tenantData.RetailerPercentage > 0 ? newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : newCostPrice;
-                    decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
-                    orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
-                    orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
-                    orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
-                    orderCalculationData.TotalAmount = totalPrice;
-                }
-            }
-            return _mapper.Map<OrderCalculationApiResponseDto>(orderCalculationData);
         }
 
         public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
