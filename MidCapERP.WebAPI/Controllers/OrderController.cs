@@ -82,6 +82,37 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
+        /// <summary>
+        /// Calculate product price based on dimension 
+        /// </summary>
+        /// <param name="subjectTypeId"></param>
+        /// <param name="subjectId"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="depth"></param>
+        /// <param name="quantity"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("{subjectTypeId}/{subjectId}/{width}/{height}/{depth}/{quantity}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        public async Task<ApiResponse> CalculateProductDimensionPrice(int subjectTypeId, int subjectId, decimal width, decimal height, decimal depth, int quantity, CancellationToken cancellationToken)
+        {
+            // Get product by productId
+            var productData = await _unitOfWorkBL.ProductBL.GetByIdAPI(subjectId, cancellationToken);
+            if (productData == null)
+            {
+                return new ApiResponse(message: "No Data found", result: productData, statusCode: 404);
+            }
+
+            // Calculate product dimension price
+            var data = await _unitOfWorkBL.OrderBL.CalculateProductDimensionPriceAPI(productData, subjectTypeId, subjectId, width, height, depth, quantity, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
         #region Private Methods
 
         private void ValidationRequest(OrderApiRequestDto orderRequestDto)
