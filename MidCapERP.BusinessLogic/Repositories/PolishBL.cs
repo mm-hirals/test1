@@ -186,18 +186,15 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     polishResponseDto = polishResponseDto.Where(p => p.Title.StartsWith(dataTableFilterDto.Title));
                 }
-
                 if (!string.IsNullOrEmpty(dataTableFilterDto.Model))
                 {
                     polishResponseDto = polishResponseDto.Where(p => p.ModelNo.StartsWith(dataTableFilterDto.Model));
                 }
-
                 if (!string.IsNullOrEmpty(dataTableFilterDto.Company))
                 {
                     polishResponseDto = polishResponseDto.Where(p => p.CompanyName.StartsWith(dataTableFilterDto.Company));
                 }
             }
-
             return polishResponseDto;
         }
 

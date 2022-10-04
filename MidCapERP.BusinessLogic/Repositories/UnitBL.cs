@@ -140,7 +140,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                     unitResponseDto = unitResponseDto.Where(p => p.LookupValueName.StartsWith(unitDataTableFilterDto.UnitName));
                 }
             }
-
             return unitResponseDto;
         }
 

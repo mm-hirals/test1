@@ -142,7 +142,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                     rawMaterialResponseDto = rawMaterialResponseDto.Where(p => p.UnitName.StartsWith(rawMaterialDataTableFilterDto.UnitName));
                 }
             }
-
             return rawMaterialResponseDto;
         }
 

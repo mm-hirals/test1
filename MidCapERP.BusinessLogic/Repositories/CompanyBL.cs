@@ -143,7 +143,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                     companyResponseDtos = companyResponseDtos.Where(p => p.LookupValueName.StartsWith(companyDataTableFilterDto.CompanyName));
                 }
             }
-
             return companyResponseDtos;
         }
 
