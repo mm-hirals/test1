@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.Order
 {
     public class OrderDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("reffereBy")]
+        [JsonProperty("refferedBy")]
         public long? RefferedBy { get; set; }
 
         [JsonProperty("customerName")]
@@ -15,12 +15,18 @@ namespace MidCapERP.Dto.Order
         public string PhoneNumber { get; set; }
 
         [JsonProperty("status")]
-        public int Status { get; set; }
+        public int? Status { get; set; }
 
-        [JsonProperty("orderDate")]
-        public DateTime orderDate { get; set; }
+        [JsonProperty("orderFromDate")]
+        public DateTime orderFromDate { get; set; }
 
-        [JsonProperty("deliveryDate")]
-        public DateTime DeliveryDate { get; set; }
+        [JsonProperty("orderToDate")]
+        public DateTime orderToDate { get; set; }
+
+        [JsonProperty("deliveryFromDate")]
+        public DateTime DeliveryFromDate { get; set; }
+
+        [JsonProperty("deliveryToDate")]
+        public DateTime DeliveryToDate { get; set; }
     }
 }

@@ -14,11 +14,14 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.refferedBy = $("#refferedBy").val().trim(),
                 d.customerName = $("#customerName").val().trim(),
                 d.phoneNumber = $("#phoneNumber").val().trim(),
                 d.status = $("#status").val().trim(),
-                d.orderDate = $("#orderDate").val().trim(),
-                d.deliveryDate = $("#deliveryDate").val().trim()
+                d.orderFromDate = $("#orderFromDate").val().trim(),
+                d.orderToDate = $("#orderToDate").val().trim(),
+                d.deliveryFromDate = $("#deliveryFromDate").val().trim(),
+                d.deliveryToDate = $("#deliveryToDate").val().trim()
             }
         },
         "columns": [
@@ -26,7 +29,26 @@ $(function () {
             { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
             { "data": "customerName", "name": "CustomerName", "autoWidth": true },
             { "data": "payableAmount", "name": "PayableAmount", "autoWidth": true },
-            { "data": "status", "name": "Status", "autoWidth": true },
+            {
+                "data": "status", "name": "Status", "autoWidth": true,
+                "mRender": function (o) {
+                    if (o == 0) {
+                        status = "Pending";
+                    } else if (o == 1) {
+                        status = "In Progress";
+                    }
+                    else if (o == 2) {
+                        status = "Completed";
+                    }
+                    else if (o == 3) {
+                        status = "Cancelled";
+                    }
+                    else if (o == 4) {
+                        status = "Archieved";
+                    }
+                    return status;
+                }
+            },
             { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
             { "data": "deliveryDateFormat", "name": "DeliveryDateFormat", "autoWidth": true },
             //{ "data": "grossTotal", "name": "GrossTotal", "autoWidth": true },
@@ -48,7 +70,7 @@ $("#lnkOrderFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-$('#reffereBy').keyup(function () {
+$('#refferedBy').change(function () {
     tblOrder.ajax.reload(null, false);
 });
 
@@ -60,15 +82,23 @@ $('#phoneNumber').keyup(function () {
     tblOrder.ajax.reload(null, false);
 });
 
-$('#status').keyup(function () {
+$('#status').change(function () {
     tblOrder.ajax.reload(null, false);
 });
 
-$("#orderDate").on("input", function () {
+$("#orderFromDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
 });
 
-$("#deliveryDate").on("input", function () {
+$("#orderToDate").on("input", function () {
+    tblOrder.ajax.reload(null, false);
+});
+
+$("#deliveryFromDate").on("input", function () {
+    tblOrder.ajax.reload(null, false);
+});
+
+$("#deliveryToDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
 });
 

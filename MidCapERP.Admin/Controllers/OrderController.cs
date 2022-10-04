@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.DataGrid;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -20,6 +19,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
+            FillRefferedDropDown(cancellationToken);
             return View();
         }
 
@@ -50,5 +50,16 @@ namespace MidCapERP.Admin.Controllers
             var customerById = await _unitOfWorkBL.CustomersBL.GetById(CustomerId, cancellationToken);
             return PartialView("Order_CustomerPartial", customerById);
         }
+
+        #region Private Method
+
+        private async void FillRefferedDropDown(CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+            var architecher = customerData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect).Select(p => p.RefferedBy).ToList();
+            ViewBag.ReferedBySelectItemList = (architecher).ToList();
+        }
+
+        #endregion Private Method
     }
 }

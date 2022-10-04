@@ -41,11 +41,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerRefData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var orderResponseData = (from x in orderAllData
-                                     join y in customerData on x.CustomerID equals y.CustomerId
-                                     join a in customerRefData on x.RefferedBy equals a.CustomerId 
+                                     join y in customerData on x.CustomerID equals y.CustomerId 
                                      join z in userData on x.CreatedBy equals z.UserId
                                      select new OrderResponseDto()
                                      {
@@ -492,13 +490,23 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     orderResponseDto = orderResponseDto.Where(p => p.Status == orderDataTableFilterDto.Status);
                 }
-                if (orderDataTableFilterDto.orderDate != DateTime.MinValue)
+                if (orderDataTableFilterDto.orderFromDate != DateTime.MinValue)
                 {
-                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate > orderDataTableFilterDto.orderDate || p.UpdatedDate > orderDataTableFilterDto.orderDate);
+                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate > orderDataTableFilterDto.orderFromDate);
                 }
-                if (orderDataTableFilterDto.DeliveryDate != DateTime.MinValue)
+                if (orderDataTableFilterDto.orderToDate != DateTime.MinValue)
                 {
-                    orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate == orderDataTableFilterDto.DeliveryDate);
+                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate < orderDataTableFilterDto.orderToDate );
+                    // p.UpdatedDate < orderDataTableFilterDto.orderToDate
+                }
+                if (orderDataTableFilterDto.DeliveryFromDate != DateTime.MinValue)
+                {
+                    
+                    orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate > orderDataTableFilterDto.DeliveryFromDate);
+                }
+                if (orderDataTableFilterDto.DeliveryToDate != DateTime.MinValue)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate < orderDataTableFilterDto.DeliveryToDate);
                 }
             }
 
