@@ -38,11 +38,7 @@ $("#lnkRawMaterialFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-$("#title").on("input", function () {
-    tblRawMaterial.ajax.reload(null, false);
-});
-
-$("#unitName").on("input", function () {
+$("#title,#unitName").on("input", function () {
     tblRawMaterial.ajax.reload(null, false);
 });
 

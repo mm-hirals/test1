@@ -5,13 +5,13 @@ namespace MidCapERP.Dto.Polish
 {
     public class PolishDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("Title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonProperty("Model")]
+        [JsonProperty("model")]
         public string Model { get; set; }
 
-        [JsonProperty("Company")]
+        [JsonProperty("company")]
         public string Company { get; set; }
     }
 }

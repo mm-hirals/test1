@@ -8,7 +8,7 @@ namespace MidCapERP.Dto.RawMaterial
         [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonProperty("unit Name")]
+        [JsonProperty("unitName")]
         public string UnitName { get; set; }
     }
 }

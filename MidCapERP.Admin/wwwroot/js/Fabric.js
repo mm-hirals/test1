@@ -42,15 +42,7 @@ $("#lnkFabricFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-$('#title').keyup(function () {
-    tblFabric.ajax.reload(null, false);
-});
-
-$("#modelNo").on("input", function () {
-    tblFabric.ajax.reload(null, false);
-});
-
-$("#companyName").on("input", function () {
+$("#title,#modelNo,#companyName").keyup(function () {
     tblFabric.ajax.reload(null, false);
 });
 

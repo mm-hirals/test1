@@ -74,15 +74,7 @@ $('#refferedBy').change(function () {
     tblOrder.ajax.reload(null, false);
 });
 
-$('#customerName').keyup(function () {
-    tblOrder.ajax.reload(null, false);
-});
-
-$('#phoneNumber').keyup(function () {
-    tblOrder.ajax.reload(null, false);
-});
-
-$('#status').change(function () {
+$('#customerName,#phoneNumber,#status').keyup(function () {
     tblOrder.ajax.reload(null, false);
 });
 
@@ -94,11 +86,7 @@ $("#orderToDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
 });
 
-$("#deliveryFromDate").on("input", function () {
-    tblOrder.ajax.reload(null, false);
-});
-
-$("#deliveryToDate").on("input", function () {
+$("#deliveryFromDate,#deliveryToDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
 });
 

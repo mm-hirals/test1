@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.Unit
 {
     public class UnitDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("Unit Name")]
+        [JsonProperty("unit Name")]
         public string UnitName { get; set; }
     }
 }

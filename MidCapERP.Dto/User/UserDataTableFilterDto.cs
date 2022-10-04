@@ -5,13 +5,13 @@ namespace MidCapERP.Dto.User
 {
     public class UserDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("Name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("Email")]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
-        [JsonProperty("PhoneNumber")]
+        [JsonProperty("phoneNumber")]
         public string PhoneNumber { get; set; }
     }
 }

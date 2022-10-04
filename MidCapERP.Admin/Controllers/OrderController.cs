@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
@@ -56,8 +57,15 @@ namespace MidCapERP.Admin.Controllers
         private async void FillRefferedDropDown(CancellationToken cancellationToken)
         {
             var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
-            var architecher = customerData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect).Select(p => p.RefferedBy).ToList();
-            ViewBag.ReferedBySelectItemList = (architecher).ToList();
+
+            var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect).Select(
+                                    p => new { p.RefferedBy, p.FirstName,p.LastName }).Select(a =>
+                                    new SelectListItem
+                                    {
+                                        Value = Convert.ToString(a.RefferedBy),
+                                        Text = Convert.ToString(a.FirstName+ " " +a.LastName)
+                                    }).ToList();
+            ViewBag.ReferedBySelectItemList = referedByDataSelectedList;
         }
 
         #endregion Private Method

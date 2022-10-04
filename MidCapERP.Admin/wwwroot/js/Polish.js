@@ -41,15 +41,7 @@ $("#lnkPolishFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-$('#title').keyup(function () {
-    tblPolish.ajax.reload(null, false);
-});
-
-$("#modelNo").on("input", function () {
-    tblPolish.ajax.reload(null, false);
-});
-
-$("#companyName").on("input", function () {
+$("#modelNo,#companyName,#title").keyup("input", function () {
     tblPolish.ajax.reload(null, false);
 });
 
