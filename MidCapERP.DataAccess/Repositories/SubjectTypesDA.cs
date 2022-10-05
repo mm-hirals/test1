@@ -2,6 +2,7 @@
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.Constants;
 
 namespace MidCapERP.DataAccess.Repositories
 {
@@ -44,6 +45,50 @@ namespace MidCapERP.DataAccess.Repositories
                 return await _subjectTypes.UpdateAsync(entity, cancellationToken);
             }
             return entity;
+        }
+
+        public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.RawMaterials));
+            if (subjectType == null)
+            {
+                throw new Exception("SubjectTypeId not found");
+            }
+            return subjectType.SubjectTypeId;
+        }
+
+        public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish));
+            if (subjectType == null)
+            {
+                throw new Exception("SubjectTypeId not found");
+            }
+            return subjectType.SubjectTypeId;
+        }
+
+        public async Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products));
+            if (subjectType == null)
+            {
+                throw new Exception("SubjectTypeId not found");
+            }
+            return subjectType.SubjectTypeId;
+        }
+
+        public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics));
+            if (subjectType == null)
+            {
+                throw new Exception("SubjectTypeId not found");
+            }
+            return subjectType.SubjectTypeId;
         }
     }
 }
