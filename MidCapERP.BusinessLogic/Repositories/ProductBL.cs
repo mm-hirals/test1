@@ -3,6 +3,7 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.BusinessLogic.Services.PriceCalculation;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -29,8 +30,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly IFileStorageService _fileStorageService;
         private readonly IQRCodeService _iQRCodeService;
         private readonly IActivityLogsService _activityLogsService;
+        private readonly IPriceCalculationService _priceCalculationService;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IPriceCalculationService priceCalculationService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -38,6 +40,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             _fileStorageService = fileStorageService;
             _iQRCodeService = iQRCodeService;
             _activityLogsService = activityLogsService;
+            _priceCalculationService = priceCalculationService;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -270,8 +273,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Product is not found");
             }
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-            decimal retailerPrice = tenantData.RetailerPercentage > 0 ? productData.CostPrice + ((productData.CostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : productData.CostPrice;
-            productData.CostPrice = Math.Round(Math.Round(retailerPrice, 2));
+            productData.CostPrice = _priceCalculationService.GetCalculatedPrice(productData.CostPrice, tenantData.RetailerPercentage);
             return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
         }
 
@@ -464,7 +466,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
                     decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
                     decimal newCostPrice = totalCubic * costPerCubic;
-                    decimal retailerPrice = tenantData.RetailerPercentage > 0 ? newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : newCostPrice;
+                    decimal retailerPrice = _priceCalculationService.GetCalculatedPrice(newCostPrice, tenantData.RetailerPercentage);
                     decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
                     orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
                     orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
@@ -501,8 +503,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var productData = await GetProductById(Id, cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-            decimal retailerPrice = tenantData.RetailerPercentage > 0 ? productData.CostPrice + ((productData.CostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : productData.CostPrice;
-            productData.CostPrice = Math.Round(Math.Round(retailerPrice, 2));
+            productData.CostPrice = _priceCalculationService.GetCalculatedPrice(productData.CostPrice, tenantData.RetailerPercentage);
             return _mapper.Map<ProductRequestDto>(productData);
         }
 
