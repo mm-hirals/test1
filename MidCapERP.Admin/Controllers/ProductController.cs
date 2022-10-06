@@ -273,6 +273,7 @@ namespace MidCapERP.Admin.Controllers
             var tenantDetails = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
             ViewBag.RetailerSP = tenantDetails != null && tenantDetails?.RetailerPercentage > 0 ? tenantDetails.RetailerPercentage : 0;
             ViewBag.WholesalerSP = tenantDetails != null && tenantDetails?.WholeSellerPercentage > 0 ? tenantDetails.WholeSellerPercentage : 0;
+            ViewBag.RoundTo = 50;
         }
 
         #endregion Private Method

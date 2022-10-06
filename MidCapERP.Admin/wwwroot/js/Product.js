@@ -42,30 +42,33 @@ function calculateCostPrice() {
         if ($(this).parent().parent().find("input.isDeleted").val() == 'false')
             sum += +this.value;
     });
-    sum = RoundTo(Math.round(sum).toFixed(2));
+    var roundedSum = RoundTo(Math.round(sum).toFixed(2));
+    sum = roundedSum.toFixed(2);
     $("#CostPrice").val(sum);
     $("#ProductRequestDto_CostPrice-error").hide();
-    calculateRetailerSP(sum);
-    calculateWholesalerSP(sum);
+    calculateRetailerSP(roundedSum);
+    calculateWholesalerSP(roundedSum);
 }
 
 function calculateRetailerSP(costPrice) {
     var retailerSP = $("#hdnRetailerSP").val();
     if (retailerSP > 0) {
-        $("#RetailerPrice").val(RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100))));
+        var retailerCostPrice = RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2));
+        $("#RetailerPrice").val(retailerCostPrice.toFixed(2));
     }
 }
 
 function calculateWholesalerSP(costPrice) {
-    var retailerSP = $("#hdnWholesalerSP").val();
-    if (retailerSP > 0) {
-        $("#WholesalerPrice").val(RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100))));
+    var wholesalerSP = $("#hdnWholesalerSP").val();
+    if (wholesalerSP > 0) {
+        var wholesalerCostPrice = RoundTo(Math.round((costPrice + (costPrice * wholesalerSP) / 100)).toFixed(2));
+        $("#WholesalerPrice").val(wholesalerCostPrice.toFixed(2));
     }
 }
 
 function RoundTo(number, roundto) {
     roundto = 50;
-    return (roundto * Math.round(number / roundto)).toFixed(2);
+    return roundto * Math.round(number / roundto);
 }
 
 function emptyFields(trRow) {

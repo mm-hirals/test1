@@ -251,9 +251,10 @@
                                     {
                                         TotalRetailerPrice = Model.CostPrice + Math.Round(((Model.CostPrice * ViewBag.RetailerSP) / 100));
                                     }
+                                    TotalRetailerPrice = ViewBag.RoundTo * Math.Round(TotalRetailerPrice / ViewBag.RoundTo);
                                     TotalRetailerPrice = Math.Round(TotalRetailerPrice, 2);
                                 }
-                                <input type="text" id="RetailerPrice" class="form-control" readonly value="@TotalRetailerPrice" />
+                                <input type="text" id="RetailerPrice" class="form-control" readonly value="@TotalRetailerPrice.ToString("0.00")" />
                             </div>
                         </li>
                         <li class="price-list--item">
@@ -270,9 +271,10 @@
                                     {
                                         TotalWholesalerPrice = Model.CostPrice + Math.Round(((Model.CostPrice * ViewBag.WholesalerSP) / 100));
                                     }
+                                    TotalWholesalerPrice = ViewBag.RoundTo * Math.Round(TotalWholesalerPrice / ViewBag.RoundTo);
                                     TotalWholesalerPrice = Math.Round(TotalWholesalerPrice, 2);
                                 }
-                                <input type="text" id="WholesalerPrice" class="form-control" readonly value="@TotalWholesalerPrice" />
+                                <input type="text" id="WholesalerPrice" class="form-control" readonly value="@TotalWholesalerPrice.ToString("0.00")" />
                             </div>
                         </li>
                     </ul>
