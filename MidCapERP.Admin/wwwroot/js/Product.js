@@ -52,20 +52,20 @@ function calculateCostPrice() {
 function calculateRetailerSP(costPrice) {
     var retailerSP = $("#hdnRetailerSP").val();
     if (retailerSP > 0) {
-        $("#RetailerPrice").val(RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2)));
+        $("#RetailerPrice").val(RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100))));
     }
 }
 
 function calculateWholesalerSP(costPrice) {
     var retailerSP = $("#hdnWholesalerSP").val();
     if (retailerSP > 0) {
-        $("#WholesalerPrice").val(RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2)));
+        $("#WholesalerPrice").val(RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100))));
     }
 }
 
 function RoundTo(number, roundto) {
     roundto = 50;
-    return roundto * Math.round(number / roundto);
+    return (roundto * Math.round(number / roundto)).toFixed(2);
 }
 
 function emptyFields(trRow) {
@@ -84,8 +84,8 @@ $(document).on("change", "input.quantity", (function () {
     var unitPrice = $(this).parent().parent().find("input.materialPrice").val();
     var costPrice = qty.val() * unitPrice;
     $(this).parent().parent().find("input.quantity").attr('value', qty.val());
-    $(this).parent().parent().find("input.costPrice").val(costPrice);
-    $(this).parent().parent().find("input.costPrice").attr('value', costPrice);
+    $(this).parent().parent().find("input.costPrice").val(costPrice.toFixed(2));
+    $(this).parent().parent().find("input.costPrice").attr('value', costPrice.toFixed(2));
 }));
 $(document).on("change", "select.material", (function () {
     var val = $(this).val();
