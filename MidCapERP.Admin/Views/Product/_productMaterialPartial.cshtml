@@ -1,4 +1,5 @@
-﻿@using MidCapERP.Dto.Product
+﻿@using MidCapERP.Core.CommonHelper
+@using MidCapERP.Dto.Product
 @model ProductMainRequestDto
 @{
     var i = 0;
@@ -233,6 +234,7 @@
                                 </span>
                                 <input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
                                 <input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
+                                <input type="hidden" id="hdnAmountRoundTo" value="@ViewBag.RoundTo">
                                 <input asp-for="CostPrice" type="text" class="form-control" placeholder="Enter Cost Price">
                                 <span asp-validation-for="ProductRequestDto.CostPrice" class="text-danger"></span>
                             </div>
@@ -246,13 +248,7 @@
                                     ₹
                                 </span>
                                 @{
-                                    var TotalRetailerPrice = Model.CostPrice;
-                                    if (ViewBag.RetailerSP > 0)
-                                    {
-                                        TotalRetailerPrice = Model.CostPrice + Math.Round(((Model.CostPrice * ViewBag.RetailerSP) / 100));
-                                    }
-                                    TotalRetailerPrice = ViewBag.RoundTo * Math.Round(TotalRetailerPrice / ViewBag.RoundTo);
-                                    TotalRetailerPrice = Math.Round(TotalRetailerPrice, 2);
+                                    var TotalRetailerPrice = CommonMethod.GetCalculatedPrice(Model.CostPrice, ViewBag.RetailerSP, ViewBag.RoundTo);
                                 }
                                 <input type="text" id="RetailerPrice" class="form-control" readonly value="@TotalRetailerPrice.ToString("0.00")" />
                             </div>
@@ -266,13 +262,7 @@
                                     ₹
                                 </span>
                                 @{
-                                    var TotalWholesalerPrice = Model.CostPrice;
-                                    if (ViewBag.WholesalerSP > 0)
-                                    {
-                                        TotalWholesalerPrice = Model.CostPrice + Math.Round(((Model.CostPrice * ViewBag.WholesalerSP) / 100));
-                                    }
-                                    TotalWholesalerPrice = ViewBag.RoundTo * Math.Round(TotalWholesalerPrice / ViewBag.RoundTo);
-                                    TotalWholesalerPrice = Math.Round(TotalWholesalerPrice, 2);
+                                    var TotalWholesalerPrice = CommonMethod.GetCalculatedPrice(Model.CostPrice, ViewBag.WholesalerSP, ViewBag.RoundTo);
                                 }
                                 <input type="text" id="WholesalerPrice" class="form-control" readonly value="@TotalWholesalerPrice.ToString("0.00")" />
                             </div>

@@ -271,9 +271,9 @@ namespace MidCapERP.Admin.Controllers
             ViewBag.RawMaterialSubjectTypeId = await _unitOfWorkBL.ProductBL.GetRawMaterialSubjectTypeId(cancellationToken);
             ViewBag.PolishSubjectTypeId = await _unitOfWorkBL.ProductBL.GetPolishSubjectTypeId(cancellationToken);
             var tenantDetails = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
-            ViewBag.RetailerSP = tenantDetails != null && tenantDetails?.RetailerPercentage > 0 ? tenantDetails.RetailerPercentage : 0;
-            ViewBag.WholesalerSP = tenantDetails != null && tenantDetails?.WholeSellerPercentage > 0 ? tenantDetails.WholeSellerPercentage : 0;
-            ViewBag.RoundTo = 50;
+            ViewBag.RetailerSP = tenantDetails != null && tenantDetails?.ProductRSPPercentage > 0 ? tenantDetails.ProductRSPPercentage : 0;
+            ViewBag.WholesalerSP = tenantDetails != null && tenantDetails?.ProductWSPPercentage > 0 ? tenantDetails.ProductWSPPercentage : 0;
+            ViewBag.RoundTo = tenantDetails != null && tenantDetails?.AmountRoundMultiple > 0 ? tenantDetails.AmountRoundMultiple : 0;
         }
 
         #endregion Private Method

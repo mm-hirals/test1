@@ -66,9 +66,12 @@ function calculateWholesalerSP(costPrice) {
     }
 }
 
-function RoundTo(number, roundto) {
-    roundto = 50;
-    return roundto * Math.round(number / roundto);
+function RoundTo(number) {
+    var roundto = $("#hdnAmountRoundTo").val();
+    if (roundto > 0)
+        return roundto * Math.round(number / roundto);
+    else
+        return number;
 }
 
 function emptyFields(trRow) {
