@@ -269,6 +269,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Product is not found");
             }
+            var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
+            decimal retailerPrice = tenantData.RetailerPercentage > 0 ? productData.CostPrice + ((productData.CostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : productData.CostPrice;
+            productData.CostPrice = Math.Round(Math.Round(retailerPrice, 2));
             return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
         }
 
@@ -496,8 +499,11 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
         {
-            var produdctData = await GetProductById(Id, cancellationToken);
-            return _mapper.Map<ProductRequestDto>(produdctData);
+            var productData = await GetProductById(Id, cancellationToken);
+            var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
+            decimal retailerPrice = tenantData.RetailerPercentage > 0 ? productData.CostPrice + ((productData.CostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : productData.CostPrice;
+            productData.CostPrice = Math.Round(Math.Round(retailerPrice, 2));
+            return _mapper.Map<ProductRequestDto>(productData);
         }
 
         public async Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
