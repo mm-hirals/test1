@@ -77,7 +77,7 @@ namespace MidCapERP.Dto.Tenant
         public decimal? ProductRSPPercentage { get; set; }
 
         [Required]
-        [DisplayName("Product WholeSaler SP %")]
+        [DisplayName("Product Wholesaler SP %")]
         public decimal? ProductWSPPercentage { get; set; }
 
         [Required]
@@ -89,7 +89,7 @@ namespace MidCapERP.Dto.Tenant
         public decimal? FabricRSPPercentage { get; set; }
 
         [Required]
-        [DisplayName("Fabric WholeSaler SP %")]
+        [DisplayName("Fabric Wholesaler SP %")]
         public decimal? FabricWSPPercentage { get; set; }
 
         [Required]
