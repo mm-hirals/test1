@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
@@ -21,14 +20,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         public readonly CurrentUser _currentUser;
-        private readonly IFileStorageService _fileStorageService;
 
-        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
+        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
-            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -83,16 +80,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
 
                 // Get Order Set Items Data
+                var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
                 foreach (var item in orderResponseDto.OrderSetResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                    var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-                    var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
 
@@ -150,7 +147,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderResponseDto>(data);
         }
 
-        public async Task<OrderApiResponseDto> GetOrderAll(int Id, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> GetOrderDetailByOrderIdAPI(long Id, CancellationToken cancellationToken)
         {
             try
             {
@@ -163,6 +160,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     throw new Exception("Order not found");
                 }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
+                orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
 
                 // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
@@ -170,23 +168,23 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderApiResponseDto.OrderSetApiResponseDto = _mapper.Map<List<OrderSetApiResponseDto>>(orderSetDataByOrderId);
 
                 // Get Order Set Items Data
+                var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+                var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
+
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-                    var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                    var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-                    var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                    var rawMaterialData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
 
                     var orderSetItemsData = (from x in orderSetItemDataById
                                              join y in productData on x.SubjectId equals y.ProductId into productM
 
                                              from productMat in productM.DefaultIfEmpty()
                                              join z in polishData on x.SubjectId equals z.PolishId into polishM
-
-                                             from rawMaterial in rawMaterialData.DefaultIfEmpty()
-                                             join b in fabricData on x.SubjectId equals b.FabricId into rawMateria
 
                                              from polishMat in polishM.DefaultIfEmpty()
                                              join a in fabricData on x.SubjectId equals a.FabricId into fabricM
@@ -204,8 +202,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Height = x.Height,
                                                  Depth = x.Depth,
                                                  Quantity = x.Quantity,
-                                                 ProductTitle = (x.SubjectTypeId == 1 ? productMat.ProductTitle : (x.SubjectTypeId == 3 ? polishMat.Title : fabricMat.Title)),
-                                                 ModelNo = (x.SubjectTypeId == 1 ? productMat.ModelNo : (x.SubjectTypeId == 3 ? polishMat.ModelNo : fabricMat.ModelNo)),
+                                                 ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
+                                                 ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
@@ -214,6 +212,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              }).ToList();
 
                     item.OrderSetItemResponseDto = orderSetItemsData;
+                    item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
                 }
                 return orderApiResponseDto;
             }
@@ -227,7 +226,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             //Cost Calculation
             Random generator = new Random();
-            model.OrderNo = Convert.ToString(DateTime.Now.Year) + "-" + "R" + generator.Next(1, 99999).ToString("D5");
+            model.OrderNo = await _unitOfWorkDA.OrderDA.CreateOrderNo("R", cancellationToken); ;
+            //model.OrderNo = Convert.ToString(DateTime.Now.Year) + "-" + "R" + generator.Next(1, 99999).ToString("D5");
             model.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
             model.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
             model.TotalAmount = model.GrossTotal - model.Discount;
@@ -255,6 +255,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
+
             return _mapper.Map<OrderApiResponseDto>(saveOrder);
         }
 
@@ -268,20 +269,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.OrderDA.UpdateOrder(Id, oldData, cancellationToken);
+            var data = await _unitOfWorkDA.OrderDA.UpdateOrder(oldData, cancellationToken);
             //Start Update OrderSet
             foreach (var orderSet in model.OrderSetRequestDto)
             {
-                var oldOrderSet = await OrderSetGetById(Id, cancellationToken);
+                var oldOrderSet = await OrderSetGetById(orderSet.OrderSetId, cancellationToken);
                 oldOrderSet.SetName = orderSet.SetName;
                 oldOrderSet.UpdatedBy = _currentUser.UserId;
                 oldOrderSet.UpdatedDate = DateTime.Now;
                 oldOrderSet.UpdatedUTCDate = DateTime.UtcNow;
-                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(orderSet.OrderSetId, oldOrderSet, cancellationToken);
+                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(oldOrderSet, cancellationToken);
                 //Start Update OrderSetItem
                 foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
                 {
-                    var oldOrderSetItem = await OrderSetItemGetById(Id, cancellationToken);
+                    var oldOrderSetItem = await OrderSetItemGetById(orderSetItem.OrderSetItemId, cancellationToken);
                     if (oldOrderSetItem != null)
                     {
                         oldOrderSetItem.Height = orderSetItem.Height;
@@ -290,12 +291,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                         oldOrderSetItem.Quantity = orderSetItem.Quantity;
                         oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
                         oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
-                        oldOrderSetItem.TotalAmount = orderSetItem.TotalAmount;
+                        oldOrderSetItem.TotalAmount = (orderSetItem.UnitPrice * orderSetItem.Quantity) - orderSetItem.DiscountPrice;
                         oldOrderSetItem.Comment = orderSetItem.Comment;
                         oldOrderSetItem.UpdatedBy = _currentUser.UserId;
                         oldOrderSetItem.UpdatedDate = DateTime.Now;
                         oldOrderSetItem.UpdatedUTCDate = DateTime.UtcNow;
-                        await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem.OrderSetItemId, oldOrderSetItem, cancellationToken);
+                        await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(oldOrderSetItem, cancellationToken);
                     }
                 }
             }
@@ -303,7 +304,149 @@ namespace MidCapERP.BusinessLogic.Repositories
             //End Update OrderSet
         }
 
+        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+            data.DiscountPrice = discountPrice;
+            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
+
+            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
+
+            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
+
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
+            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return orderData;
+        }
+
+        public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkDA.BeginTransactionAsync();
+                if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.Order)
+                {
+                    var data = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
+                    var orderSetList = data.Where(p => p.OrderId == orderDeleteApiRequestDto.OrderId).Select(p => p.OrderSetId).ToList();
+
+                    foreach (Int64 orderSetId in orderSetList)
+                    {
+                        var orderSetItem = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+                        var orderSetItemList = orderSetItem.Where(p => p.OrderSetId == orderSetId).Select(p => p.OrderSetItemId).ToList();
+
+                        foreach (Int64 orderItemId in orderSetItemList)
+                        {
+                            await DeleteOrderSetItem(orderItemId, cancellationToken);
+                        }
+                        await DeleteOrderSet(orderSetId, cancellationToken);
+                    }
+                    await DeleteOrder(orderDeleteApiRequestDto.OrderId, cancellationToken);
+                }
+                else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSet)
+                {
+                    var orderSetItem = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+                    var orderSetItemList = orderSetItem.Where(p => p.OrderSetId == orderDeleteApiRequestDto.OrderSetId).Select(p => p.OrderSetItemId).ToList();
+
+                    foreach (Int64 orderItemId in orderSetItemList)
+                    {
+                        await DeleteOrderSetItem(orderItemId, cancellationToken);
+                    }
+                    await DeleteOrderSet(orderDeleteApiRequestDto.OrderSetId, cancellationToken);
+                }
+                else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSetItem)
+                {
+                    await DeleteOrderSetItem(orderDeleteApiRequestDto.OrderSetItemId, cancellationToken);
+                }
+                else
+                {
+                    throw new Exception("No Data Deleted");
+                }
+                await _unitOfWorkDA.CommitTransactionAsync();
+            }
+            catch (Exception e)
+            {
+                await _unitOfWorkDA.rollbackTransactionAsync();
+                throw new Exception("No Data Deleted");
+            }
+        }
+
+        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if (data == null)
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+            data.DiscountPrice = discountPrice;
+            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
+
+            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
+
+            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
+
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
+            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return orderData;
+        }
+
         #region Private Method
+
+        private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            if (order != null)
+            {
+                await _unitOfWorkDA.OrderDA.DeleteOrder(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order not found");
+            }
+        }
+
+        private async Task DeleteOrderSet(Int64 orderSetId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderSetDA.GetById(orderSetId, cancellationToken);
+            if (order != null)
+            {
+                await _unitOfWorkDA.OrderSetDA.DeleteOrderSet(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("OrderSet not found");
+            }
+        }
+
+        private async Task DeleteOrderSetItem(Int64 orderSetItemId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            if (order != null)
+            {
+                await _unitOfWorkDA.OrderSetItemDA.DeleteOrderSetItem(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("OrderSetItem not found");
+            }
+        }
 
         private async Task<OrderApiRequestDto> SaveOrder(OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
         {
@@ -376,9 +519,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private async Task<OrderSetItemRequestDto> SaveOrderSetItem(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
-            var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-            var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+            var ProductSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+            var FrabriSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
 
             OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
             orderSetItem.OrderId = orderSetItemRequestDto.OrderId;

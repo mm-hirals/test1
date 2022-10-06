@@ -29,7 +29,7 @@ namespace MidCapERP.Dto.Order
         [JsonIgnore]
         public DateTime? DeliveryDate { get; set; }
 
-        public string Comments { get; set; }
+        public string? Comments { get; set; }
 
         [JsonIgnore]
         public int Status { get; set; }
