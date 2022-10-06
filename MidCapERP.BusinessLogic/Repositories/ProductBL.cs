@@ -487,6 +487,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
         }
 
+        public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
+        }
+
         #region API Methods
 
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
