@@ -74,7 +74,11 @@ $('#refferedBy').change(function () {
     tblOrder.ajax.reload(null, false);
 });
 
-$('#customerName,#phoneNumber,#status').keyup(function () {
+$('#customerName,#phoneNumber').keyup(function () {
+    tblOrder.ajax.reload(null, false);
+});
+
+$('#status').change(function () {
     tblOrder.ajax.reload(null, false);
 });
 
