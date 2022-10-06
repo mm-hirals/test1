@@ -51,44 +51,28 @@ namespace MidCapERP.DataAccess.Repositories
         {
             var subjectTypeAllData = await GetAll(cancellationToken);
             var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.RawMaterials));
-            if (subjectType == null)
-            {
-                throw new Exception("SubjectTypeId not found");
-            }
-            return subjectType.SubjectTypeId;
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
         }
 
         public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
         {
             var subjectTypeAllData = await GetAll(cancellationToken);
             var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish));
-            if (subjectType == null)
-            {
-                throw new Exception("SubjectTypeId not found");
-            }
-            return subjectType.SubjectTypeId;
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
         }
 
         public async Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken)
         {
             var subjectTypeAllData = await GetAll(cancellationToken);
             var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products));
-            if (subjectType == null)
-            {
-                throw new Exception("SubjectTypeId not found");
-            }
-            return subjectType.SubjectTypeId;
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
         }
 
         public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
         {
             var subjectTypeAllData = await GetAll(cancellationToken);
             var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics));
-            if (subjectType == null)
-            {
-                throw new Exception("SubjectTypeId not found");
-            }
-            return subjectType.SubjectTypeId;
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
         }
     }
 }
