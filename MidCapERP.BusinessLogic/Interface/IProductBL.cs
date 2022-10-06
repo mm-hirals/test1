@@ -10,11 +10,11 @@ namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IProductBL
     {
-        public Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
-
         public Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
 
         public Task<ProductDetailResponseDto> GetProductDetailById(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken);
 
