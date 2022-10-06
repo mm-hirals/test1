@@ -310,11 +310,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             data.DiscountPrice = discountPrice;
             data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
-
             await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
 
             var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
-
             var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
             orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
             orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
@@ -324,6 +322,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderById.UpdatedDate = DateTime.Now;
             orderById.UpdatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+
+            orderData.GrossTotal = orderById.GrossTotal;
+            orderData.Discount = orderById.Discount;
+            orderData.TotalAmount = orderById.TotalAmount;
+            orderData.GSTTaxAmount = orderById.GSTTaxAmount;
+            orderData.UpdatedBy = orderById.UpdatedBy;
+            orderData.UpdatedDate = orderById.UpdatedDate;
+            orderData.UpdatedUTCDate = orderById.UpdatedUTCDate;
             return orderData;
         }
 
