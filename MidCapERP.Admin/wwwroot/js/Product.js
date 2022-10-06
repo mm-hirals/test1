@@ -4,7 +4,6 @@ var ProductModel = {};
 var tblActivitylog ;
 $(document).ready(function () {
     $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
-    debugger;
     if ($("#hdnProductId").val() > 0) {
         $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
         $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
@@ -88,6 +87,7 @@ $(function () {
             { "data": "description", "name": "description", "autoWidth": true },
             { "data": "action", "name": "action", "autoWidth": true },
             { "data": "createdBy", "name": "createdBy", "autoWidth": true },
+            { "data": "createdDate", "name": "createdDate", "autoWidth": true },
            
             {
                 "mData": null, "bSortable": false,
@@ -149,4 +149,3 @@ ProductModel.onProductMaterialSuccess = function (xhr) {
 
 ProductModel.onProductMaterialFailed = function (xhr) {
 };
-

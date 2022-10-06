@@ -395,6 +395,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 		public async Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken)
 		{
 			var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
+			data = data.Where(p => p.SubjectId == Convert.ToString(productId));
 			var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
 			var dataResponse = (from x in data
 								join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }
