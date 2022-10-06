@@ -54,8 +54,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken);
 
-        public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
-
         public Task<IEnumerable<ActivityLogs>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
 
         public Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);

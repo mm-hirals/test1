@@ -36,14 +36,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IList<SearchResponse>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
         {
-            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish", polishSubjectTypeId)).Take(10).ToList();
         }
 
         public async Task<PolishApiResponseDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
-            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
             var polishdata = polishAlldata.FirstOrDefault(x => x.ModelNo == modelno);
             if (polishdata == null)
@@ -125,13 +125,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.PolishDA.UpdatePolish(Id, polishToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<PolishRequestDto>(data);
             return _mappedUser;
-        }
-
-        public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
         }
 
         #region Private Method

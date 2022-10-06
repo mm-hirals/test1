@@ -80,9 +80,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
                 var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-                var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
                 foreach (var item in orderResponseDto.OrderSetResponseDto)
                 {
@@ -168,9 +168,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
                 var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-                var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
 
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
@@ -516,9 +516,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private async Task<OrderSetItemRequestDto> SaveOrderSetItem(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
-            var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-            var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+            var ProductSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+            var FrabriSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
 
             OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
             orderSetItem.OrderId = orderSetItemRequestDto.OrderId;
@@ -587,27 +587,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Order Set Item not found");
             }
             return data;
-        }
-
-        private async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
-        }
-
-        private async Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
-        }
-
-        private async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
         }
 
         #endregion Private Method
