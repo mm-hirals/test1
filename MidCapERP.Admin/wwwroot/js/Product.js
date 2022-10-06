@@ -1,7 +1,7 @@
 ﻿'use strict';
 window.counter = 0;
 var ProductModel = {};
-var tblActivitylog ;
+var tblActivitylog;
 $(document).ready(function () {
     $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
     if ($("#hdnProductId").val() > 0) {
@@ -71,11 +71,10 @@ function emptyFields(trRow) {
 }
 
 $(function () {
-    
     tblActivitylog = $("#tblactivitylog").DataTable({
         "searching": false,
         "processing": true,
-        "serverSide": false,
+        "serverSide": true,
         "filter": true,
         "ajax": {
             "url": "/Product/GetProductActivity",
@@ -87,14 +86,7 @@ $(function () {
             { "data": "description", "name": "description", "autoWidth": true },
             { "data": "action", "name": "action", "autoWidth": true },
             { "data": "createdBy", "name": "createdBy", "autoWidth": true },
-            { "data": "createdDate", "name": "createdDate", "autoWidth": true },
-           
-            {
-                "mData": null, "bSortable": false,
-                "mRender": function (o) {
-                   
-                }
-            }
+            { "data": "createdDate", "name": "createdDate", "autoWidth": true }
         ]
     });
 });
