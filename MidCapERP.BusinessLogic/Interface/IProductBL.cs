@@ -1,4 +1,5 @@
 ﻿using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Product;
@@ -49,6 +50,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken);
 
-        public Task<IEnumerable<ActivityLogs>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
+        public Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
     }
 }

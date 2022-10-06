@@ -1,9 +1,11 @@
-﻿@model IEnumerable<MidCapERP.DataEntities.Models.ActivityLogs>
+﻿@model IEnumerable<MidCapERP.Dto.ActivityLogs.ActivityLogsResponseDto>
 
-<table class="table c-table c-table-stripted" id="tblFrame">
+<table class="table c-table c-table-stripted" id="tblActivitylog">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th>@Html.DisplayNameFor(model => model.Action)</th>
+            <th>@Html.DisplayNameFor(model => model.CreatedByName)</th>
         </tr>
     </thead>
     <tbody>
@@ -11,6 +13,8 @@
         {
             <tr>
                 <th>@item.Description</th>
+                <th>@item.Action</th>
+                <th>@item.CreatedByName</th>
             </tr>
         }
     </tbody>
