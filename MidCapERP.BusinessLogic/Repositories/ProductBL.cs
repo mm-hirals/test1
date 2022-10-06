@@ -473,6 +473,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
                     orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
                     orderCalculationData.TotalAmount = totalPrice;
+                    orderCalculationData.Width = orderCalculationApiRequestDto.Width;
+                    orderCalculationData.Height = orderCalculationApiRequestDto.Height;
+                    orderCalculationData.Depth = orderCalculationApiRequestDto.Depth;
                 }
             }
             return _mapper.Map<ProductDimensionsApiResponseDto>(orderCalculationData);
