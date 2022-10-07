@@ -53,7 +53,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return new PolishApiResponseDto(polishdata.PolishId, polishdata.Title, polishdata.ModelNo, polishdata.CompanyId, polishdata.UnitId, polishdata.UnitPrice, polishdata.ImagePath, polishSubjectTypeId);
         }
 
-        public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(PolishDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var lookupCompanyId = await GetCompanyLookupId(cancellationToken);
             var lookupUnitId = await GetUnitLookupId(cancellationToken);
@@ -74,7 +74,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                           UnitPrice = x.UnitPrice,
                                           ImagePath = x.ImagePath
                                       }).AsQueryable();
-            var polishData = new PagedList<PolishResponseDto>(polishResponseData, dataTableFilterDto);
+            var polishFilteredData = FilterPolishData(dataTableFilterDto, polishResponseData);
+            var polishData = new PagedList<PolishResponseDto>(polishFilteredData, dataTableFilterDto);
             return new JsonRepsonse<PolishResponseDto>(dataTableFilterDto.Draw, polishData.TotalCount, polishData.TotalCount, polishData);
         }
 
@@ -168,6 +169,26 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
             return lookupId;
+        }
+
+        private static IQueryable<PolishResponseDto> FilterPolishData(PolishDataTableFilterDto dataTableFilterDto, IQueryable<PolishResponseDto> polishResponseDto)
+        {
+            if (dataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(dataTableFilterDto.Title))
+                {
+                    polishResponseDto = polishResponseDto.Where(p => p.Title.StartsWith(dataTableFilterDto.Title));
+                }
+                if (!string.IsNullOrEmpty(dataTableFilterDto.Model))
+                {
+                    polishResponseDto = polishResponseDto.Where(p => p.ModelNo.StartsWith(dataTableFilterDto.Model));
+                }
+                if (!string.IsNullOrEmpty(dataTableFilterDto.Company))
+                {
+                    polishResponseDto = polishResponseDto.Where(p => p.CompanyName.StartsWith(dataTableFilterDto.Company));
+                }
+            }
+            return polishResponseDto;
         }
 
         #endregion Private Method

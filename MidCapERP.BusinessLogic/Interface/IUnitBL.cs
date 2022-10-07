@@ -7,7 +7,7 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<UnitResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+        public Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(UnitDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<UnitResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 

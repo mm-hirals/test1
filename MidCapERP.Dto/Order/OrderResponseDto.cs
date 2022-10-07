@@ -49,6 +49,10 @@ namespace MidCapERP.Dto.Order
         [DisplayName("Order Status")]
         public int Status { get; set; }
 
+        public long? RefferedBy { get; set; }
+
+        public string PhoneNumber { get; set; }
+
         public int CreatedBy { get; set; }
 
         [DisplayName("Salesman Name")]

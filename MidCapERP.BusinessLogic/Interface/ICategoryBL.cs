@@ -9,7 +9,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CategoryResponseDto> GetCategorySearchByCategoryName(string searchName, CancellationToken cancellation);
 
-        public Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+        public Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<CategoryResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 

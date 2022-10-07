@@ -12,7 +12,12 @@ $(function () {
         "ajax": {
             "url": "/Polish/GetPolishData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                    d.title = $("#title").val().trim(),
+                    d.model = $("#modelNo").val().trim(),
+                    d.company = $("#companyName").val().trim()
+            }
         },
         "columns": [
             { "data": "title", "name": "title", "autoWidth": true },
@@ -23,7 +28,6 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    console.log(o);
                     return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="PolishModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdatePolish" href="/Polish/Update/' + o.polishId + '"><i class="bx bxs-pencil"></i></a>' +
                         '<a data-ajax-complete="PolishModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Polish/Delete/' + o.polishId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
@@ -35,6 +39,10 @@ $(function () {
 $("#lnkPolishFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#modelNo,#companyName,#title").keyup("input", function () {
+    tblPolish.ajax.reload(null, false);
 });
 
 PolishModel.onComplete = function () {

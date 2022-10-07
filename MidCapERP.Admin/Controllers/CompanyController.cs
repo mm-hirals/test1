@@ -28,7 +28,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Company.View)]
-        public async Task<IActionResult> GetCompanyData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCompanyData([FromForm] CompanyDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CompanyBL.GetFilterCompanyData(dataTableFilterDto, cancellationToken);
             return Ok(data);

@@ -43,10 +43,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return rolesByTenant;
         }
 
-        public async Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(UserDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var userAllData = await GetAllUsersData(cancellationToken);
-            var users = from x in userAllData
+            var usersResponse = from x in userAllData
                         join y in await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken)
                                    on new { x.UserId } equals new { y.UserId }
                         where y.TenantId == _currentUser.TenantId
@@ -60,7 +60,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                             PhoneNumber = x.PhoneNumber,
                             UserId = x.UserId
                         };
-            var userData = new PagedList<UserResponseDto>(users, dataTableFilterDto);
+            var userFilteredData = FilterUserData(dataTableFilterDto, usersResponse);
+            var userData = new PagedList<UserResponseDto>(userFilteredData, dataTableFilterDto);
             return new JsonRepsonse<UserResponseDto>(dataTableFilterDto.Draw, userData.TotalCount, userData.TotalCount, userData);
         }
 
@@ -163,6 +164,27 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Users data not found");
             }
             return getAllUser;
+        }
+
+        private static IQueryable<UserResponseDto> FilterUserData(UserDataTableFilterDto userDataTableFilterDto, IQueryable<UserResponseDto> userResponseDto)
+        {
+            if (userDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(userDataTableFilterDto.Name))
+                {
+                    userResponseDto = userResponseDto.Where(p => (p.FirstName + " " + p.LastName).StartsWith(userDataTableFilterDto.Name) ||
+                    (p.FirstName).StartsWith(userDataTableFilterDto.Name) || (p.LastName).StartsWith(userDataTableFilterDto.Name));
+                }
+                if (!string.IsNullOrEmpty(userDataTableFilterDto.Email))
+                {
+                    userResponseDto = userResponseDto.Where(p => p.Email.StartsWith(userDataTableFilterDto.Email));
+                }
+                if (!string.IsNullOrEmpty(userDataTableFilterDto.PhoneNumber))
+                {
+                    userResponseDto = userResponseDto.Where(p => p.PhoneNumber.StartsWith(userDataTableFilterDto.PhoneNumber));
+                }
+            }
+            return userResponseDto;
         }
 
         #endregion Private Method

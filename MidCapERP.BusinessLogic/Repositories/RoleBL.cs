@@ -33,7 +33,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return rolesByTenant;
         }
 
-        public async Task<JsonRepsonse<RoleResponseDto>> GetFilterRoleData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<RoleResponseDto>> GetFilterRoleData(RoleDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var roleAllData = await GetAllRoleData(cancellationToken);
             var role = from x in roleAllData
@@ -45,7 +45,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                            NormalizedName = x.NormalizedName,
                            TenantId = x.TenantId
                        };
-            var roleData = new PagedList<RoleResponseDto>(role, dataTableFilterDto);
+            var roleFilterData = FilterRoleData(dataTableFilterDto, role);
+            var roleData = new PagedList<RoleResponseDto>(roleFilterData, dataTableFilterDto);
             return new JsonRepsonse<RoleResponseDto>(dataTableFilterDto.Draw, roleData.TotalCount, roleData.TotalCount, roleData);
         }
 
@@ -111,6 +112,18 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Role data not found");
             }
             return getAllRole;
+        }
+
+        private static IQueryable<RoleResponseDto> FilterRoleData(RoleDataTableFilterDto roleDataTableFilterDto, IQueryable<RoleResponseDto> roleResponseDto)
+        {
+            if (roleDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(roleDataTableFilterDto.RoleName))
+                {
+                    roleResponseDto = roleResponseDto.Where(p => p.Name.StartsWith(roleDataTableFilterDto.RoleName));
+                }
+            }
+            return roleResponseDto;
         }
 
         #endregion Private Method

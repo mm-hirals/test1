@@ -304,7 +304,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                 if (dataTableFilterDto.customerToDate != DateTime.MinValue)
                 {
-                    customerAllData = customerAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate > dataTableFilterDto.customerToDate);
+                    customerAllData = customerAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate < dataTableFilterDto.customerToDate);
                 }
             }
 
