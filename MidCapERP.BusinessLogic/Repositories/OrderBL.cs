@@ -327,6 +327,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderData.Discount = orderById.Discount;
             orderData.TotalAmount = orderById.TotalAmount;
             orderData.GSTTaxAmount = orderById.GSTTaxAmount;
+            orderData.PayableAmount = (orderData.GrossTotal - orderData.Discount) + orderData.GSTTaxAmount;
             orderData.UpdatedBy = orderById.UpdatedBy;
             orderData.UpdatedDate = orderById.UpdatedDate;
             orderData.UpdatedUTCDate = orderById.UpdatedUTCDate;
