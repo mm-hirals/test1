@@ -71,6 +71,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
                 orderResponseDto.PayableAmount = (orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount;
 
+                // Get Order Addresses
+                var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
+                orderResponseDto.OrderAddressesResponseDto = _mapper.Map<List<OrderAddressesResponseDto>>(orderAddressesData.ToList());
+
                 // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
                 var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();

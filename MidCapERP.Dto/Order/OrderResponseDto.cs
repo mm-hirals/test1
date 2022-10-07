@@ -65,5 +65,6 @@ namespace MidCapERP.Dto.Order
         public DateTime? UpdatedUTCDate { get; set; }
 
         public List<OrderSetResponseDto> OrderSetResponseDto { get; set; }
+        public List<OrderAddressesResponseDto> OrderAddressesResponseDto { get; set; }
     }
 }

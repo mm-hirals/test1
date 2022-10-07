@@ -20,13 +20,13 @@ namespace MidCapERP.Dto.Fabric
 
         [DisplayName("Unit Price")]
         public decimal UnitPrice { get; set; }
-        
+
         [DisplayName("Retailers Price")]
-        public decimal Retailerprice { get; set; }
+        public decimal RetailerPrice { get; set; }
 
         [DisplayName("Wholesalers Price")]
-        public decimal Wholesalerprice { get; set; }
-        
+        public decimal WholesalerPrice { get; set; }
+
         public string? ImagePath { get; set; }
 
         [DisplayName("Photo Upload")]
