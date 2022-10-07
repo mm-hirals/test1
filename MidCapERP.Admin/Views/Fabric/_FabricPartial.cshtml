@@ -1,93 +1,109 @@
-﻿@model MidCapERP.Dto.Fabric.FabricRequestDto
+﻿@using MidCapERP.Core.CommonHelper
+@model MidCapERP.Dto.Fabric.FabricRequestDto
 
 @{
-    string action = (Model != null && Model.FabricId != 0) ? "Update" : "Create";
+	string action = (Model != null && Model.FabricId != 0) ? "Update" : "Create";
 }
 
 <!-- Modal -->
 <div class="modal right fade" id="divFabricModal" tabindex="-1" aria-labelledby="fabricModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fabricModalLabel">Fabric</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <i class='bx bx-x'></i>
-                </button>
-            </div>
-            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
-                  data-ajax="true" data-ajax-method="post"
-                  data-ajax-complete="FabricModel.onSuccess"
-                  data-ajax-failure="FabricModel.onFailed">
-                <div class="modal-body">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input asp-for="FabricId" hidden class="form-control" />
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="Title" class="form-label"></label>
-                                <input asp-for="Title" class="form-control" />
-                                <span asp-validation-for="Title" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="ModelNo" class="form-label"></label>
-                                <input asp-for="ModelNo" class="form-control" />
-                                <span asp-validation-for="ModelNo" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="CompanyId" class="form-label"></label>
-                                <select asp-for="CompanyId" data-val="true" class="form-control"
-                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CompanySelectItemList, "Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select Company</option>
-                                </select>
-                                <span asp-validation-for="CompanyId" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="UnitId" class="form-label"></label>
-                                <select asp-for="UnitId" data-val="true" class="form-control"
-                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
-                                    <option value="" hidden disabled selected>Select Unit</option>
-                                </select>
-                                <span asp-validation-for="UnitId" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="UnitPrice" class="form-label"></label>
-                                <input asp-for="UnitPrice" class="form-control" type="number" min="0" />
-                                <span asp-validation-for="UnitPrice" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label asp-for="UploadImage" class="form-label"></label>
-                                <input asp-for="UploadImage" class="form-control" type="file" />
-                                @if (action == "Update")
-                                {
-                                    <input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
-                                    <div>
-                                        <img src="@Model.ImagePath" width="150" height="150">
-                                    </div>
-                                }
-                                <span asp-validation-for="UploadImage" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="fabricModalLabel">Fabric</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class='bx bx-x'></i>
+				</button>
+			</div>
+			<form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+				  data-ajax="true" data-ajax-method="post"
+				  data-ajax-complete="FabricModel.onSuccess"
+				  data-ajax-failure="FabricModel.onFailed">
+				<div class="modal-body">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<input asp-for="FabricId" hidden class="form-control" />
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group">
+								<label asp-for="Title" class="form-label"></label>
+								<input asp-for="Title" class="form-control" />
+								<span asp-validation-for="Title" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label asp-for="ModelNo" class="form-label"></label>
+								<input asp-for="ModelNo" class="form-control" />
+								<span asp-validation-for="ModelNo" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label asp-for="CompanyId" class="form-label"></label>
+								<select asp-for="CompanyId" data-val="true" class="form-control"
+										asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CompanySelectItemList, "Value", "Text"))">
+									<option value="" hidden disabled selected>Select Company</option>
+								</select>
+								<span asp-validation-for="CompanyId" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label asp-for="UnitId" class="form-label"></label>
+								<select asp-for="UnitId" data-val="true" class="form-control"
+										asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
+									<option value="" hidden disabled selected>Select Unit</option>
+								</select>
+								<span asp-validation-for="UnitId" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label asp-for="UnitPrice" class="form-label"></label>
+								<input asp-for="UnitPrice" name="UnitPrice" class="form-control" />
+								<span asp-validation-for="UnitPrice" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<input type="hidden" id="hdnAmountRoundTo" value="@ViewBag.RoundTo">
+								<input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
+								<label asp-for="Retailerprice" class="form-label"></label>
+								<input type="text" id="RetailerPrice" class="form-control" readonly />
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
+								<label asp-for="Wholesalerprice" class="form-label"></label>
+								<input type="text" id="WholesalerPrice" class="form-control" readonly />
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label asp-for="UploadImage" class="form-label"></label>
+								<input asp-for="UploadImage" class="form-control" type="file" />
+								@if (action == "Update")
+								{
+									<input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
+									<div>
+										<img src="@Model.ImagePath" width="150" height="150">
+									</div>
+								}
+								<span asp-validation-for="UploadImage" class="text-danger"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer justify-content-between">
+					<input type="submit" value="Save" class="btn btn-primary" />
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 @{
-    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+	await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }

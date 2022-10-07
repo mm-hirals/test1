@@ -23,7 +23,13 @@ namespace MidCapERP.Dto.Fabric
         [DisplayName("Unit Price")]
         [StringLength(8, MinimumLength = 1, ErrorMessage = "Minimum 1 characters, Maximum 8 characters")]
         public decimal UnitPrice { get; set; }
+        
+        [DisplayName("Retailers Price")]
+        public decimal Retailerprice { get; set; }
 
+        [DisplayName("Wholesalers Price")]
+        public decimal Wholesalerprice { get; set; }
+        
         public string? ImagePath { get; set; }
 
         [DisplayName("Photo Upload")]

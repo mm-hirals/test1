@@ -41,7 +41,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             _activityLogsService = activityLogsService;
         }
 
-        public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             int lookupId = await GetCategoryLookupId(cancellationToken);
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
@@ -60,12 +60,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
                                            Status = x.Status,
-                                           CreatedByName = z.FullName,
-                                           CreatedDate = x.CreatedDate,
+                                           UpdatedBy = x.UpdatedBy != null ? x.UpdatedBy : x.CreatedBy,
                                            UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : z.FullName,
                                            UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : x.CreatedDate,
                                        }).AsQueryable();
-            var productData = new PagedList<ProductResponseDto>(productResponseData, dataTableFilterDto);
+            var productFilteredData = FilterProductData(dataTableFilterDto, productResponseData);
+            var productData = new PagedList<ProductResponseDto>(productFilteredData, dataTableFilterDto);
             return new JsonRepsonse<ProductResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
         }
 
@@ -466,7 +466,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
                     decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
                     decimal newCostPrice = totalCubic * costPerCubic;
-                    newCostPrice = CommonMethod.GetCalculatedPrice(newCostPrice, 0, tenantData.AmountRoundMultiple);
+                    newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
                     decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
                     decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
                     orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
@@ -671,6 +671,30 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
             return lookupId;
+        }
+
+        private static IQueryable<ProductResponseDto> FilterProductData(ProductDataTableFilterDto productDataTableFilterDto, IQueryable<ProductResponseDto> productResponseDto)
+        {
+            if (productDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(productDataTableFilterDto.CategoryName))
+                {
+                    productResponseDto = productResponseDto.Where(p => p.CategoryName.StartsWith(productDataTableFilterDto.CategoryName));
+                }
+                if (!string.IsNullOrEmpty(productDataTableFilterDto.ModelNo))
+                {
+                    productResponseDto = productResponseDto.Where(p => p.ModelNo.StartsWith(productDataTableFilterDto.ModelNo));
+                }
+                if (!string.IsNullOrEmpty(productDataTableFilterDto.ProductTitle))
+                {
+                    productResponseDto = productResponseDto.Where(p => p.ProductTitle.StartsWith(productDataTableFilterDto.ProductTitle));
+                }
+                if (productDataTableFilterDto.publishStatus != null)
+                {
+                    productResponseDto = productResponseDto.Where(p => p.Status == productDataTableFilterDto.publishStatus);
+                }
+            }
+            return productResponseDto;
         }
 
         #endregion Private Method

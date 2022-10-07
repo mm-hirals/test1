@@ -12,7 +12,13 @@ $(function () {
         "ajax": {
             "url": "/Product/GetProductData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                    d.categoryName = $("#categoryName").val().trim(),
+                    d.productTitle = $("#productTitle").val().trim(),
+                    d.modelNo = $("#modelNo").val().trim(),
+                    d.publishStatus = $("#publishStatus").val().trim()
+            }
         },
         "columns": [
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
@@ -53,9 +59,22 @@ $(function () {
     });
 });
 
+$("#lnkProductFilter").click(function () {
+    $(this).toggleClass("filter-icon");
+    $("#FilterCard").slideToggle("slow");
+});
+
 ProductModel.onDelete = function () {
     tblProduct.ajax.reload();
 }
+
+$("#categoryName,#productTitle,#modelNo").keyup("input", function () {
+    tblProduct.ajax.reload(null, false);
+});
+
+$('#publishStatus').change(function () {
+    tblProduct.ajax.reload(null, false);
+});
 
 $('#tblProduct').on('click', 'input[type="checkbox"]', function () {
     var data = {

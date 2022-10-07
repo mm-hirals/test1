@@ -37,7 +37,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CategoryResponseDto>(categoryAllData.FirstOrDefault(x => x.LookupId == lookupId && x.LookupValueName == searchName));
         }
 
-        public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             int lookupId = await GetLookupId(cancellationToken);
             var categoryAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
@@ -60,7 +60,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                             UpdatedDate = x.UpdatedDate,
                                             UpdatedUTCDate = x.UpdatedUTCDate
                                         }).AsQueryable();
-            var categoryData = new PagedList<CategoryResponseDto>(categoryResponseData, dataTableFilterDto);
+            var categoryFilteredData = FilterCategoryData(dataTableFilterDto, categoryResponseData);
+            var categoryData = new PagedList<CategoryResponseDto>(categoryFilteredData, dataTableFilterDto);
             return new JsonRepsonse<CategoryResponseDto>(dataTableFilterDto.Draw, categoryData.TotalCount, categoryData.TotalCount, categoryData);
         }
 
@@ -140,6 +141,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Category)).Select(x => x.LookupId).FirstOrDefault();
             return lookupId;
+        }
+
+        private static IQueryable<CategoryResponseDto> FilterCategoryData(CategoryDataTableFilterDto categoryDataTableFilterDto, IQueryable<CategoryResponseDto> categoryResponseDto)
+        {
+            if (categoryDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(categoryDataTableFilterDto.CategoryName))
+                {
+                    categoryResponseDto = categoryResponseDto.Where(p => p.LookupValueName.StartsWith(categoryDataTableFilterDto.CategoryName));
+                }
+            }
+
+            return categoryResponseDto;
         }
 
         #endregion PrivateMethods
