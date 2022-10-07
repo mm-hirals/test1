@@ -5,7 +5,6 @@ using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -59,8 +58,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
                                            Status = x.Status,
-                                           CreatedByName = z.FullName,
-                                           CreatedDate = x.CreatedDate,
+                                           UpdatedBy = x.UpdatedBy != null ? x.UpdatedBy : x.CreatedBy,
                                            UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : z.FullName,
                                            UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : x.CreatedDate,
                                        }).AsQueryable();
