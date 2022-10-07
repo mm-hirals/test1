@@ -9,12 +9,14 @@ namespace MidCapERP.Dto.RawMaterial
         public int RawMaterialId { get; set; }
 
         [DisplayName("Title")]
+        [StringLength(150, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 150 characters")]
         public string Title { get; set; }
 
         [DisplayName("Unit Name")]
         public int UnitId { get; set; }
 
         [DisplayName("Unit Price")]
+        [StringLength(8, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 8 characters")]
         public decimal UnitPrice { get; set; }
 
         public string? ImagePath { get; set; }
