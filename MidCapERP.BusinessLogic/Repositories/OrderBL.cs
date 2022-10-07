@@ -34,13 +34,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<OrderResponseDto>>(data);
         }
 
-        public async Task<JsonRepsonse<OrderResponseDto>> GetFilterOrderData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<OrderResponseDto>> GetFilterOrderData(OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var orderResponseData = (from x in orderAllData
-                                     join y in customerData on x.CustomerID equals y.CustomerId
+                                     join y in customerData on x.CustomerID equals y.CustomerId 
                                      join z in userData on x.CreatedBy equals z.UserId
                                      select new OrderResponseDto()
                                      {
@@ -55,9 +55,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                                          GSTTaxAmount = x.GSTTaxAmount,
                                          PayableAmount = (x.GrossTotal - x.Discount) + x.GSTTaxAmount,
                                          DeliveryDate = x.DeliveryDate,
-                                         CreatedByName = z.FullName
+                                         CreatedByName = z.FullName,
+                                         RefferedBy = x.RefferedBy,
+                                         PhoneNumber = y.PhoneNumber
                                      }).AsQueryable();
-            var orderData = new PagedList<OrderResponseDto>(orderResponseData, dataTableFilterDto);
+            var polishFilterData = FilterOrderData(dataTableFilterDto, orderResponseData);
+            var orderData = new PagedList<OrderResponseDto>(polishFilterData, dataTableFilterDto);
             return new JsonRepsonse<OrderResponseDto>(dataTableFilterDto.Draw, orderData.TotalCount, orderData.TotalCount, orderData);
         }
 
@@ -594,6 +597,68 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Order Set Item not found");
             }
             return data;
+        }
+
+        private async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        private async Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        private async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
+            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
+            return subjectTypeId;
+        }
+
+        private static IQueryable<OrderResponseDto> FilterOrderData(OrderDataTableFilterDto orderDataTableFilterDto, IQueryable<OrderResponseDto> orderResponseDto)
+        {
+            if (orderDataTableFilterDto != null)
+            {
+                if (orderDataTableFilterDto.RefferedBy != null)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.RefferedBy == orderDataTableFilterDto.RefferedBy);
+                }
+                if (!string.IsNullOrEmpty(orderDataTableFilterDto.CustomerName))
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.CustomerName.StartsWith(orderDataTableFilterDto.CustomerName));
+                }
+                if (!string.IsNullOrEmpty(orderDataTableFilterDto.PhoneNumber))
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.PhoneNumber.StartsWith(orderDataTableFilterDto.PhoneNumber));
+                }
+                if (orderDataTableFilterDto.Status != null)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.Status == orderDataTableFilterDto.Status);
+                }
+                if (orderDataTableFilterDto.orderFromDate != DateTime.MinValue)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate > orderDataTableFilterDto.orderFromDate);
+                }
+                if (orderDataTableFilterDto.orderToDate != DateTime.MinValue)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate < orderDataTableFilterDto.orderToDate );
+                    // p.UpdatedDate < orderDataTableFilterDto.orderToDate
+                }
+                if (orderDataTableFilterDto.DeliveryFromDate != DateTime.MinValue)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate > orderDataTableFilterDto.DeliveryFromDate);
+                }
+                if (orderDataTableFilterDto.DeliveryToDate != DateTime.MinValue)
+                {
+                    orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate < orderDataTableFilterDto.DeliveryToDate);
+                }
+            }
+            return orderResponseDto;
         }
 
         #endregion Private Method

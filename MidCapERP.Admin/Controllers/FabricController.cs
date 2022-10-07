@@ -29,7 +29,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
-        public async Task<IActionResult> GetFabricData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetFabricData([FromForm] FabricDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.FabricBL.GetFilterFabricData(dataTableFilterDto, cancellationToken);
             return Ok(data);
