@@ -9,7 +9,6 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
 using MidCapERP.Dto.OrderAddressesApi;
-using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
@@ -81,9 +80,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
                 var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-                var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
                 foreach (var item in orderResponseDto.OrderSetResponseDto)
                 {
@@ -169,9 +168,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                 var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
                 var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-                var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-                var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
 
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
@@ -311,11 +310,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             data.DiscountPrice = discountPrice;
             data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
-
             await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
 
             var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
-
             var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
             orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
             orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
@@ -325,31 +322,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderById.UpdatedDate = DateTime.Now;
             orderById.UpdatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
-            return orderData;
-        }
 
-        public async Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
-        {
-            OrderCalculationApiResponseDto orderCalculationData = new OrderCalculationApiResponseDto();
-            var productSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-            if (productSubjectTypeId == orderCalculationApiRequestDto.SubjectTypeId)
-            {
-                var productData = await _unitOfWorkDA.ProductDA.GetById(orderCalculationApiRequestDto.SubjectId, cancellationToken);
-                if (productData != null)
-                {
-                    var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-                    decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
-                    decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
-                    decimal newCostPrice = totalCubic * costPerCubic;
-                    decimal retailerPrice = tenantData.RetailerPercentage > 0 ? newCostPrice + ((newCostPrice * Convert.ToDecimal(tenantData.RetailerPercentage)) / 100) : newCostPrice;
-                    decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
-                    orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
-                    orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
-                    orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
-                    orderCalculationData.TotalAmount = totalPrice;
-                }
-            }
-            return _mapper.Map<OrderCalculationApiResponseDto>(orderCalculationData);
+            orderData.GrossTotal = orderById.GrossTotal;
+            orderData.Discount = orderById.Discount;
+            orderData.TotalAmount = orderById.TotalAmount;
+            orderData.GSTTaxAmount = orderById.GSTTaxAmount;
+            orderData.PayableAmount = (orderData.GrossTotal - orderData.Discount) + orderData.GSTTaxAmount;
+            orderData.UpdatedBy = orderById.UpdatedBy;
+            orderData.UpdatedDate = orderById.UpdatedDate;
+            orderData.UpdatedUTCDate = orderById.UpdatedUTCDate;
+            return orderData;
         }
 
         public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
@@ -541,9 +523,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private async Task<OrderSetItemRequestDto> SaveOrderSetItem(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
-            var ProductSubjectTypeId = await GetProductSubjectTypeId(cancellationToken);
-            var polishSubjectTypeId = await GetPolishSubjectTypeId(cancellationToken);
-            var FrabriSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
+            var ProductSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+            var FrabriSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
 
             OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
             orderSetItem.OrderId = orderSetItemRequestDto.OrderId;
@@ -612,27 +594,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Order Set Item not found");
             }
             return data;
-        }
-
-        private async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
-        }
-
-        private async Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
-        }
-
-        private async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
-        {
-            var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
-            var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
-            return subjectTypeId;
         }
 
         #endregion Private Method

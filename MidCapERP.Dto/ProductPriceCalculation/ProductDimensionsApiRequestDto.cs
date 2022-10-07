@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MidCapERP.Dto.OrderCalculation
+﻿namespace MidCapERP.Dto.OrderCalculation
 {
-    public class OrderCalculationApiRequestDto
+    public class ProductDimensionsApiRequestDto
     {
         public int SubjectTypeId { get; set; }
         public long SubjectId { get; set; }

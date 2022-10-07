@@ -82,24 +82,6 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
-        /// <summary>
-        /// Calculate product price based on dimension
-        /// </summary>
-        /// <param name="orderCalculationApiRequestDto"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<ApiResponse> CalculateProductDimensionPrice([FromBody] OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.OrderBL.CalculateProductDimensionPriceAPI(orderCalculationApiRequestDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
-        }
-
         #region Private Methods
 
         private void ValidationRequest(OrderApiRequestDto orderRequestDto)

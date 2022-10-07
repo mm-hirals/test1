@@ -1,7 +1,6 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
-using MidCapERP.Dto.OrderCalculation;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -24,8 +23,6 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken);
 
         public Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
-
-        public Task<OrderCalculationApiResponseDto> CalculateProductDimensionPriceAPI(OrderCalculationApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
 
         public Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
     }

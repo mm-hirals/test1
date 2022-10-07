@@ -1,6 +1,7 @@
 ﻿using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.SearchResponse;
@@ -56,5 +57,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<IEnumerable<ActivityLogs>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
+
+        public Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
     }
 }
