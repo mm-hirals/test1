@@ -466,7 +466,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
                     decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
                     decimal newCostPrice = totalCubic * costPerCubic;
-                    newCostPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                    newCostPrice = CommonMethod.GetCalculatedPrice(newCostPrice, 0, tenantData.AmountRoundMultiple);
                     decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
                     decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
                     orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
