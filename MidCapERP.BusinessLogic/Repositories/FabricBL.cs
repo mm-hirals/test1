@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.Core.CommonHelper;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -50,6 +51,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Fabric data not found");
             }
+            var tenantData = await _unitOfWorkDA.TenantDA.GetById(fabricData.TenantId, cancellationToken);
+            fabricData.UnitPrice = CommonMethod.GetCalculatedPrice(fabricData.UnitPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
             return new FabricApiResponseDto(fabricData.FabricId, fabricData.Title, fabricData.ModelNo, fabricData.CompanyId, fabricData.UnitId, fabricData.UnitPrice, fabricData.ImagePath, fabricSubjectTypeId);
         }
 
