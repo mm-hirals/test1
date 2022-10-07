@@ -42,7 +42,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data Found", result: productDetailsData, statusCode: 200);
         }
 
-        [HttpGet("GetPriceByDimensions")]
+        [HttpPost("GetPriceByDimensions")]
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> GetPriceByDimensions([FromBody] ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
