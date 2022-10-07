@@ -38,6 +38,7 @@ $("#lnkFabricFilter").click(function () {
 });
 
 FabricModel.onComplete = function () {
+    calculateUnitPrice();
     $("#divFabricModal").modal('show');
 }
 
@@ -54,3 +55,43 @@ FabricModel.onFailed = function (xhr) {
     tblFabric.ajax.reload(null, false);
     $("#divFabricModal").modal('hide');
 };
+
+$(document).on("change", "input#UnitPrice", (function () {
+    $(this).attr('value', $(this).val());
+    calculateUnitPrice();
+}));
+
+function calculateUnitPrice() {
+    var unitPrice = parseInt($("#UnitPrice").val());
+    if (unitPrice > 0) {
+        calculateRetailerSP(unitPrice);
+        calculateWholesalerSP(unitPrice);
+    } else {
+        $("#RetailerPrice").val("");
+        $("#WholesalerPrice").val("");
+    }
+}
+
+function calculateRetailerSP(unitPrice) {
+    var retailerSP = parseInt($("#hdnRetailerSP").val());
+    if (retailerSP > 0) {
+        var retailerUnitPrice = RoundTo(Math.round(unitPrice + ((unitPrice * retailerSP) / 100)).toFixed(2));
+        $("#RetailerPrice").val(retailerUnitPrice.toFixed(2));
+    }
+}
+
+function calculateWholesalerSP(unitPrice) {
+    var wholesalerSP = $("#hdnWholesalerSP").val();
+    if (wholesalerSP > 0) {
+        var wholesalerUnitPrice = RoundTo(Math.round(unitPrice + ((unitPrice * wholesalerSP) / 100)).toFixed(2));
+        $("#WholesalerPrice").val(wholesalerUnitPrice.toFixed(2));
+    }
+}
+
+function RoundTo(number) {
+    var roundto = $("#hdnAmountRoundTo").val();
+    if (roundto > 0)
+        return roundto * Math.round(number / roundto);
+    else
+        return number;
+}

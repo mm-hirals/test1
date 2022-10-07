@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
 
@@ -12,10 +13,12 @@ namespace MidCapERP.Admin.Controllers
     public class FabricController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly CurrentUser _currentUser;
 
-        public FabricController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public FabricController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _currentUser = currentUser;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
@@ -38,6 +41,7 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillCompanyNameDropDown(cancellationToken);
             await FillUnitNameDropDown(cancellationToken);
+            await FillViewBags(cancellationToken);
             return PartialView("_FabricPartial");
         }
 
@@ -55,6 +59,7 @@ namespace MidCapERP.Admin.Controllers
         {
             await FillCompanyNameDropDown(cancellationToken);
             await FillUnitNameDropDown(cancellationToken);
+            await FillViewBags(cancellationToken);
             var fabric = await _unitOfWorkBL.FabricBL.GetById(Id, cancellationToken);
             return PartialView("_FabricPartial", fabric);
         }
@@ -98,7 +103,13 @@ namespace MidCapERP.Admin.Controllers
             }).ToList();
             ViewBag.UnitSelectItemList = unitDataSelectedList;
         }
-
+        private async Task FillViewBags(CancellationToken cancellationToken)
+        {
+            var tenantDetails = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+            ViewBag.WholesalerSP = tenantDetails != null && tenantDetails?.FabricWSPPercentage > 0 ? tenantDetails.FabricWSPPercentage : 0;
+            ViewBag.RetailerSP = tenantDetails != null && tenantDetails?.FabricRSPPercentage > 0 ? tenantDetails.FabricRSPPercentage : 0;
+            ViewBag.RoundTo = tenantDetails != null && tenantDetails?.AmountRoundMultiple > 0 ? tenantDetails.AmountRoundMultiple : 0;
+        }
         #endregion Private Method
     }
 }
