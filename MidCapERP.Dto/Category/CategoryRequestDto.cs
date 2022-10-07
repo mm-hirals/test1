@@ -11,7 +11,7 @@ namespace MidCapERP.Dto.Category
         public int LookupId { get; set; } = (int)MasterPagesEnum.Category;
 
         [Required(ErrorMessage = "The Category Name is required")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 50 characters")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "Minimum 1 characters, Maximum 50 characters")]
         [DisplayName("Category Name")]
         public string LookupValueName { get; set; }
 

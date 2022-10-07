@@ -24,7 +24,8 @@ namespace MidCapERP.Dto.User
         [StringLength(256, MinimumLength = 2, ErrorMessage = "The Minimum 2 characters, Maximum 256 characters.")]
         public string UserName { get; set; } = string.Empty;
 
-        [Required]
+        [DisplayName("Email Address")]
+        [EmailAddress(ErrorMessage = "Please enter valid email address.")]
         [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "The E-mail is not valid.")]
         public string Email { get; set; } = string.Empty;
 

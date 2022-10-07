@@ -10,7 +10,7 @@ namespace MidCapERP.Dto.Company
         public int LookupId { get; set; } = (int)MasterPagesEnum.Company;
 
         [DisplayName("Company Name")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 50 characters")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "Maximum 50 characters")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }

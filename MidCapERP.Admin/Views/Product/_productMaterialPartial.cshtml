@@ -92,7 +92,7 @@
                                             <input type="text" readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
                                         </td>
                                         <td>
-                                            <input type="number" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" placeholder="Qty"  />
+                                            <input type="number" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" placeholder="Qty" readonly/>
                                         </td>
                                         <td>
                                             @{
@@ -235,7 +235,7 @@
                                 <input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
                                 <input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
                                 <input type="hidden" id="hdnAmountRoundTo" value="@ViewBag.RoundTo">
-                                <input asp-for="CostPrice" type="number" class="form-control" placeholder="Enter Cost Price" min="0" max>
+                                <input asp-for="CostPrice" type="number" class="form-control" placeholder="Enter Cost Price" min="0">
                                 <span asp-validation-for="ProductRequestDto.CostPrice" class="text-danger"></span>
                             </div>
                         </li>
