@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using MidCapERP.Dto.ProductImage;
-using MidCapERP.Dto.ProductMaterial;
+﻿using MidCapERP.Dto.ProductImage;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -34,6 +32,7 @@ namespace MidCapERP.Dto.Product
         public string Depth { get; set; }
 
         [DisplayName("Fabric Needed")]
+        [StringLength(3, MinimumLength = 1, ErrorMessage = "The Minimum 1 Number, Maximum 3 Number.")]
         public decimal? FabricNeeded { get; set; }
 
         [DisplayName("Total days to prepare")]

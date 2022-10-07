@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MidCapERP.Dto.RolePermission;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Role
