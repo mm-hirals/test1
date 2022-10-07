@@ -42,24 +42,36 @@ function calculateCostPrice() {
         if ($(this).parent().parent().find("input.isDeleted").val() == 'false')
             sum += +this.value;
     });
-    $("#CostPrice").val(Math.round(sum).toFixed(2));
+    var roundedSum = RoundTo(Math.round(sum).toFixed(2));
+    sum = roundedSum.toFixed(2);
+    $("#CostPrice").val(sum);
     $("#ProductRequestDto_CostPrice-error").hide();
-    calculateRetailerSP(sum);
-    calculateWholesalerSP(sum);
+    calculateRetailerSP(roundedSum);
+    calculateWholesalerSP(roundedSum);
 }
 
 function calculateRetailerSP(costPrice) {
     var retailerSP = $("#hdnRetailerSP").val();
     if (retailerSP > 0) {
-        $("#RetailerPrice").val(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2));
+        var retailerCostPrice = RoundTo(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2));
+        $("#RetailerPrice").val(retailerCostPrice.toFixed(2));
     }
 }
 
 function calculateWholesalerSP(costPrice) {
-    var retailerSP = $("#hdnWholesalerSP").val();
-    if (retailerSP > 0) {
-        $("#WholesalerPrice").val(Math.round((costPrice + (costPrice * retailerSP) / 100)).toFixed(2));
+    var wholesalerSP = $("#hdnWholesalerSP").val();
+    if (wholesalerSP > 0) {
+        var wholesalerCostPrice = RoundTo(Math.round((costPrice + (costPrice * wholesalerSP) / 100)).toFixed(2));
+        $("#WholesalerPrice").val(wholesalerCostPrice.toFixed(2));
     }
+}
+
+function RoundTo(number) {
+    var roundto = $("#hdnAmountRoundTo").val();
+    if (roundto > 0)
+        return roundto * Math.round(number / roundto);
+    else
+        return number;
 }
 
 function emptyFields(trRow) {
@@ -78,8 +90,8 @@ $(document).on("change", "input.quantity", (function () {
     var unitPrice = $(this).parent().parent().find("input.materialPrice").val();
     var costPrice = qty.val() * unitPrice;
     $(this).parent().parent().find("input.quantity").attr('value', qty.val());
-    $(this).parent().parent().find("input.costPrice").val(costPrice);
-    $(this).parent().parent().find("input.costPrice").attr('value', costPrice);
+    $(this).parent().parent().find("input.costPrice").val(costPrice.toFixed(2));
+    $(this).parent().parent().find("input.costPrice").attr('value', costPrice.toFixed(2));
 }));
 $(document).on("change", "select.material", (function () {
     var val = $(this).val();

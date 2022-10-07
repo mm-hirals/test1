@@ -4,6 +4,6 @@ namespace MidCapERP.BusinessLogic.Services.ActivityLog
 {
     public interface IActivityLogsService
     {
-        public Task<ActivityLogs> PerformActivityLog(int subjectTypeId, string subjectId, string description, string action, CancellationToken cancellationToken);
+        public Task<ActivityLogs> PerformActivityLog(int subjectTypeId, long subjectId, string description, string action, CancellationToken cancellationToken);
     }
 }

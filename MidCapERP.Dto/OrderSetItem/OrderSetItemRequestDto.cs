@@ -40,8 +40,7 @@ namespace MidCapERP.Dto.OrderSetItem
         [Required]
         public decimal TotalAmount { get; set; }
 
-        [Required]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         [JsonIgnore]
         [Required]
