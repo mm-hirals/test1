@@ -1,4 +1,6 @@
-﻿namespace MidCapERP.Dto.ProductMaterial
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MidCapERP.Dto.ProductMaterial
 {
     public class ProductMaterialRequestDto
     {
@@ -6,7 +8,12 @@
         public long ProductId { get; set; }
         public int SubjectTypeId { get; set; }
         public int SubjectId { get; set; }
+
+        [Required]
+        [RegularExpression("/^\\d+$/", ErrorMessage = "The Quentite not Valid")]
+        [Range(0, 999)]
         public int Qty { get; set; }
+
         public decimal CostPrice { get; set; }
         public string? UnitType { get; set; }
         public int CreatedBy { get; set; }
