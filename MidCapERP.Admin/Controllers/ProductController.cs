@@ -114,8 +114,14 @@ namespace MidCapERP.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductActivity(int productId, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.ProductBL.GetProductActivityByProductId(productId, cancellationToken);
-            return PartialView("_productActivityTable", data);
+            return PartialView("_productActivityTable");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProductActivityDataById([FromForm] ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetFilterProductActivityData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
         }
 
         [HttpPost]
