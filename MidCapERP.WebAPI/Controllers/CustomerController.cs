@@ -119,7 +119,7 @@ namespace MidCapERP.WebAPI.Controllers
             }
         }
 
-        [HttpGet("/SearchForCustomerDoupdown/{searchText}")]
+        [HttpGet("/SearchForCustomerDropdown/{searchText}")]
         [Authorize((ApplicationIdentityConstants.Permissions.Customer.View))]
         public async Task<ApiResponse> SearchDropDownRefferedBy(string searchText, CancellationToken cancellationToken)
         {
