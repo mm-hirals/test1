@@ -119,6 +119,18 @@ namespace MidCapERP.WebAPI.Controllers
             }
         }
 
+        [HttpGet("searchText")]
+        [Authorize((ApplicationIdentityConstants.Permissions.Customer.View))]
+        public async Task<ApiResponse> SearchDropDownRefferedBy(string searchText, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.GetSearchCustomerForDropDownNameOrPhoneNumber(searchText, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
         #region Private Methods
 
         private void ValidationRequest(CustomerApiRequestDto customersRequestDto)

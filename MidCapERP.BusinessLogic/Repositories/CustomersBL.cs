@@ -61,6 +61,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new MegaSearchResponse(x.CustomerId, x.FirstName + " " + x.LastName, x.PhoneNumber, null, "Customer")).Take(10).ToList();
         }
 
+        public async Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken)
+        {
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
+            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber });
+            return data.ToList();
+        }
+
         public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var cutomerAlldata = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
