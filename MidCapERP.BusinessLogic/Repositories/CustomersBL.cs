@@ -136,8 +136,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 refferedCustomer.CreatedBy = _currentUser.UserId;
                 refferedCustomer.CreatedDate = DateTime.Now;
                 refferedCustomer.CreatedUTCDate = DateTime.UtcNow;
-                var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
-                customerToInsert.RefferedBy = customer.CustomerId;
+                if (!string.IsNullOrEmpty(model.RefferedName) && !string.IsNullOrEmpty(model.RefferedNumber))
+                {
+                    var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
+                    customerToInsert.RefferedBy = customer.CustomerId;
+                }
                 var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
