@@ -41,7 +41,7 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200); 
         }
 
         [HttpPost]
