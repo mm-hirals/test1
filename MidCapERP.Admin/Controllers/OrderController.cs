@@ -24,6 +24,18 @@ namespace MidCapERP.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
+        {
+            OrderResponseDto orderData = new OrderResponseDto();
+            if (Id > 0)
+            {
+                orderData = await _unitOfWorkBL.OrderBL.GetOrderDetailData(Id, cancellationToken);
+            }
+            return View("OrderMain", orderData);
+        }
+
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<IActionResult> GetOrderData([FromForm] OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -34,7 +46,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
+        public async Task<IActionResult> OrderDetailData(long Id, CancellationToken cancellationToken)
         {
             OrderResponseDto orderData = new OrderResponseDto();
             if (Id > 0)
