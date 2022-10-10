@@ -28,12 +28,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
         {
-            OrderResponseDto orderData = new OrderResponseDto();
-            if (Id > 0)
-            {
-                orderData = await _unitOfWorkBL.OrderBL.GetOrderDetailData(Id, cancellationToken);
-            }
-            return View("OrderMain", orderData);
+            return View("OrderMain");
         }
 
         [HttpPost]
@@ -71,11 +66,11 @@ namespace MidCapERP.Admin.Controllers
             var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
 
             var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect).Select(
-                                    p => new { p.CustomerId, p.FirstName,p.LastName }).Select(a =>
+                                    p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
                                     new SelectListItem
                                     {
                                         Value = Convert.ToString(a.CustomerId),
-                                        Text = Convert.ToString(a.FirstName+ " " +a.LastName)
+                                        Text = Convert.ToString(a.FirstName + " " + a.LastName)
                                     }).ToList();
             ViewBag.ReferedBySelectItemList = referedByDataSelectedList;
         }
