@@ -119,12 +119,12 @@ namespace MidCapERP.WebAPI.Controllers
             }
         }
 
-        [HttpGet("searchText")]
+        [HttpGet("/SearchForCustomerDoupdown/{searchText}")]
         [Authorize((ApplicationIdentityConstants.Permissions.Customer.View))]
         public async Task<ApiResponse> SearchDropDownRefferedBy(string searchText, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetSearchCustomerForDropDownNameOrPhoneNumber(searchText, cancellationToken);
-            if (data == null)
+            if (data == null || data.Count() == 0)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }

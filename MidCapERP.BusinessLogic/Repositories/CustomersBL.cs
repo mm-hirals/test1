@@ -65,7 +65,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber });
+            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber });
             return data.ToList();
         }
 
@@ -118,32 +118,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             customerToInsert.CreatedBy = _currentUser.UserId;
             customerToInsert.CreatedDate = DateTime.Now;
             customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber));
-            if (customerExistOrNot != null)
-            {
-                customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-                return _mapper.Map<CustomerApiRequestDto>(data);
-            }
-            else
-            {
-                Customers refferedCustomer = new Customers();
-                refferedCustomer.TenantId = _currentUser.TenantId;
-                refferedCustomer.LastName = String.Empty;
-                refferedCustomer.FirstName = model.RefferedName;
-                refferedCustomer.PhoneNumber = model.RefferedNumber;
-                refferedCustomer.CreatedBy = _currentUser.UserId;
-                refferedCustomer.CreatedDate = DateTime.Now;
-                refferedCustomer.CreatedUTCDate = DateTime.UtcNow;
-                if (!string.IsNullOrEmpty(model.RefferedName) && !string.IsNullOrEmpty(model.RefferedNumber))
-                {
-                    var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
-                    customerToInsert.RefferedBy = customer.CustomerId;
-                }
-                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-                return _mapper.Map<CustomerApiRequestDto>(data);
-            }
+            var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+            return _mapper.Map<CustomerApiRequestDto>(data);
         }
 
         public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
