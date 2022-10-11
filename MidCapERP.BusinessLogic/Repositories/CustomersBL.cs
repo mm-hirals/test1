@@ -48,16 +48,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             if (customerMobileNumberOrEmailId.RefferedBy != null)
             {
-                var customerData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
                 var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
                 if (refferedByCustomerData == null)
                 {
-                    return _mapper.Map<CustomersApiResponseDto>(customerData);
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
                 }
-                var refferedCustomerData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
                 CustomersApiResponseDto customersResponseDto = new CustomersApiResponseDto();
-                customersResponseDto = customerData;
-                customersResponseDto.Reffered = refferedCustomerData;
+                customersResponseDto = customerApiResponseData;
+                customersResponseDto.Reffered = refferedCustomerResponseData;
                 return _mapper.Map<CustomersApiResponseDto>(customersResponseDto);
             }
             else
