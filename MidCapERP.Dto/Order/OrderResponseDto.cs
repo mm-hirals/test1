@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.OrderSet;
+﻿using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.OrderSet;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -68,6 +69,7 @@ namespace MidCapERP.Dto.Order
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
 
+        public CustomersResponseDto customersResponseDto { get; set; }
         public List<OrderSetResponseDto> OrderSetResponseDto { get; set; }
         public List<OrderAddressesResponseDto> OrderAddressesResponseDto { get; set; }
     }
