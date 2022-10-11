@@ -72,5 +72,28 @@ namespace MidCapERP.Dto.Order
         public CustomersResponseDto customersResponseDto { get; set; }
         public List<OrderSetResponseDto> OrderSetResponseDto { get; set; }
         public List<OrderAddressesResponseDto> OrderAddressesResponseDto { get; set; }
+
+        /// <summary>
+        /// Remarks : Do not change the method Name or Properties. Check the PagedList.cs to get referance of the method
+        /// </summary>
+        /// <param name="orderbyColumn">Order by column name</param>
+        /// <returns>actual database column name</returns>
+        public string MapOrderBy(string orderbyColumn)
+        {
+            switch (orderbyColumn)
+            {
+                case "deliveryDateFormat":
+                    return "DeliveryDate";
+
+                case "createdDateFormat":
+                    return "CreatedDate";
+
+                case "createdByName":
+                    return "CreatedBy";
+
+                default:
+                    return orderbyColumn;
+            };
+        }
     }
 }

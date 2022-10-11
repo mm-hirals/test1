@@ -85,7 +85,7 @@ namespace MidCapERP.Admin.Controllers
             await FillCustomerTypesDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
-        }
+        } 
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
