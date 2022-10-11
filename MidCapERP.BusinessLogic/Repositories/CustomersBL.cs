@@ -38,11 +38,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data.Where(x => x.CreatedUTCDate >= oldDate).Count();
         }
 
-        public async Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
+        public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
-            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerMobileNumberOrEmailId = customerData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            return _mapper.Map<CustomersResponseDto>(customerMobileNumberOrEmailId);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
+            var customerData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
+            var oldData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
+            if(oldData == null){
+                return _mapper.Map<CustomersApiResponseDto>(customerData);
+            }
+            var refferedCustomerData =   _mapper.Map<CustomersApiResponseDto>(oldData);
+            CustomersApiResponseDto customersResponseDto = new CustomersApiResponseDto();
+            customersResponseDto = customerData;
+            customersResponseDto.Reffered = refferedCustomerData;
+            return _mapper.Map<CustomersApiResponseDto>(customersResponseDto);
         }
 
         public async Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
@@ -187,6 +196,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (data == null)
             {
                 throw new Exception("Customer not found");
+            }
+            return data;
+        }
+
+        private async Task<Customers> CustomerGetByRefferedId(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            if (data == null)
+            {
+                return data;
             }
             return data;
         }
