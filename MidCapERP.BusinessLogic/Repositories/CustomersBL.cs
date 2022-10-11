@@ -203,10 +203,6 @@ namespace MidCapERP.BusinessLogic.Repositories
         private async Task<Customers> CustomerGetByRefferedId(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                return data;
-            }
             return data;
         }
 
