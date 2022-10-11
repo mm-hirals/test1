@@ -42,16 +42,26 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            var customerData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-            var oldData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
-            if(oldData == null){
-                return _mapper.Map<CustomersApiResponseDto>(customerData);
+            if(customerMobileNumberOrEmailId == null)
+            {
+                throw new Exception("Customer not found");
             }
-            var refferedCustomerData =   _mapper.Map<CustomersApiResponseDto>(oldData);
-            CustomersApiResponseDto customersResponseDto = new CustomersApiResponseDto();
-            customersResponseDto = customerData;
-            customersResponseDto.Reffered = refferedCustomerData;
-            return _mapper.Map<CustomersApiResponseDto>(customersResponseDto);
+            if (customerMobileNumberOrEmailId.RefferedBy != null)
+            {
+                var customerData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerData);
+                }
+                var refferedCustomerData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                CustomersApiResponseDto customersResponseDto = new CustomersApiResponseDto();
+                customersResponseDto = customerData;
+                customersResponseDto.Reffered = refferedCustomerData;
+                return _mapper.Map<CustomersApiResponseDto>(customersResponseDto);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
         }
 
         public async Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
