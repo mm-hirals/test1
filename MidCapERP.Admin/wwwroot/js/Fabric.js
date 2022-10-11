@@ -9,14 +9,16 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/Fabric/GetFabricData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
                 d.title = $("#title").val().trim(),
-                d.model = $("#modelNo").val().trim(),
-                d.company = $("#companyName").val().trim()
+                    d.model = $("#modelNo").val().trim(),
+                    d.company = $("#companyName").val().trim()
+                    d.company = $("#companyName").val().trim()
             }
         },
         "columns": [

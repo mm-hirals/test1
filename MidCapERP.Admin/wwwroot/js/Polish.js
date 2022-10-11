@@ -8,13 +8,14 @@ $(function () {
         "searching": false,
         "processing": true,
         "serverSide": true,
+        "iDisplayLength": 50,
         "filter": true,
         "ajax": {
             "url": "/Polish/GetPolishData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                    d.title = $("#title").val().trim(),
+                d.title = $("#title").val().trim(),
                     d.model = $("#modelNo").val().trim(),
                     d.company = $("#companyName").val().trim()
             }

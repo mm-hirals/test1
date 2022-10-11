@@ -8,6 +8,7 @@ $(function () {
         "searching": false,
         "processing": true,
         "serverSide": true,
+        "iDisplayLength": 50,
         "filter": true,
         "ajax": {
             "url": "/Company/GetCompanyData",
