@@ -15,10 +15,10 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.categoryName = $("#categoryName").val().trim(),
-                    d.productTitle = $("#productTitle").val().trim(),
-                    d.modelNo = $("#modelNo").val().trim(),
-                    d.publishStatus = $("#publishStatus").val().trim()
+                d.categoryName = $("#categoryName").val().trim();
+                d.productTitle = $("#productTitle").val().trim();
+                d.modelNo = $("#modelNo").val().trim();
+                d.publishStatus = $("#publishStatus").val().trim();
             }
         },
         "columns": [

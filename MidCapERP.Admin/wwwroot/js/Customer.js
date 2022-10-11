@@ -16,10 +16,10 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.customerName = $("#customerName").val().trim(),
-                    d.customerMobileNo = $("#customerMobileNo").val().trim(),
-                    d.customerFromDate = $("#customerFromDate").val().trim(),
-                    d.customerToDate = $("#customerToDate").val().trim()
+                d.customerName = $("#customerName").val().trim();
+                d.customerMobileNo = $("#customerMobileNo").val().trim();
+                d.customerFromDate = $("#customerFromDate").val().trim();
+                d.customerToDate = $("#customerToDate").val().trim();
             }
         },
         "columnDefs": [

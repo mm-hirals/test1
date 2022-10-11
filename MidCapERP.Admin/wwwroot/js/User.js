@@ -15,9 +15,9 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.name = $("#name").val().trim(),
-                    d.email = $("#email").val().trim(),
-                    d.phoneNumber = $("#phoneNumber").val().trim()
+                d.name = $("#name").val().trim();
+                d.email = $("#email").val().trim();
+                d.phoneNumber = $("#phoneNumber").val().trim();
             }
         },
         "columns": [

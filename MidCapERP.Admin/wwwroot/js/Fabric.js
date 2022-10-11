@@ -15,10 +15,10 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.title = $("#title").val().trim(),
-                    d.model = $("#modelNo").val().trim(),
-                    d.company = $("#companyName").val().trim()
-                    d.company = $("#companyName").val().trim()
+                d.title = $("#title").val().trim();
+                d.model = $("#modelNo").val().trim();
+                d.company = $("#companyName").val().trim();
+                d.company = $("#companyName").val().trim();
             }
         },
         "columns": [
