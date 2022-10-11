@@ -55,10 +55,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                     return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
                 }
                 var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
-                CustomersApiResponseDto customersResponseDto = new CustomersApiResponseDto();
-                customersResponseDto = customerApiResponseData;
-                customersResponseDto.Reffered = refferedCustomerResponseData;
-                return _mapper.Map<CustomersApiResponseDto>(customersResponseDto);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
             }
             else
                 return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
@@ -84,7 +82,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber });
+            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber }).Take(10);
             return data.ToList();
         }
 
