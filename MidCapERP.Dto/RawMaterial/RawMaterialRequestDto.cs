@@ -16,7 +16,7 @@ namespace MidCapERP.Dto.RawMaterial
         public int UnitId { get; set; }
 
         [DisplayName("Unit Price")]
-        [StringLength(8, MinimumLength = 1, ErrorMessage = "Minimum 1 characters, Maximum 8 characters")]
+        [Range(0, 999999, ErrorMessage = "Minimum 1 character, Maximum 6 characters")]
         public decimal UnitPrice { get; set; }
 
         public string? ImagePath { get; set; }
