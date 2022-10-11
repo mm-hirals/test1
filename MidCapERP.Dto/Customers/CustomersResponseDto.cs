@@ -30,6 +30,9 @@ namespace MidCapERP.Dto.Customers
 
         public long? RefferedBy { get; set; }
 
+        [DisplayName("Reffered Name")]
+        public string? RefferedName { get; set; }
+
         [JsonIgnore]
         public decimal Discount { get; set; }
 

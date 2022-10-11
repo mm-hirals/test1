@@ -1,4 +1,5 @@
-﻿@model MidCapERP.Dto.Order.OrderResponseDto
+﻿@using MidCapERP.Core.Constants
+@model MidCapERP.Dto.Order.OrderResponseDto
 
 <form method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
@@ -9,11 +10,11 @@
                         <div class="form-group">
                             <label class="form-label fw-bold">Order Detail</label><br />
                             <span class="form-label fw-bold">Order No:</span>
-                            <span class="form-label">2022-R38706</span><br />
+                            <span class="form-label">@Model.OrderNo</span><br />
                             <span class="form-label fw-bold">Total Amount:</span>
-                            <span class="form-label">288012.00</span><br />
+                            <span class="form-label">@Model.TotalAmount</span><br />
                             <span class="form-label fw-bold">Delivery Date:</span>
-                            <span class="form-label">2022-09-15</span>
+                            <span class="form-label">@Model.DeliveryDate</span>
                         </div>
                     </div>
                 </div>
@@ -21,7 +22,26 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label fw-bold">Order Status</label><br />
-                            <span class="form-label badge bg-warning">Pending</span>
+                            @if (@Model.Status == (int)OrderStatusEnum.Pending)
+                            {
+                                <span class="form-label badge bg-warning">Pending</span>
+                            }
+                            else if (@Model.Status == (int)OrderStatusEnum.InProgress)
+                            {
+                                <span class="form-label badge bg-secondary">In Progress</span>
+                            }
+                            else if (@Model.Status == (int)OrderStatusEnum.Completed)
+                            {
+                                <span class="form-label badge bg-success">Completed</span>
+                            }
+                            else if (@Model.Status == (int)OrderStatusEnum.Cancelled)
+                            {
+                                <span class="form-label badge bg-danger">Cancelled</span>
+                            }
+                            else
+                            {
+                                <span class="form-label badge bg-warning">Archieved</span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -30,42 +50,31 @@
                         <div class="form-group">
                             <label class="form-label fw-bold">Customer Info</label><br />
                             <span class="form-label fw-bold">Name:</span>
-                            <span class="form-label">Kishan Parmar</span><br />
+                            <span class="form-label">@(Model.customersResponseDto.FirstName + " " + Model.customersResponseDto.LastName)</span><br />
                             <span class="form-label fw-bold">Referred By:</span>
-                            <span class="form-label">Kishan Parmar</span><br />
+                            <span class="form-label">@Model.customersResponseDto.RefferedName</span><br />
                             <span class="form-label fw-bold">Mobile Number:</span>
-                            <span class="form-label">9844236960</span><br />
+                            <span class="form-label">@Model.customersResponseDto.PhoneNumber</span><br />
                             <span class="form-label fw-bold">Email Address:</span>
-                            <span class="form-label">kparmar@MagnusMinds.net</span>
+                            <span class="form-label">@Model.customersResponseDto.EmailId</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="product-info--item">
-                        <div class="form-group">
-                            <label class="form-label fw-bold">Billing Address</label><br />
-                            <span class="form-label">
-                                503, Mauryansh Elanza,<br />
-                                Shyamal Cross Rd,<br />
-                                Nr. Parekhs Hospital,<br />
-                                Ahmedabad, 380015 - Gujarat
-                            </span>
+                @foreach (var item in @Model.OrderAddressesResponseDto)
+                {
+                    <div class="col-md-2">
+                        <div class="product-info--item">
+                            <div class="form-group">
+                                <label class="form-label fw-bold">@item.AddressType Address</label><br />
+                                <span class="form-label">
+                                    @item.Street1 @(item.Street2 != null ? item.Street2 : ""),<br>
+                                    @(item.Landmark != null ? item.Landmark : "") @item.Area,<br>
+                                    @item.City, @item.ZipCode - @item.State
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="product-info--item">
-                        <div class="form-group">
-                            <label class="form-label fw-bold">Shipping Address</label><br />
-                            <span class="form-label">
-                                503, Mauryansh Elanza,<br />
-                                Shyamal Cross Rd,<br />
-                                Nr. Parekhs Hospital,<br />
-                                Ahmedabad, 380015 - Gujarat
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>

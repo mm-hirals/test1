@@ -1,29 +1,19 @@
 ﻿@model MidCapERP.Dto.Order.OrderResponseDto
-@{
-    //ViewData["Title"] = (Model != null && Model.OrderId != 0) ? "Update Order" : "Add Order";
-    //var i = 0;
 
-    //var orderId = (Model == null) ? 0 : Model.OrderId;
-}
-
-@*@Html.Hidden("hdnOrderId", orderId)*@
+@Html.Hidden("hdnOrderId", Model.OrderId)
 <div id="content">
-    <div id="divOrderInfo">
-        <partial name="_OrderBasicDetail" />
-    </div>
+    <div id="divOrderInfo"></div>
 
     <nav class="order-nav-tab--sticky">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
             <button class="nav-link" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Images</button>
-            <button class="nav-link" id="nav-rowmaterial-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Order Activity</button>
+            <button class="nav-link" id="nav-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-rowmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Order Activity</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
-            <div id="divOrderSetDetailPartial">
-                <partial name="_OrderSetDetailPartial" />
-            </div>
+            <div id="divOrderSetDetailPartial"></div>
         </div>
         <div class="tab-pane fade show" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
             <div id="divOrderImagePartial">
@@ -43,6 +33,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-        //<script asp-src-include="~/js/OrderMain.js"></script>
+        <script asp-src-include="~/js/OrderMain.js"></script>
     }
 }

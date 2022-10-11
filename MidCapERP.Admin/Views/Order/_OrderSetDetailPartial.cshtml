@@ -1,395 +1,178 @@
-﻿<div class="accordion-item c-card--wrapper">
-    <h2 class="accordion-header" id="headingOne">
-        <button class="c-card--header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            <div class="d-flex justify-content-between w-100">
-                <span class="mb-0 c-card--header-title">
-                    Sofa Set
-                </span>
-                <span class="mb-0 c-card--header-title fs-20 ms-auto me-5">
-                    ₹ 26,000
-                </span>
-            </div>
-        </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse p-3" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="mb-3 c-card--wrapper">
-            <div class="c-card--header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0 c-card--header-title">
-                    Sofa
-                </h5>
-            </div>
-            <div class="c-card--wrapper p-3">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="product-order--info mb-3">
-                            <div class="overflow-hidden">
-                                <div class="avatar-title bg-soft-info">
-                                    <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
+﻿<div class="row">
+    <div class="col-12">
+        <div class="accordion mb-3" id="accordionExample">
+            @if (@Model.OrderSetResponseDto != null)
+            {
+                @foreach (var orderSet in @Model.OrderSetResponseDto)
+                {
+                    <div class="accordion-item c-card--wrapper mb-3">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="c-card--header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@orderSet.OrderSetId" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="d-flex justify-content-between w-100">
+                                    <span class="mb-0 c-card--header-title">
+                                        @orderSet.SetName
+                                    </span>
+                                    <span class="mb-0 c-card--header-title fs-20 ms-auto me-5">
+                                        @orderSet.TotalAmount
+                                    </span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="product-order--info mb-1">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Demensions
-                                    </label>
-                                </div>
-                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                    <label for="" class="form-label mb-0">
-                                        Width:
-                                    </label>
-                                    <div class="form-value fw-bold ms-2">
-                                        50
+                            </button>
+                        </h2>
+                        <div id="collapse_@orderSet.OrderSetId" class="accordion-collapse collapse p-3" aria-labelledby="headingOne">
+                            @foreach (var orderSetItem in @orderSet.OrderSetItemResponseDto)
+                            {
+                                <div class="mb-3 c-card--wrapper">
+                                    <div class="c-card--header d-flex align-items-center justify-content-between">
+                                        <h5 class="mb-0 c-card--header-title">
+                                            @orderSetItem.ModelNo - @orderSetItem.ProductTitle
+                                        </h5>
                                     </div>
-                                </div>
-                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                    <label for="" class="form-label mb-0">
-                                        Height:
-                                    </label>
-                                    <div class="form-value fw-bold ms-2">
-                                        60
-                                    </div>
-                                </div>
-                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                    <label for="" class="form-label mb-0">
-                                        Depth:
-                                    </label>
-                                    <div class="form-value fw-bold ms-2">
-                                        40
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="product-order--info mb-3 text-center">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Unit Price
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        13,000
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="product-order--info mb-3 text-center">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Quantity
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        1
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="product-order--info mb-3 text-center">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Discount
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        0.00
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2 ms-auto">
-                                <div class="product-order--info mb-3 text-end">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Total Amount
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        13,000
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="product-order--info">
-                            <label for="" class="form-label mb-1 fs-12">
-                                Comment
-                            </label>
-                            <div class="form-value">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 c-card--wrapper">
-            <div class="c-card--header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0 c-card--header-title">
-                    Wood Type (6 mm)
-                </h5>
-            </div>
-            <div class="c-card--wrapper p-3">
-                <div class="row">
-                    <div class="col-1">
-                        <div class="product-order--info mb-3">
-                            <div class="overflow-hidden">
-                                <div class="avatar-title bg-soft-info">
-                                    <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="product-order--info mb-1">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Demensions
-                                    </label>
-                                </div>
-                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                    <label for="" class="form-label mb-0">
-                                        Width:
-                                    </label>
-                                    <div class="form-value fw-bold ms-2">
-                                        50
-                                    </div>
-                                </div>
-                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                    <label for="" class="form-label mb-0">
-                                        Height:
-                                    </label>
-                                    <div class="form-value fw-bold ms-2">
-                                        60
-                                    </div>
-                                </div>
-                                <div class="product-order--info mb-1 d-flex align-items-center">
-                                    <label for="" class="form-label mb-0">
-                                        Depth:
-                                    </label>
-                                    <div class="form-value fw-bold ms-2">
-                                        40
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="product-order--info mb-3 text-center">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Unit Price
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        13,000
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="product-order--info mb-3 text-center">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Quantity
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        1
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="product-order--info mb-3 text-center">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Discount
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        0.00
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2 ms-auto">
-                                <div class="product-order--info mb-3 text-end">
-                                    <label for="" class="form-label mb-1 fs-12">
-                                        Total Amount
-                                    </label>
-                                    <div class="order-final-price fw-bold">
-                                        13,000
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="product-order--info">
-                            <label for="" class="form-label mb-1 fs-12">
-                                Comment
-                            </label>
-                            <div class="form-value">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="accordion-item mt-2 c-card--wrapper">
-    <h2 class="accordion-header" id="headingTwo">
-        <button class="c-card--header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <div class="d-flex justify-content-between w-100">
-                <span class="mb-0 c-card--header-title">
-                    Dining Set
-                </span>
-                <span class="mb-0 c-card--header-title fs-20 ms-auto me-5">
-                    ₹ 6,500
-                </span>
-            </div>
-        </button>
-    </h2>
-    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-            <div class="c-card--wrapper">
-                <div class="c-card--header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0 c-card--header-title">
-                        Sofa
-                    </h5>
-                </div>
-                <div class="c-card--wrapper p-3">
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="product-order--info mb-3">
-                                <div class="overflow-hidden">
-                                    <div class="avatar-title bg-soft-info">
-                                        <img class="w-100" src="~/images/drawer.jpg" alt="Wood type">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="product-order--info mb-1">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Demensions
-                                        </label>
-                                    </div>
-                                    <div class="product-order--info mb-1 d-flex align-items-center">
-                                        <label for="" class="form-label mb-0">
-                                            Width:
-                                        </label>
-                                        <div class="form-value fw-bold ms-2">
-                                            50
+                                    <div class="c-card--wrapper p-3">
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <div class="product-order--info mb-3">
+                                                    <div class="overflow-hidden">
+                                                        <div class="avatar-title bg-soft-info">
+                                                            <img class="w-100" src="@orderSetItem.ProductImage" alt="Wood type">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="product-order--info mb-1">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Demensions
+                                                            </label>
+                                                        </div>
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Width:
+                                                            </label>
+                                                            <div class="form-value fw-bold ms-2">
+                                                                @orderSetItem.Width
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Height:
+                                                            </label>
+                                                            <div class="form-value fw-bold ms-2">
+                                                                @orderSetItem.Height
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-order--info mb-1 d-flex align-items-center">
+                                                            <label for="" class="form-label mb-0">
+                                                                Depth:
+                                                            </label>
+                                                            <div class="form-value fw-bold ms-2">
+                                                                @orderSetItem.Depth
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="product-order--info mb-3 text-center">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Unit Price
+                                                            </label>
+                                                            <div class="order-final-price fw-bold">
+                                                                @orderSetItem.UnitPrice
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="product-order--info mb-3 text-center">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Quantity
+                                                            </label>
+                                                            <div class="order-final-price fw-bold">
+                                                                @orderSetItem.Quantity
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <div class="product-order--info mb-3 text-center">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Discount
+                                                            </label>
+                                                            <div class="order-final-price fw-bold">
+                                                                @orderSetItem.DiscountPrice
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2 ms-auto">
+                                                        <div class="product-order--info mb-3 text-end">
+                                                            <label for="" class="form-label mb-1 fs-12">
+                                                                Total Amount
+                                                            </label>
+                                                            <div class="order-final-price fw-bold">
+                                                                @orderSetItem.TotalAmount
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="product-order--info">
+                                                    <label for="" class="form-label mb-1 fs-12">
+                                                        Comment
+                                                    </label>
+                                                    <div class="form-value">
+                                                        @orderSetItem.Comment
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="product-order--info mb-1 d-flex align-items-center">
-                                        <label for="" class="form-label mb-0">
-                                            Height:
-                                        </label>
-                                        <div class="form-value fw-bold ms-2">
-                                            60
-                                        </div>
-                                    </div>
-                                    <div class="product-order--info mb-1 d-flex align-items-center">
-                                        <label for="" class="form-label mb-0">
-                                            Depth:
-                                        </label>
-                                        <div class="form-value fw-bold ms-2">
-                                            40
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="product-order--info mb-3 text-center">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Unit Price
-                                        </label>
-                                        <div class="order-final-price fw-bold">
-                                            6,500
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="product-order--info mb-3 text-center">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Quantity
-                                        </label>
-                                        <div class="order-final-price fw-bold">
-                                            1
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="product-order--info mb-3 text-center">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Discount
-                                        </label>
-                                        <div class="order-final-price fw-bold">
-                                            0.00
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2 ms-auto">
-                                    <div class="product-order--info mb-3 text-end">
-                                        <label for="" class="form-label mb-1 fs-12">
-                                            Total Amount
-                                        </label>
-                                        <div class="order-final-price fw-bold">
-                                            6,500
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="product-order--info">
-                                <label for="" class="form-label mb-1 fs-12">
-                                    Comment
-                                </label>
-                                <div class="form-value">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis aliquam aperiam quis aspernatur dolore quam earum,
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<br />
-<div class="c-card--wrapper order-details-price-section">
-    <div class="c-card--header">
-        <h4 class="c-card--header-title">Price Details</h4>
-    </div>
-    <div class="">
-        <div>
-            <table class="table c-table c-table-stripted">
-                <tbody>
-                    <tr style="border-bottom: 1px dashed #353535;">
-                        <td colspan="9">Gross Total</td>
-                        <td class="text-end">32,500</td>
-                    </tr>
-                    <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
-                        <td colspan="9">Discount</td>
-                        <td class="text-end"><span class="text-success">0.00</span></td>
-                    </tr>
-                    <tr style="border-top: 2px dashed #353535;border-bottom: 2px dashed #353535;">
-                        <td colspan="9">Total</td>
-                        <td class="text-end">32,500</td>
-                    </tr>
-                    <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
-                        <td colspan="9">GST Tax (18%):</td>
-                        <td class="text-end">0.00</td>
-                    </tr>
-                    <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
-                        <td colspan="9">Delivery Date</td>
-                        <td class="text-end"></td>
-                    </tr>
-                    <tr class="c-card--header-title">
-                        <td colspan="9">Total</td>
-                        <td class="text-end">32,500</td>
-                    </tr>
 
-                </tbody>
-            </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
         </div>
+        <div class="c-card--wrapper order-details-price-section">
+            <div class="c-card--header">
+                <h4 class="c-card--header-title">Price Details</h4>
+            </div>
+            <div class="">
+                <div>
+                    <table class="table c-table c-table-stripted">
+                        <tbody>
+                            <tr style="border-bottom: 1px dashed #353535;">
+                                <td colspan="9">Gross Total</td>
+                                <td class="text-end">@Model.GrossTotal</td>
+                            </tr>
+                            <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
+                                <td colspan="9">Discount</td>
+                                <td class="text-end"><span class="text-success">@Model.Discount</span></td>
+                            </tr>
+                            <tr style="border-top: 2px dashed #353535;border-bottom: 2px dashed #353535;">
+                                <td colspan="9">Total</td>
+                                <td class="text-end">@Model.TotalAmount</td>
+                            </tr>
+                            <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
+                                <td colspan="9">GST Tax (18%):</td>
+                                <td class="text-end">@Model.GSTTaxAmount</td>
+                            </tr>
+                            <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
+                                <td colspan="9">Delivery Date</td>
+                                <td class="text-end">@Model.DeliveryDateFormat</td>
+                            </tr>
+                            <tr class="c-card--header-title">
+                                <td colspan="9">Total</td>
+                                <td class="text-end">@Model.PayableAmount</td>
+                            </tr>
 
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
