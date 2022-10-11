@@ -56,12 +56,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                                          GSTTaxAmount = x.GSTTaxAmount,
                                          PayableAmount = (x.GrossTotal - x.Discount) + x.GSTTaxAmount,
                                          DeliveryDate = x.DeliveryDate,
+                                         CreatedBy = x.CreatedBy,
                                          CreatedByName = z.FullName,
                                          RefferedBy = x.RefferedBy,
                                          PhoneNumber = y.PhoneNumber
                                      }).AsQueryable();
-            var polishFilterData = FilterOrderData(dataTableFilterDto, orderResponseData);
-            var orderData = new PagedList<OrderResponseDto>(polishFilterData, dataTableFilterDto);
+            var orderFilterData = FilterOrderData(dataTableFilterDto, orderResponseData);
+            var orderData = new PagedList<OrderResponseDto>(orderFilterData, dataTableFilterDto);
             return new JsonRepsonse<OrderResponseDto>(dataTableFilterDto.Draw, orderData.TotalCount, orderData.TotalCount, orderData);
         }
 
