@@ -84,6 +84,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
             var customerAddresses = _mapper.Map<CustomerAddresses>(model);
+            customerAddresses.AddressType = model.AddressType != "" ? model.AddressType : "Home";
+            customerAddresses.Street1 = model.Street1 != null ? model.Street1 : String.Empty;
+            customerAddresses.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
+            customerAddresses.Area = model.Area != null ? model.Area : String.Empty;
+            customerAddresses.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
+            customerAddresses.City = model.City != null ? model.City : String.Empty;
+            customerAddresses.State = model.State != null ? model.State : String.Empty;
+            customerAddresses.ZipCode = model.ZipCode != null ? model.ZipCode : String.Empty;
             customerAddresses.IsDeleted = false;
             customerAddresses.CreatedBy = _currentUser.UserId;
             customerAddresses.CreatedDate = DateTime.Now;
@@ -153,13 +161,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             oldData.CustomerId = model.CustomerId;
             oldData.AddressType = model.AddressType;
-            oldData.Street1 = model.Street1;
-            oldData.Street2 = model.Street2;
-            oldData.Landmark = model.Landmark;
-            oldData.Area = model.Area;
-            oldData.City = model.City;
-            oldData.State = model.State;
-            oldData.ZipCode = model.ZipCode;
+            oldData.Street1 = model.Street1 != null ? model.Street1 : String.Empty;
+            oldData.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
+            oldData.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
+            oldData.Area = model.Area != null ? model.Area : String.Empty;
+            oldData.City = model.City != null ? model.City : String.Empty;
+            oldData.State = model.State != null ? model.State : String.Empty;
+            oldData.ZipCode = model.ZipCode != null ? model.ZipCode : String.Empty;
             oldData.IsDefault = model.IsDefault;
         }
 
