@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.Core.CommonHelper;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -50,10 +51,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Fabric data not found");
             }
+            var tenantData = await _unitOfWorkDA.TenantDA.GetById(fabricData.TenantId, cancellationToken);
+            fabricData.UnitPrice = CommonMethod.GetCalculatedPrice(fabricData.UnitPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
             return new FabricApiResponseDto(fabricData.FabricId, fabricData.Title, fabricData.ModelNo, fabricData.CompanyId, fabricData.UnitId, fabricData.UnitPrice, fabricData.ImagePath, fabricSubjectTypeId);
         }
 
-        public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(FabricDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var lookupCompanyId = await GetCompanyLookupId(cancellationToken);
             var lookupUnitId = await GetUnitLookupId(cancellationToken);
@@ -74,7 +77,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                           UnitPrice = x.UnitPrice,
                                           ImagePath = x.ImagePath
                                       }).AsQueryable();
-            var fabricData = new PagedList<FabricResponseDto>(fabricResponseData, dataTableFilterDto);
+            var fabricFilteredData = FilterFabricData(dataTableFilterDto, fabricResponseData);
+            var fabricData = new PagedList<FabricResponseDto>(fabricFilteredData, dataTableFilterDto);
             return new JsonRepsonse<FabricResponseDto>(dataTableFilterDto.Draw, fabricData.TotalCount, fabricData.TotalCount, fabricData);
         }
 
@@ -175,6 +179,29 @@ namespace MidCapERP.BusinessLogic.Repositories
             var subjectTypeAllData = await _unitOfWorkDA.SubjectTypesDA.GetAll(cancellationToken);
             var subjectTypeId = subjectTypeAllData.Where(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics)).Select(x => x.SubjectTypeId).FirstOrDefault();
             return subjectTypeId;
+        }
+
+        private static IQueryable<FabricResponseDto> FilterFabricData(FabricDataTableFilterDto dataTableFilterDto, IQueryable<FabricResponseDto> fabricResponseDto)
+        {
+            if (dataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(dataTableFilterDto.Title))
+                {
+                    fabricResponseDto = fabricResponseDto.Where(p => p.Title.StartsWith(dataTableFilterDto.Title));
+                }
+
+                if (!string.IsNullOrEmpty(dataTableFilterDto.Model))
+                {
+                    fabricResponseDto = fabricResponseDto.Where(p => p.ModelNo.StartsWith(dataTableFilterDto.Model));
+                }
+
+                if (!string.IsNullOrEmpty(dataTableFilterDto.Company))
+                {
+                    fabricResponseDto = fabricResponseDto.Where(p => p.CompanyName.StartsWith(dataTableFilterDto.Company));
+                }
+            }
+
+            return fabricResponseDto;
         }
 
         #endregion Private Method

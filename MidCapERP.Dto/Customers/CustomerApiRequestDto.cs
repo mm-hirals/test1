@@ -36,8 +36,6 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("GST No")]
         public string? GSTNo { get; set; }
 
-        public string? RefferedNumber { get; set; }
-
-        public string? RefferedName { get; set; }
+        public long RefferedBy { get; set; }
     }
 }

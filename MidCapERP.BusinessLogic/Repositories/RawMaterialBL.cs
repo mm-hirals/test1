@@ -32,7 +32,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<RawMaterialResponseDto>>(rawMaterialAllData.ToList());
         }
 
-        public async Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterRawMaterialData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<RawMaterialResponseDto>> GetFilterRawMaterialData(RawMaterialDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var rawMaterialAllData = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
@@ -47,7 +47,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                UnitPrice = x.UnitPrice,
                                                ImagePath = x.ImagePath
                                            }).AsQueryable();
-            var rawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialResponseData, dataTableFilterDto);
+            var rawMaterialFilteredData = FilterRawMaterialData(dataTableFilterDto, rawMaterialResponseData);
+            var rawMaterialData = new PagedList<RawMaterialResponseDto>(rawMaterialFilteredData, dataTableFilterDto);
             return new JsonRepsonse<RawMaterialResponseDto>(dataTableFilterDto.Draw, rawMaterialData.TotalCount, rawMaterialData.TotalCount, rawMaterialData);
         }
 
@@ -125,6 +126,23 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
+        }
+
+        private static IQueryable<RawMaterialResponseDto> FilterRawMaterialData(RawMaterialDataTableFilterDto rawMaterialDataTableFilterDto, IQueryable<RawMaterialResponseDto> rawMaterialResponseDto)
+        {
+            if (rawMaterialDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(rawMaterialDataTableFilterDto.Title))
+                {
+                    rawMaterialResponseDto = rawMaterialResponseDto.Where(p => p.Title.StartsWith(rawMaterialDataTableFilterDto.Title));
+                }
+
+                if (!string.IsNullOrEmpty(rawMaterialDataTableFilterDto.UnitName))
+                {
+                    rawMaterialResponseDto = rawMaterialResponseDto.Where(p => p.UnitName.StartsWith(rawMaterialDataTableFilterDto.UnitName));
+                }
+            }
+            return rawMaterialResponseDto;
         }
 
         #endregion PrivateMethods

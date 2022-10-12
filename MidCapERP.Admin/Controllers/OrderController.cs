@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Dto.DataGrid;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
-using MidCapERP.Infrastructure.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -20,12 +20,13 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
+            FillRefferedDropDown(cancellationToken);
             return View();
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<IActionResult> GetOrderData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrderData([FromForm] OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetFilterOrderData(dataTableFilterDto, cancellationToken);
             return Ok(data);
@@ -35,20 +36,52 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
         {
-            OrderResponseDto orderData = new OrderResponseDto();
-            if (Id > 0)
+            OrderResponseDto data = new OrderResponseDto();
+            data.OrderId = Id;
+            return View("OrderMain", data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrderBasicDetail(int orderId, CancellationToken cancellationToken)
+        {
+            if (orderId > 0)
             {
-                orderData = await _unitOfWorkBL.OrderBL.GetOrderDetailData(Id, cancellationToken);
+                var getOrderInfoById = await _unitOfWorkBL.OrderBL.GetOrderDetailData(orderId, cancellationToken);
+                return PartialView("_OrderBasicDetail", getOrderInfoById);
             }
-            return View(orderData);
+            else
+                throw new Exception("Order Id can not be null");
         }
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<IActionResult> CustomerDetail(long CustomerId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrderSetDetailData(long orderId, CancellationToken cancellationToken)
         {
-            var customerById = await _unitOfWorkBL.CustomersBL.GetById(CustomerId, cancellationToken);
-            return PartialView("Order_CustomerPartial", customerById);
+            if (orderId > 0)
+            {
+                var orderSetData = await _unitOfWorkBL.OrderBL.GetOrderSetDetailData(orderId, cancellationToken);
+                return PartialView("_OrderSetDetailPartial", orderSetData);
+            }
+            else
+                throw new Exception("Order Id can not be null");
         }
+
+        #region Private Method
+
+        private async void FillRefferedDropDown(CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+
+            var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect).Select(
+                                    p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
+                                    new SelectListItem
+                                    {
+                                        Value = Convert.ToString(a.CustomerId),
+                                        Text = Convert.ToString(a.FirstName + " " + a.LastName)
+                                    }).ToList();
+            ViewBag.ReferedBySelectItemList = referedByDataSelectedList;
+        }
+
+        #endregion Private Method
     }
 }

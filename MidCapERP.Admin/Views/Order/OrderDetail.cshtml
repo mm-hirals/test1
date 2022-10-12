@@ -6,7 +6,7 @@
 @Html.Hidden("hdnCustomerId", customerId)
 <div class="row">
     <div class="col-9">
-        <div class="accordion mb-5" id="accordionExample">
+        <div class="accordion mb-3" id="accordionExample">
             @if (@Model.OrderSetResponseDto != null)
             {
                 @foreach (var orderSet in @Model.OrderSetResponseDto)
@@ -141,7 +141,6 @@
                 }
             }
         </div>
-
         <div class="c-card--wrapper order-details-price-section">
             <div class="c-card--header">
                 <h4 class="c-card--header-title">Price Details</h4>
@@ -184,6 +183,52 @@
     </div>
     <div class="col-3">
         <div id="divCustomerInfo"></div>
+
+        @if (Model.OrderAddressesResponseDto != null)
+        {
+            foreach (var item in Model.OrderAddressesResponseDto)
+            {
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="c-card--wrapper c-card-sm--wrapper price-card--wrapper">
+                            <div class="c-card--header">
+                                <h4 class="c-card--header-title">@item.AddressType Address Details</h4>
+                            </div>
+                            <div class="c-card--body">
+                                <ul class="list-unstyled mb-0 vstack gap-2">
+                                    <li>
+                                        <div class="d-flex align-items-center">
+                                            <label class="form-label customer-details-label mb-0">Name: </label>
+                                            <div class="flex-grow-1">
+                                                <h6 class="fs-12">
+                                                    @item.FirstName @item.LastName
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex align-items-center">
+                                            <label class="form-label customer-details-label mb-0">Address: </label>
+                                            <div class="flex-grow-1">
+                                                <small class="fs-12">
+                                                    @item.Street1, @item.Street2, <br>
+                                                    @item.Area, <br>
+                                                    @item.Landmark, <br>
+                                                    @item.City, @item.ZipCode - @item.State
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li><label class="form-label customer-details-label mb-0">GST:</label> <i class="ri-phone-line align-middle text-muted fs-12"></i>@item.GSTNo</li>
+                                    <li><label class="form-label customer-details-label mb-0">Mobile:</label> <i class="ri-phone-line align-middle text-muted fs-12"></i>@item.PhoneNumber</li>
+                                    <li><label class="form-label customer-details-label mb-0">Email:</label> <i class="ri-mail-line align-middle text-muted fs-12"></i>@item.EmailId</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
     </div>
 </div>
 
@@ -192,6 +237,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-        <script asp-src-include="~/js/Order.js" ></script>
+        <script asp-src-include="~/js/Order.js"></script>
     }
-}
+    }

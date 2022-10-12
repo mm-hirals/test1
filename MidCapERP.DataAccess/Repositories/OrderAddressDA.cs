@@ -16,6 +16,11 @@ namespace MidCapERP.DataAccess.Repositories
             _currentUser = currentUser;
         }
 
+        public async Task<IQueryable<OrderAddress>> GetOrderAddressesByOrderId(long OrderId, CancellationToken cancellationToken)
+        {
+            return await _orderAddressDA.GetAsync(cancellationToken, x => x.OrderId == OrderId);
+        }
+
         public async Task<OrderAddress> CreateOrderAddress(OrderAddress model, CancellationToken cancellationToken)
         {
             return await _orderAddressDA.InsertAsync(model, cancellationToken);

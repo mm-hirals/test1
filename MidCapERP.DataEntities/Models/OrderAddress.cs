@@ -23,6 +23,7 @@ namespace MidCapERP.DataEntities.Models
         public string State { get; set; }
         public string ZipCode { get; set; }
         public int CreatedBy { get; set; }
+        public string? GSTNo { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }

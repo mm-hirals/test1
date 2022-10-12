@@ -9,10 +9,15 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50, 
         "ajax": {
             "url": "/RawMaterial/GetRawMaterialData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.title = $("#title").val().trim(),
+                    d.unitName = $("#unitName").val().trim()
+            }
         },
         "columns": [
             { "data": "title", "name": "title", "autoWidth": true },
@@ -32,6 +37,10 @@ $(function () {
 $("#lnkRawMaterialFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#title,#unitName").on("input", function () {
+    tblRawMaterial.ajax.reload(null, false);
 });
 
 RawMaterialModel.onComplete = function () {

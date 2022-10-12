@@ -50,21 +50,25 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, int subjectTypeId, CancellationToken cancellationToken)
         {
-            if (subjectTypeId == Convert.ToInt16(SubjectTypesEnum.Products))
+            int productSubjectTypeId = await _unitOfWorkBL.ProductBL.GetProductSubjectTypeId(cancellationToken);
+            int polishSubjectTypeId = await _unitOfWorkBL.ProductBL.GetPolishSubjectTypeId(cancellationToken);
+            int fabricSubjectTypeId = await _unitOfWorkBL.ProductBL.GetFabricSubjectTypeId(cancellationToken);
+
+            if (subjectTypeId == productSubjectTypeId)
             {
                 var productData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
                 if (productData == null)
                     return new ApiResponse(message: "No Data Found", result: productData, statusCode: 404);
                 return new ApiResponse(message: "Data Found", result: productData, statusCode: 200);
             }
-            else if (subjectTypeId == Convert.ToInt16(SubjectTypesEnum.Polish))
+            else if (subjectTypeId == polishSubjectTypeId)
             {
                 var polishData = await _unitOfWorkBL.PolishBL.GetPolishForDetailsByModuleNo(modelNo, cancellationToken);
                 if (polishData == null)
                     return new ApiResponse(message: "No Data Found", result: polishData, statusCode: 200);
                 return new ApiResponse(message: "Data Found", result: polishData, statusCode: 200);
             }
-            else if (subjectTypeId == Convert.ToInt16(SubjectTypesEnum.Fabrics))
+            else if (subjectTypeId == fabricSubjectTypeId)
             {
                 var frabricData = await _unitOfWorkBL.FabricBL.GetFabricForDetailsByModuleNo(modelNo, cancellationToken);
                 if (frabricData == null)

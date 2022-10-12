@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using MidCapERP.Dto.Constants;
 
 namespace MidCapERP.Dto.Unit
@@ -9,6 +10,7 @@ namespace MidCapERP.Dto.Unit
         public int LookupId { get; set; } = (int)MasterPagesEnum.Unit;
         
         [DisplayName("Unit Name")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 50 characters")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }
