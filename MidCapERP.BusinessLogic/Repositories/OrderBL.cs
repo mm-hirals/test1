@@ -5,6 +5,7 @@ using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Constants;
+using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
@@ -40,7 +41,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var orderResponseData = (from x in orderAllData
-                                     join y in customerData on x.CustomerID equals y.CustomerId 
+                                     join y in customerData on x.CustomerID equals y.CustomerId
                                      join z in userData on x.CreatedBy equals z.UserId
                                      select new OrderResponseDto()
                                      {
@@ -55,12 +56,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                                          GSTTaxAmount = x.GSTTaxAmount,
                                          PayableAmount = (x.GrossTotal - x.Discount) + x.GSTTaxAmount,
                                          DeliveryDate = x.DeliveryDate,
+                                         CreatedBy = x.CreatedBy,
                                          CreatedByName = z.FullName,
                                          RefferedBy = x.RefferedBy,
                                          PhoneNumber = y.PhoneNumber
                                      }).AsQueryable();
-            var polishFilterData = FilterOrderData(dataTableFilterDto, orderResponseData);
-            var orderData = new PagedList<OrderResponseDto>(polishFilterData, dataTableFilterDto);
+            var orderFilterData = FilterOrderData(dataTableFilterDto, orderResponseData);
+            var orderData = new PagedList<OrderResponseDto>(orderFilterData, dataTableFilterDto);
             return new JsonRepsonse<OrderResponseDto>(dataTableFilterDto.Draw, orderData.TotalCount, orderData.TotalCount, orderData);
         }
 
@@ -70,13 +72,47 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
                 // Get Order data by OrderId
-                var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
-                orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
-                orderResponseDto.PayableAmount = (orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount;
+                orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
 
                 // Get Order Addresses
                 var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
                 orderResponseDto.OrderAddressesResponseDto = _mapper.Map<List<OrderAddressesResponseDto>>(orderAddressesData.ToList());
+
+                // Get customer data
+                var customerById = await _unitOfWorkDA.CustomersDA.GetById(orderResponseDto.CustomerID, cancellationToken);
+                if (customerById != null)
+                {
+                    CustomersResponseDto customerModel = new CustomersResponseDto();
+                    if (customerById.RefferedBy > 0)
+                    {
+                        var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                        var referredById = customerAllData.Where(x => x.CustomerId == customerById.RefferedBy).FirstOrDefault();
+                        if (referredById != null)
+                        {
+                            customerModel.RefferedName = referredById.FirstName + " " + referredById.LastName;
+                        }
+                    }
+                    customerModel.FirstName = customerById.FirstName;
+                    customerModel.LastName = customerById.LastName;
+                    customerModel.PhoneNumber = customerById.PhoneNumber;
+                    customerModel.EmailId = customerById.EmailId;
+                    orderResponseDto.customersResponseDto = customerModel;
+                }
+                return orderResponseDto;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        public async Task<OrderResponseDto> GetOrderSetDetailData(long Id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OrderResponseDto orderResponseDto = new OrderResponseDto();
+                // Get Order data by OrderId
+                orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
 
                 // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
@@ -130,6 +166,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     item.OrderSetItemResponseDto = orderSetItemsData;
                     item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
                 }
+
                 return orderResponseDto;
             }
             catch (Exception e)
@@ -650,7 +687,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 if (orderDataTableFilterDto.orderToDate != DateTime.MinValue)
                 {
-                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate < orderDataTableFilterDto.orderToDate );
+                    orderResponseDto = orderResponseDto.Where(p => p.CreatedDate < orderDataTableFilterDto.orderToDate);
                     // p.UpdatedDate < orderDataTableFilterDto.orderToDate
                 }
                 if (orderDataTableFilterDto.DeliveryFromDate != DateTime.MinValue)
@@ -662,6 +699,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderResponseDto = orderResponseDto.Where(p => p.DeliveryDate < orderDataTableFilterDto.DeliveryToDate);
                 }
             }
+            return orderResponseDto;
+        }
+
+        private async Task<OrderResponseDto> GetOrderById(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+            orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
+            orderResponseDto.PayableAmount = (orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount;
             return orderResponseDto;
         }
 

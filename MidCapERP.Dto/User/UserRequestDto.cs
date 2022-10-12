@@ -15,7 +15,7 @@ namespace MidCapERP.Dto.User
 
         [Required]
         [DisplayName("Last Name")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "The Last Name is Not Valid Please Enter Valid Last Name.")] 
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "The Last Name is Not Valid Please Enter Valid Last Name.")]
         [RegularExpression(@"^[a-zA-Z]+[a-zA-Z\s]*$", ErrorMessage = "Not Valid First Name Please Enter Proper Name.")]
         public string LastName { get; set; } = string.Empty;
 

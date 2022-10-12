@@ -15,13 +15,13 @@ $(function () {
             "datatype": "json",
             "data": function (d) {
                 d.refferedBy = $("#refferedBy").val().trim(),
-                d.customerName = $("#customerName").val().trim(),
-                d.phoneNumber = $("#phoneNumber").val().trim(),
-                d.status = $("#status").val().trim(),
-                d.orderFromDate = $("#orderFromDate").val().trim(),
-                d.orderToDate = $("#orderToDate").val().trim(),
-                d.deliveryFromDate = $("#deliveryFromDate").val().trim(),
-                d.deliveryToDate = $("#deliveryToDate").val().trim()
+                    d.customerName = $("#customerName").val().trim(),
+                    d.phoneNumber = $("#phoneNumber").val().trim(),
+                    d.status = $("#status").val().trim(),
+                    d.orderFromDate = $("#orderFromDate").val().trim(),
+                    d.orderToDate = $("#orderToDate").val().trim(),
+                    d.deliveryFromDate = $("#deliveryFromDate").val().trim(),
+                    d.deliveryToDate = $("#deliveryToDate").val().trim()
             }
         },
         "columns": [
@@ -92,8 +92,4 @@ $("#orderToDate").on("input", function () {
 
 $("#deliveryFromDate,#deliveryToDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
-});
-
-$(document).ready(function () {
-    $("#divCustomerInfo").load('/Order/CustomerDetail' + "?CustomerId=" + $("#hdnCustomerId").val());
 });
