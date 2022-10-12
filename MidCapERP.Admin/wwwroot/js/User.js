@@ -9,14 +9,15 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/User/GetUserData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                    d.name = $("#name").val().trim(),
-                    d.email = $("#email").val().trim(),
-                    d.phoneNumber = $("#phoneNumber").val().trim()
+                d.name = $("#name").val().trim();
+                d.email = $("#email").val().trim();
+                d.phoneNumber = $("#phoneNumber").val().trim();
             }
         },
         "columns": [

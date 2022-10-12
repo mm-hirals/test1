@@ -9,15 +9,16 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/Product/GetProductData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                    d.categoryName = $("#categoryName").val().trim(),
-                    d.productTitle = $("#productTitle").val().trim(),
-                    d.modelNo = $("#modelNo").val().trim(),
-                    d.publishStatus = $("#publishStatus").val().trim()
+                d.categoryName = $("#categoryName").val().trim();
+                d.productTitle = $("#productTitle").val().trim();
+                d.modelNo = $("#modelNo").val().trim();
+                d.publishStatus = $("#publishStatus").val().trim();
             }
         },
         "columns": [

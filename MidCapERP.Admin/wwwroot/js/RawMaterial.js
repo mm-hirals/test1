@@ -9,6 +9,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50, 
         "ajax": {
             "url": "/RawMaterial/GetRawMaterialData",
             "type": "POST",
