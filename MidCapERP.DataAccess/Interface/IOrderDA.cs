@@ -14,6 +14,10 @@ namespace MidCapERP.DataAccess.Interface
 
         public Task<Order> CreateOrder(Order model, CancellationToken cancellationToken);
 
-        public Task<Order> UpdateOrder(Int64 Id, Order model, CancellationToken cancellationToken);
+        public Task<Order> UpdateOrder(Order model, CancellationToken cancellationToken);
+
+        public Task<Order> DeleteOrder(Order model, CancellationToken cancellationToken);
+
+        public Task<string?> CreateOrderNo(string type, CancellationToken cancellationToken);
     }
 }

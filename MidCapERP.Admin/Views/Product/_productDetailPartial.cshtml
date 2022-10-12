@@ -19,13 +19,14 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="FabricNeeded" class="form-label"></label>
-                                <input asp-for="FabricNeeded" type="number" class="form-control fabric" placeholder="Fabric in meter">
+                                <input asp-for="FabricNeeded" type="number" class="form-control fabric" placeholder="Fabric in meter" min="0" max="999">
+                                <span asp-validation-for="FabricNeeded" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="TotalDaysToPrepare" class="form-label"></label>
-                                <input asp-for="TotalDaysToPrepare" type="number" class="form-control" placeholder="Total days to prepare">
+                                <input asp-for="TotalDaysToPrepare" type="number" class="form-control" placeholder="Total days to prepare" min="1" max="999">
                                 <span asp-validation-for="TotalDaysToPrepare" class="text-danger"></span>
                             </div>
                         </div>
@@ -43,6 +44,7 @@
                                 <div class="form-group">
                                     <label asp-for="Features" class="form-label"></label>
                                     <textarea asp-for="Features" class="form-control" placeholder="Features"></textarea>
+                                    <span asp-validation-for="Features" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -53,6 +55,7 @@
                                 <div class="form-group">
                                     <label asp-for="Comments" class="form-label"></label>
                                     <textarea asp-for="Comments" class="form-control" placeholder="Comments"></textarea>
+                                    <span asp-validation-for="Comments" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -84,3 +87,7 @@
         </div>
     </div>
 </form>
+
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}

@@ -72,9 +72,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.FacebookURL = model.FacebookURL;
             oldData.InstagramURL = model.InstagramURL;
             oldData.GSTNo = model.GSTNo;
-            oldData.RetailerPercentage = model.RetailerPercentage;
-            oldData.WholeSellerPercentage = model.WholeSellerPercentage;
+            oldData.ProductRSPPercentage = model.ProductRSPPercentage;
+            oldData.ProductWSPPercentage = model.ProductWSPPercentage;
             oldData.ArchitectDiscount = model.ArchitectDiscount;
+            oldData.FabricRSPPercentage = model.FabricRSPPercentage;
+            oldData.FabricWSPPercentage = model.FabricWSPPercentage;
+            oldData.AmountRoundMultiple = model.AmountRoundMultiple;
         }
 
         private async Task<Tenant> TenantGetById(int Id, CancellationToken cancellationToken)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.Order;
 using MidCapERP.Dto.OrderAddressesApi;
 
 namespace MidCapERP.BusinessLogic.MapperDto
@@ -10,6 +11,7 @@ namespace MidCapERP.BusinessLogic.MapperDto
         {
             CreateMap<OrderAddress, OrderAddressesApiRequestDto>().ReverseMap();
             CreateMap<OrderAddress, OrderAddressesApiResponseDto>().ReverseMap();
+            CreateMap<OrderAddress, OrderAddressesResponseDto>().ReverseMap();
         }
     }
 }

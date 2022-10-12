@@ -56,5 +56,31 @@ namespace MidCapERP.Dto.Product
         public string UpdatedDateFormat => UpdatedDate != null && UpdatedDate.HasValue ? UpdatedDate.Value.ToLongDateString() : CreatedDate.ToLongDateString();
 
         public DateTime? UpdatedUTCDate { get; set; }
+
+        /// <summary>
+        /// Remarks : Do not change the method Name or Properties. Check the PagedList.cs to get referance of the method
+        /// </summary>
+        /// <param name="orderbyColumn">Order by column name</param>
+        /// <returns>actual database column name</returns>
+        public string MapOrderBy(string orderbyColumn)
+        {
+            switch (orderbyColumn)
+            {
+                case "updatedDateFormat":
+                    return "UpdatedDate";
+
+                case "createdDateFormat":
+                    return "CreatedDate";
+
+                case "createdByName":
+                    return "CreatedBy";
+
+                case "updatedByName":
+                    return "UpdatedBy";
+
+                default:
+                    return orderbyColumn;
+            };
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
-        public async Task<IActionResult> GetUserData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUserData([FromForm] UserDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.UserBL.GetFilterUserData(dataTableFilterDto, cancellationToken);
             return Ok(data);

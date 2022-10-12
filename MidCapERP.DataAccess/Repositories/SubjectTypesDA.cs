@@ -2,6 +2,7 @@
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.Constants;
 
 namespace MidCapERP.DataAccess.Repositories
 {
@@ -44,6 +45,34 @@ namespace MidCapERP.DataAccess.Repositories
                 return await _subjectTypes.UpdateAsync(entity, cancellationToken);
             }
             return entity;
+        }
+
+        public async Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.RawMaterials));
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
+        }
+
+        public async Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Polish));
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
+        }
+
+        public async Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Products));
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
+        }
+
+        public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics));
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
         }
     }
 }

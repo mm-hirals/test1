@@ -1,7 +1,10 @@
-﻿using MidCapERP.DataEntities.Models;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.OrderCalculation;
 using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.SearchResponse;
@@ -10,9 +13,11 @@ namespace MidCapERP.BusinessLogic.Interface
 {
     public interface IProductBL
     {
-        public Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
-
         public Task<ProductRequestDto> GetById(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<ProductDetailResponseDto> GetProductDetailById(Int64 Id, CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<List<ProductImageRequestDto>> GetImageByProductId(long Id, CancellationToken cancellationToken);
 
@@ -50,8 +55,14 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken);
 
+        public Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken);
+
+        public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
+
         public Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterProductActivityData(ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+        
+        public Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
     }
 }
