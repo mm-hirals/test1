@@ -447,7 +447,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
             }
-        }
+        } 
 
         public async Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
