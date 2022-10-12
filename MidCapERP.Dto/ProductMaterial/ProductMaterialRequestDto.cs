@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MidCapERP.Dto.ProductMaterial
+﻿namespace MidCapERP.Dto.ProductMaterial
 {
     public class ProductMaterialRequestDto
     {
