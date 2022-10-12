@@ -40,9 +40,26 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
-            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerMobileNumberOrEmailId = customerData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            return _mapper.Map<CustomersResponseDto>(customerMobileNumberOrEmailId);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
+            if (customerMobileNumberOrEmailId == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerMobileNumberOrEmailId.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
         }
 
         public async Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
@@ -271,13 +288,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 CustomerId = data.CustomerId,
                 AddressType = "Home",
-                Street1 = model.CustomerAddressesRequestDto?.Street1,
-                Street2 = model.CustomerAddressesRequestDto?.Street2,
-                Landmark = model.CustomerAddressesRequestDto?.Landmark,
-                Area = model.CustomerAddressesRequestDto?.Area,
-                City = model.CustomerAddressesRequestDto?.City,
-                State = model.CustomerAddressesRequestDto?.State,
-                ZipCode = model.CustomerAddressesRequestDto?.ZipCode,
+                Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
+                Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
+                Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : String.Empty,
+                City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
+                State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,
+                ZipCode = model.CustomerAddressesRequestDto.ZipCode != null ? model.CustomerAddressesRequestDto.ZipCode : String.Empty,
                 IsDefault = true,
                 CreatedDate = DateTime.Now,
                 CreatedUTCDate = DateTime.UtcNow,
