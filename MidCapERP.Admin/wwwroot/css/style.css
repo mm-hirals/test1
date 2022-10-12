@@ -12800,6 +12800,11 @@ a {
   background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.5, rgba(75, 73, 172, 0.2)), color-stop(0.5, transparent), to(transparent));
 }
 
+.dataTables_wrapper .form-select {
+  width: 60px !important;
+  padding: 4px;
+}
+
 body {
   font-family: "Nunito", sans-serif;
   font-size: 16px;
@@ -13143,7 +13148,7 @@ body {
 }
 
 .c-main-content--wrapper {
-  padding: 24px 24px 0;
+  padding: 24px 24px 24px;
   min-height: calc(100vh - 4rem - 54px);
 }
 
@@ -13748,6 +13753,10 @@ header .btn-check:focus + .btn, header .btn:focus {
   color: #fafafa;
 }
 
+.c-card--wrapper .dashboard-canvas {
+  width: 100% !important;
+}
+
 .card-product--wrapper {
   border-radius: 10px;
   background: #fafafa;
@@ -13968,6 +13977,8 @@ header .btn-check:focus + .btn, header .btn:focus {
 
 .filter-form--wrapper {
   display: none;
+  margin-bottom: 16px;
+  padding: 16px;
 }
 
 .login-body-page--wrapper {
