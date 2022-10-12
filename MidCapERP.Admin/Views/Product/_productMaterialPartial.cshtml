@@ -57,7 +57,7 @@
                                     <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" data-name="ProductMaterialRequestDto[{ID}].Qty" min="0" maxlength="999" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
+                                    <input type="number" data-name="ProductMaterialRequestDto[{ID}].Qty" min="1" max="999" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
                                 </td>
                                 <td>
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly>
@@ -92,11 +92,11 @@
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
                                         </td>
                                         <td>
-                                            <input type="number" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" placeholder="Qty" readonly/>
+                                            <input type="number" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" placeholder="Qty" readonly />
                                         </td>
                                         <td>
                                             @{
-                                               var costPrice = item.CostPrice * item.Qty;
+                                                var costPrice = item.CostPrice * item.Qty;
                                             }
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" readonly="readonly" class="form-control isDeleted" value="false">
@@ -158,7 +158,7 @@
                                     <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" placeholder="Qty">
+                                    <input type="number" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" min="1" max="999" class="form-control quantity" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" placeholder="Qty">
                                 </td>
                                 <td>
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly>
@@ -193,7 +193,7 @@
                                             <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly />
                                         </td>
                                         <td>
-                                            <input type="number" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity"  onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" placeholder="Qty" />
+                                            <input type="number" asp-for="ProductMaterialRequestDto[i].Qty" readonly="readonly" class="form-control quantity" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57" placeholder="Qty" />
                                         </td>
                                         <td>
                                             @{
@@ -287,7 +287,7 @@
 </form>
 
 <script>
-    $(function () {
+    $(function() {
         window.counter = @i;
     });
 </script>

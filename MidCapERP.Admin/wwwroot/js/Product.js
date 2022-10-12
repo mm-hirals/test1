@@ -20,19 +20,24 @@ $(document).on("#lnkProductFilter", "click", (function () {
 }));
 
 $(document).on("click", ".add-icon", (function () {
-    if ($(this).parent().parent().find("select").val() != "") {
-        var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
-        htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
-        htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
-        htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
+    if ($(this).parent().parent().find("input.quantity").val() > 0 && $(this).parent().parent().find("input.quantity").val() < 1000) {
+        if ($(this).parent().parent().find("select").val() != "") {
+            var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
+            htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
+            htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
+            htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
 
-        $(this).parent().parent().parent().append(htmlStringToAppend)
-        counter++;
-        emptyFields($(this).parent().parent())
-        calculateCostPrice();
-    } else {
-        alert("Please select value");
-        //$("span.materialErrorMsg").text("Please select value");
+            $(this).parent().parent().parent().append(htmlStringToAppend)
+            counter++;
+            emptyFields($(this).parent().parent())
+            calculateCostPrice();
+        } else {
+            alert("Please select value");
+            //$("span.materialErrorMsg").text("Please select value");
+        }
+    }
+    else {
+        alert("Please enter value between 0-999");
     }
 }));
 
@@ -76,6 +81,9 @@ function RoundTo(number) {
 
 function emptyFields(trRow) {
     trRow.find("input[type=text]").each(function () {
+        $(this).val("")
+    });
+    trRow.find("input[type=number]").each(function () {
         $(this).val("")
     });
     trRow.find("select").each(function () {
