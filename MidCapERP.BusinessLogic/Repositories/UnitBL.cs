@@ -30,7 +30,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<UnitResponseDto>>(lookupValuesAllData.Where(x => x.LookupId == lookupId).ToList());
         }
 
-        public async Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<UnitResponseDto>> GetFilterUnitData(UnitDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             int lookupId = await GetLookupId(cancellationToken);
             var unitAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
@@ -53,7 +53,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                         UpdatedDate = x.UpdatedDate,
                                         UpdatedUTCDate = x.UpdatedUTCDate
                                     }).AsQueryable();
-            var unitData = new PagedList<UnitResponseDto>(unitResponseData, dataTableFilterDto);
+            var unitFilteredData = FilterUnitData(dataTableFilterDto, unitResponseData);
+            var unitData = new PagedList<UnitResponseDto>(unitFilteredData, dataTableFilterDto);
             return new JsonRepsonse<UnitResponseDto>(dataTableFilterDto.Draw, unitData.TotalCount, unitData.TotalCount, unitData);
         }
 
@@ -128,6 +129,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Unit)).Select(x => x.LookupId).FirstOrDefault();
             return lookupId;
+        }
+
+        private static IQueryable<UnitResponseDto> FilterUnitData(UnitDataTableFilterDto unitDataTableFilterDto, IQueryable<UnitResponseDto> unitResponseDto)
+        {
+            if (unitDataTableFilterDto != null)
+            {
+                if (!string.IsNullOrEmpty(unitDataTableFilterDto.UnitName))
+                {
+                    unitResponseDto = unitResponseDto.Where(p => p.LookupValueName.StartsWith(unitDataTableFilterDto.UnitName));
+                }
+            }
+            return unitResponseDto;
         }
 
         #endregion PrivateMethods

@@ -10,7 +10,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IList<ApplicationRole>> GetAllRoles(CancellationToken cancellationToken);
 
-        public Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
+        public Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(UserDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<UserRequestDto> GetById(int Id, CancellationToken cancellationToken);
 

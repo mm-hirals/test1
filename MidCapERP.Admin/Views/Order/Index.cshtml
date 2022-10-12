@@ -1,5 +1,12 @@
-﻿@{
+﻿@using MidCapERP.Core.Constants
+@model MidCapERP.Dto.Order.OrderDataTableFilterDto
+@{
     ViewData["Title"] = "Orders";
+    var pending = (int)OrderStatusEnum.Pending;
+    var InProgress = (int)@OrderStatusEnum.InProgress;
+    var Completed = (int)@OrderStatusEnum.Completed;
+    var Cancelled = (int)@OrderStatusEnum.Cancelled;
+    var Archieved = (int)@OrderStatusEnum.Archieved;
 }
 
 <div class="c-card--wrapper">
@@ -12,10 +19,65 @@
     <div class="c-card--body">
         <div class="card filter-form--wrapper" id="FilterCard">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label class="form-label">Order #</label>
-                        <input type="text" class="form-control" placeholder="Order Number" />
+                 <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Please Select Reffered By</label>
+                                   <select id="refferedBy" data-val="true" class="form-control"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
+                                             <option value="">Select Reffered</option>
+                                    </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Customer Name</label>
+                            <input id="customerName" type="text" class="form-control" placeholder="Customer Name" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input id="phoneNumber" type="text" class="form-control" placeholder="Phone Number" />
+                        </div>
+                    </div>
+                    <!--Status-->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                           <label class="form-label">Staus</label>
+                           <select id="status" class="form-control">
+                                <option>Please Select Status</option>
+                                <option value="@pending">Pending</option>
+                                <option value="@InProgress">In Progress</option>
+                                <option value="@Completed">Completed</option>
+                                <option value="@Cancelled">Cancelled</option>
+                                <option value="@Archieved">Archieved</option>
+                           </select>
+                       </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Order From</label>
+                            <input id="orderFromDate" type="date" class="form-control" placeholder="From Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Order To Date</label>
+                            <input id="orderToDate" type="date" class="form-control" placeholder="To Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Delivery From Date</label>
+                            <input id="deliveryFromDate" type="date" class="form-control" placeholder="From Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Delivery To Date</label>
+                            <input id="deliveryToDate" type="date" class="form-control" placeholder="To Date" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,6 +91,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Order.js" ></script>
+    <script asp-src-include="~/js/Order.js" ></script>
     }
 }

@@ -9,10 +9,14 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50, 
         "ajax": {
             "url": "/Unit/GetUnitData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.unitName = $("#unitName").val().trim()
+            }
         },
         "columns": [
             { "data": "lookupValueName", "name": "LookupValueName", "autoWidth": true },
@@ -30,6 +34,10 @@ $(function () {
 $("#lnkUnitFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#unitName").on("input", function () {
+    tblUnit.ajax.reload(null, false);
 });
 
 UnitModel.onComplete = function () {

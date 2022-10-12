@@ -5,7 +5,7 @@
 		<div class="c-card--body  p-0">
 			<div class="row">
 				<div class="col-md-12">
-					<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+					<div class="c-card--wrapper c-card-sm--wrapper mb-0">
 						<div class="c-card--header">
 							<h4 class="c-card--header-title">Organization Details</h4>
 						</div>
@@ -65,7 +65,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+					<div class="c-card--wrapper c-card-sm--wrapper mb-0">
 						<div class="c-card--header">
 							<h4 class="c-card--header-title">Address Details</h4>
 						</div>
@@ -118,7 +118,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+					<div class="c-card--wrapper c-card-sm--wrapper mb-0">
 						<div class="c-card--header">
 							<h4 class="c-card--header-title">Other Configurations</h4>
 						</div>
@@ -128,20 +128,38 @@
 									<div class="row">
 										<div class="col-3">
 											<div class="form-group">
-												<label asp-for="RetailerPercentage" class="form-label"></label>
-												<input asp-for="RetailerPercentage" type="number" class="form-control" placeholder="Retailer SP %">
+												<label asp-for="ProductRSPPercentage" class="form-label"></label>
+												<input asp-for="ProductRSPPercentage" type="number" class="form-control" placeholder="Product Retailer SP %">
 											</div>
 										</div>
 										<div class="col-3">
 											<div class="form-group">
-												<label asp-for="WholeSellerPercentage" class="form-label"></label>
-												<input asp-for="WholeSellerPercentage" type="number" class="form-control" placeholder="WholeSaler SP %">
+												<label asp-for="ProductWSPPercentage" class="form-label"></label>
+												<input asp-for="ProductWSPPercentage" type="number" class="form-control" placeholder="Product WholeSaler SP %">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="FabricRSPPercentage" class="form-label"></label>
+												<input asp-for="FabricRSPPercentage" type="number" class="form-control" placeholder="Fabric Retailer SP %">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="FabricWSPPercentage" class="form-label"></label>
+												<input asp-for="FabricWSPPercentage" type="number" class="form-control" placeholder="Fabric WholeSaler SP %">
 											</div>
 										</div>
 										<div class="col-3">
 											<div class="form-group">
 												<label asp-for="ArchitectDiscount" class="form-label"></label>
 												<input asp-for="ArchitectDiscount" type="number" class="form-control" placeholder="Architect Discount %">
+											</div>
+										</div>
+										<div class="col-3">
+											<div class="form-group">
+												<label asp-for="AmountRoundMultiple" class="form-label"></label>
+												<input asp-for="AmountRoundMultiple" type="number" class="form-control" placeholder="Amount Rounding off Multiple">
 											</div>
 										</div>
 									</div>

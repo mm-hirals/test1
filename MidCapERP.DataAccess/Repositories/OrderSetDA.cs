@@ -31,9 +31,14 @@ namespace MidCapERP.DataAccess.Repositories
             return await _orderset.InsertAsync(model, cancellationToken);
         }
 
-        public async Task<OrderSet> UpdateOrderSet(Int64 Id, OrderSet model, CancellationToken cancellationToken)
+        public async Task<OrderSet> UpdateOrderSet(OrderSet model, CancellationToken cancellationToken)
         {
             return await _orderset.UpdateAsync(model, cancellationToken);
+        }
+
+        public async Task<OrderSet> DeleteOrderSet(OrderSet model, CancellationToken cancellationToken)
+        {
+            return await _orderset.DeleteAsync(model, cancellationToken);
         }
     }
 }

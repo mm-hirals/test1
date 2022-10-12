@@ -9,10 +9,16 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/User/GetUserData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.name = $("#name").val().trim();
+                d.email = $("#email").val().trim();
+                d.phoneNumber = $("#phoneNumber").val().trim();
+            }
         },
         "columns": [
             { "data": "firstName", "name": "FirstName", "autoWidth": true },
@@ -34,6 +40,18 @@ $(function () {
 $("#lnkUserFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#name").keyup("input", function () {
+    tblUser.ajax.reload(null, false);
+});
+
+$("#email").keyup("input", function () {
+    tblUser.ajax.reload(null, false);
+});
+
+$("#phoneNumber").keyup("input", function () {
+    tblUser.ajax.reload(null, false);
 });
 
 UserModel.onComplete = function () {

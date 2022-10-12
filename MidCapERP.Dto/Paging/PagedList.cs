@@ -1,5 +1,6 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace MidCapERP.Dto.Paging
 {
@@ -30,10 +31,22 @@ namespace MidCapERP.Dto.Paging
             {
                 string sortBy = dataTableFilterDto.Columns[dataTableFilterDto.Order[0].column].data;
                 string sortDirection = dataTableFilterDto.Order[0].dir.ToLower();
-                source = source.OrderBy(sortBy + " " + sortDirection);
+                source = source.OrderBy(ApplyOrder<T>(sortBy) + " " + sortDirection);
             }
 
             AddRange(source.Skip(dataTableFilterDto.Start).Take(dataTableFilterDto.PageSize).ToList());
+        }
+
+        private string ApplyOrder<T>(string property)
+        {
+            Type type = typeof(T);
+            var method = type.GetMethod("MapOrderBy", BindingFlags.Instance | BindingFlags.Public);
+            if (method != null)
+            {
+                object classInstance = Activator.CreateInstance(type, null);
+                return Convert.ToString(method.Invoke(classInstance, new object[] { property }));
+            }
+            return property;
         }
 
         /// <summary>

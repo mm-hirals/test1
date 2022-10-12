@@ -25,8 +25,11 @@ namespace MidCapERP.DataEntities.Models
 		public string? FacebookURL { get; set; }
 		public string? InstagramURL { get; set; }
 		public string? GSTNo { get; set; }
-		public decimal? RetailerPercentage { get; set; }
-		public decimal? WholeSellerPercentage { get; set; }
+		public decimal? ProductRSPPercentage { get; set; }
+		public decimal? ProductWSPPercentage { get; set; }
 		public decimal? ArchitectDiscount { get; set; }
+		public decimal? FabricRSPPercentage { get; set; }
+		public decimal? FabricWSPPercentage { get; set; }
+		public int? AmountRoundMultiple { get; set; }
 	}
 }

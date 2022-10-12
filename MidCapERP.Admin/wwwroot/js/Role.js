@@ -8,11 +8,15 @@ $(function () {
         "searching": false,
         "processing": true,
         "serverSide": true,
+        "iDisplayLength": 50, 
         "filter": true,
         "ajax": {
             "url": "/Role/GetRoleData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.roleName = $("#roleName").val().trim()
+            }
         },
         "columns": [
             { "data": "name", "name": "name", "autoWidth": true },
@@ -29,6 +33,10 @@ $(function () {
 $("#lnkRoleFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#roleName").keyup("input", function () {
+    tblRole.ajax.reload(null, false);
 });
 
 $("#lnkToredirect").click(function () {

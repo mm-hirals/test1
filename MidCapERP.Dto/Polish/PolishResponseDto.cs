@@ -5,6 +5,7 @@ namespace MidCapERP.Dto.Polish
     public class PolishResponseDto
     {
         public int PolishId { get; set; }
+
         public string Title { get; set; }
 
         [DisplayName("Model No")]

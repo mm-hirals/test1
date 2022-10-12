@@ -3,8 +3,9 @@ using AutoWrapper.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
-using MidCapERP.Infrastructure.Constants;
+using MidCapERP.Dto.OrderCalculation;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -21,9 +22,9 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Get(long id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.GetOrderAll(id, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.GetOrderDetailByOrderIdAPI(id, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -53,6 +54,30 @@ namespace MidCapERP.WebAPI.Controllers
             if (data == null)
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        [HttpPost("DeleteOrder")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Delete)]
+        public async Task<ApiResponse> DeleteOrder([FromBody] OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.OrderBL.DeleteOrderAPI(orderDeleteApiRequestDto, cancellationToken);
+            if (orderDeleteApiRequestDto.DeleteType != (int)OrderDeleteTypeEnum.Order)
+            {
+                return await Get(orderDeleteApiRequestDto.OrderId, cancellationToken);
+            }
+            return new ApiResponse(message: "Data deleted successful", result: null, statusCode: 200);
+        }
+
+        [HttpGet("{orderSetItemId}/{discountPrice}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        public async Task<ApiResponse> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderDiscountAmountAPI(orderSetItemId, discountPrice, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }

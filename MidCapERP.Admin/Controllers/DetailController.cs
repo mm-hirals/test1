@@ -18,7 +18,7 @@ namespace MidCapERP.Admin.Controllers
         [Route("/ProductDetail/{id}")]
         public async Task<IActionResult> ProductDetail(int Id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.ProductBL.GetById(Id, cancellationToken);
+            var data = await _unitOfWorkBL.ProductBL.GetProductDetailById(Id, cancellationToken);
             return View("ProductDetail", data);
         }
     }

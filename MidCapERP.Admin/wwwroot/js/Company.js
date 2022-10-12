@@ -8,11 +8,15 @@ $(function () {
         "searching": false,
         "processing": true,
         "serverSide": true,
+        "iDisplayLength": 50,
         "filter": true,
         "ajax": {
             "url": "/Company/GetCompanyData",
             "type": "POST",
-            "datatype": "json"
+            "datatype": "json",
+            "data": function (d) {
+                d.companyName = $("#companyName").val().trim()
+            }
         },
         "columns": [
             { "data": "lookupValueName", "name": "LookupValueName", "autoWidth": true },
@@ -30,6 +34,10 @@ $(function () {
 $("#lnkCompanyFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$("#companyName").on("input", function () {
+    tblCompany.ajax.reload(null, false);
 });
 
 CompanyModel.onComplete = function () {

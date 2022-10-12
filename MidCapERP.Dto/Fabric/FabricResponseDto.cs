@@ -23,6 +23,12 @@ namespace MidCapERP.Dto.Fabric
         [DisplayName("Unit Price")]
         public decimal UnitPrice { get; set; }
 
+        [DisplayName("Retailers Price")]
+        public decimal RetailerPrice { get; set; }
+
+        [DisplayName("Wholesalers Price")]
+        public decimal WholesalerPrice { get; set; }
+
         [DisplayName("Photo Upload")]
         public string? ImagePath { get; set; }
 

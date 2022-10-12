@@ -1,4 +1,5 @@
-﻿@model MidCapERP.Dto.Fabric.FabricRequestDto
+﻿@using MidCapERP.Core.CommonHelper
+@model MidCapERP.Dto.Fabric.FabricRequestDto
 
 @{
     string action = (Model != null && Model.FabricId != 0) ? "Update" : "Create";
@@ -59,8 +60,23 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="UnitPrice" class="form-label"></label>
-                                <input asp-for="UnitPrice" class="form-control" />
+                                <input asp-for="UnitPrice" name="UnitPrice" class="form-control" min="0" />
                                 <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="hidden" id="hdnAmountRoundTo" value="@ViewBag.RoundTo">
+                                <input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
+                                <label asp-for="RetailerPrice" class="form-label"></label>
+                                <input type="text" id="RetailerPrice" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
+                                <label asp-for="WholesalerPrice" class="form-label"></label>
+                                <input type="text" id="WholesalerPrice" class="form-control" readonly />
                             </div>
                         </div>
                         <div class="col-12">
