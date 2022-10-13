@@ -508,24 +508,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var totalAmount = orderSetItemById.UnitPrice * orderSetItemById.Quantity;
                     orderSetItemById.TotalAmount = Math.Round(totalAmount - (totalAmount * orderSetItemById.DiscountPrice / 100), 2);
                     saveDiscount = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItemById, cancellationToken);
-
-                    var orderById = await _unitOfWorkDA.OrderDA.GetById(orderSetItemById.OrderId, cancellationToken);
-                    if (orderById != null)
-                    {
-                        var orderData = await GetOrderSetDetailData(orderById.OrderId, cancellationToken);
-                        if (orderData != null)
-                        {
-                            orderById.GrossTotal = orderData.OrderSetResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
-                            decimal discountAmount = 0.00m;
-                            foreach (var item in orderData.OrderSetResponseDto)
-                                foreach (var item2 in item.OrderSetItemResponseDto)
-                                    discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
-                            orderById.Discount = Math.Round(Math.Round(discountAmount), 2);
-                            orderById.TotalAmount = orderById.GrossTotal - orderById.Discount;
-                            orderById.GSTTaxAmount = Math.Round(Math.Round((orderById.TotalAmount * 18) / 100), 2);
-                        }
-                        await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
-                    }
+                    await ChangePriceDetails(orderSetItemById, cancellationToken);
                 }
                 return saveDiscount;
             }
@@ -816,6 +799,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
             orderResponseDto.PayableAmount = (orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount;
             return orderResponseDto;
+        }
+
+        private async Task ChangePriceDetails(OrderSetItem orderSetItemById, CancellationToken cancellationToken)
+        {
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(orderSetItemById.OrderId, cancellationToken);
+            if (orderById != null)
+            {
+                var orderData = await GetOrderSetDetailData(orderById.OrderId, cancellationToken);
+                if (orderData != null)
+                {
+                    orderById.GrossTotal = orderData.OrderSetResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+                    decimal discountAmount = 0.00m;
+                    foreach (var item in orderData.OrderSetResponseDto)
+                        foreach (var item2 in item.OrderSetItemResponseDto)
+                            discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+                    orderById.Discount = Math.Round(Math.Round(discountAmount), 2);
+                    orderById.TotalAmount = orderById.GrossTotal - orderById.Discount;
+                    orderById.GSTTaxAmount = Math.Round(Math.Round((orderById.TotalAmount * 18) / 100), 2);
+                }
+                await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            }
         }
 
         #endregion Private Method
