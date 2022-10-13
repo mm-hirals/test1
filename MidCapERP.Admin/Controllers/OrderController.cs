@@ -66,6 +66,14 @@ namespace MidCapERP.Admin.Controllers
                 throw new Exception("Order Id can not be null");
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<IActionResult> SaveDiscount(decimal discount, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.OrderBL.SaveDiscount(discount, cancellationToken);
+            return null;
+        }
+
         #region Private Method
 
         private async void FillRefferedDropDown(CancellationToken cancellationToken)

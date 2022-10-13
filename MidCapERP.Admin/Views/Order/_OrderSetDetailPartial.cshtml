@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@model MidCapERP.Dto.Order.OrderResponseDto
+<div class="row">
     <div class="col-12">
         <div class="accordion mb-3" id="accordionExample">
             @if (@Model.OrderSetResponseDto != null)
@@ -43,7 +44,7 @@
                                                     <div class="col-4">
                                                         <div class="product-order--info mb-1">
                                                             <label for="" class="form-label mb-1 fs-12">
-                                                                Demensions
+                                                                Dimensions
                                                             </label>
                                                         </div>
                                                         <div class="product-order--info mb-1 d-flex align-items-center">
@@ -97,7 +98,8 @@
                                                                 Discount
                                                             </label>
                                                             <div class="order-final-price fw-bold">
-                                                                @orderSetItem.DiscountPrice
+                                                                <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" id="@orderSetItem.OrderSetItemId">&nbsp;
+                                                                <button type="button" class="saveDiscount btn btn-icon btn-outline-primary" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-pencil"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>

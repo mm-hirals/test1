@@ -455,6 +455,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
+        public async Task SaveDiscount(decimal discount, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OrderSetItem orderSetItem = new OrderSetItem();
+                orderSetItem.DiscountPrice = discount;
+                var saveDiscount = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         #region Private Method
 
         private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)

@@ -21,3 +21,13 @@ $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
         //$("#divOrderActivityPartial").load('/Order/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
     }
 });
+
+$(document).delegate(".saveDiscount", "click", function (e) {
+    alert($(e.target).attr("id"));
+    //$.ajax({
+    //    url: "/Order/SaveDiscount?ProductImageId=" + id,
+    //    type: "POST",
+    //    success: function (response) {
+    //    }
+    //});
+});
