@@ -13,6 +13,7 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
+using System.Threading;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -175,6 +176,39 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<IEnumerable<OrderStatusApiResponseDto>> GetOrderForDetailsByStatus(string status, CancellationToken cancellationToken)
+        {
+            List<OrderStatusApiResponseDto> orderStatusApiResponseDto = new List<OrderStatusApiResponseDto>();
+            var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            var orderEnum = Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>().ToList();
+            int statusValue = 0;
+            foreach (var i in orderEnum)
+            {
+                if (status == Convert.ToString(i))
+                {
+                    statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(i));
+                }
+            }
+            var enumOrderData = orderAllData.Where(p => p.Status == statusValue).ToList();
+            foreach (var orderData in enumOrderData)
+            {
+                var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                var orderResponseData = (from x in enumOrderData
+                                         join y in customerData on x.CustomerID equals y.CustomerId
+                                         select new OrderStatusApiResponseDto()
+                                         {
+                                             OrderId = x.OrderId,
+                                             OrderNo = x.OrderNo,
+                                             CustomerName = y.FirstName + " " + y.LastName,
+                                             TotalAmount = x.TotalAmount,
+                                             OrderStatus = status,
+                                             OrderDate = x.CreatedDate
+                                         }).ToList();
+                orderStatusApiResponseDto = orderResponseData;
+            }
+            return orderStatusApiResponseDto;
+        }
+
         public async Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
@@ -267,10 +301,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             //Cost Calculation
             Random generator = new Random();
-            model.OrderNo = await _unitOfWorkDA.OrderDA.CreateOrderNo("R", cancellationToken); ;
-            //model.OrderNo = Convert.ToString(DateTime.Now.Year) + "-" + "R" + generator.Next(1, 99999).ToString("D5");
+            model.OrderNo = await _unitOfWorkDA.OrderDA.CreateOrderNo("R", cancellationToken);
             model.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
-            model.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
+            decimal discountAmount = 0.00m;
+            foreach (var item in model.OrderSetRequestDto)
+                foreach (var item2 in item.OrderSetItemRequestDto)
+                    discountAmount += ((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100);
+            model.Discount = Math.Round(Math.Round(discountAmount), 2);
             model.TotalAmount = model.GrossTotal - model.Discount;
             model.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
 
@@ -304,9 +341,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = await OrderGetById(Id, cancellationToken);
             oldData.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
-            oldData.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
-            oldData.TotalAmount = model.GrossTotal - model.Discount;
-            oldData.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
+            decimal discountAmount = 0.00m;
+            foreach (var item in model.OrderSetRequestDto)
+                foreach (var item2 in item.OrderSetItemRequestDto)
+                    discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+            oldData.Discount = Math.Round(Math.Round(discountAmount), 2);
+            oldData.TotalAmount = oldData.GrossTotal - oldData.Discount;
+            oldData.GSTTaxAmount = Math.Round(Math.Round((oldData.TotalAmount * 18) / 100), 2);
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -332,7 +373,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                         oldOrderSetItem.Quantity = orderSetItem.Quantity;
                         oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
                         oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
-                        oldOrderSetItem.TotalAmount = (orderSetItem.UnitPrice * orderSetItem.Quantity) - orderSetItem.DiscountPrice;
+                        var discountAmountP = Math.Round(Math.Round(((orderSetItem.UnitPrice * orderSetItem.Quantity) * orderSetItem.DiscountPrice / 100)), 2);
+                        oldOrderSetItem.TotalAmount = (orderSetItem.UnitPrice * orderSetItem.Quantity) - discountAmountP;
                         oldOrderSetItem.Comment = orderSetItem.Comment;
                         oldOrderSetItem.UpdatedBy = _currentUser.UserId;
                         oldOrderSetItem.UpdatedDate = DateTime.Now;
@@ -476,6 +518,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (order != null)
             {
                 await _unitOfWorkDA.OrderSetDA.DeleteOrderSet(order, cancellationToken);
+                await UpdateOrderPriceCalculation(order.OrderId, cancellationToken);
             }
             else
             {
@@ -489,10 +532,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (order != null)
             {
                 await _unitOfWorkDA.OrderSetItemDA.DeleteOrderSetItem(order, cancellationToken);
+                await UpdateOrderPriceCalculation(order.OrderId, cancellationToken);
             }
             else
             {
                 throw new Exception("OrderSetItem not found");
+            }
+        }
+
+        private async Task UpdateOrderPriceCalculation(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            if (order != null)
+            {
+                var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+                if (orderData != null)
+                {
+                    order.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+                    decimal discountAmount = 0.00m;
+                    foreach (var item in orderData.OrderSetApiResponseDto)
+                        foreach (var item2 in item.OrderSetItemResponseDto)
+                            discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+                    order.Discount = Math.Round(Math.Round(discountAmount), 2);
+                    order.TotalAmount = order.GrossTotal - order.Discount;
+                    order.GSTTaxAmount = Math.Round(Math.Round((order.TotalAmount * 18) / 100), 2);
+                }
+                await _unitOfWorkDA.OrderDA.UpdateOrder(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order not found");
             }
         }
 
@@ -598,7 +667,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderSetItem.Quantity = orderSetItemRequestDto.Quantity;
             orderSetItem.UnitPrice = orderSetItemRequestDto.UnitPrice;
             orderSetItem.DiscountPrice = orderSetItemRequestDto.DiscountPrice;
-            orderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - orderSetItemRequestDto.DiscountPrice;
+            var discountAmount = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
+            orderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmount;
             orderSetItem.Comment = orderSetItemRequestDto.Comment;
             orderSetItem.MakingStatus = (int)ProductStatusEnum.Pending;
             orderSetItem.CreatedBy = _currentUser.UserId;

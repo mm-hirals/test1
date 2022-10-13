@@ -36,26 +36,19 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Create)]
         public async Task<ApiResponse> Post([FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
+            OrderApiResponseDto orderApiResponseDto = new OrderApiResponseDto();
+            
             ValidationRequest(orderRequestApiDto);
-            var data = await _unitOfWorkBL.OrderBL.CreateOrderAPI(orderRequestApiDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-            }
-            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
-        }
-
-        [HttpPut("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
-        public async Task<ApiResponse> Put(int id, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
-        {
-            ValidationRequest(orderRequestApiDto);
-            var data = await _unitOfWorkBL.OrderBL.UpdateOrderAPI(id, orderRequestApiDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-            }
-            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+            
+            if (orderRequestApiDto.OrderId > 0)
+                orderApiResponseDto = await _unitOfWorkBL.OrderBL.UpdateOrderAPI(orderRequestApiDto.OrderId, orderRequestApiDto, cancellationToken);
+            else
+                orderApiResponseDto = await _unitOfWorkBL.OrderBL.CreateOrderAPI(orderRequestApiDto, cancellationToken);
+            
+            if (orderApiResponseDto == null)
+                return new ApiResponse(message: "Internal server error", result: orderApiResponseDto, statusCode: 500);
+            
+            return new ApiResponse(message: "Data inserted successful", result: orderApiResponseDto, statusCode: 200);
         }
 
         [HttpPost("DeleteOrder")]
@@ -70,16 +63,28 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data deleted successful", result: null, statusCode: 200);
         }
 
-        [HttpGet("{orderSetItemId}/{discountPrice}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
-        public async Task<ApiResponse> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        //[HttpGet("{orderSetItemId}/{discountPrice}")]
+        //[Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        //public async Task<ApiResponse> UpdateOrderDiscountAmount(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        //{
+        //    var data = await _unitOfWorkBL.OrderBL.UpdateOrderDiscountAmountAPI(orderSetItemId, discountPrice, cancellationToken);
+        //    if (data == null)
+        //    {
+        //        return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+        //    }
+        //    return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        //}
+
+        [HttpGet("OrderStatus/{status}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<ApiResponse> GetOrderbyStatus(string status, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.UpdateOrderDiscountAmountAPI(orderSetItemId, discountPrice, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.GetOrderForDetailsByStatus(status, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
         #region Private Methods
