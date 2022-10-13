@@ -12,7 +12,7 @@ namespace MidCapERP.DataEntities.Models
         public long ProductId { get; set; }
         public int SubjectTypeId { get; set; }
         public int SubjectId { get; set; }
-        public int Qty { get; set; }
+        public decimal Qty { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
