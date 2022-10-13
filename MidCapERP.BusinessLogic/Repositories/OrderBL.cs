@@ -488,13 +488,26 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
-        public async Task SaveDiscount(decimal discount, CancellationToken cancellationToken)
+        public async Task<OrderSetItem> SaveDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
             try
             {
-                OrderSetItem orderSetItem = new OrderSetItem();
-                orderSetItem.DiscountPrice = discount;
-                var saveDiscount = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItem, cancellationToken);
+                OrderSetItem saveDiscount = new OrderSetItem();
+                var orderSetItemById = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemRequestDto.OrderSetItemId, cancellationToken);
+                if (orderSetItemById != null)
+                {
+                    orderSetItemById.DiscountPrice = orderSetItemRequestDto.DiscountPrice;
+                    var totalAmount = orderSetItemById.UnitPrice * orderSetItemById.Quantity;
+                    var discountPrice = totalAmount * orderSetItemRequestDto.DiscountPrice / 100;
+                    orderSetItemById.TotalAmount = totalAmount - discountPrice;
+                    saveDiscount = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItemById, cancellationToken);
+
+                    var orderById = await _unitOfWorkDA.OrderDA.GetById(orderSetItemById.OrderId, cancellationToken);
+                    if (orderById != null)
+                    {
+                    }
+                }
+                return saveDiscount;
             }
             catch (Exception ex)
             {

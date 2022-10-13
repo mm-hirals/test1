@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    debugger;
     var tblCategory = $("#tblActivitylog").DataTable({
         "searching": false,
         "processing": true,

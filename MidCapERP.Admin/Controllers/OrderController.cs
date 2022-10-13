@@ -5,6 +5,7 @@ using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
+using MidCapERP.Dto.OrderSetItem;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -68,10 +69,19 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<IActionResult> SaveDiscount(decimal discount, CancellationToken cancellationToken)
+        public async Task<IActionResult> SaveDiscount([FromForm] OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.OrderBL.SaveDiscount(discount, cancellationToken);
-            return null;
+            try
+            {
+                var orderSetItem = await _unitOfWorkBL.OrderBL.SaveDiscount(orderSetItemRequestDto, cancellationToken);
+
+                var orderSetData = await _unitOfWorkBL.OrderBL.GetOrderSetDetailData(orderSetItem.OrderId, cancellationToken);
+                return PartialView("_OrderSetDetailPartial", orderSetData);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
         }
 
         #region Private Method

@@ -1,6 +1,8 @@
-﻿using MidCapERP.Dto.DataGrid;
+﻿using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
+using MidCapERP.Dto.OrderSetItem;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -30,6 +32,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
 
-        public Task SaveDiscount(decimal discount, CancellationToken cancellationToken);
+        public Task<OrderSetItem> SaveDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken);
     }
 }

@@ -23,11 +23,23 @@ $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
 });
 
 $(document).delegate(".saveDiscount", "click", function (e) {
-    alert($(e.target).attr("id"));
-    //$.ajax({
-    //    url: "/Order/SaveDiscount?ProductImageId=" + id,
-    //    type: "POST",
-    //    success: function (response) {
-    //    }
-    //});
+    var data = {
+        DiscountPrice: $(this).parent().find("input").val(),
+        OrderSetItemId: $(this).attr('id')
+    };
+    $.ajax({
+        url: "/Order/SaveDiscount",
+        type: "POST",
+        data: data,
+        success: function (response) {
+            $('#divOrderSetDetailPartial').html(response);
+            //divOrderSetDetailPartial
+
+            //if (response == "success") {
+            //    location.reload();
+            //}
+            //else
+            //    alert("Error : ", response)
+        }
+    });
 });
