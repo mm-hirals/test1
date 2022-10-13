@@ -38,11 +38,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data.Where(x => x.CreatedUTCDate >= oldDate).Count();
         }
 
-        public async Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
+        public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
-            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerMobileNumberOrEmailId = customerData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            return _mapper.Map<CustomersResponseDto>(customerMobileNumberOrEmailId);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
+            if (customerMobileNumberOrEmailId == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerMobileNumberOrEmailId.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
         }
 
         public async Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
@@ -59,6 +76,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new MegaSearchResponse(x.CustomerId, x.FirstName + " " + x.LastName, x.PhoneNumber, null, "Customer")).Take(10).ToList();
+        }
+
+        public async Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken)
+        {
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
+            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber }).Take(10);
+            return data.ToList();
         }
 
         public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
@@ -105,34 +130,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
+            customerToInsert.CustomerTypeId = 1;
             customerToInsert.IsDeleted = false;
             customerToInsert.TenantId = _currentUser.TenantId;
             customerToInsert.CreatedBy = _currentUser.UserId;
             customerToInsert.CreatedDate = DateTime.Now;
             customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber));
-            if (customerExistOrNot != null)
-            {
-                customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-                return _mapper.Map<CustomerApiRequestDto>(data);
-            }
-            else
-            {
-                Customers refferedCustomer = new Customers();
-                refferedCustomer.TenantId = _currentUser.TenantId;
-                refferedCustomer.LastName = String.Empty;
-                refferedCustomer.FirstName = model.RefferedName;
-                refferedCustomer.PhoneNumber = model.RefferedNumber;
-                refferedCustomer.CreatedBy = _currentUser.UserId;
-                refferedCustomer.CreatedDate = DateTime.Now;
-                refferedCustomer.CreatedUTCDate = DateTime.UtcNow;
-                var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
-                customerToInsert.RefferedBy = customer.CustomerId;
-                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-                return _mapper.Map<CustomerApiRequestDto>(data);
-            }
+            var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+            return _mapper.Map<CustomerApiRequestDto>(data);
         }
 
         public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
@@ -204,6 +209,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data;
         }
 
+        private async Task<Customers> CustomerGetByRefferedId(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
+            return data;
+        }
+
         private async Task<CustomerTypes> CustomerTypesGetById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomerTypesDA.GetById(Id, cancellationToken);
@@ -268,13 +279,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 CustomerId = data.CustomerId,
                 AddressType = "Home",
-                Street1 = model.CustomerAddressesRequestDto?.Street1,
-                Street2 = model.CustomerAddressesRequestDto?.Street2,
-                Landmark = model.CustomerAddressesRequestDto?.Landmark,
-                Area = model.CustomerAddressesRequestDto?.Area,
-                City = model.CustomerAddressesRequestDto?.City,
-                State = model.CustomerAddressesRequestDto?.State,
-                ZipCode = model.CustomerAddressesRequestDto?.ZipCode,
+                Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
+                Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
+                Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : String.Empty,
+                City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
+                State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,
+                ZipCode = model.CustomerAddressesRequestDto.ZipCode != null ? model.CustomerAddressesRequestDto.ZipCode : String.Empty,
                 IsDefault = true,
                 CreatedDate = DateTime.Now,
                 CreatedUTCDate = DateTime.UtcNow,

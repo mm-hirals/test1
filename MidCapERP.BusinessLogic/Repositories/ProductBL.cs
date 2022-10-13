@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using AutoMapper;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
@@ -9,6 +11,7 @@ using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
@@ -444,14 +447,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
             }
-        }
-
-        public async Task<IEnumerable<ActivityLogs>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
-            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
-            return data.Where(p => p.SubjectTypeId == productSubjectTypeId && p.SubjectId == productId).OrderByDescending(p => p.ActivityLogID).ToList();
-        }
+        } 
 
         public async Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
@@ -496,6 +492,48 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
         }
 
+        public async Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
+            data = data.Where(p => p.SubjectId == productId);
+            var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var dataResponse = (from x in data
+                                join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }
+                                select new ActivityLogsResponseDto()
+                                {
+                                    Description = x.Description,
+                                    Action = x.Action,
+                                    CreatedBy = x.CreatedBy,
+                                    CreatedByName = y.FirstName + " " + y.LastName,
+                                    CreatedDate = x.CreatedDate,
+                                    ActivityLogID = x.ActivityLogID,
+
+                                }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
+
+            return dataResponse;
+        }
+
+        public async Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterProductActivityData(ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
+            data = data.Where(p => p.SubjectId ==dataTableFilterDto.productId);
+            var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var dataResponse = (from x in data
+                                join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }
+                                select new ActivityLogsResponseDto()
+                                {
+                                    Description = x.Description,
+                                    Action = x.Action,
+                                    CreatedBy = x.CreatedBy,
+                                    CreatedByName = y.FirstName + " " + y.LastName,
+                                    CreatedDate = x.CreatedDate,
+                                    ActivityLogID = x.ActivityLogID,
+
+                                }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
+            var productData = new PagedList<ActivityLogsResponseDto>(dataResponse, dataTableFilterDto);
+            return new JsonRepsonse<ActivityLogsResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
+        }
+
         public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
@@ -527,9 +565,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #endregion API Methods
 
-        #region Private Method
+            #region Private Method
 
-        private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
+            private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
             var lookupId = await GetUnitLookupId(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);

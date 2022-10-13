@@ -41,7 +41,7 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200); 
         }
 
         [HttpPost]
@@ -117,6 +117,18 @@ namespace MidCapERP.WebAPI.Controllers
                 }
                 return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
             }
+        }
+
+        [HttpGet("/SearchForCustomerDropdown/{searchText}")]
+        [Authorize((ApplicationIdentityConstants.Permissions.Customer.View))]
+        public async Task<ApiResponse> SearchDropDownRefferedBy(string searchText, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.GetSearchCustomerForDropDownNameOrPhoneNumber(searchText, cancellationToken);
+            if (data == null || data.Count() == 0)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
         #region Private Methods

@@ -1,18 +1,31 @@
 ﻿'use strict';
 window.counter = 0;
 var ProductModel = {};
-
+var tblActivitylog;
 $(document).ready(function () {
     $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
-
     if ($("#hdnProductId").val() > 0) {
         $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
         $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
         $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
         $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-        //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
+        $("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
     }
 });
+
+//$(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
+//    debugger;
+//    var tabId = $(e.target).attr("id")
+//    if (tabId == "nav-images-tab") {
+//        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+//    } else if (tabId == "nav-rowmaterial-tab") {
+//        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+//    } else if (tabId == "nav-detail-tab") {
+//        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+//    } else if (tabId == "nav-productActivity") {
+//        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
+//    }
+//});
 
 $(document).on("#lnkProductFilter", "click", (function () {
     $(this).toggleClass("filter-icon");
@@ -20,19 +33,24 @@ $(document).on("#lnkProductFilter", "click", (function () {
 }));
 
 $(document).on("click", ".add-icon", (function () {
-    if ($(this).parent().parent().find("select").val() != "") {
-        var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
-        htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
-        htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
-        htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
+    if ($(this).parent().parent().find("input.quantity").val() > 0 && $(this).parent().parent().find("input.quantity").val() < 1000) {
+        if ($(this).parent().parent().find("select").val() != "") {
+            var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
+            htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
+            htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
+            htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
 
-        $(this).parent().parent().parent().append(htmlStringToAppend)
-        counter++;
-        emptyFields($(this).parent().parent())
-        calculateCostPrice();
-    } else {
-        alert("Please select value");
-        //$("span.materialErrorMsg").text("Please select value");
+            $(this).parent().parent().parent().append(htmlStringToAppend)
+            counter++;
+            emptyFields($(this).parent().parent())
+            calculateCostPrice();
+        } else {
+            alert("Please select value");
+            //$("span.materialErrorMsg").text("Please select value");
+        }
+    }
+    else {
+        alert("Please enter value between 0-999");
     }
 }));
 
@@ -78,10 +96,34 @@ function emptyFields(trRow) {
     trRow.find("input[type=text]").each(function () {
         $(this).val("")
     });
+    trRow.find("input[type=number]").each(function () {
+        $(this).val("")
+    });
     trRow.find("select").each(function () {
         $(this).val("")
     });
 }
+
+$(function () {
+    tblActivitylog = $("#tblactivitylog").DataTable({
+        "searching": false,
+        "processing": true,
+        "serverSide": true,
+        "filter": true,
+        "ajax": {
+            "url": "/Product/GetProductActivity",
+            "type": "POST",
+            "datatype": "json"
+        },
+        "columns": [
+            { "data": "activityLogID", "name": "activityLogID", "autoWidth": true },
+            { "data": "description", "name": "description", "autoWidth": true },
+            { "data": "action", "name": "action", "autoWidth": true },
+            { "data": "createdBy", "name": "createdBy", "autoWidth": true },
+            { "data": "createdDate", "name": "createdDate", "autoWidth": true }
+        ]
+    });
+});
 $(document).on("change", "input.costPrice", (function () {
     $(this).attr('value', $(this).val());
 }));
