@@ -42,7 +42,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            if(customerMobileNumberOrEmailId == null)
+            if (customerMobileNumberOrEmailId == null)
             {
                 throw new Exception("Customer not found");
             }
@@ -279,13 +279,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 CustomerId = data.CustomerId,
                 AddressType = "Home",
-                Street1 = model.CustomerAddressesRequestDto?.Street1,
-                Street2 = model.CustomerAddressesRequestDto?.Street2,
-                Landmark = model.CustomerAddressesRequestDto?.Landmark,
-                Area = model.CustomerAddressesRequestDto?.Area,
-                City = model.CustomerAddressesRequestDto?.City,
-                State = model.CustomerAddressesRequestDto?.State,
-                ZipCode = model.CustomerAddressesRequestDto?.ZipCode,
+                Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
+                Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
+                Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : String.Empty,
+                City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
+                State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,
+                ZipCode = model.CustomerAddressesRequestDto.ZipCode != null ? model.CustomerAddressesRequestDto.ZipCode : String.Empty,
                 IsDefault = true,
                 CreatedDate = DateTime.Now,
                 CreatedUTCDate = DateTime.UtcNow,

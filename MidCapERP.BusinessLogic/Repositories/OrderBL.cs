@@ -175,6 +175,39 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<IEnumerable<OrderStatusApiResponseDto>> GetOrderForDetailsByStatus(string status, CancellationToken cancellationToken)
+        {
+            List<OrderStatusApiResponseDto> orderStatusApiResponseDto = new List<OrderStatusApiResponseDto>();
+            var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            var orderEnum = Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>().ToList();
+            int statusValue = 0;
+            foreach (var i in orderEnum)
+            {
+                if (status == Convert.ToString(i))
+                {
+                    statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(i));
+                }
+            }
+            var enumOrderData = orderAllData.Where(p => p.Status == statusValue).ToList();
+            foreach (var orderData in enumOrderData)
+            {
+                var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                var orderResponseData = (from x in enumOrderData
+                                         join y in customerData on x.CustomerID equals y.CustomerId
+                                         select new OrderStatusApiResponseDto()
+                                         {
+                                             OrderId = x.OrderId,
+                                             OrderNo = x.OrderNo,
+                                             CustomerName = y.FirstName + " " + y.LastName,
+                                             TotalAmount = x.TotalAmount,
+                                             OrderStatus = status,
+                                             OrderDate = x.CreatedDate
+                                         }).ToList();
+                orderStatusApiResponseDto = orderResponseData;
+            }
+            return orderStatusApiResponseDto;
+        }
+
         public async Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);

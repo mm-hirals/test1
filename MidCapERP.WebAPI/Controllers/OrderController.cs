@@ -82,6 +82,18 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
+        [HttpGet("OrderStatus/{status}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<ApiResponse> GetOrderbyStatus(string status, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderForDetailsByStatus(status, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
         #region Private Methods
 
         private void ValidationRequest(OrderApiRequestDto orderRequestDto)
