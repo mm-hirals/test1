@@ -71,17 +71,10 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
         public async Task<IActionResult> SaveDiscount([FromForm] OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
-            try
-            {
-                var orderSetItem = await _unitOfWorkBL.OrderBL.SaveDiscount(orderSetItemRequestDto, cancellationToken);
+            var orderSetItem = await _unitOfWorkBL.OrderBL.SaveDiscount(orderSetItemRequestDto, cancellationToken);
 
-                var orderSetData = await _unitOfWorkBL.OrderBL.GetOrderSetDetailData(orderSetItem.OrderId, cancellationToken);
-                return PartialView("_OrderSetDetailPartial", orderSetData);
-            }
-            catch (Exception ex)
-            {
-                return Json(ex.Message);
-            }
+            var orderSetData = await _unitOfWorkBL.OrderBL.GetOrderSetDetailData(orderSetItem.OrderId, cancellationToken);
+            return PartialView("_OrderSetDetailPartial", orderSetData);
         }
 
         #region Private Method

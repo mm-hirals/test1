@@ -33,13 +33,6 @@ $(document).delegate(".saveDiscount", "click", function (e) {
         data: data,
         success: function (response) {
             $('#divOrderSetDetailPartial').html(response);
-            //divOrderSetDetailPartial
-
-            //if (response == "success") {
-            //    location.reload();
-            //}
-            //else
-            //    alert("Error : ", response)
         }
     });
 });
