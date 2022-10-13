@@ -31,7 +31,7 @@ $(function () {
             { "data": "accountType", "name": "accountType", "autoWidth": true },
             { "data": "ifscCode", "name": "iFSCCode", "autoWidth": true },
             { "data": "upiId", "name": "uPIId", "autoWidth": true },
-            { "data": "qrCode", "name": "qRCode", "autoWidth": true },
+            //{ "data": "qrCode", "name": "qRCode", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
