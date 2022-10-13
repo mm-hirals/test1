@@ -496,7 +496,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
-        public async Task<OrderSetItem> SaveDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
+        public async Task<OrderSetItem> UpdateOrderSetItemDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
             try
             {
