@@ -98,7 +98,7 @@
                                             @{
                                                 var costPrice = item.CostPrice * item.Qty;
                                             }
-                                            <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@Math.Round(costPrice, 2)" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" readonly="readonly" class="form-control isDeleted" value="false">
                                         </td>
                                         <td>
@@ -199,7 +199,7 @@
                                             @{
                                                 var costPrice = item.CostPrice * item.Qty;
                                             }
-                                            <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@costPrice" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
+                                            <input type="text" asp-for="ProductMaterialRequestDto[i].CostPrice" value="@Math.Round(costPrice, 2)" readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly />
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].IsDeleted" readonly="readonly" class="form-control isDeleted" value="false">
                                         </td>
                                         <td>
