@@ -13,6 +13,7 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
+using System.Threading;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -517,6 +518,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (order != null)
             {
                 await _unitOfWorkDA.OrderSetDA.DeleteOrderSet(order, cancellationToken);
+                await UpdateOrderPriceCalculation(order.OrderId, cancellationToken);
             }
             else
             {
@@ -530,10 +532,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (order != null)
             {
                 await _unitOfWorkDA.OrderSetItemDA.DeleteOrderSetItem(order, cancellationToken);
+                await UpdateOrderPriceCalculation(order.OrderId, cancellationToken);
             }
             else
             {
                 throw new Exception("OrderSetItem not found");
+            }
+        }
+
+        private async Task UpdateOrderPriceCalculation(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            if (order != null)
+            {
+                var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+                if (orderData != null)
+                {
+                    order.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+                    decimal discountAmount = 0.00m;
+                    foreach (var item in orderData.OrderSetApiResponseDto)
+                        foreach (var item2 in item.OrderSetItemResponseDto)
+                            discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+                    order.Discount = Math.Round(Math.Round(discountAmount), 2);
+                    order.TotalAmount = order.GrossTotal - order.Discount;
+                    order.GSTTaxAmount = Math.Round(Math.Round((order.TotalAmount * 18) / 100), 2);
+                }
+                await _unitOfWorkDA.OrderDA.UpdateOrder(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order not found");
             }
         }
 
