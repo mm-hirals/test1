@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Dto;
-using MidCapERP.Dto.Order;
 using MidCapERP.Dto.Product;
-using MidCapERP.Dto.Tenant;
 
 namespace MidCapERP.Admin.Controllers
 {
