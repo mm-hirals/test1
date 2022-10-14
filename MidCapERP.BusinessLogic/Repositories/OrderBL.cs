@@ -13,7 +13,6 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
-using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
