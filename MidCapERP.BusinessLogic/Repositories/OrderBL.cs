@@ -347,6 +347,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.Discount = Math.Round(Math.Round(discountAmount), 2);
             oldData.TotalAmount = oldData.GrossTotal - oldData.Discount;
             oldData.GSTTaxAmount = Math.Round(Math.Round((oldData.TotalAmount * 18) / 100), 2);
+            oldData.Comments = model.Comments;
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
