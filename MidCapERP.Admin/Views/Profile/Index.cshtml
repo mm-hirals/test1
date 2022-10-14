@@ -11,6 +11,7 @@
 	@if (tenantId > 0)
 	{
 		<partial name="_TenantDetailPartial" model="@Model" />
+		<partial name="_SMTPPartial" model="@Model" />
 		<nav class="product-nav-tab--sticky">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Bank Details</button>
@@ -18,7 +19,7 @@
 		</nav>
 		<div class="tab-content" id="nav-tabContent">
 			<div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
-				<div class="c-card--wrapper c-card-sm--wrapper mb-3">
+				<div class="c-card--wrapper c-card-sm--wrapper">
 					<div class="c-card--header">
 						<h4 class="c-card--header-title">Bank Details</h4>
 						<div class="c-card--header-action">
