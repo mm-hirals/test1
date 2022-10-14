@@ -112,6 +112,14 @@ $('#tblCustomer').on('click', 'input[type="checkbox"]', function () {
 
 // On button click send checkbox values to controller
 $("#multiSelectCustomer").click(function () {
+
+    if ($("#selectall").checked) {
+        d.customerName = $("#customerName").val().trim();
+        d.customerMobileNo = $("#customerMobileNo").val().trim();
+        d.customerFromDate = $("#customerFromDate").val().trim();
+        d.customerToDate = $("#customerToDate").val().trim();
+    }
+
     $.ajax({
         url: "/Customer/MultipleSendCustomer",
         type: "POST",
@@ -124,11 +132,3 @@ $("#multiSelectCustomer").click(function () {
         }
     });
 });
-
-$(document).on("change", "select.customerType", (function () {
-    var val = $(this).val();
-    if ($(this).val() == 3) {
-        $(".refferedNumber").prop('disabled', true);
-        $(".refferedName").prop('disabled', true);
-    }
-}));

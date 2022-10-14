@@ -119,10 +119,11 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> MultipleSendArchitect(long?[] value_check)
+        public async Task<JsonResult> MultipleSendArchitect(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
             try
             {
+                await _unitOfWorkBL.ArchitectsBL.SendSMSToArchitects(model, cancellationToken);
                 return Json("success");
             }
             catch (Exception ex)

@@ -86,6 +86,9 @@ ArchitectModel.onFailed = function (xhr) {
 // Check all checkbox values and store it in array
 $("#selectall").click(function () {
     if (this.checked) {
+        if (value_check.length > 0) {
+            value_check = [];
+        }
         $('.case').prop('checked', true);
         for (var i = 0; i < $(".case:checked").length; i++) {
             value_check.push($(".case:checked")[i].id);
@@ -110,17 +113,55 @@ $('#tblArchitect').on('click', 'input[type="checkbox"]', function () {
     }
 });
 
-// On button click send checkbox values to controller
+// On button click open modal popup
 $("#multiSelectArchitect").click(function () {
-    $.ajax({
-        url: "/Architect/MultipleSendArchitect",
-        type: "POST",
-        data: { 'value_check': value_check },
-        success: function (response) {
-            if (response == "success")
-                alert("Success : ", response);
-            else
-                alert("Error : ", response)
-        }
-    });
+    if (value_check.length > 0) {
+        $("#sendSMSModal").modal('show');
+    }
+    else {
+        alert("Please select customer to send message.");
+    }
 });
+
+// On button click send checkbox values to controller
+$(".sendSMSToClient").click(function () {
+    if ($("#message").val() == '') {
+        $("#errorMessage").text("Please enter message.");
+    }
+    else {
+        $("#errorMessage").hide();
+
+        if ($("#selectall").checked) {
+            var architectName = $("#architectName").val().trim();
+            var architectMobileNo = $("#architectMobileNo").val().trim();
+            var architectFromDate = $("#architectFromDate").val().trim();
+            var architectToDate = $("#architectToDate").val().trim();
+        }
+
+        var data = {
+            CustomerName: architectName,
+            CustomerMobileNo: architectMobileNo,
+            CustomerFromDate: architectFromDate,
+            CustomerToDate: architectToDate,
+            IsCheckedAll: $("#selectall").checked,
+            CustomerList: value_check,
+            Message: $("#message").val()
+        };
+        console.log(data);
+        $.ajax({
+            url: "/Architect/MultipleSendArchitect",
+            type: "POST",
+            data: { model: data },
+            success: function (response) {
+                if (response == "success")
+                    alert("Success : ", response);
+                else
+                    alert("Error : ", response)
+            }
+        });
+    }
+});
+
+$('#sendSMSModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+})
