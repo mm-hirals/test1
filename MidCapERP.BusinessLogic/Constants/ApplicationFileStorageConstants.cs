@@ -11,6 +11,7 @@
             public static readonly string Polish = @"\Files\Polish\";
             public static readonly string Product = @"\Files\Product\";
             public static readonly string QRCode = @"\Files\QRCode\";
+            public static readonly string QRImageTenantBankDetail = @"\Files\QRImageTenant\";
         }
     }
 }

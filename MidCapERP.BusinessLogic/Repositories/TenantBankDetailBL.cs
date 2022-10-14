@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -14,12 +16,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IFileStorageService _fileStorageService;
 
-        public TenantBankDetailBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public TenantBankDetailBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<TenantBankDetailResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -52,6 +56,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<TenantBankDetailRequestDto> CreateTenantBankDetail(TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {
             var tenantBankDetailoInsert = _mapper.Map<TenantBankDetail>(model);
+            if (model.QRImageUpload != null)
+                tenantBankDetailoInsert.QRCode = await _fileStorageService.StoreFile(model.QRImageUpload, ApplicationFileStorageConstants.FilePaths.QRImageTenantBankDetail);
             tenantBankDetailoInsert.IsDeleted = false;
             tenantBankDetailoInsert.TenantId = _currentUser.TenantId;
             tenantBankDetailoInsert.CreatedBy = _currentUser.UserId;
@@ -60,6 +66,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var data = await _unitOfWorkDA.TenantBankDetailDA.CreateTenantBankDetail(tenantBankDetailoInsert, cancellationToken);
             return _mapper.Map<TenantBankDetailRequestDto>(data);
         }
+
         public async Task<TenantBankDetailRequestDto> GetById(int Id, CancellationToken cancellationToken)
         {
             var data = await TenantGetById(Id, cancellationToken);
@@ -69,9 +76,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<TenantBankDetailRequestDto> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await TenantGetById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
+            if (model.QRImageUpload != null)
+                model.QRCode = await _fileStorageService.StoreFile(model.QRImageUpload, ApplicationFileStorageConstants.FilePaths.QRImageTenantBankDetail);
+            UpdateTenantBankDetail(oldData);
             MapToDbObject(model, ref oldData);
             var data = await _unitOfWorkDA.TenantBankDetailDA.UpdateTenantBankDetail(Id, oldData, cancellationToken);
             return _mapper.Map<TenantBankDetailRequestDto>(data);
@@ -112,6 +119,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Tenant not found");
             }
             return data;
+        }
+
+        private void UpdateTenantBankDetail(TenantBankDetail oldData)
+        {
+            oldData.UpdatedBy = _currentUser.UserId;
+            oldData.UpdatedDate = DateTime.Now;
+            oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
         #endregion PrivateMethods
