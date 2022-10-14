@@ -22,6 +22,7 @@ using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
+using MidCapERP.Dto.Tenant;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -132,10 +133,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 ProductDetailResponseDto productDetailResponseDto = new ProductDetailResponseDto();
                 var getProductById = await GetProductById(Id, cancellationToken);
                 if (getProductById != null)
-                    _currentUser.TenantId = getProductById.TenantId;
-                if (_currentUser.TenantId > 0)
+                    getProductById.TenantId = getProductById.TenantId;
+                if (getProductById.TenantId > 0)
                 {
-                    var tenantDetails = await _unitOfWorkDA.TenantDA.GetById(_currentUser.TenantId, cancellationToken);
+                    var tenantDetails = await _unitOfWorkDA.TenantDA.GetById(getProductById.TenantId, cancellationToken);
                     //var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
                     var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                     var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
@@ -184,7 +185,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                 }).ToList();
 
                     if (data.Any())
-                        productDetailResponseDto.Polish = string.Join(", ", data.Select(x => x.Title + " - " + x.ModelNo));
+                        productDetailResponseDto.Polish = string.Join(", ", data.Select(x => x.Title + " - " + x.ModelNo)); 
+                    var tenants = await _unitOfWorkDA.TenantDA.GetById(getProductById.TenantId, cancellationToken);
+                    productDetailResponseDto.TenantResponseDto = _mapper.Map<TenantResponseDto>(tenants);
                 }
                 return productDetailResponseDto;
             }
