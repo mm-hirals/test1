@@ -13,7 +13,6 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
-using System.Threading;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -495,6 +494,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderById.UpdatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
             return orderData;
+        }
+
+        public async Task<OrderSetItem> UpdateOrderSetItemDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OrderSetItem saveDiscount = new OrderSetItem();
+                var orderSetItemById = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemRequestDto.OrderSetItemId, cancellationToken);
+                if (orderSetItemById != null)
+                {
+                    orderSetItemById.DiscountPrice = Math.Round(orderSetItemRequestDto.DiscountPrice, 2);
+                    var totalAmount = orderSetItemById.UnitPrice * orderSetItemById.Quantity;
+                    orderSetItemById.TotalAmount = Math.Round(totalAmount - (totalAmount * orderSetItemById.DiscountPrice / 100), 2);
+                    saveDiscount = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItemById, cancellationToken);
+                    await UpdateOrderPriceCalculation(orderSetItemById.OrderId, cancellationToken);
+                }
+                return saveDiscount;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         #region Private Method
