@@ -309,7 +309,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             model.TotalAmount = model.GrossTotal - model.Discount;
             model.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
             var saveOrder = await SaveOrder(model, cancellationToken);
-            
+
             //Create OrderAddress Base On Address
             OrderAddressesApiRequestDto orderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
             orderAddressesApiRequestDto.OrderId = saveOrder.OrderId;
@@ -357,7 +357,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 setData.OrderId = oldData.OrderId;
                 var saveOrderData = await SaveOrderSet(setData, cancellationToken);
-                
+
                 //Create or Update Base On OrderSet
                 foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
@@ -501,6 +501,30 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw;
             }
+        }
+
+        public async Task<Int64> GetOrderReceivableCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.InProgress);
+        }
+
+        public async Task<Int64> GetOrderApprovedCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.InProgress);
+        }
+
+        public async Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Pending);
+        }
+
+        public async Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.InProgress);
         }
 
         #region Private Method
