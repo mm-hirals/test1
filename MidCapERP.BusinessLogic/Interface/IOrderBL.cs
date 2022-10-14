@@ -33,5 +33,13 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
 
         public Task<OrderSetItem> UpdateOrderSetItemDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderReceivableCount(CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderApprovedCount(CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken);
     }
 }

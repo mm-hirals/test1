@@ -36,19 +36,26 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Create)]
         public async Task<ApiResponse> Post([FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
-            OrderApiResponseDto orderApiResponseDto = new OrderApiResponseDto();
-            
             ValidationRequest(orderRequestApiDto);
-            
-            if (orderRequestApiDto.OrderId > 0)
-                orderApiResponseDto = await _unitOfWorkBL.OrderBL.UpdateOrderAPI(orderRequestApiDto.OrderId, orderRequestApiDto, cancellationToken);
-            else
-                orderApiResponseDto = await _unitOfWorkBL.OrderBL.CreateOrderAPI(orderRequestApiDto, cancellationToken);
-            
-            if (orderApiResponseDto == null)
-                return new ApiResponse(message: "Internal server error", result: orderApiResponseDto, statusCode: 500);
-            
-            return new ApiResponse(message: "Data inserted successful", result: orderApiResponseDto, statusCode: 200);
+            var data = await _unitOfWorkBL.OrderBL.CreateOrderAPI(orderRequestApiDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        public async Task<ApiResponse> Put(int id, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(orderRequestApiDto);
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderAPI(id, orderRequestApiDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
         [HttpPost("DeleteOrder")]

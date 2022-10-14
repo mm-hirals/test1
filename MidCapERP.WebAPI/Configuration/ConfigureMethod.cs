@@ -43,7 +43,6 @@ namespace MidCapERP.WebAPI.Configuration
             // Localization implemented for message response
             app.UseLocalizationMiddleware();
 
-
             //app.UseMiddleware<UseExceptionHandlerMiddleware>();
             app.UseExceptionHandlerMiddleware();
             app.UseRouting();
@@ -51,7 +50,8 @@ namespace MidCapERP.WebAPI.Configuration
             app.UseCors(builder => builder
                .AllowAnyOrigin()
                .AllowAnyHeader()
-               .AllowAnyMethod());
+               .AllowAnyMethod()
+               .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE"));
 
             app.UseAuthentication();
             app.UseAuthorization();

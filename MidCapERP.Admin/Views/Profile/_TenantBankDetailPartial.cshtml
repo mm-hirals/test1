@@ -11,7 +11,7 @@
                     <i class='bx bx-x'></i>
                 </button>
             </div>
-            <form asp-action="@action" method="post" class="modal-form--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="TenantId" id="TenantId" hidden class="form-control" />
@@ -19,9 +19,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="BankName" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="BankName" class="form-label"></label>
                                     <input asp-for="BankName" class="form-control" />
                                     <span asp-validation-for="BankName" class="text-danger"></span>
                                 </div>
@@ -30,9 +28,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="AccountName" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="AccountName" class="form-label"></label>
                                     <input asp-for="AccountName" class="form-control" />
                                     <span asp-validation-for="AccountName" class="text-danger"></span>
                                 </div>
@@ -41,9 +37,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="AccountNo" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="AccountNo" class="form-label"></label>
                                     <input asp-for="AccountNo" class="form-control" />
                                     <span asp-validation-for="AccountNo" class="text-danger"></span>
                                 </div>
@@ -52,9 +46,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="BranchName" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="BranchName" class="form-label"></label>
                                     <input asp-for="BranchName" class="form-control" />
                                     <span asp-validation-for="BranchName" class="text-danger"></span>
                                 </div>
@@ -63,9 +55,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="AccountType" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="AccountType" class="form-label"></label>
                                     <input asp-for="AccountType" class="form-control" />
                                     <span asp-validation-for="AccountType" class="text-danger"></span>
                                 </div>
@@ -74,9 +64,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="IFSCCode" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="IFSCCode" class="form-label"></label>
                                     <input asp-for="IFSCCode" class="form-control" />
                                     <span asp-validation-for="IFSCCode" class="text-danger"></span>
                                 </div>
@@ -85,9 +73,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="UPIId" class="form-label"></label>
-                                    </label>
+                                    <label asp-for="UPIId" class="form-label"></label>
                                     <input asp-for="UPIId" class="form-control" />
                                     <span asp-validation-for="UPIId" class="text-danger"></span>
                                 </div>
@@ -96,11 +82,9 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="QRCode" class="form-label"></label>
-                                    </label>
-                                    <input asp-for="QRCode" class="form-control" />
-                                    <span asp-validation-for="QRCode" class="text-danger"></span>
+                                    <label asp-for="QRImageUpload" class="form-label"></label>
+                                    <input asp-for="QRImageUpload" class="form-control" type="file" />
+                                    <span asp-validation-for="QRImageUpload" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +98,3 @@
         </div>
     </div>
 </div>
-
-
-
-

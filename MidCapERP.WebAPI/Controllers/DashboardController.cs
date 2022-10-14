@@ -18,10 +18,58 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("CustomerCount")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
         public async Task<ApiResponse> CustomerCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetCustomerCount(cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("OrderReceivableCount")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        public async Task<ApiResponse> OrderReceivableCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderReceivableCount(cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("OrderApprovedCount")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        public async Task<ApiResponse> OrderApprovedCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderApprovedCount(cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("OrderPendingApprovalCount")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        public async Task<ApiResponse> OrderPendingApprovalCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderPendingApprovalCount(cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("OrderFollowUpCount")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        public async Task<ApiResponse> OrderFollowUpCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderFollowUpCount(cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
