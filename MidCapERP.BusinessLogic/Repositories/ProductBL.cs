@@ -22,6 +22,7 @@ using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
+using MidCapERP.Dto.Tenant;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -136,12 +137,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (_currentUser.TenantId > 0)
                 {
                     var tenantDetails = await _unitOfWorkDA.TenantDA.GetById(_currentUser.TenantId, cancellationToken);
-                    //var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
                     var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
                     var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
-                                           //join y in allUsers on x.CreatedBy equals y.UserId
-                                           //join z in allUsers on x.UpdatedBy equals (int?)z.UserId into updated
-                                           //from updatedMat in updated.DefaultIfEmpty()
                                        select new ProductDetailResponseDto()
                                        {
                                            ProductId = Id,
@@ -162,9 +159,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     var productImageList = await GetProductImageById(Id, cancellationToken);
                     if (productImageList != null)
-                    {
                         productDetailResponseDto.ProductImageResponseDto = _mapper.Map<List<ProductImageResponseDto>>(productImageList.ToList());
-                    }
 
                     var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
                     var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
@@ -185,6 +180,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     if (data.Any())
                         productDetailResponseDto.Polish = string.Join(", ", data.Select(x => x.Title + " - " + x.ModelNo));
+                   
+                    productDetailResponseDto.TenantResponseDto = _mapper.Map<TenantResponseDto>(tenantDetails);
                 }
                 return productDetailResponseDto;
             }
@@ -447,7 +444,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
             }
-        } 
+        }
 
         public async Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
@@ -516,7 +513,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterProductActivityData(ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
-            data = data.Where(p => p.SubjectId ==dataTableFilterDto.productId);
+            data = data.Where(p => p.SubjectId == dataTableFilterDto.productId);
             var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var dataResponse = (from x in data
                                 join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }
@@ -565,9 +562,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #endregion API Methods
 
-            #region Private Method
+        #region Private Method
 
-            private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
+        private async Task<IQueryable<LookupValues>> GetAllUnit(CancellationToken cancellationToken)
         {
             var lookupId = await GetUnitLookupId(cancellationToken);
             var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);

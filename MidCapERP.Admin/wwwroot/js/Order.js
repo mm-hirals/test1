@@ -15,7 +15,6 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
- 
                 d.refferedBy = $("#refferedBy").val().trim();
                 d.customerName = $("#customerName").val().trim();
                 d.phoneNumber = $("#phoneNumber").val().trim();
@@ -24,7 +23,6 @@ $(function () {
                 d.orderToDate = $("#orderToDate").val().trim();
                 d.deliveryFromDate = $("#deliveryFromDate").val().trim();
                 d.deliveryToDate = $("#deliveryToDate").val().trim();
- 
             }
         },
         "columns": [

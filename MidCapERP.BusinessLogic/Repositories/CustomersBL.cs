@@ -38,6 +38,29 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data.Where(x => x.CreatedUTCDate >= oldDate).Count();
         }
 
+        public async Task<CustomersApiResponseDto> GetCustomerById(long customerId, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(customerId, cancellationToken);
+            if (customerData == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerData.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerData);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerData.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerData);
+        }
+
         public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
@@ -130,7 +153,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerTypeId = 1;
+            customerToInsert.CustomerTypeId = model.CustomerTypeId;
             customerToInsert.IsDeleted = false;
             customerToInsert.TenantId = _currentUser.TenantId;
             customerToInsert.CreatedBy = _currentUser.UserId;

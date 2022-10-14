@@ -20,11 +20,23 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("{phoneNumberOrEmailId}")]
+        [HttpGet("Search/{phoneNumberOrEmailId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> Get(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumberOrEmailId(phoneNumberOrEmailId, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        public async Task<ApiResponse> Get(Int64 id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.GetById(id, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
