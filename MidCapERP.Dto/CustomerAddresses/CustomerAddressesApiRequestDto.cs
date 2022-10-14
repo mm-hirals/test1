@@ -35,6 +35,6 @@ namespace MidCapERP.Dto.CustomerAddresses
         public string ZipCode { get; set; } = String.Empty;
 
         [DisplayName("IsDefault")]
-        public bool IsDefault { get; set; };
+        public bool IsDefault { get; set; }
     }
 }
