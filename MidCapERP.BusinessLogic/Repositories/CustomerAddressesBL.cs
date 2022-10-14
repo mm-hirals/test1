@@ -102,6 +102,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerAddressesApiRequestDto> CreateCustomerApiAddresses(CustomerAddressesApiRequestDto model, CancellationToken cancellationToken)
         {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var  customerExistOrNot = customerData.FirstOrDefault(x => x.CustomerId == model.CustomerId);
+            if (customerExistOrNot == null)
+            {
+                throw new Exception("Customer not found");
+            }
+
             var customerAddresses = _mapper.Map<CustomerAddresses>(model);
             customerAddresses.AddressType = model.AddressType != "" ? model.AddressType : "Home";
             customerAddresses.Street1 = model.Street1 != null ? model.Street1 : String.Empty;
