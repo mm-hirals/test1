@@ -130,7 +130,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerTypeId = 1;
+            customerToInsert.CustomerTypeId = model.CustomerTypeId;
             customerToInsert.IsDeleted = false;
             customerToInsert.TenantId = _currentUser.TenantId;
             customerToInsert.CreatedBy = _currentUser.UserId;
