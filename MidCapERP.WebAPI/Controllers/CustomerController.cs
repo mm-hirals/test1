@@ -20,9 +20,9 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("Search/{phoneNumberOrEmailId}")]
+        [HttpGet("Search/PhoneNumberOrEmailId/{phoneNumberOrEmailId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> Get(string phoneNumberOrEmailId, CancellationToken cancellationToken)
+        public async Task<ApiResponse> SearchPhoneNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumberOrEmailId(phoneNumberOrEmailId, cancellationToken);
             if (data == null)
