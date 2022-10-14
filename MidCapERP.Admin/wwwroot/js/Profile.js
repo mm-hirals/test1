@@ -4,7 +4,6 @@ $(document).ready(function () {
     $("#divTenantBankDetailInfo").load('/Profile/GetTenantBankDetail' + "?Id=" + $("#hdnTenantId").val());
 });
 
-
 var TenantBankDetailModel = {};
 var tblTenantBankDetail;
 
@@ -26,7 +25,6 @@ $(function () {
             }
         },
         "columns": [
-
             { "data": "bankName", "name": "bankName", "autoWidth": true },
             { "data": "accountName", "name": "accountName", "autoWidth": true },
             { "data": "accountNo", "name": "accountNo", "autoWidth": true },
@@ -34,18 +32,27 @@ $(function () {
             { "data": "accountType", "name": "accountType", "autoWidth": true },
             { "data": "ifscCode", "name": "iFSCCode", "autoWidth": true },
             { "data": "upiId", "name": "uPIId", "autoWidth": true },
-            //{ "data": "qrCode", "name": "qRCode", "autoWidth": true },
+            {
+                "data": "qrCode",
+                "name": "qRCode",
+                "autoWidth": true,
+                "mRender": function (qrCode) {
+                    if (!qrCode) {
+                        return 'N/A';
+                    } else {
+                        return '<img src="' + qrCode + '" height="50px" width="50px" />';
+                    }
+                }
+            },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="TenantBankDetailModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateTenantBankDetail"  href="/Profile/UpdateTenantBankDetail/' + o.tenantBankDetailId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' + '<a data-ajax-complete="TenantBankDetailModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Profile/DeleteTenantBankDetail/' + o.tenantBankDetailId + '"><i class="bx bxs-trash"></i></a></div>';
-
                 }
             }
         ]
     });
 });
-
 
 TenantBankDetailModel.onComplete = function () {
     $("#divTenantBankDetailModal").modal('show');
