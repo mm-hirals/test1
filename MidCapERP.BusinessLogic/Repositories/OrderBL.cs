@@ -13,6 +13,7 @@ using MidCapERP.Dto.OrderAddressesApi;
 using MidCapERP.Dto.OrderSet;
 using MidCapERP.Dto.OrderSetItem;
 using MidCapERP.Dto.Paging;
+using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -435,10 +436,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                         await DeleteOrderSetItem(orderItemId, cancellationToken);
                     }
                     await DeleteOrderSet(orderDeleteApiRequestDto.OrderSetId, cancellationToken);
+                    await UpdateOrderPriceCalculation(orderDeleteApiRequestDto.OrderId, cancellationToken);
                 }
                 else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSetItem)
                 {
                     await DeleteOrderSetItem(orderDeleteApiRequestDto.OrderSetItemId, cancellationToken);
+                    await UpdateOrderPriceCalculation(orderDeleteApiRequestDto.OrderId, cancellationToken);
                 }
                 else
                 {
@@ -522,7 +525,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (order != null)
             {
                 await _unitOfWorkDA.OrderSetDA.DeleteOrderSet(order, cancellationToken);
-                await UpdateOrderPriceCalculation(order.OrderId, cancellationToken);
             }
             else
             {
@@ -536,7 +538,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (order != null)
             {
                 await _unitOfWorkDA.OrderSetItemDA.DeleteOrderSetItem(order, cancellationToken);
-                await UpdateOrderPriceCalculation(order.OrderId, cancellationToken);
             }
             else
             {
