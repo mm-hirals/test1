@@ -53,7 +53,7 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200); 
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
         }
 
         [HttpPost]
@@ -106,29 +106,30 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
         }
 
-        [HttpPost("CustomerAddress/{id}")]
+        [HttpPost("CustomerAddress")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<ApiResponse> CreateOrEditCustomerAddress(int id, [FromBody] CustomerAddressesRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> CreateCustomerAddress([FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
         {
             ValidationRequest(customerAddressesRequestDto);
-            if (id == 0 || id == null)
+            var data = await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerApiAddresses(customerAddressesRequestDto, cancellationToken);
+            if (data == null)
             {
-                var data = await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customerAddressesRequestDto, cancellationToken);
-                if (data == null)
-                {
-                    return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-                }
-                return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
             }
-            else
+            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+        }
+
+        [HttpPut("CustomerAddress/{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<ApiResponse> UpdateCustomerAddress(int id, [FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerAddressesRequestDto);
+            var data = await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerApiAddresses(id, customerAddressesRequestDto, cancellationToken);
+            if (data == null)
             {
-                var data = await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(id, customerAddressesRequestDto, cancellationToken);
-                if (data == null)
-                {
-                    return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-                }
-                return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
             }
+            return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
         }
 
         [HttpGet("/SearchForCustomerDropdown/{searchText}")]
@@ -154,6 +155,14 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         private void ValidationRequest(CustomerAddressesRequestDto customersRequestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new ApiException(ModelState.AllErrors());
+            }
+        }
+
+        private void ValidationRequest(CustomerAddressesApiRequestDto customersRequestDto)
         {
             if (!ModelState.IsValid)
             {
