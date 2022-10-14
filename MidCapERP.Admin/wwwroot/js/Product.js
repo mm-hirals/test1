@@ -50,7 +50,7 @@ $(document).on("click", ".add-icon", (function () {
         }
     }
     else {
-        alert("Please enter value between 0-999");
+        alert("Please enter value between 1-999");
     }
 }));
 
