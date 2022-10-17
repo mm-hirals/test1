@@ -1,6 +1,7 @@
-﻿using MidCapERP.Dto.TenantBankDetail;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using MidCapERP.Dto.TenantBankDetail;
+using MidCapERP.Dto.TenantSMTPDetail;
 
 namespace MidCapERP.Dto.Tenant
 {
@@ -95,5 +96,7 @@ namespace MidCapERP.Dto.Tenant
         public string? InstagramURL { get; set; }
 
         public List<TenantBankDetailResponseDto> BankDetail { get; set; }
+
+        public TenantSMTPDetailResponseDto tenantSMTPDetailResponseDto { get; set; }
     }
 }
