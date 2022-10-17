@@ -97,6 +97,6 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("Amount Rounding off Multiple")]
         public int? AmountRoundMultiple { get; set; }
 
-        public TenantSMTPDetailRequestDto tenantSMTPDetailRequestDto { get; set; }
+        public TenantSMTPDetailRequestDto tenantSMTPDetailResponseDto { get; set; }
     }
 }

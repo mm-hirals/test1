@@ -11,8 +11,6 @@
 	@if (tenantId > 0)
 	{
 		<partial name="_TenantDetailPartial" model="@Model" />
-		<partial name="_SMTPPartial" model="@Model.tenantSMTPDetailResponseDto" />
-		<input asp-for="@Model.tenantSMTPDetailResponseDto.TenantSMTPDetailId" hidden class="form-control" />
 		<nav class="product-nav-tab--sticky">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Bank Details</button>

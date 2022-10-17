@@ -41,6 +41,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateTenant(TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBL.UpdateTenant(tenantRequestDto, cancellationToken);
+            await _unitOfWorkBL.TenantSMTPDetailBL.UpdateTenantSMTPDetail(tenantRequestDto.tenantSMTPDetailResponseDto, cancellationToken);
             return RedirectToAction("Index");
         }
 
@@ -80,21 +81,6 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.TenantBankDetailBL.DeleteTenantBankDetail(Id, cancellationToken);
             return RedirectToAction("_TenantBankDetailPartial");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UpdateTenantSMTPDetail(long Id, CancellationToken cancellationToken)
-        {
-            var tenantBankDetail = await _unitOfWorkBL.TenantSMTPDetailBL.TenantSMTPDetailGetById(Id, cancellationToken);
-            return PartialView("Index");
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
-        public async Task<IActionResult> UpdateTenantSMTPDetail(TenantSMTPDetailRequestDto tenantSMTPDetailRequestDto, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.TenantSMTPDetailBL.UpdateTenantSMTPDetail(tenantSMTPDetailRequestDto, cancellationToken);
-            return RedirectToAction("Index");
         }
     }
 }
