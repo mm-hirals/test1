@@ -23,22 +23,30 @@ namespace MidCapERP.Dto.Product
         public decimal? Width { get; set; }
 
         [DisplayName("Width Numeric")]
-        public string WidthNumeric { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "The Width Not Valid.")]
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? WidthNumeric { get; set; }
 
         public decimal? Height { get; set; }
 
         [DisplayName("Height Numeric")]
-        public string HeightNumeric { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "The Height Not Valid.")]
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? HeightNumeric { get; set; }
 
         public decimal? Depth { get; set; }
 
         [DisplayName("Depth Numeric")]
-        public string DepthNumeric { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "The Depth Not Valid.")]
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? DepthNumeric { get; set; }
 
         public decimal? Diameter { get; set; }
 
         [DisplayName("Diameter Numeric")]
-        public string DiameterNumeric { get; set; }
+        [RegularExpression("^\\d+$", ErrorMessage = "The Diameter Not Valid.")]
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? DiameterNumeric { get; set; }
 
         [DisplayName("Fabric Needed")]
         public decimal? FabricNeeded { get; set; }
