@@ -31,6 +31,9 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Depth")]
         public string Depth { get; set; }
 
+        [DisplayName("Diameter")]
+        public string Diameter { get; set; }
+
         [DisplayName("Fabric Needed")]
         [StringLength(3, MinimumLength = 1, ErrorMessage = "The Minimum 1 Number, Maximum 3 Number.")]
         public decimal? FabricNeeded { get; set; }

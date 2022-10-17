@@ -12,9 +12,10 @@ namespace MidCapERP.DataEntities.Models
         public int CategoryId { get; set; }
         public string ProductTitle { get; set; }
         public string ModelNo { get; set; }
-        public decimal Width { get; set; }
-        public decimal Height { get; set; }
-        public decimal Depth { get; set; }
+        public decimal? Width { get; set; }
+        public decimal? Height { get; set; }
+        public decimal? Depth { get; set; }
+        public decimal? Diameter { get; set; }
         public decimal? FabricNeeded { get; set; }
         public bool IsVisibleToWholesalers { get; set; }
         public decimal TotalDaysToPrepare { get; set; }
