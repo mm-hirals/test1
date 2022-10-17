@@ -26,7 +26,6 @@ namespace MidCapERP.Dto.Customers
 
         [DisplayName("Email Address")]
         [EmailAddress(ErrorMessage = "Please enter valid email address.")]
-        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}$", ErrorMessage = "Please Enter 8 to 16 With Upper Case, Lower Case and Special Character.")]
         public string? EmailId { get; set; }
 
         [DisplayName("Phone Number")]

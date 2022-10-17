@@ -48,7 +48,6 @@ namespace MidCapERP.Dto.Product
         public bool IsVisibleToWholesalers { get; set; }
 
         [DisplayName("Total days to prepare")]
-        [RegularExpression("(0)|\\d{1,3}", ErrorMessage = "The Day Not Valid.")]
         public decimal TotalDaysToPrepare { get; set; }
 
         [StringLength(2000, MinimumLength = 1, ErrorMessage = "The Minimum 1 Number, Maximum 2000 Number.")]

@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using System.Threading;
+using AutoMapper;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
@@ -9,6 +11,7 @@ using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
@@ -19,6 +22,7 @@ using MidCapERP.Dto.Product;
 using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
+using MidCapERP.Dto.Tenant;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -157,9 +161,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     var productImageList = await GetProductImageById(Id, cancellationToken);
                     if (productImageList != null)
-                    {
                         productDetailResponseDto.ProductImageResponseDto = _mapper.Map<List<ProductImageResponseDto>>(productImageList.ToList());
-                    }
 
                     var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
                     var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
@@ -180,6 +182,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     if (data.Any())
                         productDetailResponseDto.Polish = string.Join(", ", data.Select(x => x.Title + " - " + x.ModelNo));
+                   
+                    productDetailResponseDto.TenantResponseDto = _mapper.Map<TenantResponseDto>(tenantDetails);
                 }
                 return productDetailResponseDto;
             }
@@ -446,13 +450,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<IEnumerable<ActivityLogs>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
-            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
-            return data.Where(p => p.SubjectTypeId == productSubjectTypeId && p.SubjectId == productId).OrderByDescending(p => p.ActivityLogID).ToList();
-        }
-
         public async Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
             ProductDimensionsApiResponseDto orderCalculationData = new ProductDimensionsApiResponseDto();
@@ -512,6 +509,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
+
                                 }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
 
             return dataResponse;
@@ -532,6 +530,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
+
                                 }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
             var productData = new PagedList<ActivityLogsResponseDto>(dataResponse, dataTableFilterDto);
             return new JsonRepsonse<ActivityLogsResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);

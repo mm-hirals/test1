@@ -9,7 +9,11 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<CustomersResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken);
+        public Task<CustomersApiResponseDto> GetCustomerById(long customerId, CancellationToken cancellationToken);
+
+        public Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken);
 
         public Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken);
 
