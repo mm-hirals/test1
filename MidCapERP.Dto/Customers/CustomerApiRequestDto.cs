@@ -36,5 +36,7 @@ namespace MidCapERP.Dto.Customers
         public string? GSTNo { get; set; }
 
         public long RefferedBy { get; set; }
+
+        public bool IsSubscribe { get; set; }
     }
 }

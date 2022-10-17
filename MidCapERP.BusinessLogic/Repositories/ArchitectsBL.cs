@@ -104,6 +104,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private async Task SaveArchitectAddress(CustomersRequestDto model, Customers data, CancellationToken cancellationToken)

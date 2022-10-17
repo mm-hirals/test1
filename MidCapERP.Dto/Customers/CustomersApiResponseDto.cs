@@ -25,5 +25,7 @@ namespace MidCapERP.Dto.Customers
         public string? GSTNo { get; set; }
 
         public CustomersApiResponseDto? Reffered { get; set; }
+
+        public bool IsSubscribe { get; set; }
     }
 }
