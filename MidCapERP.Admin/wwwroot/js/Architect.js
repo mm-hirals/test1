@@ -125,8 +125,11 @@ $("#multiSelectArchitect").click(function () {
 
 // On button click send checkbox values to controller
 $(".sendSMSToClient").click(function () {
-    if ($("#message").val() == '') {
+    if ($("#txtMessage").val() == '') {
         $("#errorMessage").text("Please enter message.");
+    }
+    else if ($("#txtSubject").val() == '') {
+        $("#errorSubject").text("Please enter subject.");
     }
     else {
         $("#errorMessage").hide();
@@ -145,7 +148,8 @@ $(".sendSMSToClient").click(function () {
             CustomerToDate: architectToDate,
             IsCheckedAll: $("#selectall").checked,
             CustomerList: value_check,
-            Message: $("#message").val()
+            Message: $("#txtMessage").val(),
+            Subject: $("#txtSubject").val()
         };
         console.log(data);
         $.ajax({
