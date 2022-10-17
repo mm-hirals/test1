@@ -30,6 +30,11 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var getUser = await GetAllRoleData(cancellationToken);
             var rolesByTenant = getUser.Where(x => x.TenantId == _currentUser.TenantId).ToList();
+            foreach (var item in rolesByTenant)
+            {
+                item.Name = item.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), "");
+                item.NormalizedName = item.NormalizedName.Replace("_" + Convert.ToString(_currentUser.TenantId), "");
+            }
             return rolesByTenant;
         }
 
@@ -41,8 +46,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                        select new RoleResponseDto
                        {
                            Id = x.Id,
-                           Name = x.Name,
-                           NormalizedName = x.NormalizedName,
+                           Name = x.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), ""),
+                           NormalizedName = x.NormalizedName.Replace("_" + Convert.ToString(_currentUser.TenantId), ""),
                            TenantId = x.TenantId
                        };
             var roleFilterData = FilterRoleData(dataTableFilterDto, role);
@@ -56,7 +61,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var roleData = await GetAllRoles(cancellationToken);
             var roleName = roleData.Where(x => x.Id == Id).Select(n => n.Name).FirstOrDefault();
             mRoleRequestDto.Id = Id;
-            mRoleRequestDto.Name = roleName;
+            mRoleRequestDto.Name = roleName.Replace("_" + Convert.ToString(_currentUser.TenantId), "");
             mRoleRequestDto.ModulePermissionList.AddRange(rolePermissionResponseDto);
             return mRoleRequestDto;
         }
@@ -64,8 +69,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<RoleRequestDto> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             ApplicationRole addRoleData = new ApplicationRole();
-
-            addRoleData.Name = roleRequestDto.Name;
+            addRoleData.Name = roleRequestDto.Name + "_" + Convert.ToString(_currentUser.TenantId);
             addRoleData.TenantId = _currentUser.TenantId;
             var insertedRole = await _unitOfWorkDA.RoleDA.CreateRole(addRoleData);
             return _mapper.Map<RoleRequestDto>(insertedRole);
@@ -75,6 +79,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var data = await _roleManager.FindByIdAsync(model.Id);
             data.Name = model.Name;
+            data.Name = data.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), "") + "_" + Convert.ToString(_currentUser.TenantId);
             var updateRole = await _unitOfWorkDA.RoleDA.UpdateRole(data);
             return _mapper.Map<RoleRequestDto>(updateRole);
         }
@@ -93,12 +98,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 else
                 {
-                    return !getAllRole.Any(p => p.Name == roleRequestDto.Name && p.Id != roleRequestDto.Id);
+                    return !getAllRole.Any(p => p.Name == roleRequestDto.Name + "_" + Convert.ToString(_currentUser.TenantId) && p.Id != roleRequestDto.Id);
                 }
             }
             else
             {
-                return !getAllRole.Any(p => p.Name == roleRequestDto.Name);
+                return !getAllRole.Any(p => p.Name == roleRequestDto.Name + "_" + Convert.ToString(_currentUser.TenantId));
             }
         }
 

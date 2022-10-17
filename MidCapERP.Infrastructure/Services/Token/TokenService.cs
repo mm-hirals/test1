@@ -297,7 +297,8 @@ namespace MidCapERP.Infrastructure.Services.Token
             var tenant = userTenants.FirstOrDefault(p => p.UserId == user.UserId);
             string tenantId = string.Empty;
             if (tenant != null) tenantId = MagnusMinds.Utility.Encryption.Encrypt(Convert.ToString(tenant.TenantId), true, ApplicationIdentityConstants.EncryptionSecret);
-
+            //role = role.Remove(role.Length - 2, 2);
+            role = role.Replace("_" + Convert.ToString(tenant?.TenantId), "");
             return new TokenResponse(user,
                                      role,
                                      jwtToken,
