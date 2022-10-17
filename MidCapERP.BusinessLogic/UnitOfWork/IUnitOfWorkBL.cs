@@ -37,5 +37,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IOrderBL OrderBL { get; }
         IDashboardBL DashboardBL { get; }
         IActivityLogsService ActivityLogsService { get; }
+        ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
     }
 }

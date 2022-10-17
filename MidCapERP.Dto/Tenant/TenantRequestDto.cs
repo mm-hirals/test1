@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using MidCapERP.Dto.TenantSMTPDetail;
 
 namespace MidCapERP.Dto.Tenant
 {
@@ -95,5 +96,7 @@ namespace MidCapERP.Dto.Tenant
         [Required]
         [DisplayName("Amount Rounding off Multiple")]
         public int? AmountRoundMultiple { get; set; }
+
+        public TenantSMTPDetailRequestDto tenantSMTPDetailRequestDto { get; set; }
     }
 }

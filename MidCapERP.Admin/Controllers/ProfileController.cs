@@ -6,6 +6,7 @@ using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Tenant;
 using MidCapERP.Dto.TenantBankDetail;
+using MidCapERP.Dto.TenantSMTPDetail;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -24,8 +25,8 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-            var Profile = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
-            return View("Index", Profile);
+            var tenantRequestDto = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+            return View("Index", tenantRequestDto);
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
@@ -57,6 +58,7 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.TenantBankDetailBL.CreateTenantBankDetail(tenantBankDetailRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         public async Task<IActionResult> UpdateTenantBankDetail(int Id, CancellationToken cancellationToken)
         {
@@ -71,6 +73,7 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Profile.Delete)]
         public async Task<IActionResult> DeleteTenantBankDetail(int Id, CancellationToken cancellationToken)
@@ -79,5 +82,19 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("_TenantBankDetailPartial");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdateTenantSMTPDetail(long Id, CancellationToken cancellationToken)
+        {
+            var tenantBankDetail = await _unitOfWorkBL.TenantSMTPDetailBL.TenantSMTPDetailGetById(Id, cancellationToken);
+            return PartialView("Index");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
+        public async Task<IActionResult> UpdateTenantSMTPDetail(TenantSMTPDetailRequestDto tenantSMTPDetailRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.TenantSMTPDetailBL.UpdateTenantSMTPDetail(tenantSMTPDetailRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
     }
 }
