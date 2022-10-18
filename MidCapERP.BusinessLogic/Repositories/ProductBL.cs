@@ -97,9 +97,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       WidthNumeric = Convert.ToString(Math.Floor(x.Width)),
-                                       HeightNumeric = Convert.ToString(Math.Floor(x.Height)),
-                                       DepthNumeric = Convert.ToString(Math.Floor(x.Depth)),
+                                       WidthNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Width))),
+                                       HeightNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Height))),
+                                       DepthNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Depth))),
+                                       DiameterNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Diameter))),
                                        Width = x.Width,
                                        Height = x.Height,
                                        Depth = x.Depth,
@@ -145,9 +146,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                            CategoryId = x.CategoryId,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
-                                           Width = Convert.ToString(Math.Floor(x.Width)),
-                                           Height = Convert.ToString(Math.Floor(x.Height)),
-                                           Depth = Convert.ToString(Math.Floor(x.Depth)),
+                                           Width = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Width))),
+                                           Height = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Height))),
+                                           Depth = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Depth))),
+                                           Diameter = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Diameter))),
                                            FabricNeeded = x.FabricNeeded,
                                            TotalDaysToPrepare = x.TotalDaysToPrepare,
                                            Features = x.Features,
@@ -274,7 +276,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
         }
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
@@ -282,6 +284,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             model.Width = Convert.ToDecimal(model.WidthNumeric);
             model.Height = Convert.ToDecimal(model.HeightNumeric);
             model.Depth = Convert.ToDecimal(model.DepthNumeric);
+            model.Diameter = Convert.ToDecimal(model.DiameterNumeric);
             var productToInsert = _mapper.Map<Product>(model);
             productToInsert.Status = 0;
             productToInsert.TenantId = _currentUser.TenantId;
@@ -337,6 +340,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Width = Convert.ToDecimal(model.WidthNumeric);
                     getProductById.Height = Convert.ToDecimal(model.HeightNumeric);
                     getProductById.Depth = Convert.ToDecimal(model.DepthNumeric);
+                    getProductById.Diameter = Convert.ToDecimal(model.DiameterNumeric);
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
                     await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Updated", ActivityLogStringConstant.Update, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
@@ -456,19 +460,38 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (productData != null)
                 {
                     var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-                    decimal costPerCubic = productData.CostPrice / (productData.Width * productData.Height * productData.Depth);
-                    decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
-                    decimal newCostPrice = totalCubic * costPerCubic;
-                    newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
-                    decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-                    decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                    var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetById(productData.CategoryId, cancellationToken);
+                    if (lookupValueData.LookupValueName == "Sofa / Corner / Lounger")
+                    {
+                        decimal costPerCubic = productData.CostPrice / Convert.ToDecimal(productData.Width);
+                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width);
+                        decimal newCostPrice = totalCubic * costPerCubic;
+                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                        orderCalculationData.TotalAmount = totalPrice;
+                    }
+                    else if (lookupValueData.LookupValueName == "Marble")
+                    {
+                        decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height));
+                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height);
+                        decimal newCostPrice = totalCubic * costPerCubic;
+                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                        orderCalculationData.TotalAmount = totalPrice;
+                    }
+                    else
+                    {
+                        orderCalculationData.TotalAmount = orderCalculationApiRequestDto.TotalAmount;
+                    }
                     orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
                     orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
                     orderCalculationData.Quantity = orderCalculationApiRequestDto.Quantity;
-                    orderCalculationData.TotalAmount = totalPrice;
                     orderCalculationData.Width = orderCalculationApiRequestDto.Width;
                     orderCalculationData.Height = orderCalculationApiRequestDto.Height;
                     orderCalculationData.Depth = orderCalculationApiRequestDto.Depth;
+                    orderCalculationData.Diameter = orderCalculationApiRequestDto.Diameter;
                 }
             }
             return _mapper.Map<ProductDimensionsApiResponseDto>(orderCalculationData);
@@ -623,6 +646,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.Width = model.Width;
             oldData.Height = model.Height;
             oldData.Depth = model.Depth;
+            oldData.Diameter = model.Diameter;
             oldData.FabricNeeded = model.FabricNeeded;
             oldData.IsVisibleToWholesalers = model.IsVisibleToWholesalers;
             oldData.TotalDaysToPrepare = model.TotalDaysToPrepare;
@@ -639,7 +663,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 ProductImageRequestDto productImageRequestDto = new ProductImageRequestDto();
                 productImageRequestDto.ImagePath = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.Product);
                 productImageRequestDto.ImageName = item.FileName;
-
                 var productImageToInsert = _mapper.Map<ProductImage>(productImageRequestDto);
                 productImageToInsert.ProductId = model.ProductId;
                 productImageToInsert.ImagePath = productImageRequestDto.ImagePath;

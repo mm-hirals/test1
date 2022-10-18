@@ -15,6 +15,12 @@ namespace MidCapERP.Dto.Order
         public long CustomerID { get; set; }
 
         [Required]
+        public long BillingAddressID { get; set; }
+
+        [Required]
+        public long ShippingAddressID { get; set; }
+
+        [Required]
         public decimal GrossTotal { get; set; }
 
         [Required]

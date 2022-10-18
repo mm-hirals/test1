@@ -11,7 +11,6 @@
 	@if (tenantId > 0)
 	{
 		<partial name="_TenantDetailPartial" model="@Model" />
-		<partial name="_SMTPPartial" model="@Model" />
 		<nav class="product-nav-tab--sticky">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Bank Details</button>
@@ -49,6 +48,6 @@
 		await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 		await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-		<script asp-src-include="~/js/Profile.js" ></script>
+		<script asp-src-include="~/js/Profile.js"></script>
 	}
 	}

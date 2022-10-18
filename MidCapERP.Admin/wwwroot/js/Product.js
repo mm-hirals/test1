@@ -1,7 +1,6 @@
 ﻿'use strict';
 window.counter = 0;
 var ProductModel = {};
-var tblActivitylog;
 $(document).ready(function () {
     $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
     if ($("#hdnProductId").val() > 0) {
@@ -104,29 +103,10 @@ function emptyFields(trRow) {
     });
 }
 
-$(function () {
-    tblActivitylog = $("#tblactivitylog").DataTable({
-        "searching": false,
-        "processing": true,
-        "serverSide": true,
-        "filter": true,
-        "ajax": {
-            "url": "/Product/GetProductActivity",
-            "type": "POST",
-            "datatype": "json"
-        },
-        "columns": [
-            { "data": "activityLogID", "name": "activityLogID", "autoWidth": true },
-            { "data": "description", "name": "description", "autoWidth": true },
-            { "data": "action", "name": "action", "autoWidth": true },
-            { "data": "createdBy", "name": "createdBy", "autoWidth": true },
-            { "data": "createdDate", "name": "createdDate", "autoWidth": true }
-        ]
-    });
-});
 $(document).on("change", "input.costPrice", (function () {
     $(this).attr('value', $(this).val());
 }));
+
 $(document).on("change", "input.quantity", (function () {
     var qty = $(this).attr('value', $(this).val());
     var unitPrice = $(this).parent().parent().find("input.materialPrice").val();
@@ -135,6 +115,7 @@ $(document).on("change", "input.quantity", (function () {
     $(this).parent().parent().find("input.costPrice").val(costPrice.toFixed(2));
     $(this).parent().parent().find("input.costPrice").attr('value', costPrice.toFixed(2));
 }));
+
 $(document).on("change", "select.material", (function () {
     var val = $(this).val();
     $("option", this).removeAttr("selected").filter(function () {

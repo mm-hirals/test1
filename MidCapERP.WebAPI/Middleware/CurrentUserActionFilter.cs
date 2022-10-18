@@ -44,7 +44,6 @@ namespace MidCapERP.WebAPI.Middleware
                         _currentUser.FullName = user.FullName;
                         _currentUser.EmailAddress = user.Email;
                         _currentUser.RoleId = userRoles?.Id;
-                        _currentUser.Role = userRoles?.Name;
 
                         //if (context.HttpContext.Request.Cookies[ApplicationIdentityConstants.TenantCookieName] != null)
                         //{
@@ -61,6 +60,8 @@ namespace MidCapERP.WebAPI.Middleware
                         {
                             _currentUser.TenantId = Convert.ToInt32(MagnusMinds.Utility.Encryption.Decrypt(context.HttpContext.Request.Headers[ApplicationIdentityConstants.TenantCookieName], true, ApplicationIdentityConstants.EncryptionSecret));
                         }
+
+                        _currentUser.Role = userRoles?.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), "");
                     }
                 }
             }

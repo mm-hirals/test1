@@ -19,5 +19,6 @@ namespace MidCapERP.DataEntities.Models
         public long? RefferedBy { get; set; }
         public decimal Discount { get; set; }
         public int TenantId { get; set; }
+        public bool IsSubscribe { get; set; }
     }
 }

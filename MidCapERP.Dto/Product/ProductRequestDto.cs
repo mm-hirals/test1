@@ -20,32 +20,33 @@ namespace MidCapERP.Dto.Product
         [StringLength(20, MinimumLength = 1, ErrorMessage = "Maximum 20 characters.")]
         public string ModelNo { get; set; }
 
-        [Required]
-        public decimal Width { get; set; }
+        public decimal? Width { get; set; }
 
         [DisplayName("Width Numeric")]
-        [Required(ErrorMessage = "The Width field is required.")]
         [RegularExpression("^\\d+$", ErrorMessage = "The Width Not Valid.")]
-        [StringLength(3, MinimumLength = 1, ErrorMessage = "The Minimum 1 Number, Maximum 3 Number.")]
-        public string WidthNumeric { get; set; }
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? WidthNumeric { get; set; }
 
-        [Required]
-        public decimal Height { get; set; }
+        public decimal? Height { get; set; }
 
         [DisplayName("Height Numeric")]
-        [Required(ErrorMessage = "The Height field is required.")]
         [RegularExpression("^\\d+$", ErrorMessage = "The Height Not Valid.")]
-        [StringLength(3, MinimumLength = 1, ErrorMessage = "The Minimum 1 Number, Maximum 3 Number.")]
-        public string HeightNumeric { get; set; }
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? HeightNumeric { get; set; }
 
-        [Required]
-        public decimal Depth { get; set; }
+        public decimal? Depth { get; set; }
 
         [DisplayName("Depth Numeric")]
-        [Required(ErrorMessage = "The Depth field is required.")]
         [RegularExpression("^\\d+$", ErrorMessage = "The Depth Not Valid.")]
-        [StringLength(3, MinimumLength = 1, ErrorMessage = "The Minimum 1 Number, Maximum 3 Number.")]
-        public string DepthNumeric { get; set; }
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? DepthNumeric { get; set; }
+
+        public decimal? Diameter { get; set; }
+
+        [DisplayName("Diameter Numeric")]
+        [RegularExpression("^\\d+$", ErrorMessage = "The Diameter Not Valid.")]
+        [StringLength(3, ErrorMessage = "The Maximum 3 Number.")]
+        public string? DiameterNumeric { get; set; }
 
         [DisplayName("Fabric Needed")]
         public decimal? FabricNeeded { get; set; }

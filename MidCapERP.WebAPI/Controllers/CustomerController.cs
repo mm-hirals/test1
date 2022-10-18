@@ -132,7 +132,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
         }
 
-        [HttpGet("/SearchForCustomerDropdown/{searchText}")]
+        [HttpGet("SearchForCustomerDropdown/{searchText}")]
         [Authorize((ApplicationIdentityConstants.Permissions.Customer.View))]
         public async Task<ApiResponse> SearchDropDownRefferedBy(string searchText, CancellationToken cancellationToken)
         {

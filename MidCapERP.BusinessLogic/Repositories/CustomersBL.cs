@@ -257,6 +257,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -267,6 +268,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)

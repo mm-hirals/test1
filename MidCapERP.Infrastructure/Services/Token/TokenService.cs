@@ -65,35 +65,40 @@ namespace MidCapERP.Infrastructure.Services.Token
         public async Task GenerateOTP(TokenOtpGenerateRequest request, CancellationToken cancellationToken)
         {
             string data = string.Empty;
-
             var user = await GetUserByPhoneNo(request, cancellationToken);
             if (user != null)
             {
-                var otpLogin = await _loginDA.GetAll(cancellationToken);
-                var oldLoginTokenByPhoneNo = otpLogin.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
-
-                if (oldLoginTokenByPhoneNo == null)
+                if (user.MobileDeviceId == request.MobileDeviceId)
                 {
-                    OTPLogin loginToken = new OTPLogin()
-                    {
-                        PhoneNumber = request.PhoneNo,
-                        OTP = "0000",// new Random().Next(1, 9999).ToString("D4"),
-                        ExpiryTime = DateTime.UtcNow.AddMinutes(10),
-                    };
+                    var otpLogin = await _loginDA.GetAll(cancellationToken);
+                    var oldLoginTokenByPhoneNo = otpLogin.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
 
-                    var createdToken = await _loginDA.CreateLoginToken(loginToken, cancellationToken);
-                    data = createdToken.OTP;
+                    if (oldLoginTokenByPhoneNo == null)
+                    {
+                        OTPLogin loginToken = new OTPLogin()
+                        {
+                            PhoneNumber = request.PhoneNo,
+                            OTP = "0000",// new Random().Next(1, 9999).ToString("D4"),
+                            ExpiryTime = DateTime.UtcNow.AddMinutes(10),
+                        };
+                        var createdToken = await _loginDA.CreateLoginToken(loginToken, cancellationToken);
+                        data = createdToken.OTP;
+                    }
+                    else
+                    {
+                        oldLoginTokenByPhoneNo.OTP = "0000";
+                        //oldLoginTokenByPhoneNo.OTP = new Random().Next(1, 9999).ToString("D4");
+                        oldLoginTokenByPhoneNo.ExpiryTime = DateTime.UtcNow.AddMinutes(10);
+                        var createdToken = await _loginDA.UpdateLoginToken(oldLoginTokenByPhoneNo, cancellationToken);
+                        data = createdToken.OTP;
+                    }
+
+                    //Send OTP to Someone through SMS or Email
                 }
                 else
                 {
-                    oldLoginTokenByPhoneNo.OTP = "0000";
-                    //oldLoginTokenByPhoneNo.OTP = new Random().Next(1, 9999).ToString("D4");
-                    oldLoginTokenByPhoneNo.ExpiryTime = DateTime.UtcNow.AddMinutes(10);
-                    var createdToken = await _loginDA.UpdateLoginToken(oldLoginTokenByPhoneNo, cancellationToken);
-                    data = createdToken.OTP;
+                    throw new Exception("User device not found");
                 }
-
-                //Send OTP to Someone through SMS or Email
             }
             else
             {
@@ -132,12 +137,12 @@ namespace MidCapERP.Infrastructure.Services.Token
             var getNullMobileDevice = getAllUser.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo);
             if (getNullMobileDevice == null)
                 throw new Exception("User Not Found");
-            if (getNullMobileDevice.MobileDeviceId == null || getNullMobileDevice.MobileDeviceId != request.MobileDeviceId)
-            {
-                getNullMobileDevice.MobileDeviceId = request.MobileDeviceId;
-                await _unitOfWorkDA.UserDA.UpdateUser(getNullMobileDevice);
-            }
-            return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted && p.MobileDeviceId == request.MobileDeviceId);
+            //if (getNullMobileDevice.MobileDeviceId == null || getNullMobileDevice.MobileDeviceId != request.MobileDeviceId)
+            //{
+            //    getNullMobileDevice.MobileDeviceId = request.MobileDeviceId;
+            //    await _unitOfWorkDA.UserDA.UpdateUser(getNullMobileDevice);
+            //}
+            return _userManager.Users.FirstOrDefault(p => p.PhoneNumber == request.PhoneNo && p.IsActive && !p.IsDeleted);
         }
 
         public Task<TokenResponse> RefreshToken(string refreshToken, string ipAddress, CancellationToken cancellationToken)
@@ -297,7 +302,8 @@ namespace MidCapERP.Infrastructure.Services.Token
             var tenant = userTenants.FirstOrDefault(p => p.UserId == user.UserId);
             string tenantId = string.Empty;
             if (tenant != null) tenantId = MagnusMinds.Utility.Encryption.Encrypt(Convert.ToString(tenant.TenantId), true, ApplicationIdentityConstants.EncryptionSecret);
-
+            //role = role.Remove(role.Length - 2, 2);
+            role = role.Replace("_" + Convert.ToString(tenant?.TenantId), "");
             return new TokenResponse(user,
                                      role,
                                      jwtToken,
