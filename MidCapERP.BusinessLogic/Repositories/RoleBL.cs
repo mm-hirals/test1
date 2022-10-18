@@ -14,7 +14,7 @@ namespace MidCapERP.BusinessLogic.Repositories
     public class RoleBL : IRoleBL
     {
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly IUnitOfWorkDA _unitOfWorkDA;
+        private readonly IUnitOfWorkDA _unitOfWorkDA; 
         private readonly CurrentUser _currentUser;
         private readonly IMapper _mapper;
 
