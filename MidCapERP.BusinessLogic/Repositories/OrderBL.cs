@@ -181,14 +181,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var orderEnum = Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>().ToList();
             int statusValue = 0;
-            foreach (var i in orderEnum)
+            foreach (var item in orderEnum)
             {
-                if (status == Convert.ToString(i))
-                {
-                    statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(i));
-                }
+                if (status == Convert.ToString(item))
+                    statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(item));
             }
-            var enumOrderData = orderAllData.Where(p => p.Status == statusValue).ToList();
+
+            var enumOrderData = orderAllData.Where(x => x.CreatedBy == _currentUser.UserId && x.Status == statusValue).ToList();
             foreach (var orderData in enumOrderData)
             {
                 var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
@@ -310,14 +309,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             model.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
             var saveOrder = await SaveOrder(model, cancellationToken);
 
-            //Create OrderAddress Base On Address
-            OrderAddressesApiRequestDto orderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
-            orderAddressesApiRequestDto.OrderId = saveOrder.OrderId;
-            orderAddressesApiRequestDto.AddressType = "Billing";
-            await SaveOrderAddress(orderAddressesApiRequestDto, model, cancellationToken);
-            orderAddressesApiRequestDto.AddressType = "Shipping";
-            await SaveOrderAddress(orderAddressesApiRequestDto, model, cancellationToken);
-
             //Create Orderset Base On Order
             foreach (var setData in model.OrderSetRequestDto)
             {
@@ -332,6 +323,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                     await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
+
+            //Create OrderAddress Base On Address
+            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.BillingAddressID, "Billing", cancellationToken);
+            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", cancellationToken);
+
             return _mapper.Map<OrderApiResponseDto>(saveOrder);
         }
 
@@ -367,6 +363,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                     await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
+
+            //Create OrderAddress Base On Address
+            await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", cancellationToken);
+            await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", cancellationToken);
+
             return _mapper.Map<OrderApiResponseDto>(data);
         }
 
@@ -606,47 +607,104 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderApiRequestDto>(data);
         }
 
-        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(OrderAddressesApiRequestDto orderAddressApiRequestDto, OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
+        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(long orderId, long customerId, long customerAddressId, string orderAddressType, CancellationToken cancellationToken)
         {
-            //GetAll Customer Data
-            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-
-            //GetAll Customer Addresses
-            var customerAddressData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
-            var customer = customerData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID);
-            if (customer == null)
+            OrderAddressesApiRequestDto objOrderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
+            
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(customerId, cancellationToken);
+            if (customerData == null)
             {
                 throw new Exception("Customer Id Not Valid");
             }
 
-            //Find Customer Address Base On Customer Id
-            var customerAddress = customerAddressData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID);
-            if (customerAddress == null)
+            var customerAddresses = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+            if (customerAddressId == 0)
+            {
+                var customerAddress = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.IsDefault == true);
+                if (customerAddress != null)
+                    customerAddressId = customerAddress.CustomerAddressId;
+            }
+
+            var customerAddressData = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.CustomerAddressId == customerAddressId);
+            if (customerAddressData == null)
             {
                 throw new Exception("Customer Address not found");
             }
 
-            //Create Order Address Base On Customer and Customer Address
-            OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
-            orderAddressesToInsert.OrderId = orderAddressApiRequestDto.OrderId;
-            orderAddressesToInsert.FirstName = customer.FirstName;
-            orderAddressesToInsert.LastName = customer.LastName;
-            orderAddressesToInsert.EmailId = customer.EmailId;
-            orderAddressesToInsert.PhoneNumber = customer.PhoneNumber;
-            orderAddressesToInsert.AddressType = orderAddressApiRequestDto.AddressType;
-            orderAddressesToInsert.Street1 = customerAddress.Street1;
-            orderAddressesToInsert.Street2 = customerAddress.Street2;
-            orderAddressesToInsert.Landmark = customerAddress.Landmark;
-            orderAddressesToInsert.Area = customerAddress.Area;
-            orderAddressesToInsert.City = customerAddress.City;
-            orderAddressesToInsert.State = customerAddress.State;
-            orderAddressesToInsert.ZipCode = customerAddress.ZipCode;
-            orderAddressesToInsert.CreatedBy = customerAddress.CreatedBy;
-            orderAddressesToInsert.CreatedDate = customerAddress.CreatedDate;
-            orderAddressesToInsert.CreatedUTCDate = customerAddress.CreatedUTCDate;
-            var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
-            var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
-            return _mapper.Map<OrderAddressesApiRequestDto>(data);
+            var orderAddresses = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
+            if (orderAddresses == null)
+            {
+                OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
+                orderAddressesToInsert.OrderId = orderId;
+                orderAddressesToInsert.FirstName = customerData.FirstName;
+                orderAddressesToInsert.LastName = customerData.LastName;
+                orderAddressesToInsert.EmailId = customerData.EmailId;
+                orderAddressesToInsert.PhoneNumber = customerData.PhoneNumber;
+                orderAddressesToInsert.AddressType = orderAddressType;
+                orderAddressesToInsert.Street1 = customerAddressData.Street1;
+                orderAddressesToInsert.Street2 = customerAddressData.Street2;
+                orderAddressesToInsert.Landmark = customerAddressData.Landmark;
+                orderAddressesToInsert.Area = customerAddressData.Area;
+                orderAddressesToInsert.City = customerAddressData.City;
+                orderAddressesToInsert.State = customerAddressData.State;
+                orderAddressesToInsert.ZipCode = customerAddressData.ZipCode;
+                orderAddressesToInsert.CreatedBy = customerData.CreatedBy;
+                orderAddressesToInsert.CreatedDate = DateTime.Now;
+                orderAddressesToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
+                var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
+                return _mapper.Map<OrderAddressesApiRequestDto>(data);
+            }
+            else
+            {
+                if (orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType) == null)
+                {
+                    OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
+                    orderAddressesToInsert.OrderId = orderId;
+                    orderAddressesToInsert.FirstName = customerData.FirstName;
+                    orderAddressesToInsert.LastName = customerData.LastName;
+                    orderAddressesToInsert.EmailId = customerData.EmailId;
+                    orderAddressesToInsert.PhoneNumber = customerData.PhoneNumber;
+                    orderAddressesToInsert.AddressType = orderAddressType;
+                    orderAddressesToInsert.Street1 = customerAddressData.Street1;
+                    orderAddressesToInsert.Street2 = customerAddressData.Street2;
+                    orderAddressesToInsert.Landmark = customerAddressData.Landmark;
+                    orderAddressesToInsert.Area = customerAddressData.Area;
+                    orderAddressesToInsert.City = customerAddressData.City;
+                    orderAddressesToInsert.State = customerAddressData.State;
+                    orderAddressesToInsert.ZipCode = customerAddressData.ZipCode;
+                    orderAddressesToInsert.CreatedBy = customerData.CreatedBy;
+                    orderAddressesToInsert.CreatedDate = DateTime.Now;
+                    orderAddressesToInsert.CreatedUTCDate = DateTime.UtcNow;
+                    var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
+                    var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
+                    return _mapper.Map<OrderAddressesApiRequestDto>(data);
+                }
+                else
+                {
+                    var orderAddress = await _unitOfWorkDA.OrderAddressDA.GetById(orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType).OrderAddressId, cancellationToken);
+                    if (orderAddress != null)
+                    {
+                        orderAddress.FirstName = customerData.FirstName;
+                        orderAddress.LastName = customerData.LastName;
+                        orderAddress.EmailId = customerData.EmailId;
+                        orderAddress.PhoneNumber = customerData.PhoneNumber;
+                        orderAddress.Street1 = customerAddressData.Street1;
+                        orderAddress.Street2 = customerAddressData.Street2;
+                        orderAddress.Landmark = customerAddressData.Landmark;
+                        orderAddress.Area = customerAddressData.Area;
+                        orderAddress.City = customerAddressData.City;
+                        orderAddress.State = customerAddressData.State;
+                        orderAddress.ZipCode = customerAddressData.ZipCode;
+                        orderAddress.UpdatedBy = customerData.CreatedBy;
+                        orderAddress.UpdatedDate = DateTime.Now;
+                        orderAddress.UpdatedUTCDate = DateTime.UtcNow;
+                        var data = await _unitOfWorkDA.OrderAddressDA.UpdateOrderAddress(orderAddress.OrderAddressId, orderAddress, cancellationToken);
+                        return _mapper.Map<OrderAddressesApiRequestDto>(data);
+                    }
+                }
+            }
+            return objOrderAddressesApiRequestDto;
         }
 
         private async Task<OrderSetRequestDto> SaveOrderSet(OrderSetRequestDto orderSetRequestDto, CancellationToken cancellationToken)

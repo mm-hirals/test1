@@ -8,17 +8,20 @@ namespace MidCapERP.DataAccess.Repositories
     public class OrderAddressDA : IOrderAddressDA
     {
         private readonly ISqlRepository<OrderAddress> _orderAddressDA;
-        private readonly CurrentUser _currentUser;
 
-        public OrderAddressDA(ISqlRepository<OrderAddress> orderAddress, CurrentUser currentUser)
+        public OrderAddressDA(ISqlRepository<OrderAddress> orderAddress)
         {
             _orderAddressDA = orderAddress;
-            _currentUser = currentUser;
         }
 
         public async Task<IQueryable<OrderAddress>> GetOrderAddressesByOrderId(long OrderId, CancellationToken cancellationToken)
         {
             return await _orderAddressDA.GetAsync(cancellationToken, x => x.OrderId == OrderId);
+        }
+
+        public async Task<OrderAddress> GetById(long Id, CancellationToken cancellationToken)
+        {
+            return await _orderAddressDA.GetByIdAsync(Id, cancellationToken);
         }
 
         public async Task<OrderAddress> CreateOrderAddress(OrderAddress model, CancellationToken cancellationToken)
