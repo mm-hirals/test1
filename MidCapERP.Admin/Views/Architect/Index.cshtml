@@ -8,7 +8,7 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Architects</h4>
         <div class="c-card--header-action">
-            <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectArchitect">Send</a>
+            <button class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectArchitect">Send</button>
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkArchitectFilter"><i class='bx bx-plus me-2'></i>Filters</a>
             <a asp-controller="Architect" asp-action="Create" class="btn btn-primary">Create New</a>
         </div>
@@ -44,6 +44,35 @@
         </div>
         <partial name="_ArchitectTable" />
         <div id="divUpdateArchitect"></div>
+
+        <!-- Modal -->
+        <div id="sendSMSModal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Send Newsletters/Greetings</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="message" class="col-form-label">Subject</label>
+                                <input type="text" class="form-control" id="txtSubject" />
+                                <span class="text-danger" id="errorSubject"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="col-form-label">Message</label>
+                                <textarea class="form-control" id="txtMessage" rows="30"></textarea>
+                                <span class="text-danger" id="errorMessage"></span>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary sendSMSToClient">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -53,6 +82,6 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Architect.js" ></script>
+        <script asp-src-include="~/js/Architect.js"></script>
     }
-} 
+    } 
