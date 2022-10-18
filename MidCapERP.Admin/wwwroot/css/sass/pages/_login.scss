@@ -11,10 +11,6 @@
     }
 }
 .login-main-wrapper{
-    // position: fixed;
-    // left: 50%;
-    // top: 50%;
-    // transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,5 +94,17 @@
   }
   .back-title a{
     text-decoration: underline;
+  }
+  .field-icon{
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+  }
+  .bxs-hide{
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
   }
   }

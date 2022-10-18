@@ -31,7 +31,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     console.log(o);
-                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="FabricModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateFabric" href="/Fabric/Update/' + o.fabricId + '"><i class="bx bxs-pencil"></i></a>' +
+                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="FabricModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateFabric" href="/Fabric/Update/' + o.fabricId + '"><i class="bx bxs-pencil"></i></a>' +
                         '<a data-ajax-complete="FabricModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Fabric/Delete/' + o.fabricId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
