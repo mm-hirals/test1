@@ -55,6 +55,9 @@ namespace MidCapERP.Dto.Customers
         [JsonIgnore]
         public decimal Discount { get; set; }
 
+        [DisplayName("Subscribe Newsletters/Greetings")]
+        public bool IsSubscribe { get; set; }
+
         public List<long> CustomerCheckedId { get; set; }
         public string Message { get; set; }
 

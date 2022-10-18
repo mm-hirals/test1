@@ -347,6 +347,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.Discount = Math.Round(Math.Round(discountAmount), 2);
             oldData.TotalAmount = oldData.GrossTotal - oldData.Discount;
             oldData.GSTTaxAmount = Math.Round(Math.Round((oldData.TotalAmount * 18) / 100), 2);
+            oldData.Comments = model.Comments;
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
@@ -505,26 +506,26 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<Int64> GetOrderReceivableCount(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.InProgress);
+            //var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return 0;
         }
 
         public async Task<Int64> GetOrderApprovedCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.InProgress);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Approved);
         }
 
         public async Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Pending);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.PendingForApproval);
         }
 
         public async Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.InProgress);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Inquiry);
         }
 
         #region Private Method

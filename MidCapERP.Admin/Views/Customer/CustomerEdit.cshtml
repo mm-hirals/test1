@@ -19,8 +19,8 @@
                                         <label asp-for="CustomerTypeId" class="form-label"></label>
                                     </label>
                                     <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType"
-                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">         
-                                                <option value="" hidden disabled selected>Select Customer Type</option>
+                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
+                                        <option value="" hidden disabled selected>Select Customer Type</option>
                                     </select>
                                     <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
                                 </div>
@@ -169,6 +169,19 @@
                                 </div>
                             </div>
                         }
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="IsSubscribe" class="form-label"></label>
+                                    </label>
+                                    <div class="custom-control custom-switch">
+                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isDefualtCheck" data-val="true">
+                                        <label class="custom-control-label" for="isDefualtCheck">Active</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row c-card-footer--btn">
                         <div class="col-12">
@@ -224,7 +237,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Customer.js" ></script>
-        <script asp-src-include="~/js/CustomerAddresses.js" ></script>
+        <script asp-src-include="~/js/Customer.js"></script>
+        <script asp-src-include="~/js/CustomerAddresses.js"></script>
     }
     } 

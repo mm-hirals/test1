@@ -40,9 +40,10 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ITenantBL TenantBL { get; }
         public ITenantBankDetailBL TenantBankDetailBL { get; }
         public IActivityLogsService ActivityLogsService { get; }
+        public ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
         public ISendSMSservice SendSMSservice { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IArchitectsBL architectsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IArchitectAddressesBL architectAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ISendSMSservice sendSMSservice)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IArchitectsBL architectsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IArchitectAddressesBL architectAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -75,6 +76,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.TenantBL = tenantBL;
             this.TenantBankDetailBL = tenantBankDetailBL;
             this.ActivityLogsService = activityLogsService;
+            this.TenantSMTPDetailBL = tenantSMTPDetailBL;
             this.SendSMSservice = sendSMSservice;
         }
 

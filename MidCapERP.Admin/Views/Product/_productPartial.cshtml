@@ -4,22 +4,6 @@
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" class="form-control" />
-        @*<label for="UploadImage" class="card-product--image">
-            <input asp-for="UploadImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
-            <div class="product--image" style="cursor:pointer">
-                @if (!string.IsNullOrEmpty(Model?.CoverImage))
-                {
-                    <img src="@Model.CoverImage" id="editProductImage" alt="Product Image" />
-                }
-                else
-                {
-                    <img src="~/images/No_Image.jpg" alt="Product Image" />
-                }
-                <div class="edit--image">
-                    <i class="bx bx-pencil"></i>
-                </div>
-            </div>
-        </label>*@
         <div class="card-prpoduct-cotent--wrapper">
             <div class="row">
                 <div class="col-md-3">
@@ -66,20 +50,24 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label">
-                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth) </span>in inches
+                                Product Dimensions <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth - Diameter) </span>in inches
                             </label>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width">
                                     <span asp-validation-for="WidthNumeric" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height">
                                     <span asp-validation-for="HeightNumeric" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth">
                                     <span asp-validation-for="DepthNumeric" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input asp-for="DiameterNumeric" type="text" class="form-control pdiameter" placeholder="Diameter">
+                                    <span asp-validation-for="DiameterNumeric" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>

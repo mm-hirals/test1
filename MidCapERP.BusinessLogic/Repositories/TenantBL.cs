@@ -6,6 +6,7 @@ using MidCapERP.Dto;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Tenant;
+using MidCapERP.Dto.TenantSMTPDetail;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -37,8 +38,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<TenantResponseDto> GetById(int Id, CancellationToken cancellationToken)
         {
-            var data = await TenantGetById(Id, cancellationToken);
-            return _mapper.Map<TenantResponseDto>(data);
+            var data = _mapper.Map<TenantResponseDto>(await TenantGetById(Id, cancellationToken));
+            data.tenantSMTPDetailResponseDto = _mapper.Map<TenantSMTPDetailResponseDto>(await _unitOfWorkDA.TenantSMTPDetailDA.TenantSMTPDetailGetById(Id, cancellationToken));
+            return data;
         }
 
         public async Task<TenantRequestDto> UpdateTenant(TenantRequestDto model, CancellationToken cancellationToken)

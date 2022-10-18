@@ -36,6 +36,8 @@ namespace MidCapERP.Dto.Customers
         [JsonIgnore]
         public decimal Discount { get; set; }
 
+        public bool IsSubscribe { get; set; }
+
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

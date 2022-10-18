@@ -105,7 +105,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber }).Take(10);
+            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName}).Take(10);
             return data.ToList();
         }
 
@@ -257,6 +257,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -267,6 +268,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)

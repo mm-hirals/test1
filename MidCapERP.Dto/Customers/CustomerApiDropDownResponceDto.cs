@@ -12,8 +12,5 @@ namespace MidCapERP.Dto.Customers
 
         [DisplayName("Last Name")]
         public string LastName { get; set; }
-
-        [DisplayName("Phone Number")]
-        public string PhoneNumber { get; set; }
     }
 }

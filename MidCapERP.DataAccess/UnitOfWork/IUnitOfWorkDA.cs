@@ -32,11 +32,13 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IOrderSetItemDA OrderSetItemDA { get; }
         IActivityLogsDA ActivityLogsDA { get; }
         IOrderAddressDA OrderAddressDA { get; }
+        ITenantSMTPDetailDA TenantSMTPDetailDA { get; }
+        ITenantBankDetailDA TenantBankDetailDA { get; }
 
         Task BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task rollbackTransactionAsync();
 
-        ITenantBankDetailDA TenantBankDetailDA { get; }
+        Task CommitTransactionAsync();
+
+        Task rollbackTransactionAsync();
     }
 }
