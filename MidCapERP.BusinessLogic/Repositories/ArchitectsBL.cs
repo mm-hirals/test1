@@ -89,16 +89,24 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task SendSMSToArchitects(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
             List<string> architectPhoneList = new List<string>();
-            //foreach (var item in model)
-            //{
-            //    var architectData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
-            //    var architectPhone = architectData.PhoneNumber;
-            //    architectPhoneList.Add(architectPhone);
-            //}
+
+            foreach (var item in model.CustomerList)
+            {
+                var architectData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+                if (architectData != null)
+                {
+                    var architectPhone = architectData.PhoneNumber;
+                    architectPhoneList.Add(architectPhone);
+                }
+            }
 
             foreach (var item in architectPhoneList)
             {
-                //var msg = _sendSMSservice.SendSMS("7567086864", "Hi. This is test message for greeting customers.");
+                if (item != null)
+                {
+                    //var msg = _sendSMSservice.SendSMS("7567086864", "Hi. This is test message for greeting customers.");
+                    //var msg = _sendSMSservice.SendSMS(item, model.Message);
+                }
             }
         }
 

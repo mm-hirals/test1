@@ -10,7 +10,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
-        "iDisplayLength": 50, 
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/Customer/GetCustomersData",
             "type": "POST",
@@ -86,6 +86,9 @@ CustomerModel.onFailed = function (xhr) {
 // Check all checkbox values and store it in array
 $("#selectall").click(function () {
     if (this.checked) {
+        if (value_check.length > 0) {
+            value_check = [];
+        }
         $('.case').prop('checked', true);
         for (var i = 0; i < $(".case:checked").length; i++) {
             value_check.push($(".case:checked")[i].id);
@@ -110,25 +113,67 @@ $('#tblCustomer').on('click', 'input[type="checkbox"]', function () {
     }
 });
 
-// On button click send checkbox values to controller
+// On button click open modal popup
 $("#multiSelectCustomer").click(function () {
-
-    if ($("#selectall").checked) {
-        d.customerName = $("#customerName").val().trim();
-        d.customerMobileNo = $("#customerMobileNo").val().trim();
-        d.customerFromDate = $("#customerFromDate").val().trim();
-        d.customerToDate = $("#customerToDate").val().trim();
+    if (value_check.length > 0) {
+        $("#sendSMSModal").modal('show');
     }
-
-    $.ajax({
-        url: "/Customer/MultipleSendCustomer",
-        type: "POST",
-        data: { 'value_check': value_check },
-        success: function (response) {
-            if (response == "success")
-                alert("Success : ", response);
-            else
-                alert("Error : ", response)
-        }
-    });
+    else {
+        //Swal.fire('Please select customer to send message.')
+        alert("Please select customer to send message.");
+    }
 });
+
+// On button click send checkbox values to controller
+$(".sendSMSToClient").click(function () {
+    if ($("#txtMessage").val() == '') {
+        $("#errorMessage").text("Please enter message.");
+    }
+    else if ($("#txtSubject").val() == '') {
+        $("#errorSubject").text("Please enter subject.");
+    }
+    else {
+        $("#errorMessage").hide();
+
+        if ($("#selectall").prop('checked')) {
+            var customerName = $("#customerName").val().trim();
+            var customerMobileNo = $("#customerMobileNo").val().trim();
+            var customerFromDate = $("#customerFromDate").val().trim();
+            var customerToDate = $("#customerToDate").val().trim();
+        }
+
+        var data = {
+            CustomerName: customerName,
+            CustomerMobileNo: customerMobileNo,
+            CustomerFromDate: customerFromDate,
+            CustomerToDate: customerToDate,
+            IsCheckedAll: $("#selectall").prop('checked'),
+            CustomerList: value_check,
+            Message: $("#txtMessage").val(),
+            Subject: $("#txtSubject").val()
+        };
+        console.log(data);
+        $.ajax({
+            url: "/Customer/MultipleSendCustomer",
+            type: "POST",
+            data: { model: data },
+            success: function (response) {
+                if (response == "success") {
+                    toastr.success('Messages sent successfully.');
+                    setTimeout(function () {
+                        window.location.reload(true);
+                    }, 1800);
+                    //alert("Success : ", response);
+                }
+                else
+                    toastr.error(response, 'Error in sending messages.');
+                //alert("Error : ", response)
+            }
+        });
+    }
+});
+
+// Reset modal values after close
+$('#sendSMSModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+})

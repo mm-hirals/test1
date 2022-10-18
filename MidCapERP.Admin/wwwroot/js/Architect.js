@@ -119,7 +119,8 @@ $("#multiSelectArchitect").click(function () {
         $("#sendSMSModal").modal('show');
     }
     else {
-        alert("Please select customer to send message.");
+        //Swal.fire('Please select architect to send message.')
+        alert("Please select architect to send message.");
     }
 });
 
@@ -134,7 +135,7 @@ $(".sendSMSToClient").click(function () {
     else {
         $("#errorMessage").hide();
 
-        if ($("#selectall").checked) {
+        if ($("#selectall").prop('checked')) {
             var architectName = $("#architectName").val().trim();
             var architectMobileNo = $("#architectMobileNo").val().trim();
             var architectFromDate = $("#architectFromDate").val().trim();
@@ -146,7 +147,7 @@ $(".sendSMSToClient").click(function () {
             CustomerMobileNo: architectMobileNo,
             CustomerFromDate: architectFromDate,
             CustomerToDate: architectToDate,
-            IsCheckedAll: $("#selectall").checked,
+            IsCheckedAll: $("#selectall").prop('checked'),
             CustomerList: value_check,
             Message: $("#txtMessage").val(),
             Subject: $("#txtSubject").val()
@@ -157,15 +158,22 @@ $(".sendSMSToClient").click(function () {
             type: "POST",
             data: { model: data },
             success: function (response) {
-                if (response == "success")
-                    alert("Success : ", response);
+                if (response == "success") {
+                    toastr.success('Messages sent successfully.');
+                    setTimeout(function () {
+                        window.location.reload(true);
+                    }, 1800);
+                    //alert("Success : ", response);
+                }
                 else
-                    alert("Error : ", response)
+                    toastr.error(response, 'Error in sending messages.');
+                //alert("Error : ", response)
             }
         });
     }
 });
 
+// Reset modal values after close
 $('#sendSMSModal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
 })

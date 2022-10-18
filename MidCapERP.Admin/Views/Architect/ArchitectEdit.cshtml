@@ -138,8 +138,8 @@
                                         <label asp-for="IsSubscribe" class="form-label"></label>
                                     </label>
                                     <div class="custom-control custom-switch">
-                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isDefualtCheck" data-val="true">
-                                        <label class="custom-control-label" for="isDefualtCheck">Active</label>
+                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isDefaultCheckArchitect" data-val="true">
+                                        <label class="custom-control-label" for="isDefaultCheckArchitect">Active</label>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +199,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Architect.js" ></script>
-        <script asp-src-include="~/js/ArchitectAddresses.js" ></script>
+        <script asp-src-include="~/js/Architect.js"></script>
+        <script asp-src-include="~/js/ArchitectAddresses.js"></script>
     }
     } 
