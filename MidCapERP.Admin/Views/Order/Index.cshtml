@@ -2,9 +2,12 @@
 @model MidCapERP.Dto.Order.OrderDataTableFilterDto
 @{
     ViewData["Title"] = "Orders";
-    var pending = (int)OrderStatusEnum.PendingForApproval;
-    var InProgress = (int)@OrderStatusEnum.InProgress;
+    var Inquiry = (int)OrderStatusEnum.Inquiry;
+    var PendingForApproval = (int)OrderStatusEnum.PendingForApproval;
+    var Approved = (int)OrderStatusEnum.Approved;
+    var InProgress = (int)OrderStatusEnum.InProgress;
     var Completed = (int)@OrderStatusEnum.Completed;
+    var Delivered = (int)@OrderStatusEnum.Delivered;
     var Cancelled = (int)@OrderStatusEnum.Cancelled;
 }
 
@@ -16,13 +19,13 @@
         </div>
     </div>
     <div class="c-card--body">
-        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+        <div class="card filter-form--wrapper" id="FilterCard">
             <div class="row">
                  <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="form-label">Please Select Reffered By</label>
-                                   <select id="refferedBy" data-val="true" class="form-control"
+                                   <select id="refferedBy" data-val="true" class="form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
                                              <option value="">Select Reffered</option>
                                     </select>
@@ -44,11 +47,14 @@
                     <div class="col-md-3">
                         <div class="form-group">
                            <label class="form-label">Staus</label>
-                           <select id="status" class="form-control">
+                           <select id="status" class="form-control form-select">
                                 <option>Please Select Status</option>
-                                <option value="@pending">Pending</option>
+                                <option value="@Inquiry">Inquiry</option>
+                                <option value="@PendingForApproval">Pending For Approval</option>
+                                <option value="@Approved">Approved</option>
                                 <option value="@InProgress">In Progress</option>
                                 <option value="@Completed">Completed</option>
+                                <option value="@Delivered">Delivered</option>
                                 <option value="@Cancelled">Cancelled</option>
                            </select>
                        </div>

@@ -129,37 +129,43 @@
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="ProductRSPPercentage" class="form-label"></label>
-                                                <input asp-for="ProductRSPPercentage" type="number" class="form-control" placeholder="Product Retailer SP %">
+                                                <input asp-for="ProductRSPPercentage" type="number" class="form-control" min="0" placeholder="Product Retailer SP %">
+                                                <span asp-validation-for="ProductRSPPercentage" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="ProductWSPPercentage" class="form-label"></label>
-                                                <input asp-for="ProductWSPPercentage" type="number" class="form-control" placeholder="Product WholeSaler SP %">
+                                                <input asp-for="ProductWSPPercentage" type="number" class="form-control" min="0" placeholder="Product WholeSaler SP %">
+                                                <span asp-validation-for="ProductWSPPercentage" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="FabricRSPPercentage" class="form-label"></label>
-                                                <input asp-for="FabricRSPPercentage" type="number" class="form-control" placeholder="Fabric Retailer SP %">
+                                                <input asp-for="FabricRSPPercentage" type="number" class="form-control" min="0" placeholder="Fabric Retailer SP %">
+                                                <span asp-validation-for="FabricRSPPercentage" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="FabricWSPPercentage" class="form-label"></label>
-                                                <input asp-for="FabricWSPPercentage" type="number" class="form-control" placeholder="Fabric WholeSaler SP %">
+                                                <input asp-for="FabricWSPPercentage" type="number" class="form-control" min="0" placeholder="Fabric WholeSaler SP %">
+                                                <span asp-validation-for="FabricWSPPercentage" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="ArchitectDiscount" class="form-label"></label>
-                                                <input asp-for="ArchitectDiscount" type="number" class="form-control" placeholder="Architect Discount %">
+                                                <input asp-for="ArchitectDiscount" type="number" class="form-control" min="0" placeholder="Architect Discount %">
+                                                <span asp-validation-for="ArchitectDiscount" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="AmountRoundMultiple" class="form-label"></label>
-                                                <input asp-for="AmountRoundMultiple" type="number" class="form-control" placeholder="Amount Rounding off Multiple">
+                                                <input asp-for="AmountRoundMultiple" type="number" class="form-control" min="0" placeholder="Amount Rounding off Multiple">
+                                                <span asp-validation-for="AmountRoundMultiple" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>

@@ -34,18 +34,24 @@ $(function () {
                 "data": "status", "name": "Status", "autoWidth": true,
                 "mRender": function (o) {
                     if (o == 0) {
-                        status = "Pending";
+                        status = "Inquiry";
                     } else if (o == 1) {
-                        status = "In Progress";
+                        status = "Pending For Approval";
                     }
                     else if (o == 2) {
-                        status = "Completed";
+                        status = "Approved";
                     }
                     else if (o == 3) {
-                        status = "Cancelled";
+                        status = "In Progress";
                     }
                     else if (o == 4) {
-                        status = "Archieved";
+                        status = "Completed";
+                    }
+                    else if (o == 5) {
+                        status = "Delivered";
+                    }
+                    else if (o == 6) {
+                        status = "Cancelled";
                     }
                     return status;
                 }
@@ -59,7 +65,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a class="btn btn-icon btn-outline-primary" href="/Order/OrderDetail/' + o.orderId + '"><i class="bx bxs-show"></i></a></div> ';
+                    return '<div class="c-action-btn-group justify-content-end"><a class="btn btn-icon btn-outline-primary" href="/Order/OrderDetail/' + o.orderId + '"><i class="bx bxs-show"></i></a></div> ';
                 }
             }
         ]

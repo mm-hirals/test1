@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<MidCapERP.Dto.RawMaterial.RawMaterialResponseDto>
 
-<table class="table c-table c-table-stripted" id="tblRawMaterial">
+<table class="table c-table c-table-stripted w-100" id="tblRawMaterial">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.Title)</th>
             <th>@Html.DisplayNameFor(model => model.UnitName)</th>
             <th>@Html.DisplayNameFor(model => model.UnitPrice)</th>
-            <th>Action</th>
+            <th class="text-end">Action</th>
         </tr>
     </thead>
 </table>
