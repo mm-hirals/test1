@@ -33,5 +33,10 @@ namespace MidCapERP.DataAccess.Repositories
         {
             return await _orderAddressDA.UpdateAsync(model, cancellationToken);
         }
+
+        public async Task<OrderAddress> DeleteOrderAddress(Int64 Id, OrderAddress model, CancellationToken cancellationToken)
+        {
+            return await _orderAddressDA.DeleteAsync(model, cancellationToken);
+        }
     }
 }

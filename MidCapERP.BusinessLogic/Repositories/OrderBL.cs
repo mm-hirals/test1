@@ -425,6 +425,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         }
                         await DeleteOrderSet(orderSetId, cancellationToken);
                     }
+                    await DeleteOrderAddress(orderDeleteApiRequestDto.OrderId, cancellationToken);
                     await DeleteOrder(orderDeleteApiRequestDto.OrderId, cancellationToken);
                 }
                 else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSet)
@@ -541,6 +542,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             else
             {
                 throw new Exception("Order not found");
+            }
+        }
+
+        private async Task DeleteOrderAddress(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
+            if (order != null)
+            {
+                foreach (var item in order)
+                    await _unitOfWorkDA.OrderAddressDA.DeleteOrderAddress(item.OrderAddressId, item, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order Address not found");
             }
         }
 
