@@ -11265,7 +11265,7 @@ body {
   }
   .l-navbar.collapsed .nav-item:hover .nav_link .nav_name {
     display: block;
-    padding-left: 16px;
+    padding-left: 48px;
   }
   .l-navbar.collapsed .nav-item:hover .sub-menu {
     display: block !important;
@@ -11278,17 +11278,18 @@ body {
   width: auto;
 }
 .l-navbar.navbar-show .nav .nav-item:hover .nav_name {
-  padding-left: 0;
+  padding-left: 9px;
 }
 .l-navbar.navbar-show .nav .nav-item .nav_name {
   display: block;
+  padding-left: 9px;
 }
 .l-navbar.navbar-show .submenu-link::after {
   position: absolute;
   content: "\ea4a";
   font-family: boxicons !important;
   top: calc(50% - 13px);
-  right: 20px;
+  right: 12px;
   bottom: auto;
   left: auto;
   font-size: 26px;
@@ -11314,13 +11315,11 @@ body {
 
 .nav_logo,
 .nav_link {
-  display: grid;
+  display: flex;
   grid-template-columns: -webkit-max-content -webkit-max-content;
   grid-template-columns: max-content max-content;
   align-items: center;
-  -moz-column-gap: 1rem;
-       column-gap: 1rem;
-  padding: 16px 8px 16px 24px;
+  padding: 16px 8px 16px 16px;
 }
 
 .nav_logo {
@@ -12128,6 +12127,18 @@ header .btn-check:focus + .btn, header .btn:focus {
 }
 .login-main-wrapper .back-title a {
   text-decoration: underline;
+}
+.login-main-wrapper .field-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+}
+.login-main-wrapper .bxs-hide {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
 }
 
 .order-detail-page--wrapper .form-label {

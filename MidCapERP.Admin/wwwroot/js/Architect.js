@@ -45,7 +45,7 @@ $(function () {
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
-                    return '<div class="c-action-btn-group justify-content-start"><a  href="/Architect/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Architect/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
                 }
             }
         ]

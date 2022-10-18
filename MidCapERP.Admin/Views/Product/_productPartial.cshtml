@@ -35,7 +35,7 @@
                             }
                             else
                             {
-                                <select asp-for="CategoryId" data-val="true" class="form-control"
+                                <select asp-for="CategoryId" data-val="true" class="form-control form-select"
                                     asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
                                     <option value="" selected>Select Category</option>
                                 </select>

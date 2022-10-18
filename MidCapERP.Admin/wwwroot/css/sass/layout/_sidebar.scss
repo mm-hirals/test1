@@ -131,7 +131,7 @@ body {
                         width: calc(#{$navWidth} + 220px);
                         .nav_name {
                             display: block;
-                            padding-left: spacing();
+                            padding-left: spacing(3);
                         }
                     }
                     .sub-menu {
@@ -154,11 +154,12 @@ body {
                         width: auto;
                     }
                     .nav_name {
-                        padding-left: 0;
+                        padding-left: 9px;
                     }
                 }
                 .nav_name {
                     display: block;
+                    padding-left: 9px;
                 }
             }
         }
@@ -168,7 +169,7 @@ body {
                 content: "\ea4a";
                 font-family: boxicons!important;
                 top: calc(50% - 13px);
-                right: 20px;
+                right: 12px;
                 bottom: auto;
                 left: auto;
                 font-size: 26px;
@@ -206,11 +207,11 @@ body {
 
 .nav_logo,
 .nav_link {
-    display: grid;
+    display: flex;
     grid-template-columns: max-content max-content;
     align-items: center;
-    column-gap: 1rem;
-    padding: spacing() spacing(0.5) spacing() spacing(1.5);
+    // column-gap: 1rem;
+    padding: spacing() spacing(0.5) spacing() spacing(1);
 }
 
 .nav_logo {
