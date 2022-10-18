@@ -29,7 +29,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="PolishModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdatePolish" href="/Polish/Update/' + o.polishId + '"><i class="bx bxs-pencil"></i></a>' +
+                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="PolishModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdatePolish" href="/Polish/Update/' + o.polishId + '"><i class="bx bxs-pencil"></i></a>' +
                         '<a data-ajax-complete="PolishModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Polish/Delete/' + o.polishId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }

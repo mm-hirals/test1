@@ -19,13 +19,13 @@
         </div>
     </div>
     <div class="c-card--body">
-        <div class="card mb-4 p-3 filter-form--wrapper" id="FilterCard">
+        <div class="card filter-form--wrapper" id="FilterCard">
             <div class="row">
                  <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="form-label">Please Select Reffered By</label>
-                                   <select id="refferedBy" data-val="true" class="form-control"
+                                   <select id="refferedBy" data-val="true" class="form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
                                              <option value="">Select Reffered</option>
                                     </select>
@@ -47,7 +47,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                            <label class="form-label">Staus</label>
-                           <select id="status" class="form-control">
+                           <select id="status" class="form-control form-select">
                                 <option>Please Select Status</option>
                                 <option value="@Inquiry">Inquiry</option>
                                 <option value="@PendingForApproval">Pending For Approval</option>

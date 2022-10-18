@@ -18,9 +18,9 @@
                                     <label class="form-label">
                                         <label asp-for="CustomerTypeId" class="form-label"></label>
                                     </label>
-                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType"
-                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
-                                        <option value="" hidden disabled selected>Select Customer Type</option>
+                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType form-select"
+                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">         
+                                                <option value="" hidden disabled selected>Select Customer Type</option>
                                     </select>
                                     <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
                                 </div>
