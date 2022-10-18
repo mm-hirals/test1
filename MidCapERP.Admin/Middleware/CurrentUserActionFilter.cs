@@ -55,6 +55,7 @@ namespace MidCapERP.Admin.Middleware
                                 _currentUser.IsMultipleTenant = userTenantData.Count() == 1 ? false : true;
                             }
                         }
+                        _currentUser.Role = userRoles?.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), "");
                     }
                 }
             }

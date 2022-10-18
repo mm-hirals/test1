@@ -62,7 +62,7 @@
                 .Union(GeneratePermissionsForModule("Order"))
                 .Union(GeneratePermissionsForModule("Tenant"))
                 .Union(GeneratePermissionsForModule("TenantBankDetail"))
-                 .Union(GeneratePermissionsForModule("Profile"))
+                .Union(GeneratePermissionsForModule("Profile"))
                 .ToList();
             }
 
@@ -282,7 +282,6 @@
             {
                 public const string View = "Permissions.Tenant.View";
                 public const string Update = "Permissions.Tenant.Update";
-              
             }
 
             public static class TenantBankDetail
@@ -292,6 +291,7 @@
                 public const string Update = "Permissions.TenantBankDetail.Update";
                 public const string Delete = "Permissions.TenantBankDetail.Delete";
             }
+
             public static class Profile
             {
                 public const string View = "Permissions.Profile.View";

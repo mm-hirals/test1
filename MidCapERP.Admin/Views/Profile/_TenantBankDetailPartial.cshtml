@@ -1,120 +1,100 @@
 ﻿@model MidCapERP.Dto.TenantBankDetail.TenantBankDetailRequestDto
 @{
-	string action = (Model != null && Model.TenantId != 0) ? "UpdateTenantBankDetail" : "CreateTenantBankDetail";
+    string action = (Model != null && Model.TenantId != 0) ? "UpdateTenantBankDetail" : "CreateTenantBankDetail";
 }
 <div class="modal right fade" id="divTenantBankDetailModal" tabindex="-1" aria-labelledby="TenantBankDetailModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-md">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="TenantBankDetailModalLabel">Bank Details</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-					<i class='bx bx-x'></i>
-				</button>
-			</div>
-			<form asp-action="@action" method="post" class="modal-form--wrapper">
-				<div class="modal-body">
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					<input asp-for="TenantId" id="TenantId" hidden class="form-control" />
-					<div class="row">
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="BankName" class="form-label"></label>
-									</label>
-									<input asp-for="BankName" class="form-control" />
-									<span asp-validation-for="BankName" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="AccountName" class="form-label"></label>
-									</label>
-									<input asp-for="AccountName" class="form-control" />
-									<span asp-validation-for="AccountName" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="AccountNo" class="form-label"></label>
-									</label>
-									<input asp-for="AccountNo" class="form-control" />
-									<span asp-validation-for="AccountNo" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="BranchName" class="form-label"></label>
-									</label>
-									<input asp-for="BranchName" class="form-control" />
-									<span asp-validation-for="BranchName" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="AccountType" class="form-label"></label>
-									</label>
-									<input asp-for="AccountType" class="form-control" />
-									<span asp-validation-for="AccountType" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="IFSCCode" class="form-label"></label>
-									</label>
-									<input asp-for="IFSCCode" class="form-control" />
-									<span asp-validation-for="IFSCCode" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="UPIId" class="form-label"></label>
-									</label>
-									<input asp-for="UPIId" class="form-control" />
-									<span asp-validation-for="UPIId" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-12">
-							<div class="product-info--item">
-								<div class="form-group">
-									<label class="form-label">
-										<label asp-for="QRCode" class="form-label"></label>
-									</label>
-									<input asp-for="QRCode" class="form-control" />
-									<span asp-validation-for="QRCode" class="text-danger"></span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer justify-content-between">
-						<input type="submit" value="Save" class="btn btn-primary" />
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="TenantBankDetailModalLabel">Bank Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="TenantId" id="TenantId" hidden class="form-control" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="BankName" class="form-label"></label>
+                                    <input asp-for="BankName" class="form-control" />
+                                    <span asp-validation-for="BankName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="AccountName" class="form-label"></label>
+                                    <input asp-for="AccountName" class="form-control" />
+                                    <span asp-validation-for="AccountName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="AccountNo" class="form-label"></label>
+                                    <input asp-for="AccountNo" class="form-control" />
+                                    <span asp-validation-for="AccountNo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="BranchName" class="form-label"></label>
+                                    <input asp-for="BranchName" class="form-control" />
+                                    <span asp-validation-for="BranchName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="AccountType" class="form-label"></label>
+                                    <input asp-for="AccountType" class="form-control" />
+                                    <span asp-validation-for="AccountType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="IFSCCode" class="form-label"></label>
+                                    <input asp-for="IFSCCode" class="form-control" />
+                                    <span asp-validation-for="IFSCCode" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="UPIId" class="form-label"></label>
+                                    <input asp-for="UPIId" class="form-control" />
+                                    <span asp-validation-for="UPIId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label asp-for="QRImageUpload" class="form-label"></label>
+                                    <input asp-for="QRImageUpload" class="form-control" type="file" />
+                                    <span asp-validation-for="QRImageUpload" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-
-
-

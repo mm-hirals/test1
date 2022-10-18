@@ -38,11 +38,34 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data.Where(x => x.CreatedUTCDate >= oldDate).Count();
         }
 
+        public async Task<CustomersApiResponseDto> GetCustomerById(long customerId, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(customerId, cancellationToken);
+            if (customerData == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerData.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerData);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerData.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerData);
+        }
+
         public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            if(customerMobileNumberOrEmailId == null)
+            if (customerMobileNumberOrEmailId == null)
             {
                 throw new Exception("Customer not found");
             }
@@ -82,7 +105,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.PhoneNumber.StartsWith(searchText) || x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName, PhoneNumber = p.PhoneNumber }).Take(10);
+            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName}).Take(10);
             return data.ToList();
         }
 
@@ -130,7 +153,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerTypeId = 1;
+            customerToInsert.CustomerTypeId = model.CustomerTypeId;
             customerToInsert.IsDeleted = false;
             customerToInsert.TenantId = _currentUser.TenantId;
             customerToInsert.CreatedBy = _currentUser.UserId;
@@ -234,6 +257,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -244,6 +268,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)
@@ -279,13 +304,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 CustomerId = data.CustomerId,
                 AddressType = "Home",
-                Street1 = model.CustomerAddressesRequestDto?.Street1,
-                Street2 = model.CustomerAddressesRequestDto?.Street2,
-                Landmark = model.CustomerAddressesRequestDto?.Landmark,
-                Area = model.CustomerAddressesRequestDto?.Area,
-                City = model.CustomerAddressesRequestDto?.City,
-                State = model.CustomerAddressesRequestDto?.State,
-                ZipCode = model.CustomerAddressesRequestDto?.ZipCode,
+                Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
+                Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
+                Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : String.Empty,
+                City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
+                State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,
+                ZipCode = model.CustomerAddressesRequestDto.ZipCode != null ? model.CustomerAddressesRequestDto.ZipCode : String.Empty,
                 IsDefault = true,
                 CreatedDate = DateTime.Now,
                 CreatedUTCDate = DateTime.UtcNow,

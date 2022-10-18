@@ -49,5 +49,8 @@ namespace MidCapERP.Dto.User
         public string NormalizedName { get; set; } = string.Empty;
 
         public int? UserId { get; set; }
+
+        [DisplayName("Device UDID")]
+        public string? MobileDeviceId { get; set; }
     }
 }

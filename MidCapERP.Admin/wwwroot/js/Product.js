@@ -1,32 +1,30 @@
 ﻿'use strict';
 window.counter = 0;
 var ProductModel = {};
-
 $(document).ready(function () {
     $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
-
     if ($("#hdnProductId").val() > 0) {
         $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
-        //$("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-        //$("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
-        //$("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-        //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
+        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
+        $("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
     }
 });
 
-$(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
-    debugger;
-    var tabId = $(e.target).attr("id")
-    if (tabId == "nav-images-tab") {
-        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-    } else if (tabId == "nav-rowmaterial-tab") {
-        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
-    } else if (tabId == "nav-detail-tab") {
-        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
-    } else if (tabId == "nav-productActivity") {
-        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-    }
-});
+//$(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
+//    debugger;
+//    var tabId = $(e.target).attr("id")
+//    if (tabId == "nav-images-tab") {
+//        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+//    } else if (tabId == "nav-rowmaterial-tab") {
+//        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+//    } else if (tabId == "nav-detail-tab") {
+//        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+//    } else if (tabId == "nav-productActivity") {
+//        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
+//    }
+//});
 
 $(document).on("#lnkProductFilter", "click", (function () {
     $(this).toggleClass("filter-icon");
@@ -34,19 +32,24 @@ $(document).on("#lnkProductFilter", "click", (function () {
 }));
 
 $(document).on("click", ".add-icon", (function () {
-    if ($(this).parent().parent().find("select").val() != "") {
-        var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
-        htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
-        htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
-        htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
+    if ($(this).parent().parent().find("input.quantity").val() > 0 && $(this).parent().parent().find("input.quantity").val() < 1000) {
+        if ($(this).parent().parent().find("select").val() != "") {
+            var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
+            htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
+            htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
+            htmlStringToAppend = htmlStringToAppend.replaceAll("data-", "")
 
-        $(this).parent().parent().parent().append(htmlStringToAppend)
-        counter++;
-        emptyFields($(this).parent().parent())
-        calculateCostPrice();
-    } else {
-        alert("Please select value");
-        //$("span.materialErrorMsg").text("Please select value");
+            $(this).parent().parent().parent().append(htmlStringToAppend)
+            counter++;
+            emptyFields($(this).parent().parent())
+            calculateCostPrice();
+        } else {
+            alert("Please select value");
+            //$("span.materialErrorMsg").text("Please select value");
+        }
+    }
+    else {
+        alert("Please enter value between 1-999");
     }
 }));
 
@@ -92,13 +95,18 @@ function emptyFields(trRow) {
     trRow.find("input[type=text]").each(function () {
         $(this).val("")
     });
+    trRow.find("input[type=number]").each(function () {
+        $(this).val("")
+    });
     trRow.find("select").each(function () {
         $(this).val("")
     });
 }
+
 $(document).on("change", "input.costPrice", (function () {
     $(this).attr('value', $(this).val());
 }));
+
 $(document).on("change", "input.quantity", (function () {
     var qty = $(this).attr('value', $(this).val());
     var unitPrice = $(this).parent().parent().find("input.materialPrice").val();
@@ -107,6 +115,7 @@ $(document).on("change", "input.quantity", (function () {
     $(this).parent().parent().find("input.costPrice").val(costPrice.toFixed(2));
     $(this).parent().parent().find("input.costPrice").attr('value', costPrice.toFixed(2));
 }));
+
 $(document).on("change", "select.material", (function () {
     var val = $(this).val();
     $("option", this).removeAttr("selected").filter(function () {

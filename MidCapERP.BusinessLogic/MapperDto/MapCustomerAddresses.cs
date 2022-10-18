@@ -10,6 +10,7 @@ namespace MidCapERP.BusinessLogic.MapperDto
         {
             CreateMap<CustomerAddresses, CustomerAddressesRequestDto>().ReverseMap();
             CreateMap<CustomerAddresses, CustomerAddressesResponseDto>().ReverseMap();
+            CreateMap<CustomerAddresses, CustomerAddressesApiRequestDto>().ReverseMap();
         }
     }
 }

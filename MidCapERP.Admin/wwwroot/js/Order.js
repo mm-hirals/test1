@@ -15,7 +15,6 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
- 
                 d.refferedBy = $("#refferedBy").val().trim();
                 d.customerName = $("#customerName").val().trim();
                 d.phoneNumber = $("#phoneNumber").val().trim();
@@ -24,7 +23,6 @@ $(function () {
                 d.orderToDate = $("#orderToDate").val().trim();
                 d.deliveryFromDate = $("#deliveryFromDate").val().trim();
                 d.deliveryToDate = $("#deliveryToDate").val().trim();
- 
             }
         },
         "columns": [
@@ -36,18 +34,24 @@ $(function () {
                 "data": "status", "name": "Status", "autoWidth": true,
                 "mRender": function (o) {
                     if (o == 0) {
-                        status = "Pending";
+                        status = "Inquiry";
                     } else if (o == 1) {
-                        status = "In Progress";
+                        status = "Pending For Approval";
                     }
                     else if (o == 2) {
-                        status = "Completed";
+                        status = "Approved";
                     }
                     else if (o == 3) {
-                        status = "Cancelled";
+                        status = "In Progress";
                     }
                     else if (o == 4) {
-                        status = "Archieved";
+                        status = "Completed";
+                    }
+                    else if (o == 5) {
+                        status = "Delivered";
+                    }
+                    else if (o == 6) {
+                        status = "Cancelled";
                     }
                     return status;
                 }
