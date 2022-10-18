@@ -22,7 +22,7 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label fw-bold">Order Status</label><br />
-                            @if (@Model.Status == (int)OrderStatusEnum.Pending)
+                            @if (@Model.Status == (int)OrderStatusEnum.PendingForApproval)
                             {
                                 <span class="form-label badge bg-warning">Pending</span>
                             }
@@ -37,10 +37,6 @@
                             else if (@Model.Status == (int)OrderStatusEnum.Cancelled)
                             {
                                 <span class="form-label badge bg-danger">Cancelled</span>
-                            }
-                            else
-                            {
-                                <span class="form-label badge bg-warning">Archieved</span>
                             }
                         </div>
                     </div>

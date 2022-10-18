@@ -2,11 +2,10 @@
 @model MidCapERP.Dto.Order.OrderDataTableFilterDto
 @{
     ViewData["Title"] = "Orders";
-    var pending = (int)OrderStatusEnum.Pending;
+    var pending = (int)OrderStatusEnum.PendingForApproval;
     var InProgress = (int)@OrderStatusEnum.InProgress;
     var Completed = (int)@OrderStatusEnum.Completed;
     var Cancelled = (int)@OrderStatusEnum.Cancelled;
-    var Archieved = (int)@OrderStatusEnum.Archieved;
 }
 
 <div class="c-card--wrapper">
@@ -51,7 +50,6 @@
                                 <option value="@InProgress">In Progress</option>
                                 <option value="@Completed">Completed</option>
                                 <option value="@Cancelled">Cancelled</option>
-                                <option value="@Archieved">Archieved</option>
                            </select>
                        </div>
                     </div>
