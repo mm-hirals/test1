@@ -25,22 +25,22 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="Title" class="form-label"></label>
+                                <label asp-for="Title" class="form-label"></label><span class="text-danger">*</span>
                                 <input asp-for="Title" class="form-control" />
                                 <span asp-validation-for="Title" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="ModelNo" class="form-label"></label>
+                                <label asp-for="ModelNo" class="form-label"></label><span class="text-danger">*</span>
                                 <input asp-for="ModelNo" class="form-control" />
                                 <span asp-validation-for="ModelNo" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="CompanyId" class="form-label"></label>
-                                <select asp-for="CompanyId" data-val="true" class="form-control form-select"
+                                <label asp-for="CompanyId" class="form-label"></label><span class="text-danger">*</span>
+                                <select asp-for="CompanyId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CompanySelectItemList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Company</option>
                                 </select>
@@ -49,8 +49,8 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="UnitId" class="form-label"></label>
-                                <select asp-for="UnitId" data-val="true" class="form-control form-select"
+                                <label asp-for="UnitId" class="form-label"></label><span class="text-danger">*</span>
+                                <select asp-for="UnitId" data-val="true" class="form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Unit</option>
                                 </select>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="UnitPrice" class="form-label"></label>
+                                <label asp-for="UnitPrice" class="form-label"></label><span class="text-danger">*</span>
                                 <input asp-for="UnitPrice" name="UnitPrice" class="form-control" min="0" />
                                 <span asp-validation-for="UnitPrice" class="text-danger"></span>
                             </div>
