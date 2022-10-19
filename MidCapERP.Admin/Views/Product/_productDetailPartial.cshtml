@@ -18,14 +18,14 @@
                         <input type="hidden" asp-for="ProductId" />
                         <div class="col-3">
                             <div class="form-group">
-                                <label asp-for="FabricNeeded" class="form-label"></label>
+                                <label asp-for="FabricNeeded" class="form-label"></label><span class="required">*</span>
                                 <input asp-for="FabricNeeded" type="number" class="form-control fabric" placeholder="Fabric in meter" min="0" max="999">
                                 <span asp-validation-for="FabricNeeded" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="form-group">
-                                <label asp-for="TotalDaysToPrepare" class="form-label"></label>
+                                <label asp-for="TotalDaysToPrepare" class="form-label"></label><span class="required">*</span>
                                 <input asp-for="TotalDaysToPrepare" type="number" class="form-control" placeholder="Total days to prepare" min="0" max="999">
                                 <span asp-validation-for="TotalDaysToPrepare" class="text-danger"></span>
                             </div>
