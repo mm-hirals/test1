@@ -2,6 +2,7 @@
 
 var ProductModel = {};
 var tblProduct;
+var value_check = new Array();
 
 $(function () {
     tblProduct = $("#tblProduct").DataTable({
@@ -21,7 +22,19 @@ $(function () {
                 d.publishStatus = $("#publishStatus").val().trim();
             }
         },
+        "columnDefs": [
+            {
+                "orderable": false,
+                "targets": 0
+            }
+        ],
         "columns": [
+            {
+                "bSortable": false,
+                "mRender": (data, type, row) => {
+                    return '<div class="c-action-btn-group justify-content-start"><input type="checkbox" class="case" value="' + row.productId + '" id="' + row.productId + '" /></div>';
+                }
+            },
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             { "data": "productTitle", "name": "ProductTitle", "autoWidth": true },
             { "data": "modelNo", "name": "ModelNo", "autoWidth": true },
@@ -48,15 +61,6 @@ $(function () {
                 }
             }
         ],
-        //columnDefs: [
-        //    {
-        //        "type": "unix",
-        //        "targets": [3, 4],
-        //        "render": function (data) {
-        //            return moment(data).format('DD/MM/YYYY HH:MM')
-        //        }
-        //    },
-        //]
     });
 });
 
@@ -94,4 +98,72 @@ $('#tblProduct').on('click', 'input[type="checkbox"]', function () {
                 alert("Error: " + response);
         }
     });
+});
+
+// Check all checkbox values and store it in array
+$("#selectallProduct").click(function () {
+    if (this.checked) {
+        if (value_check.length > 0) {
+            value_check = [];
+        }
+        $('.case').prop('checked', true);
+        for (var i = 0; i < $(".case:checked").length; i++) {
+            value_check.push($(".case:checked")[i].id);
+        }
+    }
+    else {
+        $('.case').prop('checked', false);
+        value_check = [];
+    }
+});
+
+// Check single checkbox value and store it in array
+$('#tblProduct').on('click', 'input[type="checkbox"]', function () {
+    if ($(this).prop("checked")) {
+        value_check.push($(this).val());
+    }
+    else {
+        var a = value_check.findIndex(q => q == $(this).val());
+        if (a > -1) {
+            value_check.splice(a, 1);
+        }
+    }
+});
+
+// On button click send checkbox values to controller
+$("#multiSelectProduct").click(function () {
+    if (value_check.length > 0) {
+        if ($("#selectallProduct").prop('checked')) {
+            var categoryName = $("#categoryName").val().trim();;
+            var productTitle = $("#productTitle").val().trim();
+            var modelNo = $("#modelNo").val().trim();
+            var publishStatus = $("#publishStatus").val().trim();
+        }
+
+        var data = {
+            CategoryName: categoryName,
+            ProductTitle: productTitle,
+            ModelNo: modelNo,
+            PublishStatus: publishStatus,
+            IsCheckedAll: $("#selectallProduct").prop('checked'),
+            ProductList: value_check
+        };
+        console.log(data);
+        $.ajax({
+            url: "/Product/PrintProductDetail",
+            type: "POST",
+            data: { model: data },
+            success: function (response) {
+                if (response == "success") {
+                    toastr.success('Print product successfully.');
+                }
+                else
+                    toastr.error(response, 'Error in printing product.');
+            }
+        });
+    }
+    else {
+        //Swal.fire('Please select customer to send message.')
+        toastr.error('Please select products to print.');
+    }
 });

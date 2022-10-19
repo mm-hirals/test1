@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-using MidCapERP.DataEntities.Models;
-using MidCapERP.Dto.ActivityLogs;
+﻿using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.OrderCalculation;
@@ -58,11 +55,13 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterProductActivityData(ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
- 
+
         public Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
+
+        public Task PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken);
     }
 }

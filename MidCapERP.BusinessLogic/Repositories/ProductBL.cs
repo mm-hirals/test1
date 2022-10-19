@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-using AutoMapper;
+﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
@@ -182,7 +180,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     if (data.Any())
                         productDetailResponseDto.Polish = string.Join(", ", data.Select(x => x.Title + " - " + x.ModelNo));
-                   
+
                     productDetailResponseDto.TenantResponseDto = _mapper.Map<TenantResponseDto>(tenantDetails);
                 }
                 return productDetailResponseDto;
@@ -527,7 +525,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
-
                                 }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
 
             return dataResponse;
@@ -548,7 +545,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
-
                                 }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
             var productData = new PagedList<ActivityLogsResponseDto>(dataResponse, dataTableFilterDto);
             return new JsonRepsonse<ActivityLogsResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
@@ -557,6 +553,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
+        }
+
+        public async Task PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        {
+            foreach (var item in model.ProductList)
+            {
+                var customerData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+            }
         }
 
         #region API Methods

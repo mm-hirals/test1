@@ -223,6 +223,20 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<JsonResult> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.PrintProductDetail(model, cancellationToken);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
+        }
+
         #region Private Method
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
