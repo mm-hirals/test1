@@ -19,7 +19,7 @@
                                         <label asp-for="CustomerTypeId" class="form-label"></label><span class="required">*</span>
                                     </label>
                                     <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType form-select"
-                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">         
+                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
                                                 <option value="" hidden disabled selected>Select Customer Type</option>
                                     </select>
                                     <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
@@ -176,8 +176,8 @@
                                         <label asp-for="IsSubscribe" class="form-label"></label>
                                     </label>
                                     <div class="custom-control custom-switch">
-                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isDefaultCheckCustomer" data-val="true">
-                                        <label class="custom-control-label" for="isDefaultCheckCustomer">Active</label>
+                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isSubscribe" data-val="true">
+                                        <label class="custom-control-label" for="isSubscribe">Active</label>
                                     </div>
                                 </div>
                             </div>

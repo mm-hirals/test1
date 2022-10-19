@@ -17,6 +17,8 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IEnumerable<CustomerAddressesResponseDto>> GetCustomerById(Int64 Id, CancellationToken cancellationToken);
 
+        public Task<CustomerAddressesResponseDto> GetCustomerAddressById(Int64 Id, CancellationToken cancellationToken);
+
         public Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken);
 
         public Task<CustomerAddressesApiRequestDto> UpdateCustomerApiAddresses(Int64 Id, CustomerAddressesApiRequestDto model, CancellationToken cancellationToken);
