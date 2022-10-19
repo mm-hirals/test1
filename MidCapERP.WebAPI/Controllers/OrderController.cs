@@ -82,11 +82,11 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
-        [HttpPatch("SendForApproval/{id}/{comments}")]
+        [HttpPatch("SendForApproval")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
-        public async Task<ApiResponse> UpdateOrderSendForApproval(Int64 id, string comments, CancellationToken cancellationToken)
+        public async Task<ApiResponse> UpdateOrderSendForApproval([FromBody] OrderUpdateStatusAPI orderUpdateStatusAPI, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.UpdateOrderSendForApproval(id, comments, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderSendForApproval(orderUpdateStatusAPI.OrderId, orderUpdateStatusAPI.Comments, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);

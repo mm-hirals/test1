@@ -408,7 +408,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
-        public async Task<OrderApiResponseDto> UpdateOrderSendForApproval(Int64 orderId, string comments, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> UpdateOrderSendForApproval(Int64 orderId, string? comments, CancellationToken cancellationToken)
         {
             var orderById = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
             orderById.Comments = comments;

@@ -3,11 +3,11 @@
     public enum CustomerTypeEnum
     {
         Customer = 1,
-        Wholesaler = 2
+        Wholesaler = 3
     }
 
     public enum ArchitectTypeEnum
     {
-        Architect = 3
+        Architect = 2
     }
 }
