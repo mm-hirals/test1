@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -17,12 +18,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IEmailHelper _emailHelper;
 
-        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _emailHelper = emailHelper;
         }
 
         public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -223,6 +226,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
             List<string> customerPhoneList = new List<string>();
+            List<string> customerEmailList = new List<string>();
 
             foreach (var item in model.CustomerList)
             {
@@ -230,9 +234,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (customerData != null)
                 {
                     var customerPhone = customerData.PhoneNumber;
+                    var customerEmail = customerData.EmailId;
                     customerPhoneList.Add(customerPhone);
+                    if (customerEmail != null)
+                        customerEmailList.Add(customerEmail);
                 }
             }
+
+            await _emailHelper.SendEmail(model.Subject, model.Message, customerEmailList);
 
             foreach (var item in customerPhoneList)
             {

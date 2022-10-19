@@ -1,7 +1,7 @@
 ﻿using AutoWrapper.Wrappers;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Identity.Models;
-using MidCapERP.Infrastructure.Services.Email;
 using System.Net;
 using System.Text.Json;
 using UAParser;

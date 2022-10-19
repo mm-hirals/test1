@@ -1,7 +1,7 @@
 ﻿using MagnusMinds.Utility.EmailService;
 using MimeKit;
 
-namespace MidCapERP.Infrastructure.Services.Email
+namespace MidCapERP.Core.Services.Email
 {
     public class EmailHelper : IEmailHelper
     {

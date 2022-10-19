@@ -1,4 +1,4 @@
-﻿namespace MidCapERP.Infrastructure.Services.Email
+﻿namespace MidCapERP.Core.Services.Email
 {
     public interface IEmailHelper
     {
