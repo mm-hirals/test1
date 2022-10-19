@@ -25,6 +25,7 @@ $(function () {
             { "data": "lastName", "name": "LastName", "autoWidth": true },
             { "data": "userName", "name": "UserName", "autoWidth": true },
             { "data": "email", "name": "Email", "autoWidth": true },
+            { "data": "userRole", "name": "UserRole", "autoWidth": true },
             { "data": "phoneNumber", "name": "PhoneNumber", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,

@@ -22,6 +22,8 @@ namespace MidCapERP.Dto.User
 
         public string Password { get; set; } = string.Empty;
 
+        public string UserRole { get; set; } = string.Empty;
+
         [DisplayName("Phone Number")]
         public string PhoneNumber { get; set; } = string.Empty;
 

@@ -30,6 +30,11 @@ namespace MidCapERP.DataAccess.Repositories
             return await _roles.GetAsync(cancellationToken);
         }
 
+        public async Task<IQueryable<IdentityUserRole<string>>> GetAspNetUserRoles(CancellationToken cancellationToken)
+        {
+            return await _userRole.GetAsync(cancellationToken);
+        }
+
         public async Task<string> GetUserRoleId(string Id, CancellationToken cancellationToken)
         {
             var data = await _userRole.GetAsync(cancellationToken);
