@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net;
 using WhatsAppApi;
 
 namespace MidCapERP.BusinessLogic.Services.SendSMS
@@ -8,12 +9,14 @@ namespace MidCapERP.BusinessLogic.Services.SendSMS
         public string SenderId;
         public string SMSType;
         public string APIkey;
+        private readonly IConfiguration _configuration;
 
-        public SendSMSservice()
+        public SendSMSservice(IConfiguration configuration)
         {
             SenderId = "BOOKCL";
             SMSType = "4";
             APIkey = "OCZs4VSRiV8lNVIYvjdzl4RWbo";
+            _configuration = configuration;
         }
 
         public bool SendSMS(string mobilenumber, string message)
@@ -42,11 +45,13 @@ namespace MidCapERP.BusinessLogic.Services.SendSMS
 
         public bool WhatsAppSendGreet(string mobilenumber, string message)
         {
-            string from = "9199********";
+            string from = _configuration["AppSettings:WhatsAppSetting:fromNumber"];
+            string password = _configuration["AppSettings:WhatsAppSetting:Password"];
+            string nickName = _configuration["AppSettings:WhatsAppSetting:NickName"];
             string to = mobilenumber;//Sender Mobile
             string msg = message;
 
-            WhatsApp wa = new WhatsApp(from, "BnXk*******B0=", "NickName", true, true);
+            WhatsApp wa = new WhatsApp(from, password, nickName, true, true);
 
             wa.OnConnectSuccess += () =>
             {
