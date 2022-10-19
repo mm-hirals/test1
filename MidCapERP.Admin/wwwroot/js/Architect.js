@@ -120,7 +120,7 @@ $("#multiSelectArchitect").click(function () {
     }
     else {
         //Swal.fire('Please select architect to send message.')
-        alert("Please select architect to send message.");
+        toastr.error('Please select architect to send message.');
     }
 });
 
@@ -160,14 +160,10 @@ $(".sendSMSToClient").click(function () {
             success: function (response) {
                 if (response == "success") {
                     toastr.success('Messages sent successfully.');
-                    setTimeout(function () {
-                        window.location.reload(true);
-                    }, 1800);
-                    //alert("Success : ", response);
+                    $('#sendSMSModal').modal('hide');
                 }
                 else
                     toastr.error(response, 'Error in sending messages.');
-                //alert("Error : ", response)
             }
         });
     }
