@@ -94,7 +94,7 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
         }
 
-        [HttpDelete]
+        [HttpPost("DeleteOrder")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Delete)]
         public async Task<ApiResponse> DeleteOrder([FromBody] OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
         {
