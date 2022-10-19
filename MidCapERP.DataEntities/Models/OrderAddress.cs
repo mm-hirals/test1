@@ -9,7 +9,8 @@ namespace MidCapERP.DataEntities.Models
         [Key]
         public long OrderAddressId { get; set; }
 
-        public long? OrderId { get; set; }
+        public long OrderId { get; set; }
+        public long CustomerAddressId { get; set; }
         public string AddressType { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

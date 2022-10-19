@@ -227,13 +227,20 @@ namespace MidCapERP.BusinessLogic.Repositories
                 OrderApiResponseDto orderApiResponseDto = new OrderApiResponseDto();
                 // Get Order data by OrderId
                 var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
-
                 if (orderById == null)
                 {
                     throw new Exception("Order not found");
                 }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
                 orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
+
+                //Get Customer Address for Order
+                var orderAddressData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
+                if (orderAddressData != null)
+                {
+                    orderApiResponseDto.BillingAddressID = orderAddressData.FirstOrDefault(x => x.AddressType == "Billing").CustomerAddressId;
+                    orderApiResponseDto.ShippingAddressID = orderAddressData.FirstOrDefault(x => x.AddressType == "Shipping").CustomerAddressId;
+                }
 
                 // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
@@ -371,23 +378,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderApiResponseDto>(data);
         }
 
-        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> UpdateOrderAdvanceAmountAPI(Int64 orderId, decimal advanceAmount, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("OrderSetItem not found");
-            }
-            data.DiscountPrice = discountPrice;
-            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
-            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
-
-            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
-            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
             orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
-            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
-            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
-            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            decimal discountAmount = 0.00m;
+            foreach (var item in orderData.OrderSetApiResponseDto)
+                foreach (var item2 in item.OrderSetItemResponseDto)
+                    discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+            orderById.Discount = Math.Round(Math.Round(discountAmount), 2);
+            orderById.TotalAmount = orderById.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = Math.Round(Math.Round((orderById.TotalAmount * 18) / 100), 2);
+            orderById.AdvanceAmount = advanceAmount;
             orderById.UpdatedBy = _currentUser.UserId;
             orderById.UpdatedDate = DateTime.Now;
             orderById.UpdatedUTCDate = DateTime.UtcNow;
@@ -397,11 +400,24 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderData.Discount = orderById.Discount;
             orderData.TotalAmount = orderById.TotalAmount;
             orderData.GSTTaxAmount = orderById.GSTTaxAmount;
-            orderData.PayableAmount = (orderData.GrossTotal - orderData.Discount) + orderData.GSTTaxAmount;
+            orderData.AdvanceAmount = orderById.AdvanceAmount;
+            orderData.PayableAmount = ((orderById.GrossTotal - orderById.Discount) + orderById.GSTTaxAmount) - orderById.AdvanceAmount;
             orderData.UpdatedBy = orderById.UpdatedBy;
             orderData.UpdatedDate = orderById.UpdatedDate;
             orderData.UpdatedUTCDate = orderById.UpdatedUTCDate;
             return orderData;
+        }
+
+        public async Task<OrderApiResponseDto> UpdateOrderSendForApproval(Int64 orderId, string comments, CancellationToken cancellationToken)
+        {
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            orderById.Comments = comments;
+            orderById.Status = (int)OrderStatusEnum.PendingForApproval;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
         }
 
         public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
@@ -625,7 +641,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(long orderId, long customerId, long customerAddressId, string orderAddressType, CancellationToken cancellationToken)
         {
             OrderAddressesApiRequestDto objOrderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
-            
+
             var customerData = await _unitOfWorkDA.CustomersDA.GetById(customerId, cancellationToken);
             if (customerData == null)
             {
@@ -651,6 +667,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
                 orderAddressesToInsert.OrderId = orderId;
+                orderAddressesToInsert.CustomerAddressId = customerAddressId;
                 orderAddressesToInsert.FirstName = customerData.FirstName;
                 orderAddressesToInsert.LastName = customerData.LastName;
                 orderAddressesToInsert.EmailId = customerData.EmailId;
@@ -676,6 +693,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
                     orderAddressesToInsert.OrderId = orderId;
+                    orderAddressesToInsert.CustomerAddressId = customerAddressId;
                     orderAddressesToInsert.FirstName = customerData.FirstName;
                     orderAddressesToInsert.LastName = customerData.LastName;
                     orderAddressesToInsert.EmailId = customerData.EmailId;
@@ -700,6 +718,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var orderAddress = await _unitOfWorkDA.OrderAddressDA.GetById(orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType).OrderAddressId, cancellationToken);
                     if (orderAddress != null)
                     {
+                        orderAddress.CustomerAddressId = customerAddressId;
                         orderAddress.FirstName = customerData.FirstName;
                         orderAddress.LastName = customerData.LastName;
                         orderAddress.EmailId = customerData.EmailId;
@@ -903,7 +922,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
             orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
-            orderResponseDto.PayableAmount = (orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount;
+            orderResponseDto.PayableAmount = ((orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount) - orderResponseDto.AdvanceAmount;
             return orderResponseDto;
         }
 

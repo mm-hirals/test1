@@ -20,11 +20,11 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("Search/PhoneNumberOrEmailId/{phoneNumberOrEmailId}")]
+        [HttpGet("{id}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> SearchPhoneNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
+        public async Task<ApiResponse> Get(Int64 id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumberOrEmailId(phoneNumberOrEmailId, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.GetById(id, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -32,11 +32,99 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
-        [HttpGet("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> Get(Int64 id, CancellationToken cancellationToken)
+        [HttpPut("{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<ApiResponse> Put(int id, [FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.GetById(id, cancellationToken);
+            ValidationRequest(customerApiRequestDto);
+            var data = await _unitOfWorkBL.CustomersBL.UpdateCustomerApi(id, customerApiRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        public async Task<ApiResponse> Post([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerApiRequestDto);
+            var data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+        }
+
+        [HttpGet("CheckCustomer")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)
+        {
+            bool data = await _unitOfWorkBL.CustomersBL.CheckCustomerExistOrNot(phoneNumberOrEmail, cancellationToken);
+            if (data == null || data == false)
+            {
+                return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("CustomerAddress/{customerId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        public async Task<ApiResponse> GetCustomerAddress(long customerId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerById(customerId, cancellationToken);
+            if (data == null || data.Count() == 0)
+            {
+                return new ApiResponse(message: "Customer Address not found!", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
+        }
+
+        [HttpGet("GetCustomerAddress/{customerAddressId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        public async Task<ApiResponse> GetCustomerAddressById(long customerAddressId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerAddressById(customerAddressId, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Customer Address not found!", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
+        }
+
+        [HttpPut("CustomerAddress/{customerAddressId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<ApiResponse> UpdateCustomerAddress(int customerAddressId, [FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerAddressesRequestDto);
+            var data = await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerApiAddresses(customerAddressId, customerAddressesRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
+        }
+
+        [HttpPost("CustomerAddress")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        public async Task<ApiResponse> CreateCustomerAddress([FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
+        {
+            ValidationRequest(customerAddressesRequestDto);
+            var data = await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerApiAddresses(customerAddressesRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+        }
+
+        [HttpGet("Search/PhoneNumberOrEmailId/{phoneNumberOrEmailId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        public async Task<ApiResponse> SearchPhoneNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumberOrEmailId(phoneNumberOrEmailId, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -54,82 +142,6 @@ namespace MidCapERP.WebAPI.Controllers
                 return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
             }
             return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<ApiResponse> Post([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
-        {
-            ValidationRequest(customerApiRequestDto);
-            var data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-            }
-            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
-        }
-
-        [HttpPut("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
-        public async Task<ApiResponse> Put(int id, [FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
-        {
-            ValidationRequest(customerApiRequestDto);
-            var data = await _unitOfWorkBL.CustomersBL.UpdateCustomerApi(id, customerApiRequestDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-            }
-            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
-        }
-
-        [HttpGet("CheckCustomer")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)
-        {
-            bool data = await _unitOfWorkBL.CustomersBL.CheckCustomerExistOrNot(phoneNumberOrEmail, cancellationToken);
-            if (data == null || data == false)
-            {
-                return new ApiResponse(message: "Customer not found!", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Customer Found", result: data, statusCode: 200);
-        }
-
-        [HttpGet("CustomerAddress/{customerId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
-        public async Task<ApiResponse> CustomerAddressGet(long customerId, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerById(customerId, cancellationToken);
-            if (data == null || data.Count() == 0)
-            {
-                return new ApiResponse(message: "Customer Address not found!", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Customer Address Found", result: data, statusCode: 200);
-        }
-
-        [HttpPost("CustomerAddress")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<ApiResponse> CreateCustomerAddress([FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
-        {
-            ValidationRequest(customerAddressesRequestDto);
-            var data = await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerApiAddresses(customerAddressesRequestDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-            }
-            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
-        }
-
-        [HttpPut("CustomerAddress/{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
-        public async Task<ApiResponse> UpdateCustomerAddress(int id, [FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
-        {
-            ValidationRequest(customerAddressesRequestDto);
-            var data = await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerApiAddresses(id, customerAddressesRequestDto, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
-            }
-            return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
         }
 
         [HttpGet("SearchForCustomerDropdown/{searchText}")]

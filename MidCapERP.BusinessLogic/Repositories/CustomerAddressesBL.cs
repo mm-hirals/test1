@@ -72,6 +72,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomerAddressesResponseDto>>(customerAddressData);
         }
 
+        public async Task<CustomerAddressesResponseDto> GetCustomerAddressById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var customerAddressData = await CustomerAddressesGetById(Id, cancellationToken);
+            return _mapper.Map<CustomerAddressesResponseDto>(customerAddressData);
+        }
+
         public async Task<CustomerAddressesRequestDto> CreateCustomerAddresses(CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
             if (model.IsDefault)
