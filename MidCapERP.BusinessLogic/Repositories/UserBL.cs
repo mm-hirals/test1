@@ -66,7 +66,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                      LastName = x.LastName,
                                      UserName = x.UserName,
                                      Email = x.Email,
-                                     UserRole = t.Name,
+                                     UserRole = t.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), ""),
                                      PhoneNumber = x.PhoneNumber,
                                      UserId = x.UserId
                                  });
