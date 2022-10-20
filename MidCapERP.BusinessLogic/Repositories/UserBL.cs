@@ -98,7 +98,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             // Get User Role by roleId
             var roleId = _unitOfWorkDA.UserDA.GetUserRoleId(applicationUser.Id, cancellationToken);
-            var roleDataById = await _roleManager.FindByIdAsync(roleId.Result);
+            var getAllRole = await _unitOfWorkDA.RoleDA.GetRoles(cancellationToken);
+            var roleDataById = getAllRole.FirstOrDefault(x => x.Id == roleId.Result);
             if (roleDataById != null)
                 applicationUser.AspNetRole = roleDataById.NormalizedName;
             return applicationUser;
@@ -125,7 +126,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _userTenantMappingBL.CreateUserTenant(userTenantData, cancellationToken);
 
             // Add into AspNetRole
-            await _userManager.AddToRoleAsync(applicationUser, model.AspNetRole);
+            await _userManager.AddToRoleAsync(applicationUser, model.AspNetRole + "_" + Convert.ToString(_currentUser.TenantId));
 
             return _mapper.Map<UserRequestDto>(applicationUser);
         }
@@ -149,7 +150,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _userManager.RemoveFromRoleAsync(oldApplicationUserData, oldRoleNameData.Name);
 
             //Add Updated UserRole
-            await _userManager.AddToRoleAsync(oldApplicationUserData, model.AspNetRole);
+            await _userManager.AddToRoleAsync(oldApplicationUserData, model.AspNetRole + "_" + Convert.ToString(_currentUser.TenantId));
 
             return _mapper.Map<UserRequestDto>(oldApplicationUserData);
         }
