@@ -62,6 +62,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductDimensionsApiResponseDto> GetPriceByDimensionsAPI(ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken);
 
-        public Task PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken);
+        public Task<ProductResponseDto> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken);
     }
 }

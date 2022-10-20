@@ -228,7 +228,7 @@ namespace MidCapERP.Admin.Controllers
         {
             try
             {
-                await _unitOfWorkBL.ProductBL.PrintProductDetail(model, cancellationToken);
+               await _unitOfWorkBL.ProductBL.PrintProductDetail(model, cancellationToken);
                 return Json("success");
             }
             catch (Exception ex)

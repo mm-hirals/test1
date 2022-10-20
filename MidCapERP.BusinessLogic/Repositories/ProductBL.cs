@@ -21,6 +21,10 @@ using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
 using MidCapERP.Dto.Tenant;
+using iTextSharp;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -32,8 +36,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly IFileStorageService _fileStorageService;
         private readonly IQRCodeService _iQRCodeService;
         private readonly IActivityLogsService _activityLogsService;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -41,6 +46,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             _fileStorageService = fileStorageService;
             _iQRCodeService = iQRCodeService;
             _activityLogsService = activityLogsService;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -555,12 +561,48 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
         }
 
-        public async Task PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        public async Task<ProductResponseDto> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
         {
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            //This Pdf Code
+            Document document = new Document(PageSize.A4, 25, 25, 30, 30);
+            string paths = _hostingEnvironment.WebRootPath;
+            var random = Guid.NewGuid();
+            System.IO.FileStream fs = new FileStream(paths + "\\" + "Product"+ random + ".pdf", FileMode.Create);
+            PdfPTable tableCol = new PdfPTable(4);
             foreach (var item in model.ProductList)
             {
-                var customerData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+                var getProductById = await GetProductById(item, cancellationToken);
+                var categoryName = await _unitOfWorkDA.LookupValuesDA.GetById(getProductById.CategoryId, cancellationToken);
+                productResponseDto.ProductTitle = getProductById.ProductTitle;
+                productResponseDto.CategoryName = categoryName.LookupValueName;
+                productResponseDto.ModelNo = getProductById.ModelNo;
+                productResponseDto.QRImage = getProductById.QRImage;
+                
+                PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                document.Open();
+                tableCol.AddCell(productResponseDto.ProductTitle);
+                tableCol.AddCell(productResponseDto.CategoryName);
+                tableCol.AddCell(productResponseDto.ModelNo);
+                if (!string.IsNullOrWhiteSpace(productResponseDto.QRImage))
+                {
+                    var pathMerge = paths + productResponseDto.QRImage;
+                    Image image = Image.GetInstance(pathMerge);
+                   
+                    tableCol.AddCell(image);
+                }
+                else{
+                    tableCol.AddCell("Not Image");
+                }
+                document.Add(tableCol);
             }
+            // Close the document  
+            document.Close();
+            // Close the writer instance  
+            fs.Close();
+            // Always close open filehandles explicity  
+            fs.Close();
+            return productResponseDto;
         }
 
         #region API Methods
