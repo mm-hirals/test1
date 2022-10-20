@@ -86,7 +86,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
         public async Task<ApiResponse> UpdateOrderSendForApproval([FromBody] OrderUpdateStatusAPI orderUpdateStatusAPI, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.UpdateOrderSendForApproval(orderUpdateStatusAPI.OrderId, orderUpdateStatusAPI.Comments, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderSendForApproval(orderUpdateStatusAPI, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);

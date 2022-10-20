@@ -376,8 +376,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
 
             //Create OrderAddress Base On Address
-            await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", false, cancellationToken);
-            await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
+            if (data.Status == (int)OrderStatusEnum.Inquiry)
+            {
+                await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", true, cancellationToken);
+                await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", true, cancellationToken);
+            }
+            else
+            {
+                await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", false, cancellationToken);
+                await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
+            }
 
             var responseOrder = _mapper.Map<OrderApiResponseDto>(data);
             responseOrder.BillingAddressID = model.BillingAddressID;
@@ -415,16 +423,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
-        public async Task<OrderApiResponseDto> UpdateOrderSendForApproval(Int64 orderId, string? comments, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> UpdateOrderSendForApproval(OrderUpdateStatusAPI model, CancellationToken cancellationToken)
         {
-            var orderById = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
-            orderById.Comments = comments;
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(model.OrderId, cancellationToken);
+            orderById.Comments = model.Comments;
             orderById.Status = (int)OrderStatusEnum.PendingForApproval;
             orderById.UpdatedBy = _currentUser.UserId;
             orderById.UpdatedDate = DateTime.Now;
             orderById.UpdatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
-            return await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+            await SaveOrderAddress(model.OrderId, orderById.CustomerID, model.BillingAddressID, "Billing", false, cancellationToken);
+            await SaveOrderAddress(model.OrderId, orderById.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
+            return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
 
         public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
