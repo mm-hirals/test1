@@ -120,6 +120,18 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
         }
 
+        [HttpDelete("CustomerAddress/{customerAddressId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        public async Task<ApiResponse> DeleteCustomerAddress(int customerAddressId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(customerAddressId, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
+        }
+
         [HttpGet("Search/PhoneNumberOrEmailId/{phoneNumberOrEmailId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> SearchPhoneNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
