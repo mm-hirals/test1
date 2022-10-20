@@ -20,9 +20,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly IUserTenantMappingBL _userTenantMappingBL;
-        private readonly ISqlRepository<IdentityUserRole<string>> _userRole;
 
-        public UserBL(IUnitOfWorkDA unitOfWorkDA, CurrentUser currentUser, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper, IUserTenantMappingBL userTenantMappingBL, ISqlRepository<ApplicationRole> userRole)
+        public UserBL(IUnitOfWorkDA unitOfWorkDA, CurrentUser currentUser, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper, IUserTenantMappingBL userTenantMappingBL)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _currentUser = currentUser;
