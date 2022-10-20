@@ -231,12 +231,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     throw new Exception("Order not found");
                 }
+                else if (orderById.TenantId != _currentUser.TenantId)
+                {
+                    throw new Exception("Order not found");
+                }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
                 orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
 
                 //Get Customer Address for Order
                 var orderAddressData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
-                if (orderAddressData != null)
+                if (orderAddressData != null && orderAddressData.Any())
                 {
                     orderApiResponseDto.BillingAddressID = orderAddressData.FirstOrDefault(x => x.AddressType == "Billing").CustomerAddressId;
                     orderApiResponseDto.ShippingAddressID = orderAddressData.FirstOrDefault(x => x.AddressType == "Shipping").CustomerAddressId;

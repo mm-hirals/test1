@@ -29,7 +29,7 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> MegaSearch(string searchText, CancellationToken cancellationToken)
         {
             List<MegaSearchResponse> productData = new List<MegaSearchResponse>();
-            productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductMegaSearchForDropDownByModuleNo(searchText, cancellationToken));
+            //productData.AddRange(await _unitOfWorkBL.ProductBL.GetProductMegaSearchForDropDownByModuleNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.CustomersBL.GetCustomerForDropDownByMobileNo(searchText, cancellationToken));
             productData.AddRange(await _unitOfWorkBL.OrderBL.GetOrderForDropDownByOrderNo(searchText, cancellationToken));
             if (productData != null && productData.Count > 0)
