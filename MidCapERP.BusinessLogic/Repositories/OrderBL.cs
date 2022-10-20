@@ -379,7 +379,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", false, cancellationToken);
             await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
 
-            return _mapper.Map<OrderApiResponseDto>(data);
+            var responseOrder = _mapper.Map<OrderApiResponseDto>(data);
+            responseOrder.BillingAddressID = model.BillingAddressID;
+            responseOrder.ShippingAddressID = model.ShippingAddressID;
+            return responseOrder;
         }
 
         public async Task<OrderApiResponseDto> UpdateOrderAdvanceAmountAPI(Int64 orderId, decimal advanceAmount, CancellationToken cancellationToken)
