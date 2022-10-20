@@ -672,7 +672,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
 
             var orderAddresses = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
-            if (orderAddresses == null)
+            if (orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType) == null)
             {
                 OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
                 orderAddressesToInsert.OrderId = orderId;
@@ -698,33 +698,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             else
             {
-                if (orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType) == null)
+                var orderAddressId = orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType)?.OrderAddressId;
+                if (orderAddressId != null)
                 {
-                    OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
-                    orderAddressesToInsert.OrderId = orderId;
-                    orderAddressesToInsert.CustomerAddressId = customerAddressId;
-                    orderAddressesToInsert.FirstName = customerData.FirstName;
-                    orderAddressesToInsert.LastName = customerData.LastName;
-                    orderAddressesToInsert.EmailId = customerData.EmailId;
-                    orderAddressesToInsert.PhoneNumber = customerData.PhoneNumber;
-                    orderAddressesToInsert.AddressType = orderAddressType;
-                    orderAddressesToInsert.Street1 = customerAddressData.Street1;
-                    orderAddressesToInsert.Street2 = customerAddressData.Street2;
-                    orderAddressesToInsert.Landmark = customerAddressData.Landmark;
-                    orderAddressesToInsert.Area = customerAddressData.Area;
-                    orderAddressesToInsert.City = customerAddressData.City;
-                    orderAddressesToInsert.State = customerAddressData.State;
-                    orderAddressesToInsert.ZipCode = customerAddressData.ZipCode;
-                    orderAddressesToInsert.CreatedBy = customerData.CreatedBy;
-                    orderAddressesToInsert.CreatedDate = DateTime.Now;
-                    orderAddressesToInsert.CreatedUTCDate = DateTime.UtcNow;
-                    var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
-                    var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
-                    return _mapper.Map<OrderAddressesApiRequestDto>(data);
-                }
-                else
-                {
-                    var orderAddress = await _unitOfWorkDA.OrderAddressDA.GetById(orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType).OrderAddressId, cancellationToken);
+                    var orderAddress = await _unitOfWorkDA.OrderAddressDA.GetById(Convert.ToInt64(orderAddressId), cancellationToken);
                     if (orderAddress != null)
                     {
                         orderAddress.CustomerAddressId = customerAddressId;
