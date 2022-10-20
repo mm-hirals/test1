@@ -72,6 +72,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomerAddressesResponseDto>>(customerAddressData);
         }
 
+        public async Task<CustomerAddressesResponseDto> GetCustomerAddressById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var customerAddressData = await CustomerAddressesGetById(Id, cancellationToken);
+            return _mapper.Map<CustomerAddressesResponseDto>(customerAddressData);
+        }
+
         public async Task<CustomerAddressesRequestDto> CreateCustomerAddresses(CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
             if (model.IsDefault)
@@ -84,6 +90,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
             var customerAddresses = _mapper.Map<CustomerAddresses>(model);
+            customerAddresses.AddressType = model.AddressType != "" ? model.AddressType : "Home";
+            customerAddresses.Street1 = model.Street1 != null ? model.Street1 : String.Empty;
+            customerAddresses.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
+            customerAddresses.Area = model.Area != null ? model.Area : String.Empty;
+            customerAddresses.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
+            customerAddresses.City = model.City != null ? model.City : String.Empty;
+            customerAddresses.State = model.State != null ? model.State : String.Empty;
+            customerAddresses.ZipCode = model.ZipCode != null ? model.ZipCode : String.Empty;
             customerAddresses.IsDeleted = false;
             customerAddresses.CreatedBy = _currentUser.UserId;
             customerAddresses.CreatedDate = DateTime.Now;
@@ -92,7 +106,41 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomerAddressesRequestDto>(data);
         }
 
+        public async Task<CustomerAddressesApiRequestDto> CreateCustomerApiAddresses(CustomerAddressesApiRequestDto model, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(model.CustomerId, cancellationToken);
+            if (customerData == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            var customerAddresses = _mapper.Map<CustomerAddresses>(model);
+            //customerAddresses.AddressType = model.AddressType;
+            //customerAddresses.Street1 = model.Street1;
+            //customerAddresses.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
+            //customerAddresses.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
+            //customerAddresses.Area = model.Area;
+            //customerAddresses.City = model.City;
+            //customerAddresses.State = model.State;
+            //customerAddresses.ZipCode = model.ZipCode;
+            //customerAddresses.IsDefault = model.IsDefault;
+            customerAddresses.IsDeleted = false;
+            customerAddresses.CreatedBy = _currentUser.UserId;
+            customerAddresses.CreatedDate = DateTime.Now;
+            customerAddresses.CreatedUTCDate = DateTime.UtcNow;
+            var data = await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(customerAddresses, cancellationToken);
+            return _mapper.Map<CustomerAddressesApiRequestDto>(data);
+        }
+
         public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
+        {
+            var oldData = await CustomerAddressesGetById(Id, cancellationToken);
+            UpdateCustomerAddresses(oldData);
+            MapToDbObject(model, oldData);
+            var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, oldData, cancellationToken);
+            return _mapper.Map<CustomerAddressesRequestDto>(data);
+        }
+
+        public async Task<CustomerAddressesApiRequestDto> UpdateCustomerApiAddresses(Int64 Id, CustomerAddressesApiRequestDto model, CancellationToken cancellationToken)
         {
             if (model.IsDefault)
             {
@@ -107,7 +155,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             UpdateCustomerAddresses(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(Id, oldData, cancellationToken);
-            return _mapper.Map<CustomerAddressesRequestDto>(data);
+            return _mapper.Map<CustomerAddressesApiRequestDto>(data);
         }
 
         public async Task<CustomerAddresses?> GetCustomerDefualtAddress(Int64 Id, CancellationToken cancellationToken)
@@ -154,12 +202,25 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.CustomerId = model.CustomerId;
             oldData.AddressType = model.AddressType;
             oldData.Street1 = model.Street1;
-            oldData.Street2 = model.Street2;
-            oldData.Landmark = model.Landmark;
+            oldData.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
+            oldData.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
             oldData.Area = model.Area;
             oldData.City = model.City;
             oldData.State = model.State;
             oldData.ZipCode = model.ZipCode;
+            oldData.IsDefault = model.IsDefault;
+        }
+        private static void MapToDbObject(CustomerAddressesApiRequestDto model, CustomerAddresses oldData)
+        {
+            oldData.CustomerId = model.CustomerId;
+            oldData.AddressType = model.AddressType;
+            oldData.Street1 = model.Street1 != null ? model.Street1 : String.Empty;
+            oldData.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
+            oldData.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
+            oldData.Area = model.Area != null ? model.Area : String.Empty;
+            oldData.City = model.City != null ? model.City : String.Empty;
+            oldData.State = model.State != null ? model.State : String.Empty;
+            oldData.ZipCode = model.ZipCode != null ? model.ZipCode : String.Empty;
             oldData.IsDefault = model.IsDefault;
         }
 

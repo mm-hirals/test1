@@ -7,7 +7,10 @@ namespace MidCapERP.Dto.OrderAddressesApi
         public long OrderAddressId { get; set; }
 
         [Required]
-        public long? OrderId { get; set; }
+        public long OrderId { get; set; }
+
+        [Required]
+        public long CustomerAddressId { get; set; }
 
         [Required]
         public string FirstName { get; set; }

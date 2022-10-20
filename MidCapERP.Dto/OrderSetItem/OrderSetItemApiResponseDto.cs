@@ -12,14 +12,9 @@ namespace MidCapERP.Dto.OrderSetItem
         [JsonIgnore]
         public long OrderSetId { get; set; }
 
-        [JsonIgnore]
         public int SubjectTypeId { get; set; }
-
-        [JsonIgnore]
         public long SubjectId { get; set; }
-
         public string ProductImage { get; set; }
-
         public decimal? Width { get; set; }
         public decimal? Height { get; set; }
         public decimal? Depth { get; set; }

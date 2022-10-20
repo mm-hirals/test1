@@ -16,6 +16,7 @@ namespace MidCapERP.DataEntities.Models
         public decimal Discount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal GSTTaxAmount { get; set; }
+        public decimal AdvanceAmount { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string? Comments { get; set; }
         public int Status { get; set; }

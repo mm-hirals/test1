@@ -2,10 +2,12 @@
 {
     public enum OrderStatusEnum
     {
-        Pending = 0,
-        InProgress = 1,
-        Completed = 2,
-        Cancelled = 3,
-        Archieved = 4
+        Inquiry = 0,
+        PendingForApproval = 1,
+        Approved = 2,
+        InProgress = 3,
+        Completed = 4,
+        Delivered = 5,
+        Cancelled = 6,
     }
 }

@@ -1,6 +1,8 @@
-﻿using MidCapERP.Dto.DataGrid;
+﻿using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
+using MidCapERP.Dto.OrderSetItem;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -11,6 +13,8 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<JsonRepsonse<OrderResponseDto>> GetFilterOrderData(OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<OrderResponseDto> GetOrderDetailData(long Id, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<OrderStatusApiResponseDto>> GetOrderForDetailsByStatus(string status, CancellationToken cancellationToken);
 
         public Task<OrderResponseDto> GetOrderSetDetailData(long Id, CancellationToken cancellationToken);
 
@@ -24,8 +28,20 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken);
 
-        public Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
+        public Task<OrderApiResponseDto> UpdateOrderAdvanceAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
+
+        public Task<OrderApiResponseDto> UpdateOrderSendForApproval(Int64 orderId, string? comments, CancellationToken cancellationToken);
 
         public Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
+
+        public Task<OrderSetItem> UpdateOrderSetItemDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderReceivableCount(CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderApprovedCount(CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken);
+
+        public Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken);
     }
 }

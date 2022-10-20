@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.SendSMS;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
@@ -15,12 +16,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly ISendSMSservice _sendSMSservice;
 
-        public ArchitectsBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public ArchitectsBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, ISendSMSservice sendSMSservice)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _sendSMSservice = sendSMSservice;
         }
 
         public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -83,6 +86,22 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomersRequestDto>(data);
         }
 
+        public async Task SendSMSToArchitects(CustomersSendSMSDto model, CancellationToken cancellationToken)
+        {
+            List<string> architectPhoneList = new List<string>();
+            //foreach (var item in model)
+            //{
+            //    var architectData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+            //    var architectPhone = architectData.PhoneNumber;
+            //    architectPhoneList.Add(architectPhone);
+            //}
+
+            foreach (var item in architectPhoneList)
+            {
+                //var msg = _sendSMSservice.SendSMS("7567086864", "Hi. This is test message for greeting customers.");
+            }
+        }
+
         #region PrivateMethods
 
         private async Task<Customers> ArchitectGetById(Int64 Id, CancellationToken cancellationToken)
@@ -104,6 +123,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.PhoneNumber = model.PhoneNumber;
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
+            oldData.IsSubscribe = model.IsSubscribe;
         }
 
         private async Task SaveArchitectAddress(CustomersRequestDto model, Customers data, CancellationToken cancellationToken)
@@ -112,13 +132,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 CustomerId = data.CustomerId,
                 AddressType = "Home",
-                Street1 = model.CustomerAddressesRequestDto?.Street1,
-                Street2 = model.CustomerAddressesRequestDto?.Street2,
-                Landmark = model.CustomerAddressesRequestDto?.Landmark,
-                Area = model.CustomerAddressesRequestDto?.Area,
-                City = model.CustomerAddressesRequestDto?.City,
-                State = model.CustomerAddressesRequestDto?.State,
-                ZipCode = model.CustomerAddressesRequestDto?.ZipCode,
+                Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : "",
+                Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : "",
+                Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : "",
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : "",
+                City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : "",
+                State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : "",
+                ZipCode = model.CustomerAddressesRequestDto.ZipCode != null ? model.CustomerAddressesRequestDto.ZipCode : "",
                 IsDefault = true,
                 CreatedDate = DateTime.Now,
                 CreatedUTCDate = DateTime.UtcNow,

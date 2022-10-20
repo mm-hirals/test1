@@ -1,17 +1,13 @@
-﻿@model IEnumerable<MidCapERP.DataEntities.Models.ActivityLogs>
+﻿@model IEnumerable<MidCapERP.Dto.ActivityLogs.ActivityLogsResponseDto>
 
-<table class="table c-table c-table-stripted" id="tblFrame">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Description)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th>@item.Description</th>
-            </tr>
-        }
-    </tbody>
+<table class="table c-table c-table-stripted w-100" id="tblActivitylog">
+	<thead>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Description)</th>
+			<th>@Html.DisplayNameFor(model => model.Action)</th>
+			<th>@Html.DisplayNameFor(model => model.CreatedByName)</th>
+			<th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
+		</tr>
+	</thead>
 </table>
+<script asp-src-include="~/js/ProductActivity.js"></script>

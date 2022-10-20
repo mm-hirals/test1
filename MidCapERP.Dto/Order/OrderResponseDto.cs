@@ -31,6 +31,10 @@ namespace MidCapERP.Dto.Order
         public decimal TotalAmount { get; set; }
 
         [Required]
+        [DisplayName("Advance Amount")]
+        public decimal AdvanceAmount { get; set; }
+
+        [Required]
         [DisplayName("TAX")]
         public decimal GSTTaxAmount { get; set; }
 

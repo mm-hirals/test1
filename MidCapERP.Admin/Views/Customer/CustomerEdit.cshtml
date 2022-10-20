@@ -16,9 +16,9 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="CustomerTypeId" class="form-label"></label>
+                                        <label asp-for="CustomerTypeId" class="form-label"></label><span class="required">*</span>
                                     </label>
-                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType"
+                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType form-select"
                                             asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">         
                                                 <option value="" hidden disabled selected>Select Customer Type</option>
                                     </select>
@@ -30,7 +30,7 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="FirstName" class="form-label"></label>
+                                        <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
                                     </label>
                                     <input asp-for="FirstName" class="form-control" />
                                     <span asp-validation-for="FirstName" class="text-danger"></span>
@@ -41,7 +41,7 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="LastName" class="form-label"></label>
+                                        <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
                                     </label>
                                     <input asp-for="LastName" class="form-control" />
                                     <span asp-validation-for="LastName" class="text-danger"></span>
@@ -63,7 +63,7 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="PhoneNumber" class="form-label"></label>
+                                        <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
                                     </label>
                                     <input asp-for="PhoneNumber" class="form-control" type="number" />
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -121,7 +121,7 @@
                         {
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.Street1" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.Street1" class="text-danger"></span>
                                 </div>
@@ -149,26 +149,39 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.City" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.City" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.State" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.State" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.ZipCode" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
                                 </div>
                             </div>
                         }
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="IsSubscribe" class="form-label"></label>
+                                    </label>
+                                    <div class="custom-control custom-switch">
+                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isSubscribe" data-val="true">
+                                        <label class="custom-control-label" for="isSubscribe">Active</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row c-card-footer--btn">
                         <div class="col-12">
@@ -224,7 +237,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Customer.js" ></script>
-        <script asp-src-include="~/js/CustomerAddresses.js" ></script>
+        <script asp-src-include="~/js/Customer.js"></script>
+        <script asp-src-include="~/js/CustomerAddresses.js"></script>
     }
     } 

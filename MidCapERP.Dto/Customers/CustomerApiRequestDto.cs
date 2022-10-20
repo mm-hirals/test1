@@ -10,7 +10,6 @@ namespace MidCapERP.Dto.Customers
         public long CustomerId { get; set; }
 
         [DisplayName("Customer Type")]
-        [JsonIgnore]
         public int CustomerTypeId { get; set; }
 
         [DisplayName("First Name")]
@@ -37,5 +36,7 @@ namespace MidCapERP.Dto.Customers
         public string? GSTNo { get; set; }
 
         public long RefferedBy { get; set; }
+
+        public bool IsSubscribe { get; set; }
     }
 }

@@ -35,40 +35,41 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IOrderSetItemDA OrderSetItemDA { get; }
         public IActivityLogsDA ActivityLogsDA { get; }
         public IOrderAddressDA OrderAddressDA { get; }
+        public ITenantSMTPDetailDA TenantSMTPDetailDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA)
         {
-            
-                this._context = context;
-                this.ContractorsDA = contractorsDA;
-                this.LookupsDA = lookupsDA;
-                this.SubjectTypesDA = subjectTypesDA;
-                this.LookupValuesDA = lookupValuesDA;
-                this.ContractorCategoryMappingDA = contractorCategoryMappingDa;
-                this.CustomersDA = customersDA;
-                this.ErrorLogsDA = errorLogsDA;
-                this.AccessoriesTypeDA = accessoriesTypesDA;
-                this.RawMaterialDA = rawMaterialDA;
-                this.AccessoriesDA = accessoriesDA;
-                this.FabricDA = fabricDA;
-                this.FrameDA = frameDA;
-                this.PolishDA = polishDA;
-                this.UserTenantMappingDA = userTenantMappingDA;
-                this.TenantDA = tenantDA;
-                this.UserDA = userDA;
-                this.CustomerAddressesDA = customerAddressesDA;
-                this.CustomerTypesDA = customerTypesDA;
-                this.ProductDA = productDA;
-                this.ProductImageDA = productImageDA;
-                this.ProductMaterialDA = productMaterialDA;
-                this.RoleDA = roleDA;
-                this.RolePermissionDA = rolePermissionDA;
-                this.OrderDA = orderDA;
-                this.TenantBankDetailDA = tenantBankDetailDA;
-                this.OrderSetDA = orderSetDA;
-                this.OrderSetItemDA = orderSetItemDA;
-                this.ActivityLogsDA = activityLogsDA;
-                this.OrderAddressDA = orderAddressDA; 
+            this._context = context;
+            this.ContractorsDA = contractorsDA;
+            this.LookupsDA = lookupsDA;
+            this.SubjectTypesDA = subjectTypesDA;
+            this.LookupValuesDA = lookupValuesDA;
+            this.ContractorCategoryMappingDA = contractorCategoryMappingDa;
+            this.CustomersDA = customersDA;
+            this.ErrorLogsDA = errorLogsDA;
+            this.AccessoriesTypeDA = accessoriesTypesDA;
+            this.RawMaterialDA = rawMaterialDA;
+            this.AccessoriesDA = accessoriesDA;
+            this.FabricDA = fabricDA;
+            this.FrameDA = frameDA;
+            this.PolishDA = polishDA;
+            this.UserTenantMappingDA = userTenantMappingDA;
+            this.TenantDA = tenantDA;
+            this.UserDA = userDA;
+            this.CustomerAddressesDA = customerAddressesDA;
+            this.CustomerTypesDA = customerTypesDA;
+            this.ProductDA = productDA;
+            this.ProductImageDA = productImageDA;
+            this.ProductMaterialDA = productMaterialDA;
+            this.RoleDA = roleDA;
+            this.RolePermissionDA = rolePermissionDA;
+            this.OrderDA = orderDA;
+            this.TenantBankDetailDA = tenantBankDetailDA;
+            this.OrderSetDA = orderSetDA;
+            this.OrderSetItemDA = orderSetItemDA;
+            this.ActivityLogsDA = activityLogsDA;
+            this.OrderAddressDA = orderAddressDA;
+            this.TenantSMTPDetailDA = tenantSMTPDetailDA;
         }
 
         #region TransactionMethod

@@ -38,9 +38,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
     // Your code to run since DOM is loaded and ready
 });
 
-$(".submenu-link").click(function () {
+
+/*$(".submenu-link").click(function () {
     $(".sub-menu").toggle().animate({}, 500);
+});*/
+
+$('.sub-menu').hide();
+$(".submenu-link").click(function () {
+    $(this).parent(".submenu-item").children(".sub-menu").slideToggle("500");
+});	
+
+/*===== LOGIN PASSWORD SHOW =====*/
+$(".toggle-password").click(function () {
+
+    $(this).toggleClass("field-icon bxs-hide");
+    var input = $($(this).attr("toggle"));
+    if (input.attr("type") == "password") {
+        input.attr("type", "text");
+    } else {
+        input.attr("type", "password");
+    }
 });
+
 
 //Chart JS For Dashboard page
 var xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
@@ -92,3 +111,4 @@ new Chart("myCharts", {
         }
     }
 });
+

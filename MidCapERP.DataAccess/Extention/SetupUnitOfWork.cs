@@ -41,7 +41,8 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IOrderSetItemDA, OrderSetItemDA>();
             services.AddScoped<IActivityLogsDA, ActivityLogsDA>();
             services.AddScoped<IOrderAddressDA, OrderAddressDA>();
- 
+            services.AddScoped<ITenantSMTPDetailDA, TenantSMTPDetailDA>();
+
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();
         }

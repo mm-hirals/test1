@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿@model MidCapERP.Dto.Order.OrderResponseDto
+<div class="row">
     <div class="col-12">
         <div class="accordion mb-3" id="accordionExample">
             @if (@Model.OrderSetResponseDto != null)
@@ -43,7 +44,7 @@
                                                     <div class="col-4">
                                                         <div class="product-order--info mb-1">
                                                             <label for="" class="form-label mb-1 fs-12">
-                                                                Demensions
+                                                                Dimensions
                                                             </label>
                                                         </div>
                                                         <div class="product-order--info mb-1 d-flex align-items-center">
@@ -96,8 +97,9 @@
                                                             <label for="" class="form-label mb-1 fs-12">
                                                                 Discount
                                                             </label>
-                                                            <div class="order-final-price fw-bold">
-                                                                @orderSetItem.DiscountPrice
+                                                            <div class="order-final-price fw-bold d-flex">
+                                                                <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" id="@orderSetItem.OrderSetItemId">&nbsp;
+                                                                <button type="button" class="saveDiscount btn btn-icon btn-outline-primary" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-pencil"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -144,30 +146,33 @@
                     <table class="table c-table c-table-stripted">
                         <tbody>
                             <tr style="border-bottom: 1px dashed #353535;">
-                                <td colspan="9">Gross Total</td>
+                                <td colspan="9">Gross Total Amount</td>
                                 <td class="text-end">@Model.GrossTotal</td>
                             </tr>
                             <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
-                                <td colspan="9">Discount</td>
+                                <td colspan="9">Discount Amount</td>
                                 <td class="text-end"><span class="text-success">@Model.Discount</span></td>
                             </tr>
                             <tr style="border-top: 2px dashed #353535;border-bottom: 2px dashed #353535;">
-                                <td colspan="9">Total</td>
+                                <td colspan="9">Total Amount</td>
                                 <td class="text-end">@Model.TotalAmount</td>
                             </tr>
                             <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
-                                <td colspan="9">GST Tax (18%):</td>
+                                <td colspan="9">GST Tax (18%)</td>
                                 <td class="text-end">@Model.GSTTaxAmount</td>
+                            </tr>
+                            <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
+                                <td colspan="9">Advance Amount</td>
+                                <td class="text-end">@Model.AdvanceAmount</td>
                             </tr>
                             <tr style="border-top: 1px dashed #353535;border-bottom: 1px dashed #353535;">
                                 <td colspan="9">Delivery Date</td>
                                 <td class="text-end">@Model.DeliveryDateFormat</td>
                             </tr>
                             <tr class="c-card--header-title">
-                                <td colspan="9">Total</td>
+                                <td colspan="9">Payable Amount</td>
                                 <td class="text-end">@Model.PayableAmount</td>
                             </tr>
-
                         </tbody>
                     </table>
                 </div>

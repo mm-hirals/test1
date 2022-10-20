@@ -13,6 +13,8 @@
                             <span class="form-label">@Model.OrderNo</span><br />
                             <span class="form-label fw-bold">Total Amount:</span>
                             <span class="form-label">@Model.TotalAmount</span><br />
+                            <span class="form-label fw-bold">Advance Amount:</span>
+                            <span class="form-label">@Model.AdvanceAmount</span><br />
                             <span class="form-label fw-bold">Delivery Date:</span>
                             <span class="form-label">@Model.DeliveryDate</span>
                         </div>
@@ -22,9 +24,17 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label fw-bold">Order Status</label><br />
-                            @if (@Model.Status == (int)OrderStatusEnum.Pending)
+                            @if (@Model.Status == (int)OrderStatusEnum.Inquiry)
                             {
-                                <span class="form-label badge bg-warning">Pending</span>
+                                <span class="form-label badge bg-warning">Inquiry</span>
+                            }
+                            else if (@Model.Status == (int)OrderStatusEnum.PendingForApproval)
+                            {
+                                <span class="form-label badge bg-secondary">Pending For Approval</span>
+                            }
+                            else if (@Model.Status == (int)OrderStatusEnum.Approved)
+                            {
+                                <span class="form-label badge bg-secondary">Approved</span>
                             }
                             else if (@Model.Status == (int)OrderStatusEnum.InProgress)
                             {
@@ -34,13 +44,13 @@
                             {
                                 <span class="form-label badge bg-success">Completed</span>
                             }
+                            else if (@Model.Status == (int)OrderStatusEnum.Delivered)
+                            {
+                                <span class="form-label badge bg-secondary">Delivered</span>
+                            }
                             else if (@Model.Status == (int)OrderStatusEnum.Cancelled)
                             {
                                 <span class="form-label badge bg-danger">Cancelled</span>
-                            }
-                            else
-                            {
-                                <span class="form-label badge bg-warning">Archieved</span>
                             }
                         </div>
                     </div>

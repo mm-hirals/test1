@@ -175,6 +175,38 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<IEnumerable<OrderStatusApiResponseDto>> GetOrderForDetailsByStatus(string status, CancellationToken cancellationToken)
+        {
+            List<OrderStatusApiResponseDto> orderStatusApiResponseDto = new List<OrderStatusApiResponseDto>();
+            var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            var orderEnum = Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>().ToList();
+            int statusValue = 0;
+            foreach (var item in orderEnum)
+            {
+                if (status == Convert.ToString(item))
+                    statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(item));
+            }
+
+            var enumOrderData = orderAllData.Where(x => x.CreatedBy == _currentUser.UserId && x.Status == statusValue).ToList();
+            foreach (var orderData in enumOrderData)
+            {
+                var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                var orderResponseData = (from x in enumOrderData
+                                         join y in customerData on x.CustomerID equals y.CustomerId
+                                         select new OrderStatusApiResponseDto()
+                                         {
+                                             OrderId = x.OrderId,
+                                             OrderNo = x.OrderNo,
+                                             CustomerName = y.FirstName + " " + y.LastName,
+                                             TotalAmount = x.TotalAmount,
+                                             OrderStatus = status,
+                                             OrderDate = x.CreatedDate
+                                         }).ToList();
+                orderStatusApiResponseDto = orderResponseData;
+            }
+            return orderStatusApiResponseDto;
+        }
+
         public async Task<IEnumerable<MegaSearchResponse>> GetOrderForDropDownByOrderNo(string orderNo, CancellationToken cancellationToken)
         {
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
@@ -195,13 +227,20 @@ namespace MidCapERP.BusinessLogic.Repositories
                 OrderApiResponseDto orderApiResponseDto = new OrderApiResponseDto();
                 // Get Order data by OrderId
                 var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
-
                 if (orderById == null)
                 {
                     throw new Exception("Order not found");
                 }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
                 orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
+
+                //Get Customer Address for Order
+                var orderAddressData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
+                if (orderAddressData != null)
+                {
+                    orderApiResponseDto.BillingAddressID = orderAddressData.FirstOrDefault(x => x.AddressType == "Billing").CustomerAddressId;
+                    orderApiResponseDto.ShippingAddressID = orderAddressData.FirstOrDefault(x => x.AddressType == "Shipping").CustomerAddressId;
+                }
 
                 // Get Order Sets Data
                 var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
@@ -265,29 +304,24 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<OrderApiResponseDto> CreateOrderAPI(OrderApiRequestDto model, CancellationToken cancellationToken)
         {
-            //Cost Calculation
-            Random generator = new Random();
-            model.OrderNo = await _unitOfWorkDA.OrderDA.CreateOrderNo("R", cancellationToken); ;
-            //model.OrderNo = Convert.ToString(DateTime.Now.Year) + "-" + "R" + generator.Next(1, 99999).ToString("D5");
+            //Create Order and Cost Calculation
+            model.OrderNo = await _unitOfWorkDA.OrderDA.CreateOrderNo("R", cancellationToken);
             model.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
-            model.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
+            decimal discountAmount = 0.00m;
+            foreach (var item in model.OrderSetRequestDto)
+                foreach (var item2 in item.OrderSetItemRequestDto)
+                    discountAmount += ((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100);
+            model.Discount = Math.Round(Math.Round(discountAmount), 2);
             model.TotalAmount = model.GrossTotal - model.Discount;
             model.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
-
             var saveOrder = await SaveOrder(model, cancellationToken);
-            OrderAddressesApiRequestDto orderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
-            orderAddressesApiRequestDto.OrderId = saveOrder.OrderId;
-            //Create OrderAddress Base On Address
-            orderAddressesApiRequestDto.AddressType = "Billing";
-            await SaveOrderAddress(orderAddressesApiRequestDto, model, cancellationToken);
-            orderAddressesApiRequestDto.AddressType = "Shipping";
-            await SaveOrderAddress(orderAddressesApiRequestDto, model, cancellationToken);
 
             //Create Orderset Base On Order
             foreach (var setData in model.OrderSetRequestDto)
             {
                 setData.OrderId = saveOrder.OrderId;
                 var saveOrderData = await SaveOrderSet(setData, cancellationToken);
+
                 //Create OrderSetItem Base On OrderSet
                 foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
@@ -297,71 +331,66 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
 
+            //Create OrderAddress Base On Address
+            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.BillingAddressID, "Billing", cancellationToken);
+            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", cancellationToken);
+
             return _mapper.Map<OrderApiResponseDto>(saveOrder);
         }
 
         public async Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
         {
+            //Update Order and Cost Calculation
             var oldData = await OrderGetById(Id, cancellationToken);
             oldData.GrossTotal = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.UnitPrice * x.Quantity));
-            oldData.Discount = model.OrderSetRequestDto.Sum(x => x.OrderSetItemRequestDto.Sum(x => x.DiscountPrice));
-            oldData.TotalAmount = model.GrossTotal - model.Discount;
-            oldData.GSTTaxAmount = Math.Round(Math.Round((model.TotalAmount * 18) / 100), 2);
+            decimal discountAmount = 0.00m;
+            foreach (var item in model.OrderSetRequestDto)
+                foreach (var item2 in item.OrderSetItemRequestDto)
+                    discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+            oldData.Discount = Math.Round(Math.Round(discountAmount), 2);
+            oldData.TotalAmount = oldData.GrossTotal - oldData.Discount;
+            oldData.GSTTaxAmount = Math.Round(Math.Round((oldData.TotalAmount * 18) / 100), 2);
+            oldData.Comments = model.Comments;
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             var data = await _unitOfWorkDA.OrderDA.UpdateOrder(oldData, cancellationToken);
-            //Start Update OrderSet
-            foreach (var orderSet in model.OrderSetRequestDto)
+
+            //Create or Update Orderset Base On Order
+            foreach (var setData in model.OrderSetRequestDto)
             {
-                var oldOrderSet = await OrderSetGetById(orderSet.OrderSetId, cancellationToken);
-                oldOrderSet.SetName = orderSet.SetName;
-                oldOrderSet.UpdatedBy = _currentUser.UserId;
-                oldOrderSet.UpdatedDate = DateTime.Now;
-                oldOrderSet.UpdatedUTCDate = DateTime.UtcNow;
-                await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(oldOrderSet, cancellationToken);
-                //Start Update OrderSetItem
-                foreach (var orderSetItem in orderSet.OrderSetItemRequestDto)
+                setData.OrderId = oldData.OrderId;
+                var saveOrderData = await SaveOrderSet(setData, cancellationToken);
+
+                //Create or Update Base On OrderSet
+                foreach (var itemData in setData.OrderSetItemRequestDto)
                 {
-                    var oldOrderSetItem = await OrderSetItemGetById(orderSetItem.OrderSetItemId, cancellationToken);
-                    if (oldOrderSetItem != null)
-                    {
-                        oldOrderSetItem.Height = orderSetItem.Height;
-                        oldOrderSetItem.Width = orderSetItem.Width;
-                        oldOrderSetItem.Depth = orderSetItem.Depth;
-                        oldOrderSetItem.Quantity = orderSetItem.Quantity;
-                        oldOrderSetItem.UnitPrice = orderSetItem.UnitPrice;
-                        oldOrderSetItem.DiscountPrice = orderSetItem.DiscountPrice;
-                        oldOrderSetItem.TotalAmount = (orderSetItem.UnitPrice * orderSetItem.Quantity) - orderSetItem.DiscountPrice;
-                        oldOrderSetItem.Comment = orderSetItem.Comment;
-                        oldOrderSetItem.UpdatedBy = _currentUser.UserId;
-                        oldOrderSetItem.UpdatedDate = DateTime.Now;
-                        oldOrderSetItem.UpdatedUTCDate = DateTime.UtcNow;
-                        await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(oldOrderSetItem, cancellationToken);
-                    }
+                    itemData.OrderId = oldData.OrderId;
+                    itemData.OrderSetId = saveOrderData.OrderSetId;
+                    await SaveOrderSetItem(itemData, cancellationToken);
                 }
             }
+
+            //Create OrderAddress Base On Address
+            await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", cancellationToken);
+            await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", cancellationToken);
+
             return _mapper.Map<OrderApiResponseDto>(data);
-            //End Update OrderSet
         }
 
-        public async Task<OrderApiResponseDto> UpdateOrderDiscountAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> UpdateOrderAdvanceAmountAPI(Int64 orderId, decimal advanceAmount, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("OrderSetItem not found");
-            }
-            data.DiscountPrice = discountPrice;
-            data.TotalAmount = (data.UnitPrice * data.Quantity) - data.DiscountPrice;
-            await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(data, cancellationToken);
-
-            var orderData = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
-            var orderById = await _unitOfWorkDA.OrderDA.GetById(data.OrderId, cancellationToken);
+            var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
             orderById.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
-            orderById.Discount = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.DiscountPrice));
-            orderById.TotalAmount = orderData.GrossTotal - orderById.Discount;
-            orderById.GSTTaxAmount = (orderById.TotalAmount * 18) / 100;
+            decimal discountAmount = 0.00m;
+            foreach (var item in orderData.OrderSetApiResponseDto)
+                foreach (var item2 in item.OrderSetItemResponseDto)
+                    discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+            orderById.Discount = Math.Round(Math.Round(discountAmount), 2);
+            orderById.TotalAmount = orderById.GrossTotal - orderById.Discount;
+            orderById.GSTTaxAmount = Math.Round(Math.Round((orderById.TotalAmount * 18) / 100), 2);
+            orderById.AdvanceAmount = advanceAmount;
             orderById.UpdatedBy = _currentUser.UserId;
             orderById.UpdatedDate = DateTime.Now;
             orderById.UpdatedUTCDate = DateTime.UtcNow;
@@ -371,11 +400,24 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderData.Discount = orderById.Discount;
             orderData.TotalAmount = orderById.TotalAmount;
             orderData.GSTTaxAmount = orderById.GSTTaxAmount;
-            orderData.PayableAmount = (orderData.GrossTotal - orderData.Discount) + orderData.GSTTaxAmount;
+            orderData.AdvanceAmount = orderById.AdvanceAmount;
+            orderData.PayableAmount = ((orderById.GrossTotal - orderById.Discount) + orderById.GSTTaxAmount) - orderById.AdvanceAmount;
             orderData.UpdatedBy = orderById.UpdatedBy;
             orderData.UpdatedDate = orderById.UpdatedDate;
             orderData.UpdatedUTCDate = orderById.UpdatedUTCDate;
             return orderData;
+        }
+
+        public async Task<OrderApiResponseDto> UpdateOrderSendForApproval(Int64 orderId, string? comments, CancellationToken cancellationToken)
+        {
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            orderById.Comments = comments;
+            orderById.Status = (int)OrderStatusEnum.PendingForApproval;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
         }
 
         public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
@@ -399,6 +441,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         }
                         await DeleteOrderSet(orderSetId, cancellationToken);
                     }
+                    await DeleteOrderAddress(orderDeleteApiRequestDto.OrderId, cancellationToken);
                     await DeleteOrder(orderDeleteApiRequestDto.OrderId, cancellationToken);
                 }
                 else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSet)
@@ -411,10 +454,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                         await DeleteOrderSetItem(orderItemId, cancellationToken);
                     }
                     await DeleteOrderSet(orderDeleteApiRequestDto.OrderSetId, cancellationToken);
+                    await UpdateOrderPriceCalculation(orderDeleteApiRequestDto.OrderId, cancellationToken);
                 }
                 else if (orderDeleteApiRequestDto.DeleteType == (int)OrderDeleteTypeEnum.OrderSetItem)
                 {
                     await DeleteOrderSetItem(orderDeleteApiRequestDto.OrderSetItemId, cancellationToken);
+                    await UpdateOrderPriceCalculation(orderDeleteApiRequestDto.OrderId, cancellationToken);
                 }
                 else
                 {
@@ -455,6 +500,52 @@ namespace MidCapERP.BusinessLogic.Repositories
             return orderData;
         }
 
+        public async Task<OrderSetItem> UpdateOrderSetItemDiscount(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OrderSetItem saveDiscount = new OrderSetItem();
+                var orderSetItemById = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemRequestDto.OrderSetItemId, cancellationToken);
+                if (orderSetItemById != null)
+                {
+                    orderSetItemById.DiscountPrice = Math.Round(orderSetItemRequestDto.DiscountPrice, 2);
+                    var totalAmount = orderSetItemById.UnitPrice * orderSetItemById.Quantity;
+                    orderSetItemById.TotalAmount = Math.Round(totalAmount - (totalAmount * orderSetItemById.DiscountPrice / 100), 2);
+                    saveDiscount = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(orderSetItemById, cancellationToken);
+                    await UpdateOrderPriceCalculation(orderSetItemById.OrderId, cancellationToken);
+                }
+                return saveDiscount;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Int64> GetOrderReceivableCount(CancellationToken cancellationToken)
+        {
+            //var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return 0;
+        }
+
+        public async Task<Int64> GetOrderApprovedCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Approved);
+        }
+
+        public async Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.PendingForApproval);
+        }
+
+        public async Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Inquiry);
+        }
+
         #region Private Method
 
         private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)
@@ -467,6 +558,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             else
             {
                 throw new Exception("Order not found");
+            }
+        }
+
+        private async Task DeleteOrderAddress(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
+            if (order != null)
+            {
+                foreach (var item in order)
+                    await _unitOfWorkDA.OrderAddressDA.DeleteOrderAddress(item.OrderAddressId, item, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order Address not found");
             }
         }
 
@@ -496,6 +601,31 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        private async Task UpdateOrderPriceCalculation(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var order = await _unitOfWorkDA.OrderDA.GetById(orderId, cancellationToken);
+            if (order != null)
+            {
+                var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+                if (orderData != null)
+                {
+                    order.GrossTotal = orderData.OrderSetApiResponseDto.Sum(x => x.OrderSetItemResponseDto.Sum(x => x.UnitPrice * x.Quantity));
+                    decimal discountAmount = 0.00m;
+                    foreach (var item in orderData.OrderSetApiResponseDto)
+                        foreach (var item2 in item.OrderSetItemResponseDto)
+                            discountAmount += Math.Round(Math.Round(((item2.UnitPrice * item2.Quantity) * item2.DiscountPrice / 100)), 2);
+                    order.Discount = Math.Round(Math.Round(discountAmount), 2);
+                    order.TotalAmount = order.GrossTotal - order.Discount;
+                    order.GSTTaxAmount = Math.Round(Math.Round((order.TotalAmount * 18) / 100), 2);
+                }
+                await _unitOfWorkDA.OrderDA.UpdateOrder(order, cancellationToken);
+            }
+            else
+            {
+                throw new Exception("Order not found");
+            }
+        }
+
         private async Task<OrderApiRequestDto> SaveOrder(OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
         {
             var orderToInsert = _mapper.Map<Order>(orderRequestDto);
@@ -508,106 +638,200 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderApiRequestDto>(data);
         }
 
-        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(OrderAddressesApiRequestDto orderAddressApiRequestDto, OrderApiRequestDto orderRequestDto, CancellationToken cancellationToken)
+        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(long orderId, long customerId, long customerAddressId, string orderAddressType, CancellationToken cancellationToken)
         {
-            //GetAll Customer Data
-            var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            OrderAddressesApiRequestDto objOrderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
 
-            //GetAll Customer Addresses
-            var customerAddressData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
-            var customer = customerData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID);
-            if (customer == null)
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(customerId, cancellationToken);
+            if (customerData == null)
             {
                 throw new Exception("Customer Id Not Valid");
             }
 
-            //Find Customer Address Base On Customer Id
-            var customerAddress = customerAddressData.FirstOrDefault(x => x.CustomerId == orderRequestDto.CustomerID);
-            if (customerAddress == null)
+            var customerAddresses = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+            if (customerAddressId == 0)
+            {
+                var customerAddress = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.IsDefault == true);
+                if (customerAddress != null)
+                    customerAddressId = customerAddress.CustomerAddressId;
+            }
+
+            var customerAddressData = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.CustomerAddressId == customerAddressId);
+            if (customerAddressData == null)
             {
                 throw new Exception("Customer Address not found");
             }
 
-            //Create Order Address Base On Customer and Customer Address
-            OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
-            orderAddressesToInsert.OrderId = orderAddressApiRequestDto.OrderId;
-            orderAddressesToInsert.FirstName = customer.FirstName;
-            orderAddressesToInsert.LastName = customer.LastName;
-            orderAddressesToInsert.EmailId = customer.EmailId;
-            orderAddressesToInsert.PhoneNumber = customer.PhoneNumber;
-            orderAddressesToInsert.AddressType = orderAddressApiRequestDto.AddressType;
-            orderAddressesToInsert.Street1 = customerAddress.Street1;
-            orderAddressesToInsert.Street2 = customerAddress.Street2;
-            orderAddressesToInsert.Landmark = customerAddress.Landmark;
-            orderAddressesToInsert.Area = customerAddress.Area;
-            orderAddressesToInsert.City = customerAddress.City;
-            orderAddressesToInsert.State = customerAddress.State;
-            orderAddressesToInsert.ZipCode = customerAddress.ZipCode;
-            orderAddressesToInsert.CreatedBy = customerAddress.CreatedBy;
-            orderAddressesToInsert.CreatedDate = customerAddress.CreatedDate;
-            orderAddressesToInsert.CreatedUTCDate = customerAddress.CreatedUTCDate;
-            var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
-            var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
-            return _mapper.Map<OrderAddressesApiRequestDto>(data);
+            var orderAddresses = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
+            if (orderAddresses == null)
+            {
+                OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
+                orderAddressesToInsert.OrderId = orderId;
+                orderAddressesToInsert.CustomerAddressId = customerAddressId;
+                orderAddressesToInsert.FirstName = customerData.FirstName;
+                orderAddressesToInsert.LastName = customerData.LastName;
+                orderAddressesToInsert.EmailId = customerData.EmailId;
+                orderAddressesToInsert.PhoneNumber = customerData.PhoneNumber;
+                orderAddressesToInsert.AddressType = orderAddressType;
+                orderAddressesToInsert.Street1 = customerAddressData.Street1;
+                orderAddressesToInsert.Street2 = customerAddressData.Street2;
+                orderAddressesToInsert.Landmark = customerAddressData.Landmark;
+                orderAddressesToInsert.Area = customerAddressData.Area;
+                orderAddressesToInsert.City = customerAddressData.City;
+                orderAddressesToInsert.State = customerAddressData.State;
+                orderAddressesToInsert.ZipCode = customerAddressData.ZipCode;
+                orderAddressesToInsert.CreatedBy = customerData.CreatedBy;
+                orderAddressesToInsert.CreatedDate = DateTime.Now;
+                orderAddressesToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
+                var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
+                return _mapper.Map<OrderAddressesApiRequestDto>(data);
+            }
+            else
+            {
+                if (orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType) == null)
+                {
+                    OrderAddressesApiRequestDto orderAddressesToInsert = new OrderAddressesApiRequestDto();
+                    orderAddressesToInsert.OrderId = orderId;
+                    orderAddressesToInsert.CustomerAddressId = customerAddressId;
+                    orderAddressesToInsert.FirstName = customerData.FirstName;
+                    orderAddressesToInsert.LastName = customerData.LastName;
+                    orderAddressesToInsert.EmailId = customerData.EmailId;
+                    orderAddressesToInsert.PhoneNumber = customerData.PhoneNumber;
+                    orderAddressesToInsert.AddressType = orderAddressType;
+                    orderAddressesToInsert.Street1 = customerAddressData.Street1;
+                    orderAddressesToInsert.Street2 = customerAddressData.Street2;
+                    orderAddressesToInsert.Landmark = customerAddressData.Landmark;
+                    orderAddressesToInsert.Area = customerAddressData.Area;
+                    orderAddressesToInsert.City = customerAddressData.City;
+                    orderAddressesToInsert.State = customerAddressData.State;
+                    orderAddressesToInsert.ZipCode = customerAddressData.ZipCode;
+                    orderAddressesToInsert.CreatedBy = customerData.CreatedBy;
+                    orderAddressesToInsert.CreatedDate = DateTime.Now;
+                    orderAddressesToInsert.CreatedUTCDate = DateTime.UtcNow;
+                    var orderAddress = _mapper.Map<OrderAddress>(orderAddressesToInsert);
+                    var data = await _unitOfWorkDA.OrderAddressDA.CreateOrderAddress(orderAddress, cancellationToken);
+                    return _mapper.Map<OrderAddressesApiRequestDto>(data);
+                }
+                else
+                {
+                    var orderAddress = await _unitOfWorkDA.OrderAddressDA.GetById(orderAddresses.FirstOrDefault(x => x.AddressType == orderAddressType).OrderAddressId, cancellationToken);
+                    if (orderAddress != null)
+                    {
+                        orderAddress.CustomerAddressId = customerAddressId;
+                        orderAddress.FirstName = customerData.FirstName;
+                        orderAddress.LastName = customerData.LastName;
+                        orderAddress.EmailId = customerData.EmailId;
+                        orderAddress.PhoneNumber = customerData.PhoneNumber;
+                        orderAddress.Street1 = customerAddressData.Street1;
+                        orderAddress.Street2 = customerAddressData.Street2;
+                        orderAddress.Landmark = customerAddressData.Landmark;
+                        orderAddress.Area = customerAddressData.Area;
+                        orderAddress.City = customerAddressData.City;
+                        orderAddress.State = customerAddressData.State;
+                        orderAddress.ZipCode = customerAddressData.ZipCode;
+                        orderAddress.UpdatedBy = customerData.CreatedBy;
+                        orderAddress.UpdatedDate = DateTime.Now;
+                        orderAddress.UpdatedUTCDate = DateTime.UtcNow;
+                        var data = await _unitOfWorkDA.OrderAddressDA.UpdateOrderAddress(orderAddress.OrderAddressId, orderAddress, cancellationToken);
+                        return _mapper.Map<OrderAddressesApiRequestDto>(data);
+                    }
+                }
+            }
+            return objOrderAddressesApiRequestDto;
         }
 
         private async Task<OrderSetRequestDto> SaveOrderSet(OrderSetRequestDto orderSetRequestDto, CancellationToken cancellationToken)
         {
-            OrderSetRequestDto orderSet = new OrderSetRequestDto();
-            orderSet.OrderId = orderSetRequestDto.OrderId;
-            orderSet.SetName = orderSetRequestDto.SetName;
-            orderSet.CreatedBy = _currentUser.UserId;
-            orderSet.CreatedDate = DateTime.Now;
-            orderSet.CreatedUTCDate = DateTime.UtcNow;
-            var orderSetToInsert = _mapper.Map<OrderSet>(orderSet);
-
-            var data = await _unitOfWorkDA.OrderSetDA.CreateOrderSet(orderSetToInsert, cancellationToken);
-            return _mapper.Map<OrderSetRequestDto>(data);
+            var oldOrderSet = await OrderSetGetById(orderSetRequestDto.OrderSetId, cancellationToken);
+            if (oldOrderSet != null)
+            {
+                oldOrderSet.SetName = orderSetRequestDto.SetName;
+                oldOrderSet.UpdatedBy = _currentUser.UserId;
+                oldOrderSet.UpdatedDate = DateTime.Now;
+                oldOrderSet.UpdatedUTCDate = DateTime.UtcNow;
+                var data = await _unitOfWorkDA.OrderSetDA.UpdateOrderSet(oldOrderSet, cancellationToken);
+                return _mapper.Map<OrderSetRequestDto>(data);
+            }
+            else
+            {
+                OrderSetRequestDto orderSet = new OrderSetRequestDto();
+                orderSet.OrderId = orderSetRequestDto.OrderId;
+                orderSet.SetName = orderSetRequestDto.SetName;
+                orderSet.CreatedBy = _currentUser.UserId;
+                orderSet.CreatedDate = DateTime.Now;
+                orderSet.CreatedUTCDate = DateTime.UtcNow;
+                var orderSetToInsert = _mapper.Map<OrderSet>(orderSet);
+                var data = await _unitOfWorkDA.OrderSetDA.CreateOrderSet(orderSetToInsert, cancellationToken);
+                return _mapper.Map<OrderSetRequestDto>(data);
+            }
         }
 
         private async Task<OrderSetItemRequestDto> SaveOrderSetItem(OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
-            var ProductSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
-            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
-            var FrabriSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
-
-            OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
-            orderSetItem.OrderId = orderSetItemRequestDto.OrderId;
-            orderSetItem.OrderSetId = orderSetItemRequestDto.OrderSetId;
-            orderSetItem.SubjectTypeId = orderSetItemRequestDto.SubjectTypeId;
-            orderSetItem.SubjectId = orderSetItemRequestDto.SubjectId;
-
-            if (orderSetItemRequestDto.SubjectTypeId == ProductSubjectTypeId)
+            var oldOrderSetItem = await OrderSetItemGetById(orderSetItemRequestDto.OrderSetItemId, cancellationToken);
+            if (oldOrderSetItem != null)
             {
-                var productData = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(orderSetItem.SubjectId, cancellationToken);
-                orderSetItem.ProductImage = productData.FirstOrDefault(x => x.IsCover == true)?.ImagePath;
+                oldOrderSetItem.Height = orderSetItemRequestDto.Height;
+                oldOrderSetItem.Width = orderSetItemRequestDto.Width;
+                oldOrderSetItem.Depth = orderSetItemRequestDto.Depth;
+                oldOrderSetItem.Quantity = orderSetItemRequestDto.Quantity;
+                oldOrderSetItem.UnitPrice = orderSetItemRequestDto.UnitPrice;
+                oldOrderSetItem.DiscountPrice = orderSetItemRequestDto.DiscountPrice;
+                var discountAmountP = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
+                oldOrderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmountP;
+                oldOrderSetItem.Comment = orderSetItemRequestDto.Comment;
+                oldOrderSetItem.UpdatedBy = _currentUser.UserId;
+                oldOrderSetItem.UpdatedDate = DateTime.Now;
+                oldOrderSetItem.UpdatedUTCDate = DateTime.UtcNow;
+                var data = await _unitOfWorkDA.OrderSetItemDA.UpdateOrderSetItem(oldOrderSetItem, cancellationToken);
+                return _mapper.Map<OrderSetItemRequestDto>(data);
             }
-            else if (orderSetItemRequestDto.SubjectTypeId == polishSubjectTypeId)
+            else
             {
-                var polishData = await _unitOfWorkDA.PolishDA.GetById(Convert.ToInt32(orderSetItem.SubjectId), cancellationToken);
-                orderSetItem.ProductImage = polishData?.ImagePath;
-            }
-            else if (orderSetItemRequestDto.SubjectTypeId == FrabriSubjectTypeId)
-            {
-                var fabricData = await _unitOfWorkDA.FabricDA.GetById(Convert.ToInt32(orderSetItem.SubjectId), cancellationToken);
-                orderSetItem.ProductImage = fabricData?.ImagePath;
-            }
-            orderSetItem.Width = orderSetItemRequestDto.Width;
-            orderSetItem.Height = orderSetItemRequestDto.Height;
-            orderSetItem.Depth = orderSetItemRequestDto.Depth;
-            orderSetItem.Quantity = orderSetItemRequestDto.Quantity;
-            orderSetItem.UnitPrice = orderSetItemRequestDto.UnitPrice;
-            orderSetItem.DiscountPrice = orderSetItemRequestDto.DiscountPrice;
-            orderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - orderSetItemRequestDto.DiscountPrice;
-            orderSetItem.Comment = orderSetItemRequestDto.Comment;
-            orderSetItem.MakingStatus = (int)ProductStatusEnum.Pending;
-            orderSetItem.CreatedBy = _currentUser.UserId;
-            orderSetItem.CreatedDate = DateTime.Now;
-            orderSetItem.CreatedUTCDate = DateTime.UtcNow;
-            var orderSetItemToInsert = _mapper.Map<OrderSetItem>(orderSetItem);
-            var data = await _unitOfWorkDA.OrderSetItemDA.CreateOrderSetItem(orderSetItemToInsert, cancellationToken);
+                var ProductSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+                var FrabriSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
 
-            return _mapper.Map<OrderSetItemRequestDto>(data);
+                OrderSetItemRequestDto orderSetItem = new OrderSetItemRequestDto();
+                orderSetItem.OrderId = orderSetItemRequestDto.OrderId;
+                orderSetItem.OrderSetId = orderSetItemRequestDto.OrderSetId;
+                orderSetItem.SubjectTypeId = orderSetItemRequestDto.SubjectTypeId;
+                orderSetItem.SubjectId = orderSetItemRequestDto.SubjectId;
+
+                if (orderSetItemRequestDto.SubjectTypeId == ProductSubjectTypeId)
+                {
+                    var productData = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(orderSetItem.SubjectId, cancellationToken);
+                    orderSetItem.ProductImage = productData.FirstOrDefault(x => x.IsCover == true)?.ImagePath;
+                }
+                else if (orderSetItemRequestDto.SubjectTypeId == polishSubjectTypeId)
+                {
+                    var polishData = await _unitOfWorkDA.PolishDA.GetById(Convert.ToInt32(orderSetItem.SubjectId), cancellationToken);
+                    orderSetItem.ProductImage = polishData?.ImagePath;
+                }
+                else if (orderSetItemRequestDto.SubjectTypeId == FrabriSubjectTypeId)
+                {
+                    var fabricData = await _unitOfWorkDA.FabricDA.GetById(Convert.ToInt32(orderSetItem.SubjectId), cancellationToken);
+                    orderSetItem.ProductImage = fabricData?.ImagePath;
+                }
+
+                orderSetItem.Width = orderSetItemRequestDto.Width;
+                orderSetItem.Height = orderSetItemRequestDto.Height;
+                orderSetItem.Depth = orderSetItemRequestDto.Depth;
+                orderSetItem.Quantity = orderSetItemRequestDto.Quantity;
+                orderSetItem.UnitPrice = orderSetItemRequestDto.UnitPrice;
+                orderSetItem.DiscountPrice = orderSetItemRequestDto.DiscountPrice;
+                var discountAmount = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
+                orderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmount;
+                orderSetItem.Comment = orderSetItemRequestDto.Comment;
+                orderSetItem.MakingStatus = (int)ProductStatusEnum.Pending;
+                orderSetItem.CreatedBy = _currentUser.UserId;
+                orderSetItem.CreatedDate = DateTime.Now;
+                orderSetItem.CreatedUTCDate = DateTime.UtcNow;
+                var orderSetItemToInsert = _mapper.Map<OrderSetItem>(orderSetItem);
+                var data = await _unitOfWorkDA.OrderSetItemDA.CreateOrderSetItem(orderSetItemToInsert, cancellationToken);
+                return _mapper.Map<OrderSetItemRequestDto>(data);
+            }
         }
 
         private async Task<Order> OrderGetById(Int64 Id, CancellationToken cancellationToken)
@@ -623,20 +847,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         private async Task<OrderSet> OrderSetGetById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderSetDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Order Set not found");
-            }
             return data;
         }
 
         private async Task<OrderSetItem> OrderSetItemGetById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.OrderSetItemDA.GetById(Id, cancellationToken);
-            if (data == null)
-            {
-                throw new Exception("Order Set Item not found");
-            }
             return data;
         }
 
@@ -706,7 +922,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
             orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
-            orderResponseDto.PayableAmount = (orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount;
+            orderResponseDto.PayableAmount = ((orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount) - orderResponseDto.AdvanceAmount;
             return orderResponseDto;
         }
 

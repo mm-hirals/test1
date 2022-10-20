@@ -42,6 +42,7 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("GST No")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "The Minimum 2 characters, Maximum 15 characters.")]
         public string? GSTNo { get; set; }
+
         [StringLength(15, MinimumLength = 2)]
         [DisplayName("Reffered Number")]
         public string? RefferedNumber { get; set; }
@@ -53,6 +54,12 @@ namespace MidCapERP.Dto.Customers
 
         [JsonIgnore]
         public decimal Discount { get; set; }
+
+        [DisplayName("Subscribe Newsletters/Greetings")]
+        public bool IsSubscribe { get; set; }
+
+        public List<long> CustomerCheckedId { get; set; }
+        public string Message { get; set; }
 
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }

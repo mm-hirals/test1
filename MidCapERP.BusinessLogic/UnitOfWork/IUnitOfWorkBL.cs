@@ -2,6 +2,7 @@
 using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
+using MidCapERP.BusinessLogic.Services.SendSMS;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
 {
@@ -37,5 +38,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IOrderBL OrderBL { get; }
         IDashboardBL DashboardBL { get; }
         IActivityLogsService ActivityLogsService { get; }
+        ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
+        ISendSMSservice SendSMSservice { get; }
     }
 }

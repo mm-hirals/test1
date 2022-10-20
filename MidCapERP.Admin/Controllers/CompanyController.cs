@@ -46,7 +46,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CompanyRequestDto lookupRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CompanyBL.CreateCompany(lookupRequestDto, cancellationToken);
-
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!" + _localizer["hi"]);
             return RedirectToAction("Index");
         }

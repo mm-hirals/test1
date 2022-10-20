@@ -5,6 +5,7 @@ using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Order;
+using MidCapERP.Dto.OrderSetItem;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -64,6 +65,16 @@ namespace MidCapERP.Admin.Controllers
             }
             else
                 throw new Exception("Order Id can not be null");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<IActionResult> SaveDiscount([FromForm] OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
+        {
+            var orderSetItem = await _unitOfWorkBL.OrderBL.UpdateOrderSetItemDiscount(orderSetItemRequestDto, cancellationToken);
+
+            var orderSetData = await _unitOfWorkBL.OrderBL.GetOrderSetDetailData(orderSetItem.OrderId, cancellationToken);
+            return PartialView("_OrderSetDetailPartial", orderSetData);
         }
 
         #region Private Method

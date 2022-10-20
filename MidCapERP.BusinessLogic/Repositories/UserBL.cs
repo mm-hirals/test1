@@ -91,6 +91,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        UserName = x.UserName,
                                        Email = x.Email,
                                        PhoneNumber = x.PhoneNumber,
+                                       MobileDeviceId = x.MobileDeviceId,
                                        UserId = x.UserId,
                                        TenantId = y.TenantId,
                                        UserTenantMappingId = y.UserTenantMappingId
@@ -115,6 +116,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             applicationUser.PhoneNumber = model.PhoneNumber;
             applicationUser.IsActive = true;
             applicationUser.EmailConfirmed = true;
+            applicationUser.MobileDeviceId = model.MobileDeviceId;
             await _unitOfWorkDA.UserDA.CreateUser(applicationUser, model.Password);
 
             // Add UserId and TenantId into UserTenantMapping
@@ -137,6 +139,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldApplicationUserData.FirstName = model.FirstName;
             oldApplicationUserData.LastName = model.LastName;
             oldApplicationUserData.PhoneNumber = model.PhoneNumber;
+            oldApplicationUserData.MobileDeviceId = model.MobileDeviceId;
             var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(oldApplicationUserData));
 
             // Get selected role details from AspNetUserRoles and AspNetRoles

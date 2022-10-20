@@ -3,7 +3,8 @@
     public class OrderAddressesApiResponseDto
     {
         public long OrderAddressId { get; set; }
-        public long? OrderId { get; set; }
+        public long OrderId { get; set; }
+        public long CustomerAddressId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? EmailId { get; set; }

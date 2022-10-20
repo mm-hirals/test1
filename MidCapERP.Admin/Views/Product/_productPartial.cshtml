@@ -4,28 +4,12 @@
       method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
     <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" class="form-control" />
-        @*<label for="UploadImage" class="card-product--image">
-            <input asp-for="UploadImage" onchange="document.querySelector('.product--image img').src = window.URL.createObjectURL(this.files[0])" type="file" hidden accept="image/*" />
-            <div class="product--image" style="cursor:pointer">
-                @if (!string.IsNullOrEmpty(Model?.CoverImage))
-                {
-                    <img src="@Model.CoverImage" id="editProductImage" alt="Product Image" />
-                }
-                else
-                {
-                    <img src="~/images/No_Image.jpg" alt="Product Image" />
-                }
-                <div class="edit--image">
-                    <i class="bx bx-pencil"></i>
-                </div>
-            </div>
-        </label>*@
         <div class="card-prpoduct-cotent--wrapper">
             <div class="row">
                 <div class="col-md-3">
                     <div class="product-info--item">
                         <div class="form-group">
-                            <label asp-for="CategoryId" class="form-label"></label>
+                            <label asp-for="CategoryId" class="form-label"></label><span class="required">*</span>
                             @if (Model?.ProductId > 0)
                             {
                                 <select asp-for="CategoryId" data-val="true" class="form-control" readonly="readonly"
@@ -35,7 +19,7 @@
                             }
                             else
                             {
-                                <select asp-for="CategoryId" data-val="true" class="form-control"
+                                <select asp-for="CategoryId" data-val="true" class="form-control form-select"
                                     asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
                                     <option value="" selected>Select Category</option>
                                 </select>
@@ -66,20 +50,24 @@
                     <div class="product-info--item">
                         <div class="form-group">
                             <label class="form-label">
-                                Product Dimensions <span class="required">*</span> <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth) </span>in inches
+                                Product Dimensions <span class="dimension-input">(Width &#x2715; Height &#x2715; Depth - Diameter) </span>in inches
                             </label>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width">
+                                <div class="col-md-3">
+                                    <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="WidthNumeric" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height">
+                                <div class="col-md-3">
+                                    <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="HeightNumeric" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth">
+                                <div class="col-md-3">
+                                    <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="DepthNumeric" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3">
+                                    <input asp-for="DiameterNumeric" type="text" class="form-control pdiameter" placeholder="Diameter" onkeypress='return restrictAlphabets(event)'>
+                                    <span asp-validation-for="DiameterNumeric" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -114,3 +102,14 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+
+<script type="text/javascript">
+         /*code: 48-57 Numbers*/
+         function restrictAlphabets(e) {
+             var x = e.which || e.keycode;
+             if ((x >= 48 && x <= 57))
+                 return true;
+             else
+                 return false;
+         }
+</script>
