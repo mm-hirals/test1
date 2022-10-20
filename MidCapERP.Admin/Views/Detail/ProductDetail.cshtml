@@ -1,231 +1,247 @@
 ﻿@model MidCapERP.Dto.Product.ProductDetailResponseDto
 
 @{
-	Layout = "_LayoutAnonymous";
-	ViewData["Title"] = "Product Detail";
+    Layout = "_LayoutAnonymous";
+    ViewData["Title"] = "Product Detail";
 }
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.css">
 
 @if (Model != null)
 {
-	<div class="product-details-wrapper mb-3">
-		<div class="container">
-			<div class="row c-card--wrapper pt-4 pb-4 pl-3 pr-3">
-				<div class="col-lg-6 col-md-12 col-sm-12">
-					<div class="view-product-main">
-						<div class="gallery">
-							<div class="swiper-container gallery-slider">
-								<div class="swiper-wrapper">
-									@foreach (var item in Model.ProductImageResponseDto)
-									{
-										<div class="swiper-slide"><img src="@item.ImagePath" alt="@item.ImageName"></div>
-									}
-								</div>
-								<div class="swiper-button-prev"></div>
-								<div class="swiper-button-next"></div>
-							</div>
-							<div class="swiper-container gallery-thumbs">
-								<div class="swiper-wrapper">
-									@foreach (var item in Model.ProductImageResponseDto)
-									{
-										<div class="swiper-slide"><img src="@item.ImagePath" alt="@item.ImageName"></div>
-									}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-6 col-md-12 col-sm-12 mt-lg-0 mt-md-5 mt-sm-5 mt-5">
-					<div class="view-product-mian">
-						<div class="product-details ">
-							<div class="product-name--wrapper">
-								<h2 class="product-name">@Model.ProductTitle</h2>
-								<p class="model-label">Model No. <span class="model-number">@Model.ModelNo</span></p>
-							</div>
-							<span class="product-price">₹ @Math.Round(Model.RetailerPrice, 2) /-</span>
+    <div class="product-details-wrapper mb-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="c-card--wrapper p-3 mb-3">
+                        <div class="row mb-4">
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="view-product-main">
+                                    <div class="gallery">
+                                        <div class="swiper-container gallery-slider">
+                                            <div class="swiper-wrapper">
+                                                @foreach (var item in Model.ProductImageResponseDto)
+                                                {
+                                                    <div class="swiper-slide"><img src="@item.ImagePath" alt="@item.ImageName"></div>
+                                                }
+                                            </div>
+                                            <div class="swiper-button-prev"></div>
+                                            <div class="swiper-button-next"></div>
+                                        </div>
+                                        <div class="swiper-container gallery-thumbs">
+                                            <div class="swiper-wrapper">
+                                                @foreach (var item in Model.ProductImageResponseDto)
+                                                {
+                                                    <div class="swiper-slide"><img src="@item.ImagePath" alt="@item.ImageName"></div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-sm-12 mt-lg-0 mt-md-5 mt-sm-5 mt-5">
+                                <div class="view-product-mian">
+                                    <div class="product-details ">
+                                        <div class="product-name--wrapper">
+                                            <h2 class="product-name">@Model.ProductTitle</h2>
+                                            <p class="model-label">Model No. <span class="model-number">@Model.ModelNo</span></p>
+                                        </div>
+                                        <span class="product-price">₹ @Math.Round(Model.RetailerPrice, 2) /-</span>
 
-						</div>
-						<div class="main-product-details c-card--wrapper">
-							<div class="c-card--header">
-								<h2 class="c-card--header-title text-primary">Product Details</h2>
-							</div>
-							<div class="c-card--body p-0">
-								<ul class="product-details-list mb-0">
-									<li class="product-deatils-sublist">
-										<span class="product-deatails-name">Product Dimensions</span>
-										<span class="product-details-value">@Model.Width x @Model.Height x @Model.Depth</span>
-									</li>
-									<li class="product-deatils-sublist">
-										<span class="product-deatails-name">Total days to prepare </span>
-										<span class="product-details-value">@Model.TotalDaysToPrepare days</span>
-									</li>
-									<li class="product-deatils-sublist">
-										<span class="product-deatails-name">Fabric Needed</span>
-										<span class="product-details-value">@Model.FabricNeeded meter</span>
-									</li>
-									@*<li class="product-deatils-sublist">
-										<span class="product-deatails-name">Polish </span>
-										<span class="product-details-value">@Model.Polish</span>
-									</li>*@
-									<li class="product-deatils-sublist">
-										<span class="product-deatails-name">Features</span>
-										<span class="product-details-value">@Model.Features</span>
-									</li>
-									@*<li class="product-deatils-sublist">
-										<span class="product-deatails-name">Comments</span>
-										<span class="product-details-value">@Model.Comments</span>
-									</li>*@
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="c-card--wrapper c-card-sm--wrapper mb-0">
-		<div class="c-card--body  p-0">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="c-card--wrapper c-card-sm--wrapper mb-0">
-						<div class="c-card--header">
-							<h4 class="c-card--header-title">Organization Details</h4>
-						</div>
-						<div class="c-card--body">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="row">
-										<input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.TenantName" class="form-label"></label>
-												<input asp-for="TenantResponseDto.TenantName" type="text" class="form-control" placeholder="Tenant Name">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.FirstName" class="form-label"></label>
-												<input asp-for="TenantResponseDto.FirstName" type="text" class="form-control fabric" placeholder="FirstName">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.LastName" class="form-label"></label>
-												<input asp-for="TenantResponseDto.LastName" type="text" class="form-control" placeholder="LastName">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.EmailId" class="form-label"></label>
-												<input asp-for="TenantResponseDto.EmailId" type="text" class="form-control fabric" placeholder="EmailId">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.PhoneNumber" class="form-label"></label>
-												<input asp-for="TenantResponseDto.PhoneNumber" type="number" class="form-control" placeholder="Phonetext">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.LogoPath" class="form-label"></label>
-												<input asp-for="TenantResponseDto.LogoPath" type="text" class="form-control fabric" placeholder="LogoPath">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.GSTNo" class="form-label"></label>
-												<input asp-for="TenantResponseDto.GSTNo" type="number" class="form-control" placeholder="GSTNo">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="c-card--wrapper c-card-sm--wrapper mb-0">
-						<div class="c-card--header">
-							<h4 class="c-card--header-title">Address Details</h4>
-						</div>
-						<div class="c-card--body">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="row">
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.StreetAddress1" class="form-label"></label>
-												<input asp-for="TenantResponseDto.StreetAddress1" type="text" class="form-control" placeholder="StreetAddress1">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.StreetAddress2" class="form-label"></label>
-												<input asp-for="TenantResponseDto.StreetAddress2" type="text" class="form-control fabric" placeholder="StreetAddress2">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.Landmark" class="form-label"></label>
-												<input asp-for="TenantResponseDto.Landmark" type="text" class="form-control" placeholder="Landmark">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.City" class="form-label"></label>
-												<input asp-for="TenantResponseDto.City" type="text" class="form-control" placeholder="City">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.State" class="form-label"></label>
-												<input asp-for="TenantResponseDto.State" type="text" class="form-control fabric" placeholder="State">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label asp-for="TenantResponseDto.Pincode" class="form-label"></label>
-												<input asp-for="TenantResponseDto.Pincode" type="number" class="form-control" placeholder="Pincode">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                    </div>
+                                    <div class="main-product-details c-card--wrapper">
+                                        <div class="c-card--header">
+                                            <h2 class="c-card--header-title text-primary">Product Details</h2>
+                                        </div>
+                                        <div class="c-card--body p-0">
+                                            <ul class="product-details-list mb-0">
+                                                <li class="product-deatils-sublist">
+                                                    <span class="product-deatails-name">Product Dimensions</span>
+                                                    <span class="product-details-value">@Model.Width x @Model.Height x @Model.Depth</span>
+                                                </li>
+                                                <li class="product-deatils-sublist">
+                                                    <span class="product-deatails-name">Total days to prepare </span>
+                                                    <span class="product-details-value">@Model.TotalDaysToPrepare days</span>
+                                                </li>
+                                                <li class="product-deatils-sublist">
+                                                    <span class="product-deatails-name">Fabric Needed</span>
+                                                    <span class="product-details-value">@Model.FabricNeeded meter</span>
+                                                </li>
+                                                @*<li class="product-deatils-sublist">
+                                            <span class="product-deatails-name">Polish </span>
+                                            <span class="product-details-value">@Model.Polish</span>
+                                            </li>*@
+                                                <li class="product-deatils-sublist">
+                                                    <span class="product-deatails-name">Features</span>
+                                                    <span class="product-details-value">@Model.Features</span>
+                                                </li>
+                                                @*<li class="product-deatils-sublist">
+                                            <span class="product-deatails-name">Comments</span>
+                                            <span class="product-details-value">@Model.Comments</span>
+                                            </li>*@
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="c-card--wrapper c-card-sm--wrapper mb-3 h-100">
+                                <div class="c-card--header">
+                                    <h4 class="c-card--header-title">Organization Details</h4>
+                                </div>
+                                <div class="c-card--body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.TenantName" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.TenantName</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.FirstName" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.FirstName</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.LastName" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.LastName</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.EmailId" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.EmailId</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.PhoneNumber" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.PhoneNumber</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.LogoPath" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.LogoPath</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.GSTNo" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.GSTNo</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-sm-12 mt-sm-3 mt-md-0 mt-lg-0 mt-3">
+                            <div class="c-card--wrapper c-card-sm--wrapper mb-0 h-100">
+                                <div class="c-card--header">
+                                    <h4 class="c-card--header-title">Address Details</h4>
+                                </div>
+                                <div class="c-card--body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.StreetAddress1" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.StreetAddress1</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.StreetAddress2" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.StreetAddress2</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.Landmark" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.Landmark</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.City" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.City</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.State" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.State</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details">
+                                                        <label asp-for="TenantResponseDto.Pincode" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.Pincode</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.8.4/swiper-bundle.min.js"></script>
 <script type="text/javascript">
-	var slider = new Swiper(".gallery-slider", {
-		slidesPerView: 1,
-		centeredSlides: true,
-		loop: true,
-		loopedSlides: 6,
-		navigation: {
-			nextEl: ".swiper-button-next",
-			prevEl: ".swiper-button-prev"
-		}
-	});
+    var slider = new Swiper(".gallery-slider", {
+        slidesPerView: 1,
+        centeredSlides: true,
+        loop: true,
+        loopedSlides: 6,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+        }
+    });
 
 
-	var thumbs = new Swiper(".gallery-thumbs", {
-		slidesPerView: "auto",
-		spaceBetween: 10,
-		centeredSlides: true,
-		loop: true,
-		slideToClickedSlide: true
-	});
+    var thumbs = new Swiper(".gallery-thumbs", {
+        slidesPerView: "auto",
+        spaceBetween: 10,
+        centeredSlides: true,
+        loop: true,
+        slideToClickedSlide: true
+    });
 
-	slider.controller.control = thumbs;
-	thumbs.controller.control = slider;
+    slider.controller.control = thumbs;
+    thumbs.controller.control = slider;
 </script>
