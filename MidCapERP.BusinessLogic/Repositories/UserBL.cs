@@ -144,10 +144,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             // Get selected role details from AspNetUserRoles and AspNetRoles
             var rolesData = _unitOfWorkDA.UserDA.GetUserRoleData(Convert.ToString(oldApplicationUserData.Id), cancellationToken).Result.FirstOrDefault();
-            var oldRoleNameData = await _roleManager.FindByIdAsync(rolesData.RoleId);
-
-            //Remove old UserRole
-            await _userManager.RemoveFromRoleAsync(oldApplicationUserData, oldRoleNameData.Name);
+            if (rolesData != null)
+            {
+                var oldRoleNameData = await _roleManager.FindByIdAsync(rolesData.RoleId);
+                //Remove old UserRole
+                await _userManager.RemoveFromRoleAsync(oldApplicationUserData, oldRoleNameData.Name);
+            }
 
             //Add Updated UserRole
             await _userManager.AddToRoleAsync(oldApplicationUserData, model.AspNetRole + "_" + Convert.ToString(_currentUser.TenantId));
