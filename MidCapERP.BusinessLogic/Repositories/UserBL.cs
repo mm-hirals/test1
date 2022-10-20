@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -45,21 +46,29 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<UserResponseDto>> GetFilterUserData(UserDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var userAllData = await GetAllUsersData(cancellationToken);
-            var usersResponse = from x in userAllData
-                        join y in await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken)
-                                   on new { x.UserId } equals new { y.UserId }
-                        where y.TenantId == _currentUser.TenantId
-                        orderby x.UserId ascending
-                        select new UserResponseDto
-                        {
-                            FirstName = x.FirstName,
-                            LastName = x.LastName,
-                            UserName = x.UserName,
-                            Email = x.Email,
-                            PhoneNumber = x.PhoneNumber,
-                            UserId = x.UserId
-                        };
+            var allUser = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var aspNetUserRoles = await _unitOfWorkDA.UserDA.GetAspNetUserRoles(cancellationToken);
+            var aspnetRole = await _unitOfWorkDA.RoleDA.GetRoles(cancellationToken);
+            var usersResponse = (from x in allUser
+                                 join y in aspNetUserRoles on x.Id equals y.UserId into AspNetUserRolesMapingDetails
+                                 from AspNewUserRolesMat in AspNetUserRolesMapingDetails.DefaultIfEmpty()
+                                 join z in aspnetRole on AspNewUserRolesMat.RoleId equals z.Id into AspNetUserRolesDetails
+                                 from t in AspNetUserRolesDetails.DefaultIfEmpty()
+                                 join a in await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken)
+                                   on new { x.UserId } equals new { a.UserId }
+                                 where a.TenantId == _currentUser.TenantId
+
+                                 orderby x.UserId ascending
+                                 select new UserResponseDto
+                                 {
+                                     FirstName = x.FirstName,
+                                     LastName = x.LastName,
+                                     UserName = x.UserName,
+                                     Email = x.Email,
+                                     UserRole = t.Name.Replace("_" + Convert.ToString(_currentUser.TenantId), ""),
+                                     PhoneNumber = x.PhoneNumber,
+                                     UserId = x.UserId
+                                 });
             var userFilteredData = FilterUserData(dataTableFilterDto, usersResponse);
             var userData = new PagedList<UserResponseDto>(userFilteredData, dataTableFilterDto);
             return new JsonRepsonse<UserResponseDto>(dataTableFilterDto.Draw, userData.TotalCount, userData.TotalCount, userData);
