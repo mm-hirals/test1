@@ -336,8 +336,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
 
             //Create OrderAddress Base On Address
-            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.BillingAddressID, "Billing", cancellationToken);
-            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", cancellationToken);
+            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.BillingAddressID, "Billing", true, cancellationToken);
+            await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", true, cancellationToken);
 
             return _mapper.Map<OrderApiResponseDto>(saveOrder);
         }
@@ -376,8 +376,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
 
             //Create OrderAddress Base On Address
-            await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", cancellationToken);
-            await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", cancellationToken);
+            await SaveOrderAddress(data.OrderId, model.CustomerID, model.BillingAddressID, "Billing", false, cancellationToken);
+            await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
 
             return _mapper.Map<OrderApiResponseDto>(data);
         }
@@ -642,7 +642,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<OrderApiRequestDto>(data);
         }
 
-        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(long orderId, long customerId, long customerAddressId, string orderAddressType, CancellationToken cancellationToken)
+        private async Task<OrderAddressesApiRequestDto> SaveOrderAddress(long orderId, long customerId, long customerAddressId, string orderAddressType, bool isCreate, CancellationToken cancellationToken)
         {
             OrderAddressesApiRequestDto objOrderAddressesApiRequestDto = new OrderAddressesApiRequestDto();
 
@@ -658,6 +658,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var customerAddress = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.IsDefault == true);
                 if (customerAddress != null)
                     customerAddressId = customerAddress.CustomerAddressId;
+            }
+
+            if (customerAddressId == 0 && isCreate == true)
+            {
+                return objOrderAddressesApiRequestDto;
             }
 
             var customerAddressData = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.CustomerAddressId == customerAddressId);
