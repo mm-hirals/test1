@@ -9,11 +9,11 @@
 
         public static class Roles
         {
-            public static readonly string Administrator = "Administrator";
-            public static readonly string SalesRepresentative = "SalesRepresentative";
-            public static readonly string Supervisor = "Supervisor";
-            public static readonly string Contractor = "Contractor";
-            public static readonly string StoreManager = "StoreManager";
+            public static readonly string Administrator = "Administrator_1";
+            public static readonly string SalesRepresentative = "SalesRepresentative_1";
+            public static readonly string Supervisor = "Supervisor_1";
+            public static readonly string Contractor = "Contractor_1";
+            public static readonly string StoreManager = "StoreManager_1";
             public static readonly string[] RolesSupported = { Administrator, StoreManager, Supervisor, SalesRepresentative, Contractor };
         }
 

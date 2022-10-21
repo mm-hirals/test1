@@ -9,6 +9,8 @@ namespace MidCapERP.DataAccess.Interface
 
         public Task<IQueryable<ApplicationRole>> GetRoles(CancellationToken cancellationToken);
 
+        public Task<IQueryable<IdentityUserRole<string>>> GetAspNetUserRoles(CancellationToken cancellationToken);
+
         public Task<string> GetUserRoleId(string Id, CancellationToken cancellationToken);
 
         public Task<IQueryable<IdentityUserRole<string>>> GetUserRoleData(string Id, CancellationToken cancellationToken);
