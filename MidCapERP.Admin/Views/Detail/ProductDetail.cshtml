@@ -13,6 +13,39 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
+                    <div class="c-card--wrapper p-2 mb-3">
+                        <div class="row">
+                           <div class="col-xl-5 col-lg-6 col-md-7 col-sm-12">
+                                <div class="organization-main-details mb-1 mt-1 flex-nowrap align-items-center">
+                                    <img src="@Model.TenantResponseDto.LogoPath" class="organization-logo">
+                                    <div>
+                                          <span class="organaization-text ps-0 text-sm-center text-center text-md-start">@Model.TenantResponseDto.TenantName</span>
+                                          <div class="align-items-center d-none d-md-flex">
+                                                        @*<label asp-for="TenantResponseDto.EmailId" class="organaization-title"></label>*@
+                                                        <span class="email-text"><i class='bx bx-envelope'></i></span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.EmailId</span>
+                                           </div>
+                                           <div class="align-items-center d-none d-md-flex">
+                                                        @*<label asp-for="TenantResponseDto.PhoneNumber" class="organaization-title"></label>*@
+                                                        <span class="email-text"><i class='bx bx-phone'></i></span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.PhoneNumber</span>
+                                                    </div>
+                                    </div>
+                                    
+                                </div>
+                           </div>
+
+                           <div class="col-xl-7 col-lg-6 col-md-5 col-sm-12 d-flex justify-content-end align-items-center">
+                               <div class="product-details-title d-sm-none d-md-block d-none">
+                                   <span class="ps-0 d-flex"><i class='bx bxs-map'></i> 
+                                      <span class="organization-address">@Model.TenantResponseDto.StreetAddress1 , @Model.TenantResponseDto.StreetAddress2 <br> @Model.TenantResponseDto.Landmark 
+                                       @Model.TenantResponseDto.City,<br> @Model.TenantResponseDto.State, @Model.TenantResponseDto.Pincode</span>
+                                    </span>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+
                     <div class="c-card--wrapper p-3 mb-3">
                         <div class="row mb-4">
                             <div class="col-lg-6 col-md-12 col-sm-12">
@@ -86,75 +119,100 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                            <div class="c-card--wrapper c-card-sm--wrapper mb-3 h-100">
+                    <div class="row d-md-none d-sm-block">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="c-card--wrapper c-card-sm--wrapper">
                                 <div class="c-card--header">
                                     <h4 class="c-card--header-title">Organization Details</h4>
                                 </div>
                                 <div class="c-card--body">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-12 col-sm-12">
                                             <div class="row">
-                                                <input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
+                                                @*<input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
                                                 <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details mb-1 mt-1">
+                                                        <label asp-for="TenantResponseDto.LogoPath" class="organaization-title"></label>
+                                                        <span class="organization-space">-</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.LogoPath</span>
+                                                        <img @Model.TenantResponseDto.LogoPath>
+                                                        <img src="@Model.TenantResponseDto.LogoPath" width="200px">
+                                                    </div>
+                                                </div> *@
+                                                @*<div class="col-lg-12 col-md-12 col-sm-12 mb-1">
                                                     <div class="organization-main-details">
                                                         <label asp-for="TenantResponseDto.TenantName" class="organaization-title"></label>
                                                         <span class="organization-space">-</span>
-                                                        <span class="organaization-span">@Model.TenantResponseDto.TenantName</span>
+                                                        <span class="organaization-text">@Model.TenantResponseDto.TenantName</span>
                                                     </div>
-                                                </div>
+                                                </div>*@
 
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                @*<div class="col-lg-12 col-md-12 col-sm-12 mb-1">
                                                     <div class="organization-main-details">
                                                         <label asp-for="TenantResponseDto.FirstName" class="organaization-title"></label>
                                                         <span class="organization-space">-</span>
                                                         <span class="organaization-span">@Model.TenantResponseDto.FirstName</span>
                                                     </div>
-                                                </div>
+                                                </div>*@
 
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                @*<div class="col-lg-12 col-md-12 col-sm-12 mb-1">
                                                     <div class="organization-main-details">
                                                         <label asp-for="TenantResponseDto.LastName" class="organaization-title"></label>
                                                         <span class="organization-space">-</span>
                                                         <span class="organaization-span">@Model.TenantResponseDto.LastName</span>
                                                     </div>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
-                                                    <div class="organization-main-details">
-                                                        <label asp-for="TenantResponseDto.EmailId" class="organaization-title"></label>
-                                                        <span class="organization-space">-</span>
+                                                </div>*@
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1 organization-main-details">
+                                                    <div class="align-items-center d-flex">
+                                                        @*<label asp-for="TenantResponseDto.EmailId" class="organaization-title"></label>*@
+                                                        <span class="email-text"><i class='bx bx-envelope'></i></span>
                                                         <span class="organaization-span">@Model.TenantResponseDto.EmailId</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
-                                                    <div class="organization-main-details">
-                                                        <label asp-for="TenantResponseDto.PhoneNumber" class="organaization-title"></label>
-                                                        <span class="organization-space">-</span>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1 organization-main-details">
+                                                    <div class="align-items-center d-flex">
+                                                        @*<label asp-for="TenantResponseDto.PhoneNumber" class="organaization-title"></label>*@
+                                                        <span class="email-text"><i class='bx bx-phone'></i></span>
                                                         <span class="organaization-span">@Model.TenantResponseDto.PhoneNumber</span>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
-                                                    <div class="organization-main-details">
-                                                        <label asp-for="TenantResponseDto.LogoPath" class="organaization-title"></label>
-                                                        <span class="organization-space">-</span>
-                                                        <span class="organaization-span">@Model.TenantResponseDto.LogoPath</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                
+                                                @*<div class="col-lg-12 col-md-12 col-sm-12 mb-1">
                                                     <div class="organization-main-details">
                                                         <label asp-for="TenantResponseDto.GSTNo" class="organaization-title"></label>
                                                         <span class="organization-space">-</span>
                                                         <span class="organaization-span">@Model.TenantResponseDto.GSTNo</span>
                                                     </div>
+                                                </div>*@
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-7 col-sm-12">
+                                            <div class="row">
+                                                <input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
+                                                <input asp-for="TenantResponseDto.TenantId" hidden class="form-control" />
+                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                    <div class="organization-main-details d-md-none d-sm-block">
+                                                       @*<label asp-for="TenantResponseDto.StreetAddress1" class="organaization-title d-block ps-0"></label>*@
+                                                        @*<span class="organization-space">-</span>*@
+                                                        <span class="d-flex align-items-start">
+                                                            <i class='bx bxs-map pe-1'></i> 
+                                                            <span class="organaization-span ps-0">@Model.TenantResponseDto.StreetAddress1 , @Model.TenantResponseDto.StreetAddress2 <br> @Model.TenantResponseDto.Landmark 
+                                                                @Model.TenantResponseDto.City,<br> @Model.TenantResponseDto.State, @Model.TenantResponseDto.Pincode
+                                                            </span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12 mt-sm-3 mt-md-0 mt-lg-0 mt-3">
+
+
+                        <div class="col-lg-6 col-md-12 col-sm-12 mt-sm-3 mt-md-0 mt-lg-0 mt-3 d-none">
                             <div class="c-card--wrapper c-card-sm--wrapper mb-0 h-100">
                                 <div class="c-card--header">
                                     <h4 class="c-card--header-title">Address Details</h4>
@@ -168,10 +226,12 @@
                                                     <div class="organization-main-details">
                                                         <label asp-for="TenantResponseDto.StreetAddress1" class="organaization-title"></label>
                                                         <span class="organization-space">-</span>
-                                                        <span class="organaization-span">@Model.TenantResponseDto.StreetAddress1</span>
+                                                        <span class="organaization-span">@Model.TenantResponseDto.StreetAddress1 ,  @Model.TenantResponseDto.StreetAddress2 <br> @Model.TenantResponseDto.Landmark <br>
+                                                            @Model.TenantResponseDto.City,> @Model.TenantResponseDto.State, <br> @Model.TenantResponseDto.Pincode
+                                                        </span>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 mb-1">
+                                                @*<div class="col-lg-12 col-md-12 col-sm-12 mb-1">
                                                     <div class="organization-main-details">
                                                         <label asp-for="TenantResponseDto.StreetAddress2" class="organaization-title"></label>
                                                         <span class="organization-space">-</span>
@@ -205,7 +265,7 @@
                                                         <span class="organization-space">-</span>
                                                         <span class="organaization-span">@Model.TenantResponseDto.Pincode</span>
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </div>
                                     </div>
