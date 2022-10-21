@@ -198,7 +198,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              OrderId = x.OrderId,
                                              OrderNo = x.OrderNo,
                                              CustomerName = y.FirstName + " " + y.LastName,
-                                             TotalAmount = x.TotalAmount,
+                                             TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
                                              OrderStatus = status,
                                              OrderDate = x.CreatedDate
                                          }).ToList();
