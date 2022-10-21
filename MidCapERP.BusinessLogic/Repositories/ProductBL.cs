@@ -25,6 +25,8 @@ using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Hosting;
+using System.Text;
+using iTextSharp.text.html.simpleparser;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -564,12 +566,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductResponseDto> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
         {
             ProductResponseDto productResponseDto = new ProductResponseDto();
+
             //This Pdf Code
-            Document document = new Document(PageSize.A4, 25, 25, 30, 30);
             string paths = _hostingEnvironment.WebRootPath;
             var random = Guid.NewGuid();
-            System.IO.FileStream fs = new FileStream(paths + "\\" + "Product"+ random + ".pdf", FileMode.Create);
-            PdfPTable tableCol = new PdfPTable(4);
+            System.IO.FileStream fs = new FileStream(paths + "\\" + "Product" + random + ".pdf", FileMode.Create);
+
             foreach (var item in model.ProductList)
             {
                 var getProductById = await GetProductById(item, cancellationToken);
@@ -578,26 +580,42 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productResponseDto.CategoryName = categoryName.LookupValueName;
                 productResponseDto.ModelNo = getProductById.ModelNo;
                 productResponseDto.QRImage = getProductById.QRImage;
-                
-                PdfWriter writer = PdfWriter.GetInstance(document, fs);
-                document.Open();
-                tableCol.AddCell(productResponseDto.ProductTitle);
-                tableCol.AddCell(productResponseDto.CategoryName);
-                tableCol.AddCell(productResponseDto.ModelNo);
+
+                /*PdfWriter writer = PdfWriter.GetInstance(document, fs);*/
+                /* document.Open();*/
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<table>");
+                sb.Append("<tr>");
+                sb.Append("<td>'"+ productResponseDto.ProductTitle + "'");
+                sb.Append("<br>'"+ productResponseDto.CategoryName + "'");
+                sb.Append("<br>'" + productResponseDto.ModelNo + "'");
+                sb.Append("</td><td>");
                 if (!string.IsNullOrWhiteSpace(productResponseDto.QRImage))
                 {
                     var pathMerge = paths + productResponseDto.QRImage;
-                    Image image = Image.GetInstance(pathMerge);
-                   
-                    tableCol.AddCell(image);
+                    //Image image = Image.GetInstance(pathMerge);
+
+                    sb.Append("<td> <img src='"+ pathMerge + "'>");
                 }
-                else{
-                    tableCol.AddCell("Not Image");
+                else
+                {
+                    sb.Append("Not Image");
                 }
-                document.Add(tableCol);
-            }
-            // Close the document  
-            document.Close();
+                sb.Append("</td></tr>");
+                sb.Append("</table>");
+                StringReader sr = new StringReader(sb.ToString());  
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+                    pdfDoc.Open();
+                    htmlparser.Parse(sr);
+                    pdfDoc.Close();
+                    byte[] bytes = memoryStream.ToArray();
+                    memoryStream.Close();
+                }
+            }  
             // Close the writer instance  
             fs.Close();
             // Always close open filehandles explicity  
