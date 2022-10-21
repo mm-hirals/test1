@@ -81,6 +81,7 @@ $('#publishStatus').change(function () {
     tblProduct.ajax.reload(null, false);
 });
 
+/*
 $('#tblProduct').on('click', 'input[type="checkbox"]', function () {
     var data = {
         ProductId: $(this).val(),
@@ -89,16 +90,17 @@ $('#tblProduct').on('click', 'input[type="checkbox"]', function () {
     $.ajax({
         url: "/Product/UpdateProductStatus",
         type: "POST",
-        data: data,
+        data: data ,
         success: function (response) {
             if (response == "success") {
+                alert("Success : ", response);
                 tblProduct.ajax.reload();
             }
             else
                 alert("Error: " + response);
         }
     });
-});
+});*/
 
 // Check all checkbox values and store it in array
 $("#selectallProduct").click(function () {
@@ -139,7 +141,6 @@ $("#multiSelectProduct").click(function () {
             var modelNo = $("#modelNo").val().trim();
             var publishStatus = $("#publishStatus").val().trim();
         }
-
         var data = {
             CategoryName: categoryName,
             ProductTitle: productTitle,
