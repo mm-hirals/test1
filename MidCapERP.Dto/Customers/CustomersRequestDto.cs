@@ -58,9 +58,6 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Subscribe Newsletters/Greetings")]
         public bool IsSubscribe { get; set; }
 
-        public List<long> CustomerCheckedId { get; set; }
-        public string Message { get; set; }
-
         public int TenantID { get; set; }
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }

@@ -3,6 +3,7 @@ using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.BusinessLogic.Services.SendSMS;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.DataEntities;
 
 namespace MidCapERP.BusinessLogic.UnitOfWork
@@ -42,8 +43,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IActivityLogsService ActivityLogsService { get; }
         public ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
         public ISendSMSservice SendSMSservice { get; }
+        public IEmailHelper EmailHelper { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IArchitectsBL architectsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IArchitectAddressesBL architectAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IArchitectsBL architectsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IFrameTypeBL frameTypeBL, IAccessoriesTypeBL accessoriesTypesBL, IRawMaterialBL rawMaterialBL, IAccessoriesBL accessoriesBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IFrameBL frameBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IArchitectAddressesBL architectAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice, IEmailHelper emailHelper)
         {
             this._context = context;
             this.ContractorsBL = contractorsBL;
@@ -78,6 +80,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             this.ActivityLogsService = activityLogsService;
             this.TenantSMTPDetailBL = tenantSMTPDetailBL;
             this.SendSMSservice = sendSMSservice;
+            this.EmailHelper = emailHelper;
         }
 
         #region DisposeMethod

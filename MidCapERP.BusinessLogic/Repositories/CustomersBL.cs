@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -17,12 +18,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IEmailHelper _emailHelper;
 
-        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _emailHelper = emailHelper;
         }
 
         public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -105,7 +108,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName}).Take(10);
+            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
             return data.ToList();
         }
 
@@ -218,6 +221,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
             return _mapper.Map<CustomersRequestDto>(data);
+        }
+
+        public async Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken)
+        {
+            List<string> customerPhoneList = new List<string>();
+            List<string> customerEmailList = new List<string>();
+
+            foreach (var item in model.CustomerList)
+            {
+                var customerData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+                if (customerData != null)
+                {
+                    var customerPhone = customerData.PhoneNumber;
+                    var customerEmail = customerData.EmailId;
+                    customerPhoneList.Add(customerPhone);
+                    if (customerEmail != null)
+                        customerEmailList.Add(customerEmail);
+                }
+            }
+
+            await _emailHelper.SendEmail(model.Subject, model.Message, customerEmailList);
+
+            foreach (var item in customerPhoneList)
+            {
+                if (item != null)
+                {
+                    //var msg = _sendSMSservice.SendSMS("7567086864", "Hi. This is test message for greeting customers.");
+                    //var msg = _sendSMSservice.SendSMS(item, model.Message);
+                }
+            }
         }
 
         #region PrivateMethods
