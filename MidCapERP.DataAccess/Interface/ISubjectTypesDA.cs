@@ -15,8 +15,13 @@ namespace MidCapERP.DataAccess.Interface
         public Task<SubjectTypes> DeleteSubjectTypes(int Id, CancellationToken cancellationToken);
 
         public Task<int> GetRawMaterialSubjectTypeId(CancellationToken cancellationToken);
+
         public Task<int> GetPolishSubjectTypeId(CancellationToken cancellationToken);
+
         public Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken);
+
         public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
+
+        public Task<int> GetCustomerSubjectTypeId(CancellationToken cancellationToken);
     }
 }

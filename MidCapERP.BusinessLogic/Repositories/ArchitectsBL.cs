@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.SendSMS;
 using MidCapERP.Core.Constants;
@@ -8,6 +9,7 @@ using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -91,30 +93,32 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task SendSMSToArchitects(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
-            List<string> architectPhoneList = new List<string>();
-            List<string> architectEmailList = new List<string>();
-
+            //List<string> architectEmailList = new List<string>();
             foreach (var item in model.CustomerList)
             {
                 var architectData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
                 if (architectData != null)
                 {
-                    var architectPhone = architectData.PhoneNumber;
-                    var architectEmail = architectData.EmailId;
-                    architectPhoneList.Add(architectPhone);
-                    if (architectEmail != null)
-                        architectEmailList.Add(architectEmail);
-                }
-            }
+                    //architectEmailList.Add(architectData.EmailId);
+                    //await _emailHelper.SendEmail(model.Subject, model.Message, architectEmailList);
+                    NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
+                    {
+                        EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
+                        EntityID = item,
+                        NotificationType = "Greetings",
+                        NotificationMethod = NotificationMethodConstant.Email,
+                        MessageSubject = model.Subject,
+                        MessageBody = model.Message,
+                        ReceiverEmail = architectData.EmailId,
+                        ReceiverMobile = architectData.PhoneNumber,
+                        Status = 0,
+                        CreatedBy = _currentUser.UserId,
+                        CreatedDate = DateTime.Now,
+                        CreatedUTCDate = DateTime.UtcNow
+                    };
 
-            await _emailHelper.SendEmail(model.Subject, model.Message, architectEmailList);
-
-            foreach (var item in architectPhoneList)
-            {
-                if (item != null)
-                {
-                    //var msg = _sendSMSservice.SendSMS("7567086864", "Hi. This is test message for greeting customers.");
-                    //var msg = _sendSMSservice.SendSMS(item, model.Message);
+                    var notificationModel = _mapper.Map<NotificationManagement>(notificationDto);
+                    await _unitOfWorkDA.NotificationManagementDA.CreateNotification(notificationModel, cancellationToken);
                 }
             }
         }

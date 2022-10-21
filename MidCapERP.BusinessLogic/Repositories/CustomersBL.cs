@@ -9,6 +9,7 @@ using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -225,30 +226,29 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
-            List<string> customerPhoneList = new List<string>();
-            List<string> customerEmailList = new List<string>();
-
             foreach (var item in model.CustomerList)
             {
                 var customerData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
                 if (customerData != null)
                 {
-                    var customerPhone = customerData.PhoneNumber;
-                    var customerEmail = customerData.EmailId;
-                    customerPhoneList.Add(customerPhone);
-                    if (customerEmail != null)
-                        customerEmailList.Add(customerEmail);
-                }
-            }
+                    NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
+                    {
+                        EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
+                        EntityID = item,
+                        NotificationType = "Greetings",
+                        NotificationMethod = "Email",
+                        MessageSubject = model.Subject,
+                        MessageBody = model.Message,
+                        ReceiverEmail = customerData.EmailId,
+                        ReceiverMobile = customerData.PhoneNumber,
+                        Status = 0,
+                        CreatedBy = _currentUser.UserId,
+                        CreatedDate = DateTime.Now,
+                        CreatedUTCDate = DateTime.UtcNow
+                    };
 
-            await _emailHelper.SendEmail(model.Subject, model.Message, customerEmailList);
-
-            foreach (var item in customerPhoneList)
-            {
-                if (item != null)
-                {
-                    //var msg = _sendSMSservice.SendSMS("7567086864", "Hi. This is test message for greeting customers.");
-                    //var msg = _sendSMSservice.SendSMS(item, model.Message);
+                    var notificationModel = _mapper.Map<NotificationManagement>(notificationDto);
+                    await _unitOfWorkDA.NotificationManagementDA.CreateNotification(notificationModel, cancellationToken);
                 }
             }
         }
