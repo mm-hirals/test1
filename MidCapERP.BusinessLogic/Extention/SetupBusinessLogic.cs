@@ -6,6 +6,7 @@ using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.BusinessLogic.Services.SendSMS;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Services.Email;
 
 namespace MidCapERP.BusinessLogic.Extention
 {
@@ -45,6 +46,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IActivityLogsService, ActivityLogsService>();
             services.AddScoped<ITenantSMTPDetailBL, TenantSMTPDetailBL>();
             services.AddScoped<ISendSMSservice, SendSMSservice>();
+            services.AddScoped<IEmailHelper, EmailHelper>();
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }
