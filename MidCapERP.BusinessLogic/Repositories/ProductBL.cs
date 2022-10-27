@@ -271,13 +271,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<ProductForDetailsByModuleNoResponceDto> GetProductForDetailsByModuleNo(string modelNo, CancellationToken cancellationToken)
         {
-            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var productAlldata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var productData = productAlldata.FirstOrDefault(x => x.ModelNo == modelNo);
             if (productData == null)
-            {
                 throw new Exception("Product is not found");
-            }
+            else
+                if (productData.TenantId != _currentUser.TenantId)
+                    throw new Exception("Product is not found");
+
+            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
             return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
@@ -351,10 +353,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                     return _mappedUser;
                 }
 
-                throw new Exception("Product is not found");
+                throw new Exception("Product Not Found");
             }
 
-            throw new Exception("Product is not found");
+            throw new Exception("Product Not Found");
         }
 
         public async Task<ProductRequestDto> UpdateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
@@ -377,10 +379,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                     return _mappedUser;
                 }
 
-                throw new Exception("Product is not found");
+                throw new Exception("Product Not Found");
             }
 
-            throw new Exception("Product is not found");
+            throw new Exception("Product Not Found");
         }
 
         public async Task UpdateProductStatus(ProductMainRequestDto model, CancellationToken cancellationToken)
@@ -402,7 +404,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
             else
-                throw new Exception("Product is not found");
+                throw new Exception("Product Not Found");
         }
 
         public async Task<ProductRequestDto?> UpdateProductCost(ProductMainRequestDto model, CancellationToken cancellationToken)
@@ -420,10 +422,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                     return _mapper.Map<ProductRequestDto>(data);
                 }
 
-                throw new Exception("Product is not found");
+                throw new Exception("Product Not Found");
             }
 
-            throw new Exception("Product is not found");
+            throw new Exception("Product Not Found");
         }
 
         public async Task<ProductRequestDto> DeleteProduct(int Id, CancellationToken cancellationToken)
@@ -610,6 +612,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
         {
             var productData = await GetProductById(Id, cancellationToken);
+            if (productData.TenantId != _currentUser.TenantId)
+                throw new Exception("Product Not Found");
+            
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
             return _mapper.Map<ProductRequestDto>(productData);
