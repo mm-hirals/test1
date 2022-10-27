@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -8,6 +9,7 @@ using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -17,12 +19,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IEmailHelper _emailHelper;
 
-        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _emailHelper = emailHelper;
         }
 
         public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -105,7 +109,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName}).Take(10);
+            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
             return data.ToList();
         }
 
@@ -218,6 +222,35 @@ namespace MidCapERP.BusinessLogic.Repositories
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
             return _mapper.Map<CustomersRequestDto>(data);
+        }
+
+        public async Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken)
+        {
+            foreach (var item in model.CustomerList)
+            {
+                var customerData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+                if (customerData != null)
+                {
+                    NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
+                    {
+                        EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
+                        EntityID = item,
+                        NotificationType = "Greetings",
+                        NotificationMethod = "Email",
+                        MessageSubject = model.Subject,
+                        MessageBody = model.Message,
+                        ReceiverEmail = customerData.EmailId,
+                        ReceiverMobile = customerData.PhoneNumber,
+                        Status = 0,
+                        CreatedBy = _currentUser.UserId,
+                        CreatedDate = DateTime.Now,
+                        CreatedUTCDate = DateTime.UtcNow
+                    };
+
+                    var notificationModel = _mapper.Map<NotificationManagement>(notificationDto);
+                    await _unitOfWorkDA.NotificationManagementDA.CreateNotification(notificationModel, cancellationToken);
+                }
+            }
         }
 
         #region PrivateMethods

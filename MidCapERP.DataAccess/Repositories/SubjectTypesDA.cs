@@ -74,5 +74,12 @@ namespace MidCapERP.DataAccess.Repositories
             var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Fabrics));
             return subjectType == null ? 0 : subjectType.SubjectTypeId;
         }
+
+        public async Task<int> GetCustomerSubjectTypeId(CancellationToken cancellationToken)
+        {
+            var subjectTypeAllData = await GetAll(cancellationToken);
+            var subjectType = subjectTypeAllData.FirstOrDefault(x => x.SubjectTypeName == nameof(SubjectTypesEnum.Customers));
+            return subjectType == null ? 0 : subjectType.SubjectTypeId;
+        }
     }
 }
