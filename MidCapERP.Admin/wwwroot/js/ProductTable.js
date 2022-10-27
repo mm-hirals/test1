@@ -149,17 +149,43 @@ $("#multiSelectProduct").click(function () {
             IsCheckedAll: $("#selectallProduct").prop('checked'),
             ProductList: value_check
         };
-        console.log(data);
+        
         $.ajax({
             url: "/Product/PrintProductDetail",
             type: "POST",
             data: { model: data },
-            success: function (response) {
-                if (response == "success") {
-                    toastr.success('Print product successfully.');
+            cache: false,
+            xhr: function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 2) {
+                        if (xhr.status == 200) {
+                            xhr.responseType = "blob";
+                        } else {
+                            xhr.responseType = "text";
+                        }
+                    }
+                };
+                return xhr;
+            },
+            success: function (data) {
+                //Convert the Byte Data to BLOB object.
+                var blob = data;//new Blob([data], { type: "application/octetstream" });
+
+                //Check the Browser type and download the File.
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileName);
+                } else {
+                    var url = window.URL || window.webkitURL;
+                    var link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", "abc.pdf");
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
                 }
-                else
-                    toastr.error(response, 'Error in printing product.');
             }
         });
     }

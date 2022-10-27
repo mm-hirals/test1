@@ -85,7 +85,7 @@ namespace MidCapERP.Admin.Controllers
             await FillCustomerTypesDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
-        } 
+        }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
@@ -122,10 +122,11 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> MultipleSendCustomer(long?[] value_check)
+        public async Task<JsonResult> MultipleSendCustomer(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
             try
             {
+                await _unitOfWorkBL.CustomersBL.SendSMSToCustomers(model, cancellationToken);
                 return Json("success");
             }
             catch (Exception ex)

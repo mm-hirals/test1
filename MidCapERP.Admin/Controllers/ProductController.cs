@@ -224,16 +224,16 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        public async Task<IActionResult> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
         {
-            try
+            if (model != null && model.ProductList.Count > 0)
             {
-               await _unitOfWorkBL.ProductBL.PrintProductDetail(model, cancellationToken);
-                return Json("success");
+                Byte[] bytes = await _unitOfWorkBL.ProductBL.PrintProductDetail(model, cancellationToken);
+                return File(bytes, "application/pdf", "LabResult");
             }
-            catch (Exception ex)
+            else
             {
-                return Json(ex.Message);
+                throw new Exception("No Product Found!");
             }
         }
 

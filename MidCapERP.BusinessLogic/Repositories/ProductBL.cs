@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
@@ -21,10 +23,8 @@ using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
 using MidCapERP.Dto.Tenant;
-using iTextSharp;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Microsoft.AspNetCore.Hosting;
+using System.Text;
+using Wkhtmltopdf.NetCore;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -37,8 +37,10 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly IQRCodeService _iQRCodeService;
         private readonly IActivityLogsService _activityLogsService;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IGeneratePdf _generatePdf;
+        private readonly IConfiguration _configuration;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment, IGeneratePdf generatePdf, IConfiguration configuration)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -47,6 +49,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             _iQRCodeService = iQRCodeService;
             _activityLogsService = activityLogsService;
             this._hostingEnvironment = hostingEnvironment;
+            _generatePdf = generatePdf;
+            _configuration = configuration;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -277,7 +281,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Product is not found");
             else
                 if (productData.TenantId != _currentUser.TenantId)
-                    throw new Exception("Product is not found");
+                throw new Exception("Product is not found");
 
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
@@ -563,15 +567,24 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
         }
 
-        public async Task<ProductResponseDto> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        public async Task<byte[]> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
         {
             ProductResponseDto productResponseDto = new ProductResponseDto();
+
             //This Pdf Code
-            Document document = new Document(PageSize.A4, 25, 25, 30, 30);
             string paths = _hostingEnvironment.WebRootPath;
             var random = Guid.NewGuid();
-            System.IO.FileStream fs = new FileStream(paths + "\\" + "Product"+ random + ".pdf", FileMode.Create);
-            PdfPTable tableCol = new PdfPTable(4);
+
+            var htmlStart = @"<html>
+                        <head>
+                            <title>Pdf Title</title>
+                        </head>
+                        <body>";
+            var htmlEnd = @"</body></html>";
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(htmlStart);
+            sb.Append("<table>");
             foreach (var item in model.ProductList)
             {
                 var getProductById = await GetProductById(item, cancellationToken);
@@ -580,31 +593,20 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productResponseDto.CategoryName = categoryName.LookupValueName;
                 productResponseDto.ModelNo = getProductById.ModelNo;
                 productResponseDto.QRImage = getProductById.QRImage;
-                
-                PdfWriter writer = PdfWriter.GetInstance(document, fs);
-                document.Open();
-                tableCol.AddCell(productResponseDto.ProductTitle);
-                tableCol.AddCell(productResponseDto.CategoryName);
-                tableCol.AddCell(productResponseDto.ModelNo);
-                if (!string.IsNullOrWhiteSpace(productResponseDto.QRImage))
-                {
-                    var pathMerge = paths + productResponseDto.QRImage;
-                    Image image = Image.GetInstance(pathMerge);
-                   
-                    tableCol.AddCell(image);
-                }
-                else{
-                    tableCol.AddCell("Not Image");
-                }
-                document.Add(tableCol);
+
+                sb.Append("<tr>");
+                sb.Append("<td><b>Product Title:</b> &nbsp'" + productResponseDto.ProductTitle + "'");
+                sb.Append("<br><b>Cateagory Name: </b> &nbsp'" + productResponseDto.CategoryName + "'");
+                sb.Append("<br><b>Model No :</b> &nbsp'" + productResponseDto.ModelNo + "'");
+                sb.Append("</td>");
+                var path = _configuration["AppSettings:HostURL"] + productResponseDto.QRImage;
+                sb.Append("<td><img height='250px' width='250px' src='"+ path + "'</td>");
+                sb.Append("</tr>");
             }
-            // Close the document  
-            document.Close();
-            // Close the writer instance  
-            fs.Close();
-            // Always close open filehandles explicity  
-            fs.Close();
-            return productResponseDto;
+            sb.Append("</table>");
+            sb.Append(htmlEnd);
+
+            return _generatePdf.GetPDF(sb.ToString());
         }
 
         #region API Methods
@@ -614,7 +616,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productData = await GetProductById(Id, cancellationToken);
             if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product Not Found");
-            
+
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
             return _mapper.Map<ProductRequestDto>(productData);
