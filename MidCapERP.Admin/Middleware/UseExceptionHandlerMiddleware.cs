@@ -1,5 +1,5 @@
-﻿using MidCapERP.Dto;
-using MidCapERP.Infrastructure.Services.Email;
+﻿using MidCapERP.Core.Services.Email;
+using MidCapERP.Dto;
 using System.Net;
 using System.Text.Json;
 using UAParser;
