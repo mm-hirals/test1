@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
@@ -37,9 +38,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly IActivityLogsService _activityLogsService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IGeneratePdf _generatePdf;
+        private readonly IConfiguration _configuration;
 
-
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment, IGeneratePdf generatePdf)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment, IGeneratePdf generatePdf, IConfiguration configuration)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -49,6 +50,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             _activityLogsService = activityLogsService;
             this._hostingEnvironment = hostingEnvironment;
             _generatePdf = generatePdf;
+            _configuration = configuration;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -597,8 +599,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 sb.Append("<br><b>Cateagory Name: </b> &nbsp'" + productResponseDto.CategoryName + "'");
                 sb.Append("<br><b>Model No :</b> &nbsp'" + productResponseDto.ModelNo + "'");
                 sb.Append("</td>");
-                var pathMerge = paths + productResponseDto.QRImage;
-                sb.Append("<td><img height='250px' width='250px' src='"+ productResponseDto.QRImage + "'</td>");
+                var path = _configuration["AppSettings:HostURL"] + productResponseDto.QRImage;
+                sb.Append("<td><img height='250px' width='250px' src='"+ path + "'</td>");
                 sb.Append("</tr>");
             }
             sb.Append("</table>");
