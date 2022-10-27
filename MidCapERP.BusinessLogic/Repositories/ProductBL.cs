@@ -95,10 +95,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       WidthNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Width))),
-                                       HeightNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Height))),
-                                       DepthNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Depth))),
-                                       DiameterNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Diameter))),
+                                       WidthNumeric = Convert.ToString(Convert.ToDecimal(x.Width)),
+                                       HeightNumeric = Convert.ToString(Convert.ToDecimal(x.Height)),
+                                       DepthNumeric = Convert.ToString(Convert.ToDecimal(x.Depth)),
+                                       DiameterNumeric = Convert.ToString(Convert.ToDecimal(x.Diameter)),
                                        Width = x.Width,
                                        Height = x.Height,
                                        Depth = x.Depth,
@@ -180,7 +180,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     if (data.Any())
                         productDetailResponseDto.Polish = string.Join(", ", data.Select(x => x.Title + " - " + x.ModelNo));
-                   
+
                     productDetailResponseDto.TenantResponseDto = _mapper.Map<TenantResponseDto>(tenantDetails);
                 }
                 return productDetailResponseDto;
@@ -271,7 +271,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Product is not found");
             else
                 if (productData.TenantId != _currentUser.TenantId)
-                    throw new Exception("Product is not found");
+                throw new Exception("Product is not found");
 
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
@@ -566,7 +566,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productData = await GetProductById(Id, cancellationToken);
             if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product Not Found");
-            
+
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
             return _mapper.Map<ProductRequestDto>(productData);

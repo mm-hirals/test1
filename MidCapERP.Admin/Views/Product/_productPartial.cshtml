@@ -54,19 +54,19 @@
                             </label>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width" onkeypress='return restrictAlphabets(event)'>
+                                    <input asp-for="WidthNumeric" type="text" class="form-control pwidth" placeholder="Width" max="999.99" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="WidthNumeric" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
-                                    <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height" onkeypress='return restrictAlphabets(event)'>
+                                    <input asp-for="HeightNumeric" type="text" class="form-control pheight" placeholder="Height" max="999.99" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="HeightNumeric" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
-                                    <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth" onkeypress='return restrictAlphabets(event)'>
+                                    <input asp-for="DepthNumeric" type="text" class="form-control pdepth" placeholder="Depth" max="999.99" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="DepthNumeric" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-3">
-                                    <input asp-for="DiameterNumeric" type="text" class="form-control pdiameter" placeholder="Diameter" onkeypress='return restrictAlphabets(event)'>
+                                    <input asp-for="DiameterNumeric" type="text" class="form-control pdiameter" placeholder="Diameter" max="999.99" onkeypress='return restrictAlphabets(event)'>
                                     <span asp-validation-for="DiameterNumeric" class="text-danger"></span>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
          /*code: 48-57 Numbers*/
          function restrictAlphabets(e) {
              var x = e.which || e.keycode;
-             if ((x >= 48 && x <= 57))
+             if ((x >= 48 && x <= 57 || x == 190)
                  return true;
              else
                  return false;
