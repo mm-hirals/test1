@@ -23,8 +23,6 @@ using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
 using MidCapERP.Dto.Tenant;
-using System.Text;
-using Wkhtmltopdf.NetCore;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -37,10 +35,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly IQRCodeService _iQRCodeService;
         private readonly IActivityLogsService _activityLogsService;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IGeneratePdf _generatePdf;
         private readonly IConfiguration _configuration;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment, IGeneratePdf generatePdf, IConfiguration configuration)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -49,7 +46,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             _iQRCodeService = iQRCodeService;
             _activityLogsService = activityLogsService;
             this._hostingEnvironment = hostingEnvironment;
-            _generatePdf = generatePdf;
             _configuration = configuration;
         }
 
@@ -567,46 +563,23 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
         }
 
-        public async Task<byte[]> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        public async Task<List<ProductResponseDto>> PrintProductDetail(List<long> ProductList, CancellationToken cancellationToken)
         {
             ProductResponseDto productResponseDto = new ProductResponseDto();
+            List<ProductResponseDto> productResponseList = new List<ProductResponseDto>();
 
-            //This Pdf Code
-            string paths = _hostingEnvironment.WebRootPath;
-            var random = Guid.NewGuid();
-
-            var htmlStart = @"<html>
-                        <head>
-                            <title>Pdf Title</title>
-                        </head>
-                        <body>";
-            var htmlEnd = @"</body></html>";
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(htmlStart);
-            sb.Append("<table>");
-            foreach (var item in model.ProductList)
+            // Get Product data from ProductId
+            foreach (var item in ProductList)
             {
                 var getProductById = await GetProductById(item, cancellationToken);
                 var categoryName = await _unitOfWorkDA.LookupValuesDA.GetById(getProductById.CategoryId, cancellationToken);
-                productResponseDto.ProductTitle = getProductById.ProductTitle;
+                productResponseDto = _mapper.Map<ProductResponseDto>(getProductById);
                 productResponseDto.CategoryName = categoryName.LookupValueName;
-                productResponseDto.ModelNo = getProductById.ModelNo;
-                productResponseDto.QRImage = getProductById.QRImage;
-
-                sb.Append("<tr>");
-                sb.Append("<td><b>Product Title:</b> &nbsp'" + productResponseDto.ProductTitle + "'");
-                sb.Append("<br><b>Cateagory Name: </b> &nbsp'" + productResponseDto.CategoryName + "'");
-                sb.Append("<br><b>Model No :</b> &nbsp'" + productResponseDto.ModelNo + "'");
-                sb.Append("</td>");
-                var path = _configuration["AppSettings:HostURL"] + productResponseDto.QRImage;
-                sb.Append("<td><img height='250px' width='250px' src='"+ path + "'</td>");
-                sb.Append("</tr>");
+                var path = _configuration["AppSettings:HostURL"] + getProductById.QRImage;
+                productResponseDto.QRImage = path;
+                productResponseList.Add(productResponseDto);
             }
-            sb.Append("</table>");
-            sb.Append(htmlEnd);
-
-            return _generatePdf.GetPDF(sb.ToString());
+            return productResponseList;
         }
 
         #region API Methods

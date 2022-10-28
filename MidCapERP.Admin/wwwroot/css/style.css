@@ -11234,6 +11234,7 @@ body {
 .l-navbar.collapsed .nav-item .nav_link .nav_name {
   display: none;
   line-height: 100%;
+  font-weight: bold;
 }
 .l-navbar.collapsed .nav-item .nav_link.submenu-link {
   position: relative;
@@ -11265,7 +11266,7 @@ body {
   }
   .l-navbar.collapsed .nav-item:hover .nav_link .nav_name {
     display: block;
-    padding-left: 48px;
+    padding-left: 40px;
   }
   .l-navbar.collapsed .nav-item:hover .sub-menu {
     display: block !important;
@@ -11319,7 +11320,7 @@ body {
   grid-template-columns: -webkit-max-content -webkit-max-content;
   grid-template-columns: max-content max-content;
   align-items: center;
-  padding: 16px 8px 16px 16px;
+  padding: 16px 8px 16px 24px;
 }
 
 .nav_logo {
@@ -12208,8 +12209,13 @@ header .btn-check:focus + .btn, header .btn:focus {
   padding: 0;
   min-height: calc(100vh - 54px);
 }
+.product-detail-body--wrapper .product-details-main--wrapper .tenant-top--wrapper {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
 .product-detail-body--wrapper .product-details-main--wrapper .product-details-wrapper {
-  padding-top: 12px;
   padding-bottom: 12px;
 }
 .product-detail-body--wrapper .product-details-main--wrapper .product-details-wrapper .gallery {
@@ -12411,10 +12417,11 @@ header .btn-check:focus + .btn, header .btn:focus {
 }
 .product-detail-body--wrapper .organization-main-details {
   display: flex;
+  align-items: center;
 }
 @media (max-width: 575px) {
   .product-detail-body--wrapper .organization-main-details {
-    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 .product-detail-body--wrapper .organization-main-details .organization-space {
@@ -12444,13 +12451,11 @@ header .btn-check:focus + .btn, header .btn:focus {
   color: #202020;
   font-size: 14px;
   font-weight: 600;
-  padding: 0px 10px;
 }
 @media (max-width: 575px) {
   .product-detail-body--wrapper .organization-main-details .organaization-span {
     font-size: 14px;
     width: 100%;
-    padding: 0px 6px;
   }
 }
 .product-detail-body--wrapper .organization-main-details .email-text {
@@ -12458,13 +12463,8 @@ header .btn-check:focus + .btn, header .btn:focus {
   width: auto;
   height: auto;
   display: flex;
-  padding: 0 8px;
+  margin: 0 5px 0 0;
   width: 20px;
-}
-@media (max-width: 575px) {
-  .product-detail-body--wrapper .organization-main-details .email-text {
-    padding: 0px 2px;
-  }
 }
 .product-detail-body--wrapper .organization-main-details .organaization-text {
   color: #202020;
@@ -12478,11 +12478,19 @@ header .btn-check:focus + .btn, header .btn:focus {
     padding: 2px 2px;
   }
 }
-.product-detail-body--wrapper .organization-main-details .organization-logo {
-  height: 70px;
-  width: 70px;
+.product-detail-body--wrapper .organization-main-details .organization-img--wrapper {
+  width: 200px;
+}
+.product-detail-body--wrapper .organization-main-details .organization-img--wrapper .organization-logo {
+  width: 100%;
+  height: 100%;
   -o-object-fit: contain;
      object-fit: contain;
+}
+@media (max-width: 767px) {
+  .product-detail-body--wrapper .organization-main-details .organization-detail--wrapper {
+    display: none;
+  }
 }
 .product-detail-body--wrapper .product-details-title .organization-address {
   color: #454545;

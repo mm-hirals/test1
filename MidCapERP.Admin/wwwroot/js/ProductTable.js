@@ -32,7 +32,7 @@ $(function () {
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
-                    return '<div class="c-action-btn-group justify-content-start"><input type="checkbox" class="case" value="' + row.productId + '" id="' + row.productId + '" /></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><input type="checkbox" class="case" value="' + row.productId + '" /></div>';
                 }
             },
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
@@ -81,8 +81,8 @@ $('#publishStatus').change(function () {
     tblProduct.ajax.reload(null, false);
 });
 
-/*
-$('#tblProduct').on('click', 'input[type="checkbox"]', function () {
+// Change Product Status
+$('#tblProduct').on('click', 'input.productStatus[type="checkbox"]', function () {
     var data = {
         ProductId: $(this).val(),
         Status: this.checked,
@@ -90,17 +90,16 @@ $('#tblProduct').on('click', 'input[type="checkbox"]', function () {
     $.ajax({
         url: "/Product/UpdateProductStatus",
         type: "POST",
-        data: data ,
+        data: data,
         success: function (response) {
             if (response == "success") {
-                alert("Success : ", response);
                 tblProduct.ajax.reload();
             }
             else
                 alert("Error: " + response);
         }
     });
-});*/
+});
 
 // Check all checkbox values and store it in array
 $("#selectallProduct").click(function () {
@@ -110,7 +109,7 @@ $("#selectallProduct").click(function () {
         }
         $('.case').prop('checked', true);
         for (var i = 0; i < $(".case:checked").length; i++) {
-            value_check.push($(".case:checked")[i].id);
+            value_check.push($(".case:checked")[i].value);
         }
     }
     else {
@@ -120,7 +119,7 @@ $("#selectallProduct").click(function () {
 });
 
 // Check single checkbox value and store it in array
-$('#tblProduct').on('click', 'input[type="checkbox"]', function () {
+$('#tblProduct').on('click', 'input.case[type="checkbox"]', function () {
     if ($(this).prop("checked")) {
         value_check.push($(this).val());
     }
@@ -136,7 +135,7 @@ $('#tblProduct').on('click', 'input[type="checkbox"]', function () {
 $("#multiSelectProduct").click(function () {
     if (value_check.length > 0) {
         if ($("#selectallProduct").prop('checked')) {
-            var categoryName = $("#categoryName").val().trim();;
+            var categoryName = $("#categoryName").val().trim();
             var productTitle = $("#productTitle").val().trim();
             var modelNo = $("#modelNo").val().trim();
             var publishStatus = $("#publishStatus").val().trim();
@@ -149,7 +148,7 @@ $("#multiSelectProduct").click(function () {
             IsCheckedAll: $("#selectallProduct").prop('checked'),
             ProductList: value_check
         };
-        
+
         $.ajax({
             url: "/Product/PrintProductDetail",
             type: "POST",
@@ -169,10 +168,7 @@ $("#multiSelectProduct").click(function () {
                 return xhr;
             },
             success: function (data) {
-                //Convert the Byte Data to BLOB object.
-                var blob = data;//new Blob([data], { type: "application/octetstream" });
-
-                //Check the Browser type and download the File.
+                var blob = data;
                 var isIE = false || !!document.documentMode;
                 if (isIE) {
                     window.navigator.msSaveBlob(blob, fileName);
@@ -180,13 +176,14 @@ $("#multiSelectProduct").click(function () {
                     var url = window.URL || window.webkitURL;
                     var link = url.createObjectURL(blob);
                     var a = $("<a />");
-                    a.attr("download", "abc.pdf");
+                    a.attr("download", "ProductList.pdf");
                     a.attr("href", link);
                     $("body").append(a);
                     a[0].click();
                     $("body").remove(a);
                 }
             }
+            toastr.success("PDF is generated successfully.")
         });
     }
     else {
