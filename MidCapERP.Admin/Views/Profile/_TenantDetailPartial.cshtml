@@ -1,7 +1,7 @@
 ﻿@model MidCapERP.Dto.Tenant.TenantResponseDto
 
 <div class="c-card--wrapper c-card-sm--wrapper mb-0">
-    <form asp-action="UpdateTenant" asp-controller="Profile" method="post">
+    <form asp-action="UpdateTenant" asp-controller="Profile" method="post" enctype="multipart/form-data">
         <div class="c-card--body  p-0">
             <div class="row">
                 <div class="col-md-12">
@@ -47,7 +47,10 @@
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label asp-for="LogoPath" class="form-label"></label>
-                                                <input asp-for="LogoPath" type="text" class="form-control fabric" placeholder="LogoPath">
+                                                <input type="file" asp-for="UploadImage" class="form-control" />
+                                                <div>
+                                                    <img src="@Model.LogoPath"  width="120" height="120"/>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -250,6 +253,6 @@
 
 @section Scripts {
     @{
-        <script asp-src-include="~/js/Profile.js"></script>
+    <script asp-src-include="~/js/Profile.js"></script>
     }
     }

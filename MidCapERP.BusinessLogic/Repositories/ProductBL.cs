@@ -101,10 +101,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CategoryId = x.CategoryId,
                                        ProductTitle = x.ProductTitle,
                                        ModelNo = x.ModelNo,
-                                       WidthNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Width))),
-                                       HeightNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Height))),
-                                       DepthNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Depth))),
-                                       DiameterNumeric = Convert.ToString(Math.Floor(Convert.ToDecimal(x.Diameter))),
+                                       WidthNumeric = Convert.ToString(Convert.ToDecimal(x.Width)),
+                                       HeightNumeric = Convert.ToString(Convert.ToDecimal(x.Height)),
+                                       DepthNumeric = Convert.ToString(Convert.ToDecimal(x.Depth)),
+                                       DiameterNumeric = Convert.ToString(Convert.ToDecimal(x.Diameter)),
                                        Width = x.Width,
                                        Height = x.Height,
                                        Depth = x.Depth,
@@ -400,7 +400,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         getProductById.Status = (int)ProductStatusEnum.UnPublished;
 
                     await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProducStatus Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductStatus Updated", ActivityLogStringConstant.Update, cancellationToken);
                 }
             }
             else
@@ -418,7 +418,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     UpdateData(getProductById);
                     getProductById.CostPrice = model.CostPrice;
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProducCost Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductCost Updated", ActivityLogStringConstant.Update, cancellationToken);
                     return _mapper.Map<ProductRequestDto>(data);
                 }
 
