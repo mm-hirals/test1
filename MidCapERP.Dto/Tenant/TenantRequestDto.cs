@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
 using MidCapERP.Dto.TenantSMTPDetail;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Tenant
 {
@@ -34,6 +35,10 @@ namespace MidCapERP.Dto.Tenant
         [Required]
         [DisplayName("Logo")]
         public string? LogoPath { get; set; }
+
+        [DisplayName("Photo Upload")]
+        [DataType(DataType.Upload)]
+        public IFormFile? UploadImage { get; set; }
 
         [Required]
         [DisplayName("Street Address1")]

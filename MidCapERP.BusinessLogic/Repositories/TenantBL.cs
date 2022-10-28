@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -15,12 +17,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
+        private readonly IFileStorageService _fileStorageService;
 
-        public TenantBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public TenantBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<TenantResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -46,10 +50,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<TenantRequestDto> UpdateTenant(TenantRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await TenantGetById(model.TenantId, cancellationToken);
+            MapToDbObject(model, ref oldData);
+            if (model.UploadImage != null)
+                oldData.LogoPath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.OrganizationLogo);
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
-            MapToDbObject(model, ref oldData);
+
             var data = await _unitOfWorkDA.TenantDA.UpdateTenant(model.TenantId, oldData, cancellationToken);
             return _mapper.Map<TenantRequestDto>(data);
         }
@@ -62,7 +69,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.FirstName = model.FirstName;
             oldData.EmailId = model.EmailId;
             oldData.PhoneNumber = model.PhoneNumber;
-            oldData.LogoPath = model.LogoPath;
             oldData.StreetAddress1 = model.StreetAddress1;
             oldData.StreetAddress2 = model.StreetAddress2;
             oldData.Landmark = model.Landmark;
