@@ -395,7 +395,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
             }
 
-            var responseOrder = _mapper.Map<OrderApiResponseDto>(data);
+            var responseOrder =  await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
             responseOrder.BillingAddressID = model.BillingAddressID;
             responseOrder.ShippingAddressID = model.ShippingAddressID;
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
