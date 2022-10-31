@@ -14,5 +14,6 @@
         RawMaterials = 2,
         Polish = 3,
         Fabrics = 4,
+        Customers = 5
     }
 }

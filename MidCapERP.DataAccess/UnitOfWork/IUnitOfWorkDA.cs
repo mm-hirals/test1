@@ -34,6 +34,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IOrderAddressDA OrderAddressDA { get; }
         ITenantSMTPDetailDA TenantSMTPDetailDA { get; }
         ITenantBankDetailDA TenantBankDetailDA { get; }
+        INotificationManagementDA NotificationManagementDA { get; }
 
         Task BeginTransactionAsync();
 
