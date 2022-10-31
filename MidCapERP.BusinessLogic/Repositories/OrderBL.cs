@@ -591,7 +591,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var order = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
             if (order != null)
             {
-                foreach (var item in order)
+                foreach (var item in order.ToList())
                     await _unitOfWorkDA.OrderAddressDA.DeleteOrderAddress(item.OrderAddressId, item, cancellationToken);
             }
             else
