@@ -45,15 +45,17 @@ UnitModel.onComplete = function () {
 }
 
 UnitModel.onDelete = function () {
-    tblUnit.ajax.reload();
+    tblUnit.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 UnitModel.onSuccess = function (xhr) {
-    tblUnit.ajax.reload();
+    tblUnit.ajax.reload(null, false);
     $("#divUnitModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 UnitModel.onFailed = function (xhr) {
-    tblUnit.ajax.reload();
+    tblUnit.ajax.reload(null, false);
     $("#divUnitModal").modal('hide');
 };

@@ -52,11 +52,13 @@ PolishModel.onComplete = function () {
 
 PolishModel.onDelete = function () {
     tblPolish.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 PolishModel.onSuccess = function (xhr) {
     tblPolish.ajax.reload(null, false);
     $("#divPolishModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 PolishModel.onFailed = function (xhr) {

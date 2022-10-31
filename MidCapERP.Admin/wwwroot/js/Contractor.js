@@ -42,11 +42,13 @@ ContractorModel.onComplete = function () {
 
 ContractorModel.onDelete = function () {
     tblContractor.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 ContractorModel.onSuccess = function (xhr) {
     tblContractor.ajax.reload(null, false);
     $("#divContractorModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 ContractorModel.onFailed = function (xhr) {

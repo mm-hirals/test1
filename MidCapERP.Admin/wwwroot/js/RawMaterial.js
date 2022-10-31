@@ -49,11 +49,13 @@ RawMaterialModel.onComplete = function () {
 
 RawMaterialModel.onDelete = function () {
     tblRawMaterial.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 RawMaterialModel.onSuccess = function (xhr) {
     tblRawMaterial.ajax.reload(null, false);
     $("#divRawMaterialModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 RawMaterialModel.onFailed = function (xhr) {

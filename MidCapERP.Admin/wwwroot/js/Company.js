@@ -45,15 +45,17 @@ CompanyModel.onComplete = function () {
 }
 
 CompanyModel.onDelete = function () {
-    tblCompany.ajax.reload();
+    tblCompany.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 CompanyModel.onSuccess = function (xhr) {
-    tblCompany.ajax.reload();
+    tblCompany.ajax.reload(null, false);
     $("#divCompanyModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 CompanyModel.onFailed = function (xhr) {
-    tblCompany.ajax.reload();
+    tblCompany.ajax.reload(null, false);
     $("#divCompanyModal").modal('hide');
 };

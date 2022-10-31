@@ -55,11 +55,13 @@ FabricModel.onComplete = function () {
 
 FabricModel.onDelete = function () {
     tblFabric.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 FabricModel.onSuccess = function (xhr) {
     tblFabric.ajax.reload(null, false);
     $("#divFabricModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 FabricModel.onFailed = function (xhr) {

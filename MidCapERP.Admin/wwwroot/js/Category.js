@@ -46,11 +46,13 @@ CategoryModel.onComplete = function () {
 
 CategoryModel.onDelete = function () {
     tblCategory.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 CategoryModel.onSuccess = function (xhr) {
     tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 CategoryModel.onFailed = function (xhr) {

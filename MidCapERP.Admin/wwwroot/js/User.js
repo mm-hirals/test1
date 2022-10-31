@@ -61,11 +61,13 @@ UserModel.onComplete = function () {
 
 UserModel.onDelete = function () {
     tblUser.ajax.reload(null, false);
+    toastr.error('Delete Data Successfully.');
 }
 
 UserModel.onSuccess = function (xhr) {
     tblUser.ajax.reload(null, false);
     $("#divUserModal").modal('hide');
+    toastr.success('Save Data Successfully.');
 };
 
 UserModel.onFailed = function (xhr) {
