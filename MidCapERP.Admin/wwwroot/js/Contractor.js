@@ -24,7 +24,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="ContractorModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateContractor" href="/Contractor/Update/' + o.contractorId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="ContractorModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Contractor/Delete/' + o.contractorId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a data-ajax-complete="ContractorModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Contractor/Delete/' + o.contractorId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -42,11 +42,13 @@ ContractorModel.onComplete = function () {
 
 ContractorModel.onDelete = function () {
     tblContractor.ajax.reload(null, false);
+    toastr.error('Data deleted successfully.');
 }
 
 ContractorModel.onSuccess = function (xhr) {
     tblContractor.ajax.reload(null, false);
     $("#divContractorModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 ContractorModel.onFailed = function (xhr) {

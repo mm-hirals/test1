@@ -20,7 +20,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductMainRequestDto> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
 
-        public Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
+        public Task<ProductForDetailsByModuleNoResponceDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
 
         public Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
 

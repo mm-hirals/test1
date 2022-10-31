@@ -4,21 +4,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
-using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.User;
-using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class UserController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IToastNotification _toastNotification;
 
-        public UserController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public UserController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
@@ -48,7 +44,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(UserRequestDto userRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UserBL.CreateUser(userRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -66,7 +61,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, UserRequestDto userRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UserBL.UpdateUser(Id, userRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -75,7 +69,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UserBL.DeleteUser(Id, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Deleted Successfully!");
             return RedirectToAction("Index");
         }
 

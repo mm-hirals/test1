@@ -1,6 +1,4 @@
 ﻿using MidCapERP.Dto.OrderSet;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace MidCapERP.Dto.Order
 {
@@ -20,25 +18,8 @@ namespace MidCapERP.Dto.Order
         public DateTime? DeliveryDate { get; set; }
         public string Comments { get; set; }
         public int Status { get; set; }
-
-        public List<OrderSetApiResponseDto> OrderSetApiResponseDto { get; set; }
-
-        [JsonIgnore]
-        public int CreatedBy { get; set; }
-
-        [JsonIgnore]
+        public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
-
-        [JsonIgnore]
-        public DateTime CreatedUTCDate { get; set; }
-
-        [JsonIgnore]
-        public int? UpdatedBy { get; set; }
-
-        [JsonIgnore]
-        public DateTime? UpdatedDate { get; set; }
-
-        [JsonIgnore]
-        public DateTime? UpdatedUTCDate { get; set; }
+        public List<OrderSetApiResponseDto> OrderSetApiResponseDto { get; set; }
     }
 }

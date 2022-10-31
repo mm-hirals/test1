@@ -2,7 +2,7 @@
 {
     public class ProductForDetailsByModuleNoResponceDto
     {
-        public ProductForDetailsByModuleNoResponceDto(long productId, int? categoryId, string productTitle, string modelNo, decimal? width, decimal? height, decimal? depth, decimal? diameter, decimal? usedFabric, bool isVisibleToWholesalers, decimal totalDaysToPrepare, string features, string comment, decimal costPrice, string qrImage, int subjectTypeId)
+        public ProductForDetailsByModuleNoResponceDto(long productId, int? categoryId, string productTitle, string modelNo, decimal? width, decimal? height, decimal? depth, decimal? diameter, decimal? usedFabric, bool isVisibleToWholesalers, decimal totalDaysToPrepare, string features, string comment, decimal costPrice, string qrImage, string productImage, int subjectTypeId)
         {
             ProductId = productId;
             CategoryId = categoryId;
@@ -19,6 +19,7 @@
             Comments = comment;
             CostPrice = costPrice;
             QRImage = qrImage;
+            ProductImage = productImage;
             SubjectTypeId = subjectTypeId;
         }
 
@@ -37,6 +38,7 @@
         public string Comments { get; set; }
         public decimal CostPrice { get; set; }
         public string QRImage { get; set; }
+        public string ProductImage { get; set; }
         public int SubjectTypeId { get; set; }
     }
 }

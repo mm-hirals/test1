@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Infrastructure.Constants;
+using MidCapERP.Core.Constants;
 using MidCapERP.Infrastructure.Identity.Models;
 
 namespace MidCapERP.Admin.Controllers

@@ -282,7 +282,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productSubjectTypeId);
+            var productImagesData = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(productData.ProductId, cancellationToken);
+            string productImage = null;
+            if (productImagesData != null)
+                if (!string.IsNullOrEmpty(productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath))
+                    productImage = "https://midcaperp.magnusminds.net/" + productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath;
+
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productImage, productSubjectTypeId);
         }
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
@@ -585,15 +591,22 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         #region API Methods
 
-        public async Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
+        public async Task<ProductForDetailsByModuleNoResponceDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken)
         {
             var productData = await GetProductById(Id, cancellationToken);
             if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product Not Found");
 
+            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-            return _mapper.Map<ProductRequestDto>(productData);
+            var productImagesData = await _unitOfWorkDA.ProductImageDA.GetAllByProductId(productData.ProductId, cancellationToken);
+            string productImage = null;
+            if (productImagesData != null)
+                if (!string.IsNullOrEmpty(productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath))
+                    productImage = "https://midcaperp.magnusminds.net/" + productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath;
+
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productImage, productSubjectTypeId);
         }
 
         public async Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
