@@ -181,9 +181,9 @@ $("#multiSelectProduct").click(function () {
                     $("body").append(a);
                     a[0].click();
                     $("body").remove(a);
+                    toastr.success("PDF is generated successfully.")
                 }
             }
-            toastr.success("PDF is generated successfully.")
         });
     }
     else {

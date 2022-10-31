@@ -312,6 +312,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             await DeleteProductMaterials(productMainRequestDto.ProductId, cancellationToken);
             await SaveProductMaterials(productMainRequestDto, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productMainRequestDto.ProductId, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
             await UpdateProductCost(productMainRequestDto, cancellationToken);
             return productMainRequestDto;
         }
@@ -553,7 +554,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
-                                }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
+                                }).OrderByDescending(p => p.CreatedDate).AsQueryable();
             var productData = new PagedList<ActivityLogsResponseDto>(dataResponse, dataTableFilterDto);
             return new JsonRepsonse<ActivityLogsResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
         }
@@ -728,7 +729,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             foreach (var item in productMaterialById)
             {
                 await _unitOfWorkDA.ProductMaterialDA.DeleteProductMaterial(item.ProductMaterialID, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), item.ProductMaterialID, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
             }
         }
 
@@ -740,7 +740,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), item.ProductId, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
         }
 
         private async Task<int> GetCategoryLookupId(CancellationToken cancellationToken)
