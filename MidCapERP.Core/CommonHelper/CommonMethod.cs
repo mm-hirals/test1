@@ -17,7 +17,9 @@ namespace MidCapERP.Core.CommonHelper
             await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
             await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
-                Headless = true
+                Headless = true,
+                Args = new string[] { "--no-sandbox" },
+                ExecutablePath = Path.Combine(Environment.CurrentDirectory, @".local-chromium\Win64-848005\chrome-win\chrome.exe")
             });
             await using var page = await browser.NewPageAsync();
             await page.EmulateMediaTypeAsync(MediaType.Screen);
