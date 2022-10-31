@@ -31,7 +31,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="UserModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateUser" href="/User/Update/' + o.userId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="UserModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/User/Delete/' + o.userId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a data-ajax-complete="UserModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/User/Delete/' + o.userId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -61,13 +61,13 @@ UserModel.onComplete = function () {
 
 UserModel.onDelete = function () {
     tblUser.ajax.reload(null, false);
-    toastr.error('Delete Data Successfully.');
+    toastr.error('Data deleted successfully.');
 }
 
 UserModel.onSuccess = function (xhr) {
     tblUser.ajax.reload(null, false);
     $("#divUserModal").modal('hide');
-    toastr.success('Save Data Successfully.');
+    toastr.success('Information saved successfully.');
 };
 
 UserModel.onFailed = function (xhr) {

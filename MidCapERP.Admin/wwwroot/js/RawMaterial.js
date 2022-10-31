@@ -27,7 +27,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="RawMaterialModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateRawMaterial" href="/RawMaterial/Update/' + o.rawMaterialId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="RawMaterialModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/RawMaterial/Delete/' + o.rawMaterialId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a data-ajax-complete="RawMaterialModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/RawMaterial/Delete/' + o.rawMaterialId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -49,13 +49,13 @@ RawMaterialModel.onComplete = function () {
 
 RawMaterialModel.onDelete = function () {
     tblRawMaterial.ajax.reload(null, false);
-    toastr.error('Delete Data Successfully.');
+    toastr.error('Data deleted successfully.');
 }
 
 RawMaterialModel.onSuccess = function (xhr) {
     tblRawMaterial.ajax.reload(null, false);
     $("#divRawMaterialModal").modal('hide');
-    toastr.success('Save Data Successfully.');
+    toastr.success('Information saved successfully.');
 };
 
 RawMaterialModel.onFailed = function (xhr) {
