@@ -8,6 +8,7 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Products</h4>
         <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectProduct">Print</a>
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkProductFilter"><i class='bx bx-plus me-1'></i>Filters</a>
             <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Create New</a>
         </div>
@@ -18,35 +19,37 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">Category Name</label>
-                        <input id="categoryName" type="text" class="form-control"/>
+                        <input id="categoryName" type="text" class="form-control" />
                     </div>
                 </div>
-                 <div class="col-md-3">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">Product Title</label>
-                        <input id="productTitle" type="text" class="form-control"/>
+                        <input id="productTitle" type="text" class="form-control" />
                     </div>
                 </div>
-                 <div class="col-md-3">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">Model No</label>
                         <input id="modelNo" type="text" class="form-control" />
                     </div>
                 </div>
                 <div class="col-md-3">
-                     <div class="form-group">
+                    <div class="form-group">
                         <label for="publishStatus" class="form-label">Status</label>
-                          <select id="publishStatus" data-val="true"  class="form-control form-select">
-                                <option>Select Status</option>
-                                <option value="1">Publish</option>
-                                <option value="0">UnPublish</option>
-                          </select>
-                      </div>
+                        <select id="publishStatus" data-val="true" class="form-control form-select">
+                            <option>Select Status</option>
+                            <option value="1">Publish</option>
+                            <option value="0">UnPublish</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
         <partial name="_ProductTable" />
         <div id="divUpdateProduct"></div>
+            <div id="sendSMSModal" class="modal fade" tabindex="-1">
+        </div>
     </div>
 </div>
 
@@ -55,6 +58,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/ProductTable.js" ></script>
+        <script asp-src-include="~/js/ProductTable.js"></script>
     }
 }

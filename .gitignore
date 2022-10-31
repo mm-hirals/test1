@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 /.editorconfig
 /MidCapERP.Admin/wwwroot/Files
+/MidCapERP.Admin/.local-chromium

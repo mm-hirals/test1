@@ -12,11 +12,12 @@
                 d.productId = $("#hdnProductId").val().trim()
             }
         },
+        "aaSorting": [[3, 'desc']],
         "columns": [
             { "data": "description", "name": "Description", "autoWidth": true },
             { "data": "action", "name": "Action", "autoWidth": true },
             { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
-            { "data": "createdDate", "name": "CreatedDate", "autoWidth": true }
+            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true }
         ]
     });
 });

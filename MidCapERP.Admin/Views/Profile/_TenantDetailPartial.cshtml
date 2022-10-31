@@ -220,12 +220,12 @@
                                             </div>
                                         </div>
                                         <div class="col-3">
-                                            <div class="custom-control custom-switch">
-                                                <label class="form-label">
-                                                    EnableSSL
-                                                </label>
-                                                <input asp-for="tenantSMTPDetailResponseDto.EnableSSL" type="checkbox" class="custom-control-input" id="isDefaultCheckTenant" data-val="true">
-                                                <label class="custom-control-label" for="isDefaultCheckTenant">Active</label>
+                                            <div class="form-group">
+                                                <label class="form-label">Enable SSL</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input asp-for="tenantSMTPDetailResponseDto.EnableSSL" type="checkbox" class="custom-control-input" id="isDefaultCheckTenant" data-val="true">
+                                                    <label class="custom-control-label" for="isDefaultCheckTenant">Active</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -255,4 +255,4 @@
     @{
     <script asp-src-include="~/js/Profile.js"></script>
     }
-}
+    }

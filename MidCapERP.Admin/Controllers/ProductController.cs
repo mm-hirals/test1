@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Product;
+using Razor.Templating.Core;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -220,6 +222,22 @@ namespace MidCapERP.Admin.Controllers
             catch (Exception)
             {
                 throw new Exception("Image not deleted");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PrintProductDetail(ProductPrintDto model, CancellationToken cancellationToken)
+        {
+            if (model != null && model.ProductList.Any())
+            {
+                var productList = await _unitOfWorkBL.ProductBL.PrintProductDetail(model.ProductList, cancellationToken);
+                var renderedString = await RazorTemplateEngine.RenderAsync("~/Views/Product/ProductQRPrint.cshtml", productList);
+                var pdfContent = await CommonMethod.GeneratePDF(renderedString);
+                return File(pdfContent, "application/pdf", "converted.pdf");
+            }
+            else
+            {
+                throw new Exception("No Product Found!");
             }
         }
 
