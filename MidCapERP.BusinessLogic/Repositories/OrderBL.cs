@@ -346,8 +346,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             saveOrder.CreatedBy = allUsers.FirstOrDefault(x => x.UserId == _currentUser.UserId).FullName;
             saveOrder.CreatedDate = saveOrder.CreatedDate;
-
-            return _mapper.Map<OrderApiResponseDto>(saveOrder);
+            
+            return await GetOrderDetailByOrderIdAPI(saveOrder.OrderId, cancellationToken);
         }
 
         public async Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
