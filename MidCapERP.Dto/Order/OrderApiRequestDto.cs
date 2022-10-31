@@ -46,10 +46,8 @@ namespace MidCapERP.Dto.Order
 
         public List<OrderSetRequestDto> OrderSetRequestDto { get; set; }
 
-        [JsonIgnore]
-        public int CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
-        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
 
         [JsonIgnore]

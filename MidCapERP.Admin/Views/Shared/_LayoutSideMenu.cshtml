@@ -27,7 +27,7 @@
             </button>
 
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="page-header-user-dropdown" data-popper-placement="bottom-end">
-                <h6 class="dropdown-header">Welcome @_currentUser.Name!</h6>
+                <h6 class="dropdown-header">Welcome @_currentUser.FullName!</h6>
                 <a class="dropdown-item" href="/Profile/Index"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
                 <a class="dropdown-item" href="/Account/Logout"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
             </div>
@@ -66,7 +66,7 @@
                 <li class="nav-item submenu-item">
                     <a href="javascipt:void(0)" class="nav_link submenu-link">
                         <i class="bx bx-user-circle nav_icon"></i>
-                        <span class="nav_name">Customers</span>
+                        <span class="nav_name">CRM</span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
@@ -84,7 +84,7 @@
                 <li class="nav-item submenu-item">
                     <a href="javascipt:void(0)" class="nav_link submenu-link">
                         <i class="bx bx-cog nav_icon"></i>
-                        <span class="nav_name">Master Settings</span>
+                        <span class="nav_name">Masters</span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
@@ -117,22 +117,12 @@
                                 Polish
                             </a>
                         </li>
-                        @*                        <li class="nav-item">
-                        <a class="nav_link" href="/FrameType">
-                        Frame Types
-                        </a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav_link" href="/Frame">
-                        Frames
-                        </a>
-                        </li>*@
                     </ul>
                 </li>
                 <li class="nav-item submenu-item">
                     <a href="javascipt:void(0)" class="nav_link submenu-link">
                         <i class="bx bxs-user-account nav_icon"></i>
-                        <span class="nav_name">Users Management</span>
+                        <span class="nav_name">Users &amp; Roles</span>
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
@@ -152,7 +142,7 @@
         <div class="nav-item">
             <a href="/Account/Logout" class="nav_link">
                 <i class="bx bx-log-out nav_icon"></i>
-                <span class="nav_name">SignOut</span>
+                <span class="nav_name">Signout</span>
             </a>
         </div>
     </nav>

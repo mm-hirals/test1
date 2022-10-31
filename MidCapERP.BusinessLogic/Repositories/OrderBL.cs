@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MailKit.Search;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -237,6 +238,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
                 orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
+                var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+                orderApiResponseDto.CreatedBy = allUsers.FirstOrDefault(x => x.UserId == orderById.CreatedBy).FullName;
+                orderApiResponseDto.CreatedDate = orderById.CreatedDate;
 
                 //Get Customer Address for Order
                 var orderAddressData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
@@ -281,7 +285,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  OrderSetId = x.OrderSetId,
                                                  SubjectTypeId = x.SubjectTypeId,
                                                  SubjectId = x.SubjectId,
-                                                 ProductImage = x.ProductImage,
+                                                 ProductImage = string.IsNullOrEmpty(x.ProductImage) ? null : "https://midcaperp.magnusminds.net/" + x.ProductImage,
                                                  Width = x.Width,
                                                  Height = x.Height,
                                                  Depth = x.Depth,
@@ -339,6 +343,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.BillingAddressID, "Billing", true, cancellationToken);
             await SaveOrderAddress(saveOrder.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", true, cancellationToken);
 
+            var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            saveOrder.CreatedBy = allUsers.FirstOrDefault(x => x.UserId == _currentUser.UserId).FullName;
+            saveOrder.CreatedDate = saveOrder.CreatedDate;
+
             return _mapper.Map<OrderApiResponseDto>(saveOrder);
         }
 
@@ -390,6 +398,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             var responseOrder = _mapper.Map<OrderApiResponseDto>(data);
             responseOrder.BillingAddressID = model.BillingAddressID;
             responseOrder.ShippingAddressID = model.ShippingAddressID;
+            var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            responseOrder.CreatedBy = allUsers.FirstOrDefault(x => x.UserId == data.CreatedBy).FullName;
+            responseOrder.CreatedDate = data.CreatedDate;
             return responseOrder;
         }
 
@@ -417,9 +428,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderData.GSTTaxAmount = orderById.GSTTaxAmount;
             orderData.AdvanceAmount = orderById.AdvanceAmount;
             orderData.PayableAmount = ((orderById.GrossTotal - orderById.Discount) + orderById.GSTTaxAmount) - orderById.AdvanceAmount;
-            orderData.UpdatedBy = orderById.UpdatedBy;
-            orderData.UpdatedDate = orderById.UpdatedDate;
-            orderData.UpdatedUTCDate = orderById.UpdatedUTCDate;
             return orderData;
         }
 
@@ -678,7 +686,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return objOrderAddressesApiRequestDto;
             }
 
-            var customerAddressData = customerAddresses.FirstOrDefault(x => x.CustomerId == customerId && x.CustomerAddressId == customerAddressId);
+            var customerAddressData = await _unitOfWorkDA.CustomerAddressesDA.GetById(customerAddressId, cancellationToken);
             if (customerAddressData == null)
             {
                 throw new Exception("Customer Address not found");

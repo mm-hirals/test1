@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-using MidCapERP.DataEntities.Models;
-using MidCapERP.Dto.ActivityLogs;
+﻿using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.OrderCalculation;
@@ -23,7 +20,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<ProductMainRequestDto> GetMaterialByProductId(Int64 Id, CancellationToken cancellationToken);
 
-        public Task<ProductRequestDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
+        public Task<ProductForDetailsByModuleNoResponceDto> GetByIdAPI(Int64 Id, CancellationToken cancellationToken);
 
         public Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelNo, CancellationToken cancellation);
 
@@ -58,7 +55,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken);
 
         public Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterProductActivityData(ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
- 
+
         public Task<int> GetProductSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken);
