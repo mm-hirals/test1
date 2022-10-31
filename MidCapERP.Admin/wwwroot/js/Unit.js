@@ -24,7 +24,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="UnitModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateUnit" href="/Unit/Update/' + o.lookupValueId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="UnitModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Unit/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a data-ajax-complete="UnitModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-confirm="Are you sure you want to delete?"  data-ajax-mode="replace" href="/Unit/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -45,15 +45,17 @@ UnitModel.onComplete = function () {
 }
 
 UnitModel.onDelete = function () {
-    tblUnit.ajax.reload();
+    tblUnit.ajax.reload(null, false);
+    toastr.error('Data deleted successfully.');
 }
 
 UnitModel.onSuccess = function (xhr) {
-    tblUnit.ajax.reload();
+    tblUnit.ajax.reload(null, false);
     $("#divUnitModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 UnitModel.onFailed = function (xhr) {
-    tblUnit.ajax.reload();
+    tblUnit.ajax.reload(null, false);
     $("#divUnitModal").modal('hide');
 };

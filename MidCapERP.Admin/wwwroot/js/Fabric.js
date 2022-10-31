@@ -32,7 +32,7 @@ $(function () {
                 "mRender": function (o) {
                     console.log(o);
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="FabricModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateFabric" href="/Fabric/Update/' + o.fabricId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="FabricModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Fabric/Delete/' + o.fabricId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a data-ajax-complete="FabricModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Fabric/Delete/' + o.fabricId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -55,11 +55,13 @@ FabricModel.onComplete = function () {
 
 FabricModel.onDelete = function () {
     tblFabric.ajax.reload(null, false);
+    toastr.error('Data deleted successfully.');
 }
 
 FabricModel.onSuccess = function (xhr) {
     tblFabric.ajax.reload(null, false);
     $("#divFabricModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 FabricModel.onFailed = function (xhr) {
