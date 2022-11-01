@@ -98,7 +98,7 @@
                                                                 Discount(%)
                                                             </label>
                                                             <div class="order-final-price fw-bold d-flex">
-                                                                <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" id="@orderSetItem.OrderSetItemId">&nbsp;
+                                                                <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" min="0" max="100" id="@orderSetItem.OrderSetItemId">&nbsp;
                                                                 <button type="button" class="saveDiscount btn btn-icon btn-outline-primary" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-save"></i></button>
                                                             </div>
                                                         </div>
