@@ -69,11 +69,13 @@ CustomerAddressesModel.onComplete = function () {
 
 CustomerAddressesModel.onDelete = function () {
     tblCustomerAddresses.ajax.reload(null, false);
+    toastr.error('Data deleted successfully.');
 }
 
 CustomerAddressesModel.onSuccess = function (xhr) {
     tblCustomerAddresses.ajax.reload(null, false);
     $("#divCustomerAddressModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 CustomerAddressesModel.onFailed = function (xhr) {
