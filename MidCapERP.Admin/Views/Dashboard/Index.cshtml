@@ -1,23 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
-@*<div>
-    @if (_currentUser != null)
-    {
-    <text>
-    @_currentUser.Name
-    @_currentUser.EmailAddress
-    </text>
-    }
 
-    <h1 class="display-4">Welcome</h1>
-</div>*@
 <div class="row">
     <div class="col-md-3">
         <a asp-action="Index" asp-controller="Order">
             <div class="dashboard-card d-flex justify-content-between p-3 rounded align-items-start">
                 <div>
-                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Total Order</h6>
+                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Orders</h6>
                     <h2 class="mb-0 text-white pt-1">@ViewBag.OrderCount</h2>
                 </div>
                 <div>
@@ -31,7 +21,7 @@
         <a asp-action="Index" asp-controller="Customer">
             <div class="dashboard-card d-flex justify-content-between p-3 rounded align-items-start">
                 <div>
-                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Total Customer</h6>
+                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Customers</h6>
                     <h2 class="mb-0 text-white pt-1">@ViewBag.CustomerCount</h2>
                 </div>
                 <div>
@@ -42,11 +32,11 @@
     </div>
 
     <div class="col-md-3">
-        <a asp-action="Index" asp-controller="Category">
+        <a asp-action="Index" asp-controller="Architect">
             <div class="dashboard-card d-flex justify-content-between p-3 rounded align-items-start">
                 <div>
-                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Categories</h6>
-                    <h2 class="mb-0 text-white pt-1">@ViewBag.CategoryCount</h2>
+                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Architects</h6>
+                    <h2 class="mb-0 text-white pt-1">@ViewBag.ArchitectCount</h2>
                 </div>
                 <div>
                     <i class='bx bx-grid-alt dashboard-icon'></i>
@@ -59,7 +49,7 @@
         <a asp-action="Index" asp-controller="Product">
             <div class="dashboard-card d-flex justify-content-between p-3 rounded align-items-start">
                 <div>
-                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Total Products</h6>
+                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Products</h6>
                     <h2 class="mb-0 text-white pt-1">@ViewBag.ProductCount</h2>
                 </div>
                 <div>

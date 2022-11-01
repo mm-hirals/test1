@@ -473,30 +473,43 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (productData != null)
                 {
                     var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-                    var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetById(productData.CategoryId, cancellationToken);
-                    if (lookupValueData.LookupValueName == "Sofa / Corner / Lounger")
+                    if (tenantData.TenantId == 1)
                     {
-                        decimal costPerCubic = productData.CostPrice / Convert.ToDecimal(productData.Width);
-                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width);
-                        decimal newCostPrice = totalCubic * costPerCubic;
-                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
-                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
-                        orderCalculationData.TotalAmount = totalPrice;
-                    }
-                    else if (lookupValueData.LookupValueName == "Marble")
-                    {
-                        decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height));
-                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height);
-                        decimal newCostPrice = totalCubic * costPerCubic;
-                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
-                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
-                        orderCalculationData.TotalAmount = totalPrice;
+                        var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetById(productData.CategoryId, cancellationToken);
+                        if (lookupValueData.LookupValueName == "Sofa / Corner / Lounger")
+                        {
+                            decimal costPerCubic = productData.CostPrice / Convert.ToDecimal(productData.Width);
+                            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width);
+                            decimal newCostPrice = totalCubic * costPerCubic;
+                            newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                            decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                            decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                            orderCalculationData.TotalAmount = totalPrice;
+                        }
+                        else if (lookupValueData.LookupValueName == "Marble")
+                        {
+                            decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height));
+                            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height);
+                            decimal newCostPrice = totalCubic * costPerCubic;
+                            newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                            decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                            decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                            orderCalculationData.TotalAmount = totalPrice;
+                        }
+                        else
+                        {
+                            orderCalculationData.TotalAmount = orderCalculationApiRequestDto.TotalAmount;
+                        }
                     }
                     else
                     {
-                        orderCalculationData.TotalAmount = orderCalculationApiRequestDto.TotalAmount;
+                        decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height) * Convert.ToDecimal(productData.Depth));
+                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
+                        decimal newCostPrice = totalCubic * costPerCubic;
+                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                        orderCalculationData.TotalAmount = totalPrice;
                     }
                     orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
                     orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
@@ -527,8 +540,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken)
         {
+            var subjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
-            data = data.Where(p => p.SubjectId == productId);
+            data = data.Where(p => p.SubjectId == productId && p.SubjectTypeId == subjectTypeId);
             var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var dataResponse = (from x in data
                                 join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }

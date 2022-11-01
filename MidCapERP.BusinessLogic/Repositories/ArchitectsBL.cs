@@ -40,7 +40,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterArchitectsData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
+            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
             var architectFilteredData = FilterArchitectData(dataTableFilterDto, architectData);
             var architectGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(architectFilteredData).AsQueryable(), dataTableFilterDto);
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, architectGridData.TotalCount, architectGridData.TotalCount, architectGridData);
@@ -61,7 +61,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             try
             {
                 architectToInsert.RefferedBy = 0;
-                architectToInsert.CustomerTypeId = (int)ArchitectTypeEnum.Architect;
+                architectToInsert.CustomerTypeId = (int)CustomerTypeEnum.Architect;
                 architectToInsert.IsDeleted = false;
                 architectToInsert.TenantId = _currentUser.TenantId;
                 architectToInsert.CreatedBy = _currentUser.UserId;
