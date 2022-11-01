@@ -82,7 +82,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="UploadImage" class="form-label"></label>
-                                <input asp-for="UploadImage" class="form-control" type="file" />
+                                <input asp-for="UploadImage" class="form-control" type="file" accept="image/png, image/jpeg, image/jpg"/>
                                 @if (action == "Update")
                                 {
                                     <input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
