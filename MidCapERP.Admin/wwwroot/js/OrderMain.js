@@ -1,38 +1,32 @@
 ﻿$(document).ready(function () {
     $("#divOrderInfo").load('/Order/GetOrderBasicDetail' + "?OrderId=" + $("#hdnOrderId").val());
     $("#divOrderSetDetailPartial").load('/Order/GetOrderSetDetailData' + "?OrderId=" + $("#hdnOrderId").val());
-
-    //if ($("#hdnOrderId").val() > 0) {
-    //    $("#divOrderSetDetailPartial").load('/Order/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
-    //    $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-    //    $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
-    //    $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-    //    $("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
-    //}
 });
 
 $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
     var tabId = $(e.target).attr("id")
-    if (tabId == "nav-images-tab") {
-        $("#divOrderImagePartial").load();
-        //$("#divOrderImagePartial").load('/Order/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-    } else if (tabId == "nav-activity-tab") {
+    if (tabId == "nav-activity-tab") {
         $("#divOrderActivityPartial").load();
-        //$("#divOrderActivityPartial").load('/Order/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
     }
 });
 
 $(document).delegate(".saveDiscount", "click", function (e) {
-    var data = {
-        DiscountPrice: $(this).parent().find("input").val(),
-        OrderSetItemId: $(this).attr('id')
-    };
-    $.ajax({
-        url: "/Order/SaveDiscount",
-        type: "POST",
-        data: data,
-        success: function (response) {
-            $('#divOrderSetDetailPartial').html(response);
-        }
-    });
+    var discount = $(this).parent().find("input").val();
+    if (discount >= 0 && discount <= 100) {
+        var data = {
+            DiscountPrice: discount,
+            OrderSetItemId: $(this).attr('id')
+        };
+        $.ajax({
+            url: "/Order/SaveDiscount",
+            type: "POST",
+            data: data,
+            success: function (response) {
+                $('#divOrderSetDetailPartial').html(response);
+                toastr.success("Discount price updated successfully!");
+            }
+        });
+    } else {
+        toastr.error("Please enter discount between 0-100");
+    }
 });

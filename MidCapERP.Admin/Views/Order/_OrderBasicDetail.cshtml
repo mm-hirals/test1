@@ -23,7 +23,11 @@
                 <div class="col-md-2">
                     <div class="product-info--item">
                         <div class="form-group">
-                            <label class="form-label fw-bold">Order Status</label><br />
+                            <span class="form-label fw-bold">Salesman Name:</span>
+                            <span class="form-label">@Model.CreatedByName</span><br />
+                            <span class="form-label fw-bold">Created Date:</span>
+                            <span class="form-label">@Model.CreatedDateFormat</span><br />
+                            <label class="form-label fw-bold">Order Status:</label>
                             @if (@Model.Status == (int)OrderStatusEnum.Inquiry)
                             {
                                 <span class="form-label badge bg-warning">Inquiry</span>
