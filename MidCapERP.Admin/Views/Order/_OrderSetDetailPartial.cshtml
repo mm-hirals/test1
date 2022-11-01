@@ -116,20 +116,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="product-order--info">
-                                                    <label for="" class="form-label mb-1 fs-12">
-                                                        Comment
-                                                    </label>
-                                                    <div class="form-value">
-                                                        @orderSetItem.Comment
+                                        @if(orderSetItem.Comment != String.Empty)
+                                        {
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="product-order--info">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Comment
+                                                        </label>
+                                                        <div class="form-value">
+                                                            @orderSetItem.Comment
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
                                     </div>
-
                                 </div>
                             }
                         </div>
