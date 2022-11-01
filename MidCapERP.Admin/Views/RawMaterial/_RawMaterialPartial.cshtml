@@ -52,9 +52,11 @@
                                 @if (action == "Update")
                                 {
                                     <input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
+                                    @if(Model.ImagePath != null){
                                     <div>
                                         <img src="@Model.ImagePath" width="150" height="150">
                                     </div>
+                                    }
                                 }
                                 <span asp-validation-for="UploadImage" class="text-danger"></span>
                             </div>
