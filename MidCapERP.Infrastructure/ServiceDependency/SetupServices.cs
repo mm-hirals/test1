@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MidCapERP.BusinessLogic.Extention;
+using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.DataAccess.Extention;
 using MidCapERP.Dto;
@@ -23,6 +24,7 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.Configure<TokenConfiguration>(configuration.GetSection("token"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<CurrentUser>();
+            services.AddScoped<CommonMethod>();
             services.AddWkhtmltopdf("wkhtmltopdf");
             services.SetAuthorization(configuration, AuthenticationScheme);
             services.SetupUnitOfWorkDA();
