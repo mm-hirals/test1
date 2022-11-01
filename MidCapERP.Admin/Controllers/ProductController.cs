@@ -135,6 +135,10 @@ namespace MidCapERP.Admin.Controllers
                 await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto, cancellationToken);
                 return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
             }
+            else
+            {
+                await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto, cancellationToken);
+            }
 
             throw new Exception("Please Add Material");
         }
