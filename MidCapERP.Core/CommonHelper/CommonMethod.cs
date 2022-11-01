@@ -20,6 +20,17 @@ namespace MidCapERP.Core.CommonHelper
 
         public byte[] GeneratePDF(string html)
         {
+            var options = new ConvertOptions
+            {
+                PageMargins = new Wkhtmltopdf.NetCore.Options.Margins()
+                {
+                    Top = 6,
+                    Right = 4,
+                    Left = 4,
+                    Bottom = 6
+                }
+            };
+            _generatePdf.SetConvertOptions(options);
             return _generatePdf.GetPDF(html);
         }
     }
