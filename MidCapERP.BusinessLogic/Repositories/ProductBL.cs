@@ -586,18 +586,23 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<List<ProductResponseDto>> PrintProductDetail(List<long> ProductList, CancellationToken cancellationToken)
         {
-            ProductResponseDto productResponseDto = new ProductResponseDto();
             List<ProductResponseDto> productResponseList = new List<ProductResponseDto>();
-
+            var path = _configuration["AppSettings:HostURL"];
             // Get Product data from ProductId
             foreach (var item in ProductList)
             {
+                ProductResponseDto productResponseDto = new ProductResponseDto();
                 var getProductById = await GetProductById(item, cancellationToken);
                 var categoryName = await _unitOfWorkDA.LookupValuesDA.GetById(getProductById.CategoryId, cancellationToken);
+                
                 productResponseDto = _mapper.Map<ProductResponseDto>(getProductById);
                 productResponseDto.CategoryName = categoryName.LookupValueName;
-                var path = _configuration["AppSettings:HostURL"] + getProductById.QRImage;
-                productResponseDto.QRImage = path;
+                productResponseDto.QRImage = path + getProductById.QRImage;
+                
+                var tenantLogo = await _unitOfWorkDA.TenantDA.GetById(getProductById.TenantId, cancellationToken);
+                if (tenantLogo != null && !string.IsNullOrEmpty(tenantLogo.LogoPath))
+                    productResponseDto.TenantLogo = path + tenantLogo.LogoPath;
+
                 productResponseList.Add(productResponseDto);
             }
             return productResponseList;

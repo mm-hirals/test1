@@ -55,7 +55,7 @@ namespace MidCapERP.Dto.Product
         [DisplayName("Last Modified On")]
         public string UpdatedDateFormat => UpdatedDate != null && UpdatedDate.HasValue ? UpdatedDate.Value.ToLongDateString() : CreatedDate.ToLongDateString();
 
-        public DateTime? UpdatedUTCDate { get; set; }
+        public string TenantLogo { get; set; }
 
         /// <summary>
         /// Remarks : Do not change the method Name or Properties. Check the PagedList.cs to get referance of the method
