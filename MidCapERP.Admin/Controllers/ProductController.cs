@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
-using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Product;
 using Razor.Templating.Core;
+using Wkhtmltopdf.NetCore;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -15,11 +15,13 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
         private readonly CurrentUser _currentUser;
+        private readonly IGeneratePdf _generatePdf;
 
-        public ProductController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public ProductController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer, IGeneratePdf generatePdf) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _currentUser = currentUser;
+            _generatePdf = generatePdf;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
@@ -232,8 +234,7 @@ namespace MidCapERP.Admin.Controllers
             {
                 var productList = await _unitOfWorkBL.ProductBL.PrintProductDetail(model.ProductList, cancellationToken);
                 var renderedString = await RazorTemplateEngine.RenderAsync("~/Views/Product/ProductQRPrint.cshtml", productList);
-                var pdfContent = await CommonMethod.GeneratePDF(renderedString);
-                return File(pdfContent, "application/pdf", "converted.pdf");
+                return File(_generatePdf.GetPDF(renderedString.ToString()), "application/pdf", "LabResult");
             }
             else
             {
