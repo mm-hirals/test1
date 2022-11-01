@@ -51,7 +51,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="ArchitectAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateArchitectAddresses" href="/Architect/UpdateArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="ArchitectAddressesModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Architect/DeleteArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-trash"></i></a></div>'; 
+                        '<a data-ajax-complete="ArchitectAddressesModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Architect/DeleteArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -69,11 +69,13 @@ ArchitectAddressesModel.onComplete = function () {
 
 ArchitectAddressesModel.onDelete = function () {
     tblArchitectAddresses.ajax.reload(null, false);
+    toastr.error('Data deleted successfully.');
 }
 
 ArchitectAddressesModel.onSuccess = function (xhr) {
     tblArchitectAddresses.ajax.reload(null, false);
     $("#divArchitectAddressModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 ArchitectAddressesModel.onFailed = function (xhr) {
