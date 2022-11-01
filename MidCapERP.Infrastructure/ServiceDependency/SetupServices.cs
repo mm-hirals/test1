@@ -11,6 +11,7 @@ using MidCapERP.Infrastructure.Identity.Authorization;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
 using System.Text;
+using Wkhtmltopdf.NetCore;
 using static MidCapERP.Core.Constants.ApplicationIdentityConstants;
 
 namespace MidCapERP.Infrastructure.ServiceDependency
@@ -22,6 +23,7 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.Configure<TokenConfiguration>(configuration.GetSection("token"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<CurrentUser>();
+            services.AddWkhtmltopdf("wkhtmltopdf");
             services.SetAuthorization(configuration, AuthenticationScheme);
             services.SetupUnitOfWorkDA();
             services.SetupUnitOfWorkBL();
