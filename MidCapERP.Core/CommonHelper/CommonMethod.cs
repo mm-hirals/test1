@@ -1,5 +1,4 @@
 ﻿using PuppeteerSharp;
-using PuppeteerSharp.Media;
 
 namespace MidCapERP.Core.CommonHelper
 {
@@ -14,23 +13,44 @@ namespace MidCapERP.Core.CommonHelper
 
         public static async Task<Stream> GeneratePDF(string html)
         {
-            await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
-            await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            var fetcher = new BrowserFetcher(new BrowserFetcherOptions()
+            {
+                Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Puppeteer")
+            });
+
+            await fetcher.DownloadAsync(BrowserFetcher.DefaultRevision);
+
+            var path = fetcher.GetExecutablePath(BrowserFetcher.DefaultRevision);
+
+            var options = new LaunchOptions()
             {
                 Headless = true,
-                Args = new string[] { "--no-sandbox" },
-                ExecutablePath = Path.Combine(Environment.CurrentDirectory, @".local-chromium\Win64-848005\chrome-win\chrome.exe")
-            });
-            await using var page = await browser.NewPageAsync();
-            await page.EmulateMediaTypeAsync(MediaType.Screen);
-            var renderedString = html;
-            await page.SetContentAsync(renderedString.ToString());
-            var pdfContent = await page.PdfStreamAsync(new PdfOptions
+                ExecutablePath = path
+            };
+
+            using (var browser = await Puppeteer.LaunchAsync(options))
             {
-                Format = PaperFormat.A4,
-                PrintBackground = true
-            });
-            return pdfContent;
+                var page = await browser.NewPageAsync();
+                await page.SetContentAsync(html);
+                return await page.PdfStreamAsync();
+            }
+            //await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+            //await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            //{
+            //    Headless = true,
+            //    Args = new string[] { "--no-sandbox" },
+            //    ExecutablePath = Path.Combine(Environment.CurrentDirectory, @".local-chromium\Win64-848005\chrome-win\chrome.exe")
+            //});
+            //await using var page = await browser.NewPageAsync();
+            //await page.EmulateMediaTypeAsync(MediaType.Screen);
+            //var renderedString = html;
+            //await page.SetContentAsync(renderedString.ToString());
+            //var pdfContent = await page.PdfStreamAsync(new PdfOptions
+            //{
+            //    Format = PaperFormat.A4,
+            //    PrintBackground = true
+            //});
+            //return pdfContent;
         }
     }
 }
