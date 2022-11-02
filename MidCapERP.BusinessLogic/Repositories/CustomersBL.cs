@@ -114,7 +114,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo) || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
+            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
             return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 
