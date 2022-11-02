@@ -4,20 +4,16 @@ using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Company;
-using MidCapERP.Dto.DataGrid;
-using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CompanyController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IToastNotification _toastNotification;
 
-        public CompanyController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CompanyController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Company.View)]
@@ -46,7 +42,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CompanyRequestDto lookupRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CompanyBL.CreateCompany(lookupRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!" + _localizer["hi"]);
             return RedirectToAction("Index");
         }
 
@@ -63,7 +58,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(int Id, CompanyRequestDto companyRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CompanyBL.UpdateCompany(Id, companyRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Index");
         }
 

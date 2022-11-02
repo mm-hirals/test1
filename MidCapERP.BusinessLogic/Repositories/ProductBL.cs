@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
@@ -32,8 +34,10 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly IFileStorageService _fileStorageService;
         private readonly IQRCodeService _iQRCodeService;
         private readonly IActivityLogsService _activityLogsService;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IConfiguration _configuration;
 
-        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService)
+        public ProductBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IActivityLogsService activityLogsService, IHostingEnvironment hostingEnvironment, IConfiguration configuration)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -41,6 +45,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             _fileStorageService = fileStorageService;
             _iQRCodeService = iQRCodeService;
             _activityLogsService = activityLogsService;
+            this._hostingEnvironment = hostingEnvironment;
+            _configuration = configuration;
         }
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -312,6 +318,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             await DeleteProductMaterials(productMainRequestDto.ProductId, cancellationToken);
             await SaveProductMaterials(productMainRequestDto, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productMainRequestDto.ProductId, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
             await UpdateProductCost(productMainRequestDto, cancellationToken);
             return productMainRequestDto;
         }
@@ -466,30 +473,43 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (productData != null)
                 {
                     var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
-                    var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetById(productData.CategoryId, cancellationToken);
-                    if (lookupValueData.LookupValueName == "Sofa / Corner / Lounger")
+                    if (tenantData.TenantId == 1)
                     {
-                        decimal costPerCubic = productData.CostPrice / Convert.ToDecimal(productData.Width);
-                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width);
-                        decimal newCostPrice = totalCubic * costPerCubic;
-                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
-                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
-                        orderCalculationData.TotalAmount = totalPrice;
-                    }
-                    else if (lookupValueData.LookupValueName == "Marble")
-                    {
-                        decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height));
-                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height);
-                        decimal newCostPrice = totalCubic * costPerCubic;
-                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
-                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
-                        orderCalculationData.TotalAmount = totalPrice;
+                        var lookupValueData = await _unitOfWorkDA.LookupValuesDA.GetById(productData.CategoryId, cancellationToken);
+                        if (lookupValueData.LookupValueName == "Sofa / Corner / Lounger")
+                        {
+                            decimal costPerCubic = productData.CostPrice / Convert.ToDecimal(productData.Width);
+                            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width);
+                            decimal newCostPrice = totalCubic * costPerCubic;
+                            newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                            decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                            decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                            orderCalculationData.TotalAmount = totalPrice;
+                        }
+                        else if (lookupValueData.LookupValueName == "Marble")
+                        {
+                            decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height));
+                            decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height);
+                            decimal newCostPrice = totalCubic * costPerCubic;
+                            newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                            decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                            decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                            orderCalculationData.TotalAmount = totalPrice;
+                        }
+                        else
+                        {
+                            orderCalculationData.TotalAmount = orderCalculationApiRequestDto.TotalAmount;
+                        }
                     }
                     else
                     {
-                        orderCalculationData.TotalAmount = orderCalculationApiRequestDto.TotalAmount;
+                        decimal costPerCubic = productData.CostPrice / (Convert.ToDecimal(productData.Width) * Convert.ToDecimal(productData.Height) * Convert.ToDecimal(productData.Depth));
+                        decimal totalCubic = Convert.ToDecimal(orderCalculationApiRequestDto.Width * orderCalculationApiRequestDto.Height * orderCalculationApiRequestDto.Depth);
+                        decimal newCostPrice = totalCubic * costPerCubic;
+                        newCostPrice = CommonMethod.GetCalculatedPrice(Math.Round(newCostPrice), 0, tenantData.AmountRoundMultiple);
+                        decimal retailerPrice = CommonMethod.GetCalculatedPrice(newCostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                        decimal totalPrice = Math.Round(Math.Round(retailerPrice * orderCalculationApiRequestDto.Quantity, 2));
+                        orderCalculationData.TotalAmount = totalPrice;
                     }
                     orderCalculationData.SubjectId = orderCalculationApiRequestDto.SubjectId;
                     orderCalculationData.SubjectTypeId = orderCalculationApiRequestDto.SubjectTypeId;
@@ -520,8 +540,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<ActivityLogsResponseDto>> GetProductActivityByProductId(Int64 productId, CancellationToken cancellationToken)
         {
+            var subjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
-            data = data.Where(p => p.SubjectId == productId);
+            data = data.Where(p => p.SubjectId == productId && p.SubjectTypeId == subjectTypeId);
             var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var dataResponse = (from x in data
                                 join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }
@@ -533,7 +554,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
-
                                 }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
 
             return dataResponse;
@@ -554,8 +574,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                     CreatedByName = y.FirstName + " " + y.LastName,
                                     CreatedDate = x.CreatedDate,
                                     ActivityLogID = x.ActivityLogID,
-
-                                }).OrderByDescending(p => p.ActivityLogID).AsQueryable();
+                                }).OrderByDescending(p => p.CreatedDate).AsQueryable();
             var productData = new PagedList<ActivityLogsResponseDto>(dataResponse, dataTableFilterDto);
             return new JsonRepsonse<ActivityLogsResponseDto>(dataTableFilterDto.Draw, productData.TotalCount, productData.TotalCount, productData);
         }
@@ -563,6 +582,30 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<int> GetFabricSubjectTypeId(CancellationToken cancellationToken)
         {
             return await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
+        }
+
+        public async Task<List<ProductResponseDto>> PrintProductDetail(List<long> ProductList, CancellationToken cancellationToken)
+        {
+            List<ProductResponseDto> productResponseList = new List<ProductResponseDto>();
+            var path = _configuration["AppSettings:HostURL"];
+            // Get Product data from ProductId
+            foreach (var item in ProductList)
+            {
+                ProductResponseDto productResponseDto = new ProductResponseDto();
+                var getProductById = await GetProductById(item, cancellationToken);
+                var categoryName = await _unitOfWorkDA.LookupValuesDA.GetById(getProductById.CategoryId, cancellationToken);
+                
+                productResponseDto = _mapper.Map<ProductResponseDto>(getProductById);
+                productResponseDto.CategoryName = categoryName.LookupValueName;
+                productResponseDto.QRImage = path + getProductById.QRImage;
+                
+                var tenantLogo = await _unitOfWorkDA.TenantDA.GetById(getProductById.TenantId, cancellationToken);
+                if (tenantLogo != null && !string.IsNullOrEmpty(tenantLogo.LogoPath))
+                    productResponseDto.TenantLogo = path + tenantLogo.LogoPath;
+
+                productResponseList.Add(productResponseDto);
+            }
+            return productResponseList;
         }
 
         #region API Methods
@@ -718,7 +761,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             foreach (var item in productMaterialById)
             {
                 await _unitOfWorkDA.ProductMaterialDA.DeleteProductMaterial(item.ProductMaterialID, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), item.ProductMaterialID, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
             }
         }
 
@@ -730,7 +772,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), item.ProductId, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
         }
 
         private async Task<int> GetCategoryLookupId(CancellationToken cancellationToken)

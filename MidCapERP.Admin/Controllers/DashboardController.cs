@@ -31,16 +31,14 @@ namespace MidCapERP.Admin.Controllers
         {
             try
             {
-                _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
-
                 var orderCount = await _unitOfWorkBL.DashboardBL.GetOrderCount(cancellationToken);
                 ViewBag.OrderCount = orderCount;
 
                 var customerCount = await _unitOfWorkBL.DashboardBL.GetCustomerCount(cancellationToken);
                 ViewBag.CustomerCount = customerCount;
 
-                var categoryCount = await _unitOfWorkBL.DashboardBL.GetCategoriesCount(cancellationToken);
-                ViewBag.CategoryCount = categoryCount;
+                var architectCount = await _unitOfWorkBL.DashboardBL.GetArchitectCount(cancellationToken);
+                ViewBag.ArchitectCount = architectCount;
 
                 var productCount = await _unitOfWorkBL.DashboardBL.GetProductCount(cancellationToken);
                 ViewBag.ProductCount = productCount;

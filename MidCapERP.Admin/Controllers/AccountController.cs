@@ -36,7 +36,7 @@ namespace MidCapERP.Admin.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> Login(CancellationToken cancellationToken)
+        public async Task<IActionResult> Login(string returnUrl, CancellationToken cancellationToken)
         {
             return View();
         }
@@ -48,7 +48,7 @@ namespace MidCapERP.Admin.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Login(TokenRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login(TokenRequest request, string returnUrl, CancellationToken cancellationToken)
         {
             string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, true);
@@ -58,9 +58,11 @@ namespace MidCapERP.Admin.Controllers
                 _toastNotification.AddErrorToastMessage("Incorrect username or Password. Please try again.");
                 return RedirectToAction("Login", "Account");
             }
-
-            _toastNotification.AddSuccessToastMessage(_localizer[JsonStringResourcesKeys.LoginSuccessFull]);
-            return RedirectToAction("Index", "Dashboard");
+            
+            if (string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Index", "Dashboard");
+            else
+                return Redirect(returnUrl);
         }
 
         /// <summary>

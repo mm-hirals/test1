@@ -32,4 +32,10 @@
 		<ProjectReference Include="..\MidCapERP.Infrastructure\MidCapERP.Infrastructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="wkhtmltopdf\Windows\wkhtmltopdf.exe">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

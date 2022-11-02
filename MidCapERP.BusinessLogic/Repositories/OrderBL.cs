@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MailKit.Search;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
@@ -72,8 +71,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             try
             {
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
-                // Get Order data by OrderId
                 orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
+
+                // Get User name
+                var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+                var userFullname = userData.FirstOrDefault(x => x.UserId == orderResponseDto.CreatedBy);
+                orderResponseDto.CreatedByName = userFullname.FullName;
 
                 // Get Order Addresses
                 var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
@@ -347,7 +350,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             saveOrder.CreatedBy = allUsers.FirstOrDefault(x => x.UserId == _currentUser.UserId).FullName;
             saveOrder.CreatedDate = saveOrder.CreatedDate;
 
-            return _mapper.Map<OrderApiResponseDto>(saveOrder);
+            return await GetOrderDetailByOrderIdAPI(saveOrder.OrderId, cancellationToken);
         }
 
         public async Task<OrderApiResponseDto> UpdateOrderAPI(Int64 Id, OrderApiRequestDto model, CancellationToken cancellationToken)
@@ -395,7 +398,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 await SaveOrderAddress(data.OrderId, model.CustomerID, model.ShippingAddressID, "Shipping", false, cancellationToken);
             }
 
-            var responseOrder = _mapper.Map<OrderApiResponseDto>(data);
+            var responseOrder = await GetOrderDetailByOrderIdAPI(data.OrderId, cancellationToken);
             responseOrder.BillingAddressID = model.BillingAddressID;
             responseOrder.ShippingAddressID = model.ShippingAddressID;
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
@@ -591,7 +594,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var order = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(orderId, cancellationToken);
             if (order != null)
             {
-                foreach (var item in order)
+                foreach (var item in order.ToList())
                     await _unitOfWorkDA.OrderAddressDA.DeleteOrderAddress(item.OrderAddressId, item, cancellationToken);
             }
             else

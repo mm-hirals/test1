@@ -53,6 +53,12 @@ $(document).on("click", ".add-icon", (function () {
     }
 }));
 
+$(document).on("change", "#CostPrice", (function () {
+    var amount = parseFloat($(this).val());
+    calculateRetailerSP(amount);
+    calculateWholesalerSP(amount);
+}));
+
 function calculateCostPrice() {
     var sum = 0;
     $(".costPrice").each(function () {

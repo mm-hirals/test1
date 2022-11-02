@@ -66,6 +66,7 @@ TenantBankDetailModel.onDelete = function () {
 TenantBankDetailModel.onSuccess = function (xhr) {
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 TenantBankDetailModel.onFailed = function (xhr) {

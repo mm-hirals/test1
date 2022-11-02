@@ -30,7 +30,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="PolishModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdatePolish" href="/Polish/Update/' + o.polishId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="PolishModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Polish/Delete/' + o.polishId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a data-ajax-complete="PolishModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Polish/Delete/' + o.polishId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -52,11 +52,13 @@ PolishModel.onComplete = function () {
 
 PolishModel.onDelete = function () {
     tblPolish.ajax.reload(null, false);
+    toastr.error('Data deleted successfully.');
 }
 
 PolishModel.onSuccess = function (xhr) {
     tblPolish.ajax.reload(null, false);
     $("#divPolishModal").modal('hide');
+    toastr.success('Information saved successfully.');
 };
 
 PolishModel.onFailed = function (xhr) {

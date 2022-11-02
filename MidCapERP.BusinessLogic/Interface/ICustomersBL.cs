@@ -11,8 +11,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CustomersApiResponseDto> GetCustomerById(long customerId, CancellationToken cancellationToken);
 
-        public Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken);
-
         public Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken);
 
         public Task<IEnumerable<CustomersTypesResponseDto>> CustomersTypesGetAll(CancellationToken cancellationToken);
@@ -42,5 +40,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<int> GetCustomerCount(CancellationToken cancellationToken);
 
         public Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken);
+
+        //public Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken);
     }
 }

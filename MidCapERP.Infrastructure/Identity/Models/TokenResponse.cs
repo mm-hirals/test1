@@ -15,6 +15,7 @@ namespace MidCapERP.Infrastructure.Identity.Models
                             )
         {
             this.Id = user.Id;
+            this.Initial = Convert.ToString(user.FirstName.Substring(0, 1) + user.LastName.Substring(0, 1)).ToUpper();
             this.FullName = user.FullName;
             this.EmailAddress = user.Email;
             this.Token = token;
@@ -25,6 +26,7 @@ namespace MidCapERP.Infrastructure.Identity.Models
         }
 
         public string Id { get; set; }
+        public string Initial { get; set; }
         public string FullName { get; set; }
         public string EmailAddress { get; set; }
         public string Token { get; set; }
