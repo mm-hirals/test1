@@ -68,7 +68,7 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label asp-for="AspNetRole" class="form-label"></label><span class="text-danger">*</span>
-                                    <select asp-for="AspNetRole" data-val="true" class="form-control"
+                                    <select asp-for="AspNetRole" data-val="true" class="form-control form-select"
                                             asp-items="@(new SelectList((List<SelectListItem>)ViewBag.AspNetRoleSelectItemList, "Value", "Text"))">
                                         <option value="" hidden disabled selected>Select Role</option>
                                     </select>

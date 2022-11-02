@@ -11,7 +11,7 @@
             <div class="login-header mb-3">
                 <h1>Login</h1>
             </div>
-            <form asp-action="Login">
+            <form asp-action="Login" asp-route-returnurl="@Context.Request.Query["returnurl"]">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Username" class="control-label"></label>

@@ -65,30 +65,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return _mapper.Map<CustomersApiResponseDto>(customerData);
         }
 
-        public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
-        {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-            if (customerMobileNumberOrEmailId == null)
-            {
-                throw new Exception("Customer not found");
-            }
-            if (customerMobileNumberOrEmailId.RefferedBy != null)
-            {
-                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
-                if (refferedByCustomerData == null)
-                {
-                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
-                }
-                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
-                customerApiResponseData.Reffered = refferedCustomerResponseData;
-                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
-            }
-            else
-                return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-        }
-
         public async Task<bool> CheckCustomerExistOrNot(string phoneNumberOrEmail, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
@@ -102,13 +78,22 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText)).Select(x => new MegaSearchResponse(x.CustomerId, x.FirstName + " " + x.LastName, x.PhoneNumber, null, "Customer")).Take(10).ToList();
+            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText))
+                .Select(x => new MegaSearchResponse
+                (
+                    x.CustomerId, 
+                    x.FirstName + " " + x.LastName, 
+                    x.PhoneNumber, 
+                    null, 
+                    x.CustomerTypeId == (int)CustomerTypeEnum.Architect ? "Architect" : "Customer")
+                ).Take(10).ToList();
+            return response;
         }
 
         public async Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
+            var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
             var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
             return data.ToList();
         }
@@ -136,7 +121,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterCustomersData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerData = customerAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Customer || x.CustomerTypeId == (int)CustomerTypeEnum.Wholesaler);
+            var customerData = customerAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Customer);
             var customerFilteredData = FilterCustomerData(dataTableFilterDto, customerData);
             var customerGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerFilteredData).AsQueryable(), dataTableFilterDto);
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerGridData.TotalCount, customerGridData.TotalCount, customerGridData);
@@ -253,6 +238,29 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<CustomersApiResponseDto> GetCustomerByIdAPI(Int64 id, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(id, cancellationToken);
+            if (customerData == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerData.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerData);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerData.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerData);
+        }
+
         #region PrivateMethods
 
         private async Task<Customers> CustomerGetById(Int64 Id, CancellationToken cancellationToken)
@@ -302,12 +310,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
+            oldData.CustomerTypeId = model.CustomerTypeId;
+            oldData.RefferedBy = model.RefferedBy;
         }
 
         private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)ArchitectTypeEnum.Architect);
+            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
             if (customerExistOrNot != null)
             {
                 customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
@@ -320,7 +330,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     LastName = String.Empty,
                     FirstName = model.RefferedName != null ? model.RefferedName : "",
                     PhoneNumber = model.RefferedNumber,
-                    CustomerTypeId = (int)ArchitectTypeEnum.Architect,
+                    CustomerTypeId = (int)CustomerTypeEnum.Architect,
                     RefferedBy = 0,
                     CreatedBy = _currentUser.UserId,
                     CreatedDate = DateTime.Now,

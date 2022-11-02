@@ -4,39 +4,54 @@
     Layout = null;
     int counter = 0;
 }
-<div style="width: 1000px;margin: auto;font-family: 'Nunito', sans-serif;">
-    <div style="display: table;clear: both;">
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @@media screen {
+            .page {
+                page-break-before: always !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 1000px;margin: auto;font-family: 'Nunito', sans-serif;">
         @foreach (var item in @Model)
         {
-            if (counter % 3 == 0)
+            if (counter % 9 == 0)
             {
-                @Html.Raw("<div>")
+                @Html.Raw("<div class='page'>")
             }
-            <div style="max-width: 320px;width: 320px;float: left;margin: 5px;page-break-inside:avoid; page-break-after:auto;">
-                <div style="padding: 10px;border: 2px dashed #242424;border-radius: 10px;">
+            <div style="max-width: 320px;width: 320px;display: inline-block; margin: 5px;">
+                <div style="padding: 10px;border: 2px dashed #c9c9c9;">
                     <div style="text-align: center;">
                         <div>
-                            <div style="display:block;color: #000000;height: 80px;margin: 0 auto 5px;">
-                                <img src="" style="width: 100%;height: 100%;border-radius: 10px;overflow: hidden;object-fit: contain;object-position: top;">
+                            <div style="color: #000000;height: 80px;margin: 0 auto 5px;">
+                                <img src="@item.TenantLogo" style="vertical-align: middle; margin-top: 15px;object-fit: contain;height: 50px;">
                             </div>
-                            <div style="text-align: center;font-size: 16px;color: #2c2c2c;font-weight: 600;height: 36px;overflow: hidden;">
-                                @item.ProductTitle
+                            <div style="display: table;margin: auto; text-align: center;font-size: 14px;color: #2c2c2c;font-weight: 600;height: 36px;overflow: hidden;border-bottom: 1px solid #efefef;margin-bottom: 5px;">
+                                <div style="display: table-cell;vertical-align: middle;">
+                                    @item.ProductTitle
+                                </div>
                             </div>
                         </div>
                         <div style="display: table;margin: 0 auto;">
                             <img height="260px" width="260px" src="@item.QRImage" style="object-fit: contain;">
                         </div>
-                        <div style="display: block;background: #efefef;padding: 5px;border-radius: 5px;padding: 8px;font-size: 16px;font-weight: 600;text-align: center;">
+                        <div style="display: block;padding: 5px;border-radius: 5px;padding: 8px;font-size: 16px;text-align: center;">
                             @item.ModelNo
                         </div>
                     </div>
                 </div>
             </div>
             { counter++; }
-            @if (counter % 3 == 0)
+            @if (counter % 9 == 0)
             {
                 @Html.Raw("</div>")
             }
         }
     </div>
-</div>
+</body>
+</html>

@@ -24,7 +24,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<ApiResponse> Get(Int64 id, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.GetById(id, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.GetCustomerByIdAPI(id, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -130,18 +130,6 @@ namespace MidCapERP.WebAPI.Controllers
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
             }
             return new ApiResponse(message: "Data Update successful", result: data, statusCode: 200);
-        }
-
-        [HttpGet("Search/PhoneNumberOrEmailId/{phoneNumberOrEmailId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<ApiResponse> SearchPhoneNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.CustomersBL.GetCustomerByMobileNumberOrEmailId(phoneNumberOrEmailId, cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
         [HttpGet("Search/{CustomerNameOrEmailOrMobileNo}")]
