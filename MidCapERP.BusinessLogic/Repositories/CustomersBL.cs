@@ -238,29 +238,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        //public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
-        //{
-        //    var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-        //    var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-        //    if (customerMobileNumberOrEmailId == null)
-        //    {
-        //        throw new Exception("Customer not found");
-        //    }
-        //    if (customerMobileNumberOrEmailId.RefferedBy != null)
-        //    {
-        //        var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-        //        var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
-        //        if (refferedByCustomerData == null)
-        //        {
-        //            return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
-        //        }
-        //        var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
-        //        customerApiResponseData.Reffered = refferedCustomerResponseData;
-        //        return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
-        //    }
-        //    else
-        //        return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-        //}
+        public async Task<CustomersApiResponseDto> GetCustomerByIdAPI(Int64 id, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(id, cancellationToken);
+            if (customerData == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerData.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerData);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerData.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerData);
+        }
 
         #region PrivateMethods
 
@@ -312,6 +311,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
             oldData.CustomerTypeId = model.CustomerTypeId;
+            oldData.RefferedBy = model.RefferedBy;
         }
 
         private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)

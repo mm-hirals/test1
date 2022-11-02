@@ -41,6 +41,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken);
 
-        //public Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken);
+        public Task<CustomersApiResponseDto> GetCustomerByIdAPI(Int64 id, CancellationToken cancellationToken);
     }
 }
