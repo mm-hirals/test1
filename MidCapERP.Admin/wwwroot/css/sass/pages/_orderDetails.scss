@@ -1,0 +1,99 @@
+
+.order-detail--wrapper{
+    padding-top: 12px;
+    .order-number-title{
+        font-size: 14px;
+        color: $form-label-color;
+        font-weight: 600;
+        padding-bottom: 5px;
+        .order-text{
+            font-weight: 800;
+            color: $black;
+            font-size: 26px;
+        }
+    }
+    .order-time-text{
+        font-size: 14px;
+        color: $form-label-color;
+        font-weight: 500;
+    }
+    .order-details-product{
+        padding: 10px 0;
+        // border-bottom: 1px solid #dcdcdc;
+        .product-order-image{
+            img{
+                width: 70px;
+            }
+        }
+        .product-dimension{
+            .order-label {
+                font-size: 14px;
+                font-weight: 600;
+                color: $form-label-color;
+            }
+            .ordr-value{
+                font-weight: 700;
+                color: $black;
+                font-size: 14px;
+            }
+        }
+    }
+    .order-detail-text{
+        font-weight: 600;
+        color: $form-label-color;
+        font-size: 14px;
+    }
+    .customer-summary-body{        
+        .customer-summary-text{
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 5px;
+        }
+        .customer-summary-title{
+            // font-size: 14px;
+            // font-weight: normal;
+            // color: $form-label-color;
+            font-weight: 600;
+            color: #202020;
+            font-size: 14px;
+        }
+        .customer-summary-value{
+            font-size: 14px;
+            font-weight: 500;
+            color: #606060;
+        }
+        .customer-summary-total{
+            color: $black;
+            font-weight: 800;
+            font-size: 16px;
+        }
+    }
+    .customer-detail-information{
+        .customer-info-grid {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dcdcdc;
+        }
+        &:last-child{
+            border-bottom: 1px solid #fafafa;
+        }
+        .customer-info-label{
+            // font-weight: 700;
+            // color: #202020;
+            // font-size: 14px;
+            font-weight: 600;
+            color: #202020;
+            font-size: 14px;
+        }
+        .customer-info-text{
+            // font-size: 14px;
+            // font-weight: 600;
+            // color: #606060;
+            font-size: 14px;
+            font-weight: 500;
+            color: #606060;
+        }
+        
+    }
+}
