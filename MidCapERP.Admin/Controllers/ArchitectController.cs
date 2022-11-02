@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
-using MidCapERP.Dto.CustomerAddresses;
-using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.Architect;
+using MidCapERP.Dto.ArchitectAddresses;
+
 using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
@@ -20,46 +21,64 @@ namespace MidCapERP.Admin.Controllers
             _toastNotification = toastNotification;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Architect.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
-        public async Task<IActionResult> GetArchitectsData([FromForm] CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Architect.View)]
+        public async Task<IActionResult> GetArchitectsData([FromForm] ArchitectDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ArchitectsBL.GetFilterArchitectsData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
-        public async Task<IActionResult> GetArchitectAddressesData([FromForm] CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.View)]
+        public async Task<IActionResult> GetArchitectAddressesData([FromForm] ArchitectAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ArchitectAddressesBL.GetFilterArchitectAddressesData(dataTableFilterDto, cancellationToken);
             return Ok(data);
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.Architect.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("ArchitectEdit");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
-        public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Architect.Create)]
+        public async Task<IActionResult> Create(ArchitectRequestDto architectsRequestDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.ArchitectsBL.CreateArchitects(customersRequestDto, cancellationToken);
+            var data = await _unitOfWorkBL.ArchitectsBL.CreateArchitects(architectsRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Update", "Architect", new { id = data.CustomerId });
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.Create)]
+        public async Task<IActionResult> CreateArchitectAddress(int architectId, CancellationToken cancellationToken)
+        {
+            ArchitectAddressesRequestDto dto = new();
+            dto.CustomerId = architectId;
+            return PartialView("_ArchitectAddressPartial", dto);
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.Create)]
+        public async Task<IActionResult> CreateArchitectAddress(ArchitectAddressesRequestDto architectsRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.ArchitectAddressesBL.CreateArchitectAddresses(architectsRequestDto, cancellationToken);
+            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
+            return View("_ArchitectAddressPartial");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Architect.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
             var architects = await _unitOfWorkBL.ArchitectsBL.GetById(Id, cancellationToken);
@@ -67,34 +86,16 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
-        public async Task<IActionResult> Update(Int64 Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.Architect.Update)]
+        public async Task<IActionResult> Update(Int64 Id, ArchitectRequestDto architectsRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.ArchitectsBL.UpdateArchitects(Id, customersRequestDto, cancellationToken);
+            await _unitOfWorkBL.ArchitectsBL.UpdateArchitects(Id, architectsRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
-        public async Task<IActionResult> CreateArchitectAddress(int customerId, CancellationToken cancellationToken)
-        {
-            CustomerAddressesRequestDto dto = new();
-            dto.CustomerId = customerId;
-            return PartialView("_ArchitectAddressPartial", dto);
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
-        public async Task<IActionResult> CreateArchitectAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.ArchitectAddressesBL.CreateArchitectAddresses(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
-            return View("_ArchitectAddressPartial");
-        }
-
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.Update)]
         public async Task<IActionResult> UpdateArchitectAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var architectsAddress = await _unitOfWorkBL.ArchitectAddressesBL.GetById(Id, cancellationToken);
@@ -102,16 +103,16 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
-        public async Task<IActionResult> UpdateArchitectAddresses(Int64 Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
+        [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.Update)]
+        public async Task<IActionResult> UpdateArchitectAddresses(Int64 Id, ArchitectAddressesRequestDto architectsAddressRequestDto, CancellationToken cancellationToken)
         {
-            await _unitOfWorkBL.ArchitectAddressesBL.UpdateArchitectAddresses(Id, customersAddressRequestDto, cancellationToken);
+            await _unitOfWorkBL.ArchitectAddressesBL.UpdateArchitectAddresses(Id, architectsAddressRequestDto, cancellationToken);
             _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("ArchitectEdit");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.Delete)]
         public async Task<IActionResult> DeleteArchitectAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ArchitectAddressesBL.DeleteArchitectAddresses(Id, cancellationToken);
@@ -119,7 +120,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> MultipleSendArchitect(CustomersSendSMSDto model, CancellationToken cancellationToken)
+        public async Task<JsonResult> MultipleSendArchitect(ArchitectsSendSMSDto model, CancellationToken cancellationToken)
         {
             try
             {

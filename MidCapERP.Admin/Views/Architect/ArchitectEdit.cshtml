@@ -1,4 +1,4 @@
-﻿@model MidCapERP.Dto.Customers.CustomersRequestDto
+﻿@model MidCapERP.Dto.Architect.ArchitectRequestDto
 @{
     string action = (Model != null && Model.CustomerId != 0) ? "Update" : "Create";
     Layout = "_Layout";
@@ -202,4 +202,4 @@
         <script asp-src-include="~/js/Architect.js"></script>
         <script asp-src-include="~/js/ArchitectAddresses.js"></script>
     }
-    } 
+} 
