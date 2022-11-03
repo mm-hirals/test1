@@ -61,10 +61,7 @@ namespace MidCapERP.Admin.Controllers
             if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Dashboard");
             else
-            {
-                _toastNotification.AddSuccessToastMessage("Login Successful.");
                 return Redirect(returnUrl);
-            }
         }
         /// <summary>
         ///
