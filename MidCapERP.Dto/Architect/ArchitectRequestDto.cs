@@ -1,11 +1,11 @@
-﻿using MidCapERP.Dto.CustomerAddresses;
+﻿using MidCapERP.Dto.ArchitectAddresses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MidCapERP.Dto.Customers
+namespace MidCapERP.Dto.Architect
 {
-    public class CustomersRequestDto
+    public class ArchitectRequestDto
     {
         public long CustomerId { get; set; }
 
@@ -50,11 +50,10 @@ namespace MidCapERP.Dto.Customers
         [DisplayName("Reffered Name")]
         public string? RefferedName { get; set; }
 
-        public CustomerAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
+        public ArchitectAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
 
-        [DisplayName("Commission(%)")]
         [JsonIgnore]
-        public decimal? Discount { get; set; }
+        public decimal Discount { get; set; }
 
         [DisplayName("Subscribe Newsletters/Greetings")]
         public bool IsSubscribe { get; set; }

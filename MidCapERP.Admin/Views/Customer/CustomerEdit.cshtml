@@ -16,20 +16,6 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="CustomerTypeId" class="form-label"></label><span class="required">*</span>
-                                    </label>
-                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType form-select"
-                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
-                                                <option value="" hidden disabled selected>Select Customer Type</option>
-                                    </select>
-                                    <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
                                         <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
                                     </label>
                                     <input asp-for="FirstName" class="form-control" />
@@ -117,11 +103,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="product-info--item">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <label asp-for="Discount" class="form-label"></label>
+                                    </label>
+                                    <input asp-for="Discount" type="number" class="form-control customerDiscount" min="0" max="100" />
+                                    <span asp-validation-for="Discount" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
                         @if (Model == null)
                         {
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label><span class="required">*</span>
+                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
                                     <input asp-for="CustomerAddressesRequestDto.Street1" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.Street1" class="text-danger"></span>
                                 </div>
@@ -150,21 +147,21 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label><span class="required">*</span>
-                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control" onkeypress='return restrictNumber(event)' />
                                     <span asp-validation-for="CustomerAddressesRequestDto.City" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label><span class="required">*</span>
-                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control" onkeypress='return restrictNumber(event)' />
                                     <span asp-validation-for="CustomerAddressesRequestDto.State" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label><span class="required">*</span>
-                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" type="number" min="0" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
                                 </div>
                             </div>
@@ -188,7 +185,7 @@
                             <div class="c-card--wrapper c-card-sm--wrapper">
                                 <div class="c-card--footer">
                                     <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
-                                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner" id="dataSave">Save</button>
+                                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner customerSave" id="dataSave">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -240,4 +237,4 @@
         <script asp-src-include="~/js/Customer.js"></script>
         <script asp-src-include="~/js/CustomerAddresses.js"></script>
     }
-} 
+    }

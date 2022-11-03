@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="AddressType" class="form-label"></label><span class="required">*</span>
+                                <label asp-for="AddressType" class="form-label"></label>
                                 <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="form-control form-select">
                                     <option value="" hidden disabled selected>Select Address Type</option>
                                     <option value="Home">Home</option>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="Street1" class="form-label"></label><span class="required">*</span>
+                                <label asp-for="Street1" class="form-label"></label>
                                 <input asp-for="Street1" class="form-control" />
                                 <span asp-validation-for="Street1" class="text-danger"></span>
                             </div>
@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="Area" class="form-label"></label><span class="required">*</span>
+                                <label asp-for="Area" class="form-label"></label>
                                 <input asp-for="Area" class="form-control" />
                                 <span asp-validation-for="Area" class="text-danger"></span>
                             </div>
@@ -70,21 +70,21 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="City" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="City" class="form-control" />
+                                <input asp-for="City" class="form-control" onkeypress='return restrictNumber(event)' />
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="State" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="State" class="form-control" />
+                                <input asp-for="State" class="form-control" onkeypress='return restrictNumber(event)'/>
                                 <span asp-validation-for="State" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="ZipCode" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="ZipCode" class="form-control" />
+                                <input asp-for="ZipCode" class="form-control" type="number" min="0" />
                                 <span asp-validation-for="ZipCode" class="text-danger"></span>
                             </div>
                         </div>
@@ -110,8 +110,6 @@
     </div>
 </div>
 
-@section Scripts {
-    @{
-        <script asp-src-include="~/js/CustomerAddresses.js"></script>
-    }
-} 
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}
