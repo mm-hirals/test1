@@ -65,7 +65,6 @@ namespace MidCapERP.Admin.Controllers
                 _toastNotification.AddSuccessToastMessage("Login Successful.");
                 return Redirect(returnUrl);
             }
-                
         }
         /// <summary>
         ///
