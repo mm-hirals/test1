@@ -33,8 +33,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<ArchitectResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return _mapper.Map<List<ArchitectResponseDto>>(data.ToList());
+            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
+            return _mapper.Map<List<ArchitectResponseDto>>(architectData.ToList());
         }
 
         public async Task<JsonRepsonse<ArchitectResponseDto>> GetFilterArchitectsData(ArchitectDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
