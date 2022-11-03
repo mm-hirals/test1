@@ -171,6 +171,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             try
             {
+                customerToInsert.CustomerTypeId = (int)CustomerTypeEnum.Customer;
+                customerToInsert.Discount = model.Discount != null ? model.Discount : 0;
                 customerToInsert.IsDeleted = false;
                 customerToInsert.TenantId = _currentUser.TenantId;
                 customerToInsert.CreatedBy = _currentUser.UserId;
@@ -291,7 +293,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
         {
-            oldData.CustomerTypeId = model.CustomerTypeId;
+            oldData.CustomerTypeId = (int)CustomerTypeEnum.Customer;
             oldData.FirstName = model.FirstName;
             oldData.LastName = model.LastName;
             oldData.EmailId = model.EmailId;
@@ -299,6 +301,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
+            oldData.Discount = model.Discount != null ? model.Discount : 0.0m;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -332,6 +335,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     PhoneNumber = model.RefferedNumber,
                     CustomerTypeId = (int)CustomerTypeEnum.Architect,
                     RefferedBy = 0,
+                    Discount = model.Discount != null ? model.Discount : 0,
                     CreatedBy = _currentUser.UserId,
                     CreatedDate = DateTime.Now,
                     CreatedUTCDate = DateTime.UtcNow,

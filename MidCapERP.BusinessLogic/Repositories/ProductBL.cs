@@ -448,8 +448,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task DeleteProductImage(int productImageId, CancellationToken cancellationToken)
         {
-            await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Product Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
+            var deletedProduct = await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), deletedProduct.ProductId, "Product Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
         }
 
         public async Task UpdateProductImageMarkAsCover(int productImageId, bool IsCover, CancellationToken cancellationToken)
@@ -458,8 +458,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (getProductImage != null)
             {
                 getProductImage.IsCover = IsCover;
-                await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
+                var updatedImage = await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
+                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), updatedImage.ProductId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
             }
         }
 
@@ -731,15 +731,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Image Added", ActivityLogStringConstant.Create, cancellationToken);
-            }
-        }
-
-        private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
-        {
-            foreach (var item in getImageById)
-            {
-                await _unitOfWorkDA.ProductImageDA.DeleteProductImage(item.ProductImageID, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), item.ProductImageID, "Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
             }
         }
 
