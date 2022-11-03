@@ -61,10 +61,10 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.ArchitectAddresses.Create)]
-        public async Task<IActionResult> CreateArchitectAddress(int architectId, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateArchitectAddress(int customerId, CancellationToken cancellationToken)
         {
             ArchitectAddressesRequestDto dto = new();
-            dto.CustomerId = architectId;
+            dto.CustomerId = customerId;
             return PartialView("_ArchitectAddressPartial", dto);
         }
 
