@@ -25,9 +25,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<CategoryResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            int lookupId = await GetLookupId(cancellationToken);
-            var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == lookupId).ToList());
+            //int lookupId = await GetLookupId(cancellationToken);
+            //var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
+            //return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == lookupId).ToList());
+
+            var data = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
+            return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.CategoryTypeId == (int)ProductCategoryTypesEnum.Product).ToList());
         }
 
         public async Task<CategoryResponseDto> GetCategorySearchByCategoryName(string searchName, CancellationToken cancellationToken)
@@ -79,14 +82,13 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CategoryRequestDto> CreateCategory(CategoryRequestDto model, CancellationToken cancellationToken)
         {
-            int lookupId = await GetLookupId(cancellationToken);
-            var categoryToInsert = _mapper.Map<LookupValues>(model);
-            categoryToInsert.LookupId = lookupId;
+            var categoryToInsert = _mapper.Map<Categories>(model);
             categoryToInsert.IsDeleted = false;
             categoryToInsert.CreatedBy = _currentUser.UserId;
             categoryToInsert.CreatedDate = DateTime.Now;
             categoryToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.LookupValuesDA.CreateLookupValue(categoryToInsert, cancellationToken);
+            categoryToInsert.TenantId = _currentUser.TenantId;
+            var data = await _unitOfWorkDA.CategoriesDA.CreateCategory(categoryToInsert, cancellationToken);
             var _mappedUser = _mapper.Map<CategoryRequestDto>(data);
             return _mappedUser;
         }
@@ -122,7 +124,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private static void MapToDbObject(CategoryRequestDto model, LookupValues oldData)
         {
-            oldData.LookupValueName = model.LookupValueName;
+            oldData.LookupValueName = model.CategoryName;
             //oldData.LookupValueId = model.LookupValueId;
         }
 

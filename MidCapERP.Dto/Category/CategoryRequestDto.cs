@@ -6,21 +6,36 @@ namespace MidCapERP.Dto.Category
 {
     public class CategoryRequestDto
     {
-        //[Required(ErrorMessage ="Value is required")]
-        //public int LookupValueId { get; set; }
-        public int LookupId { get; set; } = (int)MasterPagesEnum.Category;
+        public long CategoryId { get; set; }
+
+        [Required(ErrorMessage = "The Category Type is required")]
+        [DisplayName("Category Type")]
+        public int CategoryTypeId { get; set; }
 
         [Required(ErrorMessage = "The Category Name is required")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Minimum 1 characters, Maximum 50 characters")]
         [DisplayName("Category Name")]
-        public string LookupValueName { get; set; }
+        public string? CategoryName { get; set; }
+        
+        [DisplayName("Fixed Price")]
+        public bool IsFixedPrice { get; set; }
 
-        //public bool IsDeleted { get; set; }
-        //public int CreatedBy { get; set; }
-        //public DateTime CreatedDate { get; set; }
-        //public DateTime CreatedUTCDate { get; set; }
-        //public int? UpdatedBy { get; set; }
-        //public DateTime? UpdatedDate { get; set; }
-        //public DateTime? UpdatedUTCDate { get; set; }
+        [Required(ErrorMessage = "The RSP Percentage is required")]
+        [DisplayName("RSP Percentage")]
+        [StringLength(6)]
+        public string? RSPPercentage { get; set; }
+
+        [Required(ErrorMessage = "The WSP Percentage is required")]
+        [DisplayName("WSP Percentage")]
+        [StringLength(6)]
+        public string? WSPPercentage { get; set; }
+        public int TenantId { get; set; }
+        public bool IsDeleted { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedUTCDate { get; set; }
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? UpdatedUTCDate { get; set; }
     }
 }

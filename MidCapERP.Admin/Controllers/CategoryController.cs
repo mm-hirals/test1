@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Category;
+using MidCapERP.Dto.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -24,7 +26,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
-        public async Task<IActionResult>  GetCategoryData([FromForm] CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategoryData([FromForm] CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var categoryfilterdata = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
             return Ok(categoryfilterdata);
@@ -34,6 +36,21 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            var categoryProductType = from ProductCategoryTypesEnum e in Enum.GetValues(typeof(ProductCategoryTypesEnum))
+                                      select new
+                                      {
+                                          Value = (int)e,
+                                          Text = e.ToString()
+                                      };
+
+            var categoryProductTypeList = categoryProductType.Select(a =>
+                                new SelectListItem
+                                {
+                                    Value = Convert.ToString(a.Value),
+                                    Text = a.Text
+                                }).ToList();
+
+            ViewBag.CategoryProductType = categoryProductTypeList;
             return PartialView("_CategoryPartial");
         }
 

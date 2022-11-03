@@ -1,6 +1,6 @@
 ﻿@model MidCapERP.Dto.Category.CategoryRequestDto
 @{
-    string action = (Model != null ) ? "Update" : "Create";
+    string action = (Model != null) ? "Update" : "Create";
 }
 
 <!-- Modal -->
@@ -14,18 +14,50 @@
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
-                data-ajax="true" data-ajax-method="post" 
-                data-ajax-complete="CategoryModel.onSuccess" 
-                data-ajax-failure="CategoryModel.onFailed">
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="CategoryModel.onSuccess"
+                  data-ajax-failure="CategoryModel.onFailed">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @*<input asp-for="LookupValueId" hidden class="form-control" />*@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="LookupValueName" class="form-label"></label><span class="text-danger">*</span>
-                                <input asp-for="LookupValueName" class="form-control" />
-                                <span asp-validation-for="LookupValueName" class="text-danger"></span>
+                                <label asp-for="CategoryName" class="form-label"></label><span class="text-danger">*</span>
+                                <input asp-for="CategoryName" class="form-control" />
+                                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="CategoryTypeId" class="form-label"></label><span class="text-danger">*</span>
+                                <select asp-for="CategoryTypeId" data-val="true" class="form-control form-select"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategoryProductType, "Value", "Text"))">
+                                    <option value="" selected>Select Category Type</option>
+                                </select>
+                                <span asp-validation-for="CategoryTypeId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input asp-for="IsFixedPrice" type="checkbox" class="custom-control-input" id="isFixedPrice" data-val="true">
+                                    <label class="custom-control-label" for="isFixedPrice">Fixed Price</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="RSPPercentage" class="form-label"></label><span class="text-danger">*</span>
+                                <input asp-for="RSPPercentage" type="text" class="form-control pwidth" placeholder="RSP Percentage" max="999.99" onkeypress='return restrictAlphabets(event)'>
+                                <span asp-validation-for="RSPPercentage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="WSPPercentage" class="form-label"></label><span class="text-danger">*</span>
+                                <input asp-for="WSPPercentage" type="text" class="form-control pwidth" placeholder="WSP Percentage" max="999.99" onkeypress='return restrictAlphabets(event)'>
+                                <span asp-validation-for="WSPPercentage" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -42,3 +74,13 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+
+<script type="text/javascript">
+    /*code: 48-57 Numbers*/
+    function restrictAlphabets(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</script>
