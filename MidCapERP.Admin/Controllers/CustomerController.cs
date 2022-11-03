@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
@@ -46,6 +47,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            await FillArchitectDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -80,6 +82,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
+            await FillArchitectDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -135,5 +138,27 @@ namespace MidCapERP.Admin.Controllers
         public async Task Import_Export_Customer(CancellationToken cancellationToken)
         {
         }
+
+        #region Private Method
+
+        private async Task FillArchitectDropDown(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var architectData = await _unitOfWorkBL.ArchitectsBL.GetAll(cancellationToken);
+                var data = architectData.Select(a => new SelectListItem
+                {
+                    Value = Convert.ToString(a.CustomerId),
+                    Text = a.FirstName + " " + a.LastName
+                }).ToList();
+                ViewBag.ArchitectSelectItemList = data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        #endregion Private Method
     }
 }
