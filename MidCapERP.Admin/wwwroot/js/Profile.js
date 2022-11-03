@@ -55,6 +55,7 @@ $(function () {
 });
 
 TenantBankDetailModel.onComplete = function () {
+    $('#btnCreateBankDetails').buttonLoader('stop');
     $("#divTenantBankDetailModal").modal('show');
 }
 
@@ -64,12 +65,26 @@ TenantBankDetailModel.onDelete = function () {
 }
 
 TenantBankDetailModel.onSuccess = function (xhr) {
+    $('#btnCreateBankDetails').buttonLoader('stop');
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 TenantBankDetailModel.onFailed = function (xhr) {
+    $('#btnCreateBankDetails').buttonLoader('stop');
     tblTenantBankDetail.ajax.reload(null, false);
     $("#divTenantBankDetailModal").modal('hide');
 };
+
+$(document).on('submit', '#frmProfile', function (e) {
+    $('#btnUpdateProfile').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateUpdateBankDetails', function (e) {
+    $('#btnCreateUpdateBankDetails').buttonLoader('start');
+});
+
+$(document).delegate("#btnCreateBankDetails", "click", function () {
+    $('#btnCreateBankDetails').buttonLoader('start');
+});

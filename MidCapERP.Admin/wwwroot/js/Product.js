@@ -160,7 +160,20 @@ ProductModel.onFailed = function (xhr) {
 };
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
+    $('.btnProductMaterial').buttonLoader('stop');
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
+    $('.btnProductMaterial').buttonLoader('stop');
 };
+$(document).on('submit', '#frmProductInfoForm', function (e) {
+    $('.productSubmit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmProductDetail', function (e) {
+    $('.productDetailsSubmit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmProductMaterial', function (e) {
+    $('.btnProductMaterial').buttonLoader('start');
+});

@@ -64,6 +64,7 @@ $("#lnkCustemerAddressFilter").click(function () {
 });
 
 CustomerAddressesModel.onComplete = function () {
+    $('#customersId').buttonLoader('stop');
     $("#divCustomerAddressModal").modal('show');
 }
 
@@ -74,14 +75,27 @@ CustomerAddressesModel.onDelete = function () {
 
 CustomerAddressesModel.onSuccess = function (xhr) {
     tblCustomerAddresses.ajax.reload(null, false);
+    $('.CustomerAddressDetails').buttonLoader('stop');
+    $('#customersId').buttonLoader('stop');
     $("#divCustomerAddressModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 CustomerAddressesModel.onFailed = function (xhr) {
     tblCustomerAddresses.ajax.reload(null, false);
+    $('.CustomerAddressDetails').buttonLoader('stop');
+    $('#customersId').buttonLoader('stop');
     $("#divCustomerAddressModal").modal('hide');
 };
+
+
+$(document).delegate("#customersId", "click", function () {
+    $('#customersId').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCustomerAddress', function (e) {
+    $('.CustomerAddressDetails').buttonLoader('start');
+});
 
 function restrictNumber(e) {
     return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;

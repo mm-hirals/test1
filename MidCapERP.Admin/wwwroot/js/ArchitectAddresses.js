@@ -64,6 +64,7 @@ $("#lnkArchitectAddressFilter").click(function () {
 });
 
 ArchitectAddressesModel.onComplete = function () {
+    $('#customersId').buttonLoader('stop');
     $("#divArchitectAddressModal").modal('show');
 }
 
@@ -73,15 +74,27 @@ ArchitectAddressesModel.onDelete = function () {
 }
 
 ArchitectAddressesModel.onSuccess = function (xhr) {
+    $('.btn-architectAddress').buttonLoader('stop');
+    $('#customersId').buttonLoader('stop');
     tblArchitectAddresses.ajax.reload(null, false);
     $("#divArchitectAddressModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 ArchitectAddressesModel.onFailed = function (xhr) {
+    $('.btn-architectAddress').buttonLoader('stop');
+    $('#customersId').buttonLoader('stop');
     tblArchitectAddresses.ajax.reload(null, false);
     $("#divArchitectAddressModal").modal('hide');
 };
+
+$(document).on('submit', '#frmArchitectAddress', function (e) {
+    $('.btn-architectAddress').buttonLoader('start');
+});
+
+$(document).delegate("#customersId", "click", function () {
+    $('#customersId').buttonLoader('start');
+});
 
 function restrictNumber(e) {
     return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;

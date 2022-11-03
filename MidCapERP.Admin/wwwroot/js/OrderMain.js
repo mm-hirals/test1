@@ -17,16 +17,19 @@ $(document).delegate(".saveDiscount", "click", function (e) {
             DiscountPrice: discount,
             OrderSetItemId: $(this).attr('id')
         };
+        $('.saveDiscount').buttonLoader('start');
         $.ajax({
             url: "/Order/SaveDiscount",
             type: "POST",
             data: data,
             success: function (response) {
+                $('.saveDiscount').buttonLoader('stop');
                 $('#divOrderSetDetailPartial').html(response);
                 toastr.success("Discount price updated successfully!");
             }
         });
     } else {
         toastr.error("Please enter discount between 0-100");
+        $('.saveDiscount').buttonLoader('stop');
     }
 });

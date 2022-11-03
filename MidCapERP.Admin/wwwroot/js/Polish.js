@@ -47,6 +47,8 @@ $("#modelNo,#companyName,#title").keyup("input", function () {
 });
 
 PolishModel.onComplete = function () {
+    $('#btnCreatePolish').buttonLoader('stop');
+    $('#btnCreateUpdatePolish').buttonLoader('stop');
     $("#divPolishModal").modal('show');
 }
 
@@ -56,12 +58,24 @@ PolishModel.onDelete = function () {
 }
 
 PolishModel.onSuccess = function (xhr) {
+    $('#btnCreatePolish').buttonLoader('stop');
+    $('#btnCreateUpdatePolish').buttonLoader('stop');
     tblPolish.ajax.reload(null, false);
     $("#divPolishModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 PolishModel.onFailed = function (xhr) {
+    $('#btnCreatePolish').buttonLoader('stop');
+    $('#btnCreateUpdatePolish').buttonLoader('stop');
     tblPolish.ajax.reload(null, false);
     $("#divPolishModal").modal('hide');
 };
+
+$(document).delegate("#btnCreatePolish", "click", function () {
+    $('#btnCreatePolish').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateUpdatePolish', function (e) {
+    $('#btnCreateUpdatePolish').buttonLoader('start');
+});
