@@ -133,6 +133,7 @@ $(".sendSMSToClient").click(function () {
         $("#errorSubject").text("Please enter subject.");
     }
     else {
+        $('.sendSMSToClient').buttonLoader('start');
         $("#errorMessage").hide();
 
         if ($("#selectall").prop('checked')) {
@@ -158,6 +159,7 @@ $(".sendSMSToClient").click(function () {
             type: "POST",
             data: { model: data },
             success: function (response) {
+                $('.sendSMSToClient').buttonLoader('stop');
                 if (response == "success") {
                     toastr.success('Messages sent successfully.');
                     $('#sendSMSModal').modal('hide');
@@ -173,3 +175,7 @@ $(".sendSMSToClient").click(function () {
 $('#sendSMSModal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
 })
+
+$(document).on('submit', '#frmArchitectEdit', function (e) {
+    $('#dataSave').buttonLoader('start');
+});

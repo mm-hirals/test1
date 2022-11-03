@@ -10,8 +10,8 @@
         <div class="c-card--header-action">
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkFabricFilter"><i class='bx bx-plus me-1'></i>Filters</a>
             <a asp-controller="Fabric" asp-action="Create"
-               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
-               data-ajax-complete="FabricModel.onComplete" data-ajax-update="#divUpdateFabric">Create New</a>
+               class="btn btn-primary has-spinner" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="FabricModel.onComplete" data-ajax-update="#divUpdateFabric" id="btnCreateFabric">Create New</a>
         </div>
     </div>
     <div class="c-card--body">

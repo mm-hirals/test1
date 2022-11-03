@@ -40,5 +40,6 @@ $("#roleName").keyup("input", function () {
 });
 
 $("#lnkToredirect").click(function () {
+    $('#lnkToredirect').buttonLoader('start');
     window.location.href = "/Role/RolePermission"
 });

@@ -12505,3 +12505,52 @@ header .btn-check:focus + .btn, header .btn:focus {
     font-size: 12px;
   }
 }/*# sourceMappingURL=style.css.map */
+
+.btn-spinner {
+    display: inline-block;
+    opacity: 0;
+    width: 0;
+    -webkit-transition: opacity 0.25s, width 0.25s;
+    -moz-transition: opacity 0.25s, width 0.25s;
+    -o-transition: opacity 0.25s, width 0.25s;
+    transition: opacity 0.25s, width 0.25s;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+.has-spinner.active {
+    cursor: progress;
+}
+
+    .has-spinner.active .btn-spinner {
+        opacity: 1;
+        width: auto;
+    }
+
+.has-spinner.btn.active .btn-spinner {
+    min-width: 20px;
+}
+
+@-webkit-keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}
+
+@keyframes fa-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}

@@ -64,6 +64,7 @@ $("#lnkArchitectAddressFilter").click(function () {
 });
 
 ArchitectAddressesModel.onComplete = function () {
+    $('#customersId').buttonLoader('stop');
     $("#divArchitectAddressModal").modal('show');
 }
 
@@ -73,12 +74,24 @@ ArchitectAddressesModel.onDelete = function () {
 }
 
 ArchitectAddressesModel.onSuccess = function (xhr) {
+    $('.btn-architectAddress').buttonLoader('stop');
+    $('#customersId').buttonLoader('stop');
     tblArchitectAddresses.ajax.reload(null, false);
     $("#divArchitectAddressModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 ArchitectAddressesModel.onFailed = function (xhr) {
+    $('.btn-architectAddress').buttonLoader('stop');
+    $('#customersId').buttonLoader('stop');
     tblArchitectAddresses.ajax.reload(null, false);
     $("#divArchitectAddressModal").modal('hide');
 };
+
+$(document).on('submit', '#frmArchitectAddress', function (e) {
+    $('.btn-architectAddress').buttonLoader('start');
+});
+
+$(document).delegate("#customersId", "click", function () {
+    $('#customersId').buttonLoader('start');
+});

@@ -6,7 +6,7 @@
       data-ajax-complete="CreateProductDetail.onSuccess"
       data-ajax-failure="CreateProductDetail.onFailed"
       data-ajax-update="#divProductDetailPartial" data-ajax-mode="replace"
-      enctype="multipart/form-data" class="modal-form--wrapper formAction">
+      enctype="multipart/form-data" class="modal-form--wrapper formAction" id="frmProductDetail">
     <div class="c-card--wrapper c-card-sm--wrapper mb-3">
         <div class="c-card--header">
             <h4 class="c-card--header-title">Product Detail</h4>
@@ -81,7 +81,7 @@
                     <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                         Cancel
                     </a>
-                    <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner productDetailsSubmit">Save</button>
                 </div>
             </div>
         </div>

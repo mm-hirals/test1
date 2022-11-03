@@ -7,7 +7,7 @@
 <div class="">
     <div class="card mb-3">
         <div class="card-prpoduct-cotent--wrapper">
-            <form asp-action="@action" method="post" class="modal-form--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmArchitectEdit">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
@@ -150,7 +150,7 @@
                             <div class="c-card--wrapper c-card-sm--wrapper">
                                 <div class="c-card--footer">
                                     <a class="btn btn-danger" href="/Architect/Index">Cancel</a>
-                                    <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
+                                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner" id="dataSave">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                     <div class="c-card--header">
                         <h4 class="c-card--header-title">Address Details</h4>
                         <div class="c-card--header-action">
-                            <a asp-controller="Architect" asp-action="CreateArchitectAddress" class="btn btn-primary"
+                            <a asp-controller="Architect" asp-action="CreateArchitectAddress" class="btn btn-primary has-spinner"
                            data-ajax-complete="ArchitectAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateArchitectAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                         </div>

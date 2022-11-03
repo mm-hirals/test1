@@ -7,7 +7,7 @@
 <div class="">
     <div class="c-card--wrapper mb-3" id="divRoleModal">
         <div class="c-card--body">
-            <form asp-action="@action" asp-controller="Role" method="post" class="modal-form--wrapper">
+            <form asp-action="@action" asp-controller="Role" method="post" class="modal-form--wrapper" id="frmCreateUpdateRolePermission">
                 <div class="row align-items-end">
                     <div class="col-md-3">
                         <div class="product-info--item">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <button type="submit" value="Save" class="btn btn-primary has-spinner" id="btnCreateUpdateRolePermission">Save</button>
                             <a type="button" class="btn btn-primary" asp-controller="Role" asp-action="Index">Back</a>
                         </div>
                     </div>
@@ -75,38 +75,38 @@
                             </tbody>
                         </table>
                         @*<div class="row">
-                    <div class="col-4">Modules</div>
-                    <div class="col-8">
-                    <div class="row">
-                    <div class="col-md-3">Create</div>
-                    <div class="col-md-3">View</div>
-                    <div class="col-md-3">Update</div>
-                    <div class="col-md-3">Delete</div>
-                    </div>
-                    </div>
-                    </div>
-                    @if (Model != null)
-                    {
-                    foreach (var item in Model.ModulePermissionList)
-                    {
-                    <div class="row">
-                    <div class="col-4">@item.Module</div>
-                    <div class="col-8">
-                    <div class="row">
-                    @foreach (var permission in item.ModulePermissionList)
-                    {
-                    <div class="col-md-3">
-                    <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
-                    <label class="custom-control-label" for="@permission.Id"></label>
-                    </div>
-                    </div>
-                    }
-                    </div>
-                    </div>
-                    </div>
-                    }
-                    }*@
+                            <div class="col-4">Modules</div>
+                            <div class="col-8">
+                            <div class="row">
+                            <div class="col-md-3">Create</div>
+                            <div class="col-md-3">View</div>
+                            <div class="col-md-3">Update</div>
+                            <div class="col-md-3">Delete</div>
+                            </div>
+                            </div>
+                            </div>
+                            @if (Model != null)
+                            {
+                            foreach (var item in Model.ModulePermissionList)
+                            {
+                            <div class="row">
+                            <div class="col-4">@item.Module</div>
+                            <div class="col-8">
+                            <div class="row">
+                            @foreach (var permission in item.ModulePermissionList)
+                            {
+                            <div class="col-md-3">
+                            <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
+                            <label class="custom-control-label" for="@permission.Id"></label>
+                            </div>
+                            </div>
+                            }
+                            </div>
+                            </div>
+                            </div>
+                            }
+                            }*@
                     </div>
                 </div>
             </div>
@@ -118,6 +118,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
-        <script asp-src-include="~/js/RolePermission.js" ></script>
+    <script asp-src-include="~/js/RolePermission.js"></script>
     }
 }

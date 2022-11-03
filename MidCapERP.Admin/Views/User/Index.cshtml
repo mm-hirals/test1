@@ -9,8 +9,8 @@
         <div class="c-card--header-action">
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkUserFilter"><i class='bx bx-plus me-1'></i>Filters</a>
             <a asp-controller="User" asp-action="Create"
-               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
-               data-ajax-complete="UserModel.onComplete" data-ajax-update="#divUpdateUser">Create New</a>
+               class="btn btn-primary has-spinner" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="UserModel.onComplete" data-ajax-update="#divUpdateUser" id="btnCreateUser">Create New</a>
         </div>
     </div>
     <div class="c-card--body">

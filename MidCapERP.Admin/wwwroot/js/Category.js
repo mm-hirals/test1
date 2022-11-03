@@ -41,6 +41,8 @@ $("#categoryName").on("input", function () {
 });
 
 CategoryModel.onComplete = function () {
+    $('#btnCreateCategory').buttonLoader('stop');
+    $('#btnSaveCategory').buttonLoader('stop');
     $("#divCategoryModal").modal('show');
 }
 
@@ -50,12 +52,24 @@ CategoryModel.onComplete = function () {
   }
 
 CategoryModel.onSuccess = function (xhr) {
+    $('#btnCreateCategory').buttonLoader('stop');
+    $('#btnSaveCategory').buttonLoader('stop');
     tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 CategoryModel.onFailed = function (xhr) {
+    $('#btnCreateCategory').buttonLoader('stop');
+    $('#btnSaveCategory').buttonLoader('stop');
     tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
 };
+
+$(document).delegate("#btnCreateCategory", "click", function () {
+    $('#btnCreateCategory').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateCategory', function (e) {
+    $('#btnSaveCategory').buttonLoader('start');
+});
