@@ -110,8 +110,6 @@
     </div>
 </div>
 
-@section Scripts {
-    @{ 
-        <script asp-src-include="~/js/CustomerAddresses.js"></script>
-    }
-} 
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}
