@@ -1,10 +1,8 @@
 .card-product--wrapper {
-    // padding-right: spacing(0.5);
     border-radius: 10px;
     background: $white;
     border-radius: $defaultRadius;
     box-shadow: $defaulShaodw;
-    // display: flex;
     .card-product--image {
         flex: 1 0 120px;
         max-width: 120px;
@@ -40,20 +38,7 @@
     }
     .card-prpoduct-cotent--wrapper {
         padding: 15px;
-        // flex: 1 0 calc(100% - 120px);
-        // max-width: calc(100% - 120px);
-        // padding-left: 25px;
-        // .product-info--wrapper {
-        //     flex: 0 1 auto;
-        //     display: flex;
-        //     align-items: center;
-        // }
         .product-info--item {
-            // padding: 10px 15px;
-            // margin: 0 15px;
-            +.product-info--item {
-                // margin-left: 30px;
-            }
         }
         .product--label {
             display: block;
@@ -112,6 +97,7 @@
     .form-control {
         width: 200px;
     }
+ 
 }
 
 .price-card--wrapper {
@@ -123,7 +109,6 @@
         .price-list--item {
             display: flex;
             align-items: center;
-            // justify-content: space-between;
             list-style-type: none;
             +.price-list--item {
                 padding-top: 10px;
@@ -168,4 +153,13 @@
 .c-card-footer--btn {
     position: sticky;
     bottom: -1px;
+}
+.product-details-main-card--wrapper {
+    .costPrice{
+        text-align: right;
+        &::placeholder{
+            text-align: right;
+        }
+    }
+    
 }
