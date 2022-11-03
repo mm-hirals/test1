@@ -82,3 +82,7 @@ CustomerAddressesModel.onFailed = function (xhr) {
     tblCustomerAddresses.ajax.reload(null, false);
     $("#divCustomerAddressModal").modal('hide');
 };
+
+function restrictNumber(e) {
+    return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
+} 

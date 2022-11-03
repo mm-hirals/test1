@@ -39,7 +39,7 @@
                             <div class="product-info--item">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <label asp-for="EmailId" class="form-label"></label>
+                                        <label asp-for="EmailId" class="form-label"></label><span class="required">*</span>
                                     </label>
                                     <input asp-for="EmailId" class="form-control" />
                                     <span asp-validation-for="EmailId" class="text-danger"></span>
@@ -83,7 +83,7 @@
                         {
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.Street1" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.Street1" class="text-danger"></span>
                                 </div>
@@ -104,30 +104,30 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.Area" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.Area" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control" />
+                                    <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label><span class="required">*</span>
+                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control"  onkeypress='return restrictNumber(event)'/>
                                     <span asp-validation-for="CustomerAddressesRequestDto.City" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control" />
+                                    <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label><span class="required">*</span>
+                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control"  onkeypress='return restrictNumber(event)'/>
                                     <span asp-validation-for="CustomerAddressesRequestDto.State" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.ZipCode" class="form-control" />
-                                    <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
+                                    <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" type="number" min="0" class="text-danger"></span>
                                 </div>
                             </div>
                         }
@@ -174,7 +174,7 @@
                     <div class="c-card--header">
                         <h4 class="c-card--header-title">Address Details</h4>
                         <div class="c-card--header-action">
-                            <a asp-controller="Architect" asp-action="CreateArchitectAddress" class="btn btn-primary"
+                               <a asp-controller="Architect" asp-action="CreateArchitectAddress" class="btn btn-primary"
                            data-ajax-complete="ArchitectAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateArchitectAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                         </div>
