@@ -51,6 +51,8 @@ $("#title,#modelNo,#companyName").keyup(function () {
 FabricModel.onComplete = function () {
     calculateUnitPrice();
     $("#divFabricModal").modal('show');
+    $('#btnCreateFabric').buttonLoader('stop');
+    $('#btnCreateUpdateFabric').buttonLoader('stop');
 }
 
 FabricModel.onDelete = function () {
@@ -59,12 +61,16 @@ FabricModel.onDelete = function () {
 }
 
 FabricModel.onSuccess = function (xhr) {
+    $('#btnCreateFabric').buttonLoader('stop');
+    $('#btnCreateUpdateFabric').buttonLoader('stop');
     tblFabric.ajax.reload(null, false);
     $("#divFabricModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 FabricModel.onFailed = function (xhr) {
+    $('#btnCreateFabric').buttonLoader('stop');
+    $('#btnCreateUpdateFabric').buttonLoader('stop');
     tblFabric.ajax.reload(null, false);
     $("#divFabricModal").modal('hide');
 };
@@ -108,3 +114,11 @@ function RoundTo(number) {
     else
         return number;
 }
+
+$(document).delegate("#btnCreateFabric", "click", function () {
+    $('#btnCreateFabric').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateUpdateFabric', function (e) {
+    $('#btnCreateUpdateFabric').buttonLoader('start');
+});

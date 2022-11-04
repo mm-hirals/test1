@@ -58,13 +58,11 @@ namespace MidCapERP.Admin.Controllers
                 _toastNotification.AddErrorToastMessage("Incorrect username or Password. Please try again.");
                 return RedirectToAction("Login", "Account");
             }
-            
             if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Dashboard");
             else
                 return Redirect(returnUrl);
         }
-
         /// <summary>
         ///
         /// </summary>

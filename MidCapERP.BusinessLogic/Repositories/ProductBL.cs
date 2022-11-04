@@ -318,7 +318,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             await DeleteProductMaterials(productMainRequestDto.ProductId, cancellationToken);
             await SaveProductMaterials(productMainRequestDto, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productMainRequestDto.ProductId, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productMainRequestDto.ProductId, "Product Material Created", ActivityLogStringConstant.Create, cancellationToken);
             await UpdateProductCost(productMainRequestDto, cancellationToken);
             return productMainRequestDto;
         }
@@ -381,7 +381,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Features = model.Features;
                     getProductById.Comments = model.Comments;
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductDetail Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Detail Updated", ActivityLogStringConstant.Update, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
                     return _mappedUser;
                 }
@@ -407,7 +407,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         getProductById.Status = (int)ProductStatusEnum.UnPublished;
 
                     await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductStatus Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Status Updated", ActivityLogStringConstant.Update, cancellationToken);
                 }
             }
             else
@@ -425,7 +425,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     UpdateData(getProductById);
                     getProductById.CostPrice = model.CostPrice;
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductCost Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Cost Updated", ActivityLogStringConstant.Update, cancellationToken);
                     return _mapper.Map<ProductRequestDto>(data);
                 }
 
@@ -448,8 +448,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task DeleteProductImage(int productImageId, CancellationToken cancellationToken)
         {
-            await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Product Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
+            var deletedProduct = await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), deletedProduct.ProductId, "Product Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
         }
 
         public async Task UpdateProductImageMarkAsCover(int productImageId, bool IsCover, CancellationToken cancellationToken)
@@ -458,8 +458,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (getProductImage != null)
             {
                 getProductImage.IsCover = IsCover;
-                await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productImageId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
+                var updatedImage = await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
+                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), updatedImage.ProductId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
             }
         }
 
@@ -731,15 +731,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Image Added", ActivityLogStringConstant.Create, cancellationToken);
-            }
-        }
-
-        private async Task DeleteImages(List<ProductImage> getImageById, CancellationToken cancellationToken)
-        {
-            foreach (var item in getImageById)
-            {
-                await _unitOfWorkDA.ProductImageDA.DeleteProductImage(item.ProductImageID, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), item.ProductImageID, "Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
             }
         }
 

@@ -71,6 +71,7 @@ $("#lnkProductFilter").click(function () {
 
 ProductModel.onDelete = function () {
     tblProduct.ajax.reload();
+    toastr.error("Data deleted successfully.");
 }
 
 $("#categoryName,#productTitle,#modelNo").keyup("input", function () {

@@ -44,6 +44,8 @@ $("#title,#unitName").on("input", function () {
 });
 
 RawMaterialModel.onComplete = function () {
+    $('#btnCreateRawMaterial').buttonLoader('stop');
+    $('#btnCreateUpdateRawMaterial').buttonLoader('stop');
     $("#divRawMaterialModal").modal('show');
 }
 
@@ -53,12 +55,24 @@ RawMaterialModel.onDelete = function () {
 }
 
 RawMaterialModel.onSuccess = function (xhr) {
+    $('#btnCreateRawMaterial').buttonLoader('stop');
+    $('#btnCreateUpdateRawMaterial').buttonLoader('stop');
     tblRawMaterial.ajax.reload(null, false);
     $("#divRawMaterialModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 RawMaterialModel.onFailed = function (xhr) {
+    $('#btnCreateRawMaterial').buttonLoader('stop');
+    $('#btnCreateUpdateRawMaterial').buttonLoader('stop');
     tblRawMaterial.ajax.reload(null, false);
     $("#divRawMaterialModal").modal('hide');
 };
+
+$(document).delegate("#btnCreateRawMaterial", "click", function () {
+    $('#btnCreateRawMaterial').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateUpdateRawMaterial', function (e) {
+    $('#btnCreateUpdateRawMaterial').buttonLoader('start');
+});

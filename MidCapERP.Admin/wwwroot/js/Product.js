@@ -8,7 +8,7 @@ $(document).ready(function () {
         $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
         $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
         $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
+        //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
     }
 });
 
@@ -141,6 +141,8 @@ $(document).on("change", "select.material", (function () {
     $(this).parent().parent().find("input.Unit").attr('value', unit);
 
     $("span.materialErrorMsg").hide();
+    if (val == "")
+        $(this).parent().parent().find("input.quantity").val("");
 }));
 
 $(document).on("click", ".minus-icon", function () {
@@ -158,7 +160,20 @@ ProductModel.onFailed = function (xhr) {
 };
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
+    $('.btnProductMaterial').buttonLoader('stop');
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
+    $('.btnProductMaterial').buttonLoader('stop');
 };
+$(document).on('submit', '#frmProductInfoForm', function (e) {
+    $('.productSubmit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmProductDetail', function (e) {
+    $('.productDetailsSubmit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmProductMaterial', function (e) {
+    $('.btnProductMaterial').buttonLoader('start');
+});

@@ -9,11 +9,11 @@
       data-ajax="true" data-ajax-method="post"
       data-ajax-complete="ProductModel.onProductMaterialSuccess"
       data-ajax-failure="ProductModel.onProductMaterialFailed"
-      data-ajax-update="#divProductMaterialPartial" data-ajax-mode="replace">
+      data-ajax-update="#divProductMaterialPartial" data-ajax-mode="replace" id="frmProductMaterial">
     <div class="row">
         <input type="hidden" asp-for="ProductId" />
         <div class="col-md-8">
-            <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+            <div class="c-card--wrapper c-card-sm--wrapper mb-3 product-details-main-card--wrapper">
                 <div class="c-card--body">
                     <table class="table c-table c-table-bordered">
                         <thead>
@@ -115,7 +115,7 @@
                     </table>
                 </div>
             </div>
-            <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+            <div class="c-card--wrapper c-card-sm--wrapper mb-3 product-details-main-card--wrapper">
                 <div class="c-card--body">
                     <table class="table c-table c-table-bordered">
                         <thead>
@@ -279,7 +279,7 @@
                     <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                         Cancel
                     </a>
-                    <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner btnProductMaterial">Save</button>
                 </div>
             </div>
         </div>

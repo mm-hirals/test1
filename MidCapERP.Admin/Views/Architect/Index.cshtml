@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MidCapERP.Dto.Customers.CustomersResponseDto>
+﻿@model IEnumerable<MidCapERP.Dto.Architect.ArchitectResponseDto>
 @{
     ViewData["Title"] = "Architects";
     Layout = "_Layout";
@@ -68,7 +68,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary sendSMSToClient">Save</button>
+                        <button type="button" class="btn btn-primary has-spinner sendSMSToClient">Save</button>
                     </div>
                 </div>
             </div>
@@ -84,4 +84,4 @@
 
         <script asp-src-include="~/js/Architect.js"></script>
     }
-    } 
+} 

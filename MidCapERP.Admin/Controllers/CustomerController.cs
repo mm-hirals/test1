@@ -47,7 +47,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillCustomerTypesDropDown(cancellationToken);
+            await FillArchitectDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -82,7 +82,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
-            await FillCustomerTypesDropDown(cancellationToken);
+            await FillArchitectDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -141,18 +141,22 @@ namespace MidCapERP.Admin.Controllers
 
         #region Private Method
 
-        private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
+        private async Task FillArchitectDropDown(CancellationToken cancellationToken)
         {
-            IEnumerable<CustomerTypeEnum> customerTypesData = Enum.GetValues(typeof(CustomerTypeEnum))
-                                        .Cast<CustomerTypeEnum>();
-
-            IEnumerable<SelectListItem> customerTypesSelectedList = from value in customerTypesData
-                                                                    select new SelectListItem()
-                                                                    {
-                                                                        Text = Convert.ToString(value),
-                                                                        Value = Convert.ToString((int)value),
-                                                                    };
-            ViewBag.CustomerType = customerTypesSelectedList;
+            try
+            {
+                var architectData = await _unitOfWorkBL.ArchitectsBL.GetAll(cancellationToken);
+                var data = architectData.Select(a => new SelectListItem
+                {
+                    Value = Convert.ToString(a.CustomerId),
+                    Text = a.FirstName + " " + a.LastName
+                }).ToList();
+                ViewBag.ArchitectSelectItemList = data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         #endregion Private Method

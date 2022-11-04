@@ -171,20 +171,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             try
             {
+                customerToInsert.CustomerTypeId = (int)CustomerTypeEnum.Customer;
+                customerToInsert.Discount = model.Discount != null ? model.Discount : 0;
                 customerToInsert.IsDeleted = false;
                 customerToInsert.TenantId = _currentUser.TenantId;
                 customerToInsert.CreatedBy = _currentUser.UserId;
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
 
-                if (model.RefferedNumber != null)
-                {
-                    await AddCustomerAndReferralUser(model, customerToInsert, cancellationToken);
-                }
-                else
-                {
-                    customerToInsert.RefferedBy = 0;
-                }
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
 
                 await SaveCustomerAddress(model, data, cancellationToken);
@@ -291,7 +285,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
         {
-            oldData.CustomerTypeId = model.CustomerTypeId;
+            oldData.CustomerTypeId = (int)CustomerTypeEnum.Customer;
             oldData.FirstName = model.FirstName;
             oldData.LastName = model.LastName;
             oldData.EmailId = model.EmailId;
@@ -299,6 +293,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
+            oldData.Discount = model.Discount != null ? model.Discount : 0.0m;
+            oldData.RefferedBy = model.RefferedBy;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -312,33 +308,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.IsSubscribe = model.IsSubscribe;
             oldData.CustomerTypeId = model.CustomerTypeId;
             oldData.RefferedBy = model.RefferedBy;
-        }
-
-        private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)
-        {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            if (customerExistOrNot != null)
-            {
-                customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-            }
-            else
-            {
-                Customers refferedCustomer = new Customers()
-                {
-                    TenantId = _currentUser.TenantId,
-                    LastName = String.Empty,
-                    FirstName = model.RefferedName != null ? model.RefferedName : "",
-                    PhoneNumber = model.RefferedNumber,
-                    CustomerTypeId = (int)CustomerTypeEnum.Architect,
-                    RefferedBy = 0,
-                    CreatedBy = _currentUser.UserId,
-                    CreatedDate = DateTime.Now,
-                    CreatedUTCDate = DateTime.UtcNow,
-                };
-                var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
-                customerToInsert.RefferedBy = customer.CustomerId;
-            }
         }
 
         private async Task SaveCustomerAddress(CustomersRequestDto model, Customers data, CancellationToken cancellationToken)

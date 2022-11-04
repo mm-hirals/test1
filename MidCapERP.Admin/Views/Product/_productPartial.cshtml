@@ -1,7 +1,7 @@
 ﻿@model MidCapERP.Dto.Product.ProductRequestDto
 
 <form asp-action="CreateProductBasicDetail" asp-controller="Product"
-      method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
+      method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data" id="frmProductInfoForm">
     <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" class="form-control" />
         <div class="card-prpoduct-cotent--wrapper">
@@ -91,7 +91,7 @@
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                             Cancel
                         </a>
-                        <input type="submit" value="Save" class="btn btn-primary ms-2 productSubmit" />
+                        <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner productSubmit">Save</button>
                     </div>
                 </div>
             </div>

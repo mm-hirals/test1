@@ -16,7 +16,9 @@ $("#nav-tab").on("shown.bs.tab", function (e) {
                 var wrapperThis = this;
 
                 submitButton.addEventListener("click", function () {
+                    $('#submit-all').buttonLoader('start');
                     wrapperThis.processQueue();
+                    $('#submit-all').buttonLoader('stop');
                 });
 
                 this.on("addedfile", function (file) {
