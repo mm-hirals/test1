@@ -178,4 +178,5 @@ $('#sendSMSModal').on('hidden.bs.modal', function () {
 
 $(document).on('submit', '#frmArchitectEdit', function (e) {
     $('#dataSave').buttonLoader('start');
+    toastr.success('Information saved successfully.');
 });
