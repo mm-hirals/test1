@@ -246,6 +246,12 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
+        // Model No Validation
+        public async Task<bool> DuplicateModelNo(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.ProductBL.ValidateModelNo(productRequestDto, cancellationToken);
+        }
+
         #region Private Method
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)

@@ -594,11 +594,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 ProductResponseDto productResponseDto = new ProductResponseDto();
                 var getProductById = await GetProductById(item, cancellationToken);
                 var categoryName = await _unitOfWorkDA.LookupValuesDA.GetById(getProductById.CategoryId, cancellationToken);
-                
+
                 productResponseDto = _mapper.Map<ProductResponseDto>(getProductById);
                 productResponseDto.CategoryName = categoryName.LookupValueName;
                 productResponseDto.QRImage = path + getProductById.QRImage;
-                
+
                 var tenantLogo = await _unitOfWorkDA.TenantDA.GetById(getProductById.TenantId, cancellationToken);
                 if (tenantLogo != null && !string.IsNullOrEmpty(tenantLogo.LogoPath))
                     productResponseDto.TenantLogo = path + tenantLogo.LogoPath;
@@ -606,6 +606,28 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productResponseList.Add(productResponseDto);
             }
             return productResponseList;
+        }
+
+        public async Task<bool> ValidateModelNo(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllProduct = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+
+            if (productRequestDto.ProductId > 0)
+            {
+                var getProductById = getAllProduct.First(p => p.ProductId == productRequestDto.ProductId);
+                if (getProductById.ModelNo == productRequestDto.ModelNo)
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo && p.ProductId != productRequestDto.ProductId);
+                }
+            }
+            else
+            {
+                return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo);
+            }
         }
 
         #region API Methods
