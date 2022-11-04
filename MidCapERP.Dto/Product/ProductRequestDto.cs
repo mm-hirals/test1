@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Product
@@ -18,6 +19,7 @@ namespace MidCapERP.Dto.Product
         [Required]
         [DisplayName("Model No")]
         [StringLength(20, MinimumLength = 1, ErrorMessage = "Maximum 20 characters.")]
+        [Remote("DuplicateModelNo", "Product", AdditionalFields = nameof(ProductId), ErrorMessage = "Model no already exist. Please enter a different model no.")]
         public string ModelNo { get; set; }
 
         public decimal? Width { get; set; }
