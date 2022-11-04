@@ -25,30 +25,30 @@ namespace MidCapERP.CronJob.Services.Email
 
         public async Task SendGreetingEmail(CancellationToken cancellationToken)
         {
-            try
+            List<DataEntities.Models.NotificationManagement> notificationManagementData = _notificationManagementDA.GetAll(cancellationToken).Result.Where(x => x.Status == 0 && x.NotificationMethod == "Email").ToList();
+            if (notificationManagementData.Count > 0)
             {
-                var data = _notificationManagementDA.GetAll(cancellationToken).Result.Where(x => x.Status == 0);
-                if (data.Count() > 0)
+                foreach (var item in notificationManagementData)
                 {
-                    foreach (var item in data.ToList())
+                    try
                     {
                         if (!string.IsNullOrEmpty(item.ReceiverEmail))
                         {
                             List<string> emailList = new List<string>();
                             emailList.Add(item.ReceiverEmail);
-                            await _emailHelper.SendEmail(item.MessageSubject, item.MessageBody, emailList);
-
-                            item.Status = (int)NotificationManagementEnum.Completed;
-                            item.UpdatedDate = DateTime.UtcNow;
-                            item.UpdatedBy = _currentUser.UserId;
-                            await _notificationManagementDA.UpdateNotification((int)item.NotificationManagementID, item, cancellationToken);
+                            await _emailHelper.SendEmail(subject: item.MessageSubject, htmlContent: item.MessageBody, to: emailList);
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        item.Status = (int)NotificationManagementEnum.Failed;
+                        item.UpdatedDate = DateTime.Now;
+                        item.UpdatedUTCDate = DateTime.UtcNow;
+                        item.UpdatedBy = _currentUser.UserId;
+                        await _notificationManagementDA.UpdateNotification((int)item.NotificationManagementID, item, cancellationToken);
+                        throw;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
         }
     }
