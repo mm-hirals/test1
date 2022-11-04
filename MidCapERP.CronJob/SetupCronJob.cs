@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MidCapERP.CronJob.Services;
 using MidCapERP.CronJob.Services.Email;
 
 namespace MidCapERP.CronJob
@@ -14,8 +13,6 @@ namespace MidCapERP.CronJob
                 c.CronExpression = @"* * * * *";
             });
             services.AddSingleton<ISendGreetingEmailForNotification, SendGreetingEmailForNotification>();
-
-            //services.AddScoped<ISendEmail, SendEmail>();
         }
     }
 }

@@ -21,7 +21,6 @@ namespace MidCapERP.CronJob
             try
             {
                 await _sendGreetingEmailForNotification.SendGreetingEmail(cancellationToken);
-                //return base.DoWork(cancellationToken);
             }
             catch (Exception)
             {
