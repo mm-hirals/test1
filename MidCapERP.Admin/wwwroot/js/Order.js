@@ -3,6 +3,8 @@
 var OrderModel = {};
 var tblOrder;
 
+InitSelect2();
+
 $(function () {
     tblOrder = $("#tblOrder").DataTable({
         "searching": false,

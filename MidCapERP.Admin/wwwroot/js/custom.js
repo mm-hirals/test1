@@ -17,6 +17,31 @@
     }
 })(jQuery);
 
+function message(title, message, type) {
+    swal(title, message, type);
+}
+function errorMessage(title, message, type) {
+    swal(title, message, type);
+}
+
+// function
+function SweetAlert(title, id, callback) {
+    swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this record! " + title,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        closeOnConfirm: false
+    },
+        function (isConfirm) {
+            if (isConfirm) {
+                callback(id);
+            }
+        }
+    );
+}
 document.addEventListener("DOMContentLoaded", function (event) {
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),
@@ -131,3 +156,18 @@ new Chart("myCharts", {
     }
 });
 
+function InitSelect2(objParent) {
+    if (!$.isEmptyObject(objParent)) {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+            dropdownParent: objParent
+        });
+    }
+    else {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+        });
+    }
+}

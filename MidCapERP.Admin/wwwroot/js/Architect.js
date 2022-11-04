@@ -178,4 +178,9 @@ $('#sendSMSModal').on('hidden.bs.modal', function () {
 
 $(document).on('submit', '#frmArchitectEdit', function (e) {
     $('#dataSave').buttonLoader('start');
+    toastr.success('Information saved successfully.');
 });
+
+function restrictNumber(e) {
+    return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
+} 

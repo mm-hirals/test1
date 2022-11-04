@@ -44,6 +44,30 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
+        [HttpGet("GetReceiveMaterial/{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<ApiResponse> GetOrderbyReceiveMaterial(long id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderReceiveMaterial(id, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        [HttpGet("ShareOrder/{id}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        public async Task<ApiResponse> GetShareOrderByOrderId(long id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetById(id, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data updated successful", result: "https://midcaperp.magnusminds.net/OrderDetail/" + data.OrderNo, statusCode: 200);
+        }
+
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Create)]
         public async Task<ApiResponse> Post([FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
@@ -87,6 +111,18 @@ namespace MidCapERP.WebAPI.Controllers
         public async Task<ApiResponse> UpdateOrderSendForApproval([FromBody] OrderUpdateStatusAPI orderUpdateStatusAPI, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderSendForApproval(orderUpdateStatusAPI, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        [HttpPatch("ReceiveMaterial")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        public async Task<ApiResponse> UpdateOrderReceiveMaterial([FromBody] OrderUpdateReceiveMaterialAPI orderUpdateReceiveMaterialAPI, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderReceiveMaterial(orderUpdateReceiveMaterialAPI, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
