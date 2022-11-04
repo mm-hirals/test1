@@ -3,6 +3,7 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -333,6 +334,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
                                                  Comment = x.Comment,
+                                                 ReceiveDate = x.ReceiveDate,
+                                                 ProvidedMaterial = x.ProvidedMaterial,
                                                  Status = x.MakingStatus
                                              }).ToList();
 
@@ -867,6 +870,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var discountAmountP = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
                 oldOrderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmountP;
                 oldOrderSetItem.Comment = orderSetItemRequestDto.Comment;
+                oldOrderSetItem.ReceiveDate = orderSetItemRequestDto.ReceiveDate;
+                oldOrderSetItem.ProvidedMaterial = orderSetItemRequestDto.ProvidedMaterial;
                 oldOrderSetItem.UpdatedBy = _currentUser.UserId;
                 oldOrderSetItem.UpdatedDate = DateTime.Now;
                 oldOrderSetItem.UpdatedUTCDate = DateTime.UtcNow;
@@ -910,6 +915,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var discountAmount = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
                 orderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmount;
                 orderSetItem.Comment = orderSetItemRequestDto.Comment;
+                orderSetItem.ReceiveDate = orderSetItemRequestDto.ReceiveDate;
+                orderSetItem.ProvidedMaterial = orderSetItemRequestDto.ProvidedMaterial;
                 orderSetItem.MakingStatus = (int)ProductStatusEnum.Pending;
                 orderSetItem.CreatedBy = _currentUser.UserId;
                 orderSetItem.CreatedDate = DateTime.Now;

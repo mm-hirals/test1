@@ -113,11 +113,7 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
-@section Scripts {
-    @{
-        <script asp-src-include="~/js/CustomerAddresses.js"></script>
-    }
-    }
-    <script>
-        InitSelect2($("#divCustomerAddressModal"));
-    </script>
+
+<script>
+    InitSelect2($("#divCustomerAddressModal"));
+</script>
