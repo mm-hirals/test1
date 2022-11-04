@@ -13,12 +13,10 @@ namespace MidCapERP.Admin.Controllers
     public class ArchitectController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IToastNotification _toastNotification;
 
-        public ArchitectController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public ArchitectController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Architect.View)]
@@ -55,7 +53,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(ArchitectRequestDto architectsRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ArchitectsBL.CreateArchitects(architectsRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Update", "Architect", new { id = data.CustomerId });
         }
 
@@ -73,7 +70,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> CreateArchitectAddress(ArchitectAddressesRequestDto architectsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ArchitectAddressesBL.CreateArchitectAddresses(architectsRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return View("_ArchitectAddressPartial");
         }
 
@@ -90,7 +86,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(Int64 Id, ArchitectRequestDto architectsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ArchitectsBL.UpdateArchitects(Id, architectsRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -107,7 +102,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateArchitectAddresses(Int64 Id, ArchitectAddressesRequestDto architectsAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ArchitectAddressesBL.UpdateArchitectAddresses(Id, architectsAddressRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("ArchitectEdit");
         }
 
