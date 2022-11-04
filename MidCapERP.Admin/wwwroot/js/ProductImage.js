@@ -19,6 +19,7 @@ $("#nav-tab").on("shown.bs.tab", function (e) {
                     $('#submit-all').buttonLoader('start');
                     wrapperThis.processQueue();
                     $('#submit-all').buttonLoader('stop');
+                    toastr.success('Information saved successfully.');
                 });
 
                 this.on("addedfile", function (file) {
