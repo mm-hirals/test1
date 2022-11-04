@@ -30,7 +30,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="AddressType" class="form-label"></label><span class="required">*</span>
-                                <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="form-control form-select">
+                                <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="drpSelect2 form-control form-select">
                                     <option value="" hidden disabled selected>Select Address Type</option>
                                     <option value="Home">Home</option>
                                     <option value="Office">Office</option>
@@ -113,3 +113,11 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+@section Scripts {
+    @{
+        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
+    }
+    }
+    <script>
+        InitSelect2($("#divArchitectAddressModal"));
+    </script>

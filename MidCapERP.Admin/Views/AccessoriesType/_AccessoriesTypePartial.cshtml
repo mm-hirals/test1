@@ -24,7 +24,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="CategoryId" class="form-label"></label>
-                                <select asp-for="CategoryId" data-val="true" class="form-control"
+                                <select asp-for="CategoryId" data-val="true" class="drpSelect2 form-control"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectItemList, "Value", "Text"))">
                                              <option value="" hidden disabled selected>Select Category</option>
                                 </select>
@@ -50,3 +50,6 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+<script>
+    InitSelect2($("#divAccessoriesTypeModal"));
+</script>
