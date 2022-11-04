@@ -177,4 +177,5 @@ $('#sendSMSModal').on('hidden.bs.modal', function () {
 
 $(document).on('submit', '#frmCusomerDetails', function (e) {
     $('#dataSave').buttonLoader('start');
+    toastr.success('Information saved successfully.');
 });

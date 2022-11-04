@@ -293,7 +293,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
-            oldData.Discount = model.Discount != null ? model.Discount : 0.0m;
+            oldData.Discount = model.Discount != null ? model.Discount : 0;
             oldData.RefferedBy = model.RefferedBy;
         }
 

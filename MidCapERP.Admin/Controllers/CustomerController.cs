@@ -6,19 +6,16 @@ using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IToastNotification _toastNotification;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -56,7 +53,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Update", "Customer", new { id = data.CustomerId });
         }
 
@@ -74,7 +70,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> CreateCustomerAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return View("_CustomerAddressPartial");
         }
 
@@ -92,7 +87,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(Int64 Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -109,7 +103,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(Id, customersAddressRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("CustomerEdit");
         }
 

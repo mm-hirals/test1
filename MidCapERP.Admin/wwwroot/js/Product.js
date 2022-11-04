@@ -170,12 +170,15 @@ ProductModel.onProductMaterialFailed = function (xhr) {
 };
 $(document).on('submit', '#frmProductInfoForm', function (e) {
     $('.productSubmit').buttonLoader('start');
+    toastr.success('Information saved successfully.');
 });
 
 $(document).on('submit', '#frmProductDetail', function (e) {
     $('.productDetailsSubmit').buttonLoader('start');
+    toastr.success('Information saved successfully.');
 });
 
 $(document).on('submit', '#frmProductMaterial', function (e) {
     $('.btnProductMaterial').buttonLoader('start');
+    toastr.success('Information saved successfully.');
 });
