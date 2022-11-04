@@ -8,12 +8,10 @@ namespace MidCapERP.DataAccess.Repositories
     public class OrderSetDA : IOrderSetDA
     {
         private readonly ISqlRepository<OrderSet> _orderset;
-        private readonly CurrentUser _currentUser;
 
-        public OrderSetDA(ISqlRepository<OrderSet> orderset, CurrentUser currentUser)
+        public OrderSetDA(ISqlRepository<OrderSet> orderset)
         {
             _orderset = orderset;
-            _currentUser = currentUser;
         }
 
         public async Task<OrderSet> GetById(long Id, CancellationToken cancellationToken)

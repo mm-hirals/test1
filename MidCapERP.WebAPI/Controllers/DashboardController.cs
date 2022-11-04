@@ -17,18 +17,6 @@ namespace MidCapERP.WebAPI.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [HttpGet("CustomerCount")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
-        public async Task<ApiResponse> CustomerCount(CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.CustomersBL.GetCustomerCount(cancellationToken);
-            if (data == null)
-            {
-                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
-            }
-            return new ApiResponse(message: "Data found", result: data, statusCode: 200);
-        }
-
         [HttpGet("OrderReceivableCount")]
         [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
         public async Task<ApiResponse> OrderReceivableCount(CancellationToken cancellationToken)

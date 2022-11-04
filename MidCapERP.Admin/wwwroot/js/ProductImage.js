@@ -14,11 +14,12 @@ if (isDropZoneInit !== false) {
             var submitButton = document.querySelector("#submit-all");
             var wrapperThis = this;
 
-            submitButton.addEventListener("click", function () {
-                $('#submit-all').buttonLoader('start');
-                wrapperThis.processQueue();
-                $('#submit-all').buttonLoader('stop');
-            });
+                submitButton.addEventListener("click", function () {
+                    $('#submit-all').buttonLoader('start');
+                    wrapperThis.processQueue();
+                    $('#submit-all').buttonLoader('stop');
+                    toastr.success('Image saved successfully.');
+                });
 
             this.on("addedfile", function (file) {
                 var removeButton = Dropzone.createElement("<button class='btn btn-lg dark'>Remove File</button>");
