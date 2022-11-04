@@ -3,8 +3,8 @@
 <form asp-action="CreateProductDetail" asp-controller="Product"
       method="post"
       data-ajax="true" data-ajax-method="post"
-      data-ajax-complete="CreateProductDetail.onSuccess"
-      data-ajax-failure="CreateProductDetail.onFailed"
+      data-ajax-complete="ProductModel.onSuccess"
+      data-ajax-failure="ProductModel.onFailed"
       data-ajax-update="#divProductDetailPartial" data-ajax-mode="replace"
       enctype="multipart/form-data" class="modal-form--wrapper formAction" id="frmProductDetail">
     <div class="c-card--wrapper c-card-sm--wrapper mb-3">

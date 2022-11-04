@@ -154,9 +154,11 @@ $(document).on("click", ".minus-icon", function () {
 });
 
 ProductModel.onSuccess = function (xhr) {
+    $('.productDetailsSubmit').buttonLoader('stop');
 };
 
 ProductModel.onFailed = function (xhr) {
+    $('.productDetailsSubmit').buttonLoader('stop');
 };
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
