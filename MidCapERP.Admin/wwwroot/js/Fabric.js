@@ -32,7 +32,7 @@ $(function () {
                 "mRender": function (o) {
                     console.log(o);
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="FabricModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateFabric" href="/Fabric/Update/' + o.fabricId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="FabricModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Fabric/Delete/' + o.fabricId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.fabricId +'" class="btn btn-icon btn-outline-danger btnRemoveFabric"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -53,11 +53,6 @@ FabricModel.onComplete = function () {
     $("#divFabricModal").modal('show');
     $('#btnCreateFabric').buttonLoader('stop');
     $('#btnCreateUpdateFabric').buttonLoader('stop');
-}
-
-FabricModel.onDelete = function () {
-    tblFabric.ajax.reload(null, false);
-    toastr.error('Data deleted successfully.');
 }
 
 FabricModel.onSuccess = function (xhr) {
@@ -122,3 +117,30 @@ $(document).delegate("#btnCreateFabric", "click", function () {
 $(document).on('submit', '#frmCreateUpdateFabric', function (e) {
     $('#btnCreateUpdateFabric').buttonLoader('start');
 });
+
+$(document).delegate(".btnRemoveFabric", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteFabric);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteFabric(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Fabric/Delete/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblFabric.ajax.reload(null, false);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

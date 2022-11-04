@@ -51,7 +51,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="ArchitectAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateArchitectAddresses" href="/Architect/UpdateArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="ArchitectAddressesModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Architect/DeleteArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.customerAddressId + '" class="btn btn-icon btn-outline-danger btnRemoveAddress" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -68,10 +68,6 @@ ArchitectAddressesModel.onComplete = function () {
     $("#divArchitectAddressModal").modal('show');
 }
 
-ArchitectAddressesModel.onDelete = function () {
-    tblArchitectAddresses.ajax.reload(null, false);
-    toastr.error('Data deleted successfully.');
-}
 
 ArchitectAddressesModel.onSuccess = function (xhr) {
     $('.btn-architectAddress').buttonLoader('stop');
@@ -98,4 +94,32 @@ $(document).delegate("#customersId", "click", function () {
 
 function restrictNumber(e) {
     return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
-} 
+}
+
+$(document).delegate(".btnRemoveAddress", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteAddress);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteAddress(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Architect/DeleteArchitectAddresses/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                debugger;
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblArchitectAddresses.ajax.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

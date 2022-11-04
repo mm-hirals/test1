@@ -110,7 +110,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> DeleteArchitectAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ArchitectAddressesBL.DeleteArchitectAddresses(Id, cancellationToken);
-            return RedirectToAction("ArchitectEdit");
+            return Json(true);
         }
 
         [HttpPost]
