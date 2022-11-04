@@ -24,7 +24,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CompanyModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCompany" href="/Company/Update/' + o.lookupValueId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CompanyModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Company/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.lookupValueId + '" class="btn btn-icon btn-outline-danger btnRemoveCompany"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -46,10 +46,6 @@ CompanyModel.onComplete = function () {
     $("#divCompanyModal").modal('show');
 }
 
-CompanyModel.onDelete = function () {
-    tblCompany.ajax.reload(null, false);
-    toastr.error('Data deleted successfully.');
-}
 
 CompanyModel.onSuccess = function (xhr) {
     $('#btnSaveCompany').buttonLoader('stop');
@@ -73,3 +69,29 @@ $(document).delegate("#btnSaveCompany", "click", function () {
 $(document).on('submit', '#frmSaveCompany', function (e) {
     $('#btnCreateUpdateCompany').buttonLoader('start');
 });
+$(document).delegate(".btnRemoveCompany", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteCompany);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteCompany(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Company/Delete/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblCompany.ajax.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

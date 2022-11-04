@@ -133,14 +133,12 @@ namespace MidCapERP.Admin.Controllers
             if (productMainRequestDto.ProductMaterialRequestDto.Count > 0)
             {
                 await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto, cancellationToken);
-                return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
             }
             else
             {
                 await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto, cancellationToken);
             }
-
-            throw new Exception("Please Add Material");
+            return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
         }
 
         [HttpGet]

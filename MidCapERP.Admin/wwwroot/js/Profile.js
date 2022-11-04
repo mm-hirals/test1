@@ -47,7 +47,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="TenantBankDetailModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateTenantBankDetail"  href="/Profile/UpdateTenantBankDetail/' + o.tenantBankDetailId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' + '<a data-ajax-complete="TenantBankDetailModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/Profile/DeleteTenantBankDetail/' + o.tenantBankDetailId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-start"><a data-ajax-complete="TenantBankDetailModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateTenantBankDetail"  href="/Profile/UpdateTenantBankDetail/' + o.tenantBankDetailId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' + '<a id="' + o.tenantBankDetailId +'" class="btn btn-icon btn-outline-danger btnRemoveBankDetails" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -57,11 +57,6 @@ $(function () {
 TenantBankDetailModel.onComplete = function () {
     $('#btnCreateBankDetails').buttonLoader('stop');
     $("#divTenantBankDetailModal").modal('show');
-}
-
-TenantBankDetailModel.onDelete = function () {
-    tblTenantBankDetail.ajax.reload(null, false);
-    $("#divTenantBankDetailModal").modal('hide');
 }
 
 TenantBankDetailModel.onSuccess = function (xhr) {
@@ -88,3 +83,29 @@ $(document).on('submit', '#frmCreateUpdateBankDetails', function (e) {
 $(document).delegate("#btnCreateBankDetails", "click", function () {
     $('#btnCreateBankDetails').buttonLoader('start');
 });
+$(document).delegate(".btnRemoveBankDetails", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteBankDetails);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteBankDetails(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Profile/DeleteTenantBankDetail/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblTenantBankDetail.ajax.reload(null, false);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

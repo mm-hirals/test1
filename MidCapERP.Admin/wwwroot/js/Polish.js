@@ -30,7 +30,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="PolishModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdatePolish" href="/Polish/Update/' + o.polishId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="PolishModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Polish/Delete/' + o.polishId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.polishId+'" class="btn btn-icon btn-outline-danger btnRemovePolish" data-ajax-mode="replace" ><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -50,11 +50,6 @@ PolishModel.onComplete = function () {
     $('#btnCreatePolish').buttonLoader('stop');
     $('#btnCreateUpdatePolish').buttonLoader('stop');
     $("#divPolishModal").modal('show');
-}
-
-PolishModel.onDelete = function () {
-    tblPolish.ajax.reload(null, false);
-    toastr.error('Data deleted successfully.');
 }
 
 PolishModel.onSuccess = function (xhr) {
@@ -79,3 +74,30 @@ $(document).delegate("#btnCreatePolish", "click", function () {
 $(document).on('submit', '#frmCreateUpdatePolish', function (e) {
     $('#btnCreateUpdatePolish').buttonLoader('start');
 });
+
+$(document).delegate(".btnRemovePolish", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeletePolish);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeletePolish(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Polish/Delete/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblPolish.ajax.reload(null, false);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

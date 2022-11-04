@@ -31,7 +31,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="UserModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateUser" href="/User/Update/' + o.userId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="UserModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/User/Delete/' + o.userId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.userId +'" class="btn btn-icon btn-outline-danger btnRemoveUser"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -88,3 +88,29 @@ $(document).delegate("#btnCreateUser", "click", function () {
 $(document).on('submit', '#frmCreateUpdateUser', function (e) {
     $('#btnCreateUpdateUser').buttonLoader('start');
 });
+$(document).delegate(".btnRemoveUser", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteUser);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteUser(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/User/Delete?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblUser.ajax.reload(null, false);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}
