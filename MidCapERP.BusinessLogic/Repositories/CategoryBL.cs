@@ -42,29 +42,24 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            int lookupId = await GetLookupId(cancellationToken);
-            var categoryAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
+            long categoryTypeId = await GetCategoryTypeId(cancellationToken);
+            var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
             var categoryResponseData = (from x in categoryAllData
-                                        join y in lookupsAllData
-                                        on new { x.LookupId } equals new { y.LookupId }
-                                        where x.LookupId == lookupId
+                                        where x.CategoryTypeId == categoryTypeId
                                         select new CategoryResponseDto()
                                         {
-                                            LookupValueId = x.LookupValueId,
-                                            LookupValueName = x.LookupValueName,
-                                            LookupId = x.LookupId,
-                                            LookupName = y.LookupName,
+                                            CategoryId = x.CategoryId,
+                                            CategoryName = x.CategoryName,
                                             IsDeleted = x.IsDeleted,
-                                            CreatedBy = x.CreatedBy,
+                                            CreatedBy = (int)x.CreatedBy,
                                             CreatedDate = x.CreatedDate,
                                             CreatedUTCDate = x.CreatedUTCDate,
-                                            UpdatedBy = x.UpdatedBy,
+                                            UpdatedBy = (int?)x.UpdatedBy,
                                             UpdatedDate = x.UpdatedDate,
-                                            UpdatedUTCDate = x.UpdatedUTCDate
+                                            UpdatedUTCDate = x.UpdatedUTCDate,
                                         }).AsQueryable();
             var categoryFilteredData = FilterCategoryData(dataTableFilterDto, categoryResponseData);
-            var categoryData = new PagedList<CategoryResponseDto>(categoryFilteredData, dataTableFilterDto);
+            var categoryData = new PagedList<CategoryResponseDto>(categoryResponseData, dataTableFilterDto);
             return new JsonRepsonse<CategoryResponseDto>(dataTableFilterDto.Draw, categoryData.TotalCount, categoryData.TotalCount, categoryData);
         }
 
@@ -145,13 +140,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             return lookupId;
         }
 
+        private async Task<long> GetCategoryTypeId(CancellationToken cancellationToken)
+        {
+            var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
+            var categoryTypeId = categoryAllData.Where(x => x.CategoryId == (int)MasterPagesEnum.Category).Select(x => x.CategoryTypeId).FirstOrDefault();
+            return categoryTypeId;
+        }
+
         private static IQueryable<CategoryResponseDto> FilterCategoryData(CategoryDataTableFilterDto categoryDataTableFilterDto, IQueryable<CategoryResponseDto> categoryResponseDto)
         {
             if (categoryDataTableFilterDto != null)
             {
                 if (!string.IsNullOrEmpty(categoryDataTableFilterDto.CategoryName))
                 {
-                    categoryResponseDto = categoryResponseDto.Where(p => p.LookupValueName.StartsWith(categoryDataTableFilterDto.CategoryName));
+                    categoryResponseDto = categoryResponseDto.Where(p => p.CategoryName.StartsWith(categoryDataTableFilterDto.CategoryName));
                 }
             }
 

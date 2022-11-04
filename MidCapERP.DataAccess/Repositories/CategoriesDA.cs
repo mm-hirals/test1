@@ -8,12 +8,10 @@ namespace MidCapERP.DataAccess.Repositories
     public class CategoriesDA : ICategoriesDA
     {
         private readonly ISqlRepository<Categories> _categories;
-        private readonly CurrentUser _currentUser;
 
-        public CategoriesDA(ISqlRepository<Categories> categories, CurrentUser currentUser)
+        public CategoriesDA(ISqlRepository<Categories> categories)
         {
             _categories = categories;
-            _currentUser = currentUser;
         }
 
         public async Task<Categories> CreateCategory(Categories model, CancellationToken cancellationToken)

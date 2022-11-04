@@ -19,12 +19,12 @@ $(function () {
             }
         },
         "columns": [
-            { "data": "lookupValueName", "name": "LookupValueName", "autoWidth": true },
+            { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCategory" href="/Category/Update/' + o.lookupValueId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CategoryModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Category/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCategory" href="/Category/Update/' + o.categoryId + '"><i class="bx bxs-pencil"></i></a>' +
+                        '<a data-ajax-complete="CategoryModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Category/Delete/' + o.categoryId + '"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
