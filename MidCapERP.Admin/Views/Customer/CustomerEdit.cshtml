@@ -64,13 +64,6 @@
                                 <span asp-validation-for="GSTNo" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="Discount" class="form-label"></label>
-                                <input asp-for="Discount" type="number" class="form-control customerDiscount" min="0" max="100" />
-                                <span asp-validation-for="Discount" class="text-danger"></span>
-                            </div>
-                        </div>
                         @if (Model == null)
                         {
                             <div class="col-3">
