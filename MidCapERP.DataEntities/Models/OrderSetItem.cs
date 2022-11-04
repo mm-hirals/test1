@@ -22,6 +22,8 @@ namespace MidCapERP.DataEntities.Models
         public decimal DiscountPrice { get; set; }
         public decimal TotalAmount { get; set; }
         public string? Comment { get; set; }
+        public DateTime? ReceiveDate { get; set; }
+        public decimal? ProvidedMaterial { get; set; }
         public int MakingStatus { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

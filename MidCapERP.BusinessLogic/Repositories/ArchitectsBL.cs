@@ -7,7 +7,7 @@ using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.Architect;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
@@ -31,28 +31,29 @@ namespace MidCapERP.BusinessLogic.Repositories
             _emailHelper = emailHelper;
         }
 
-        public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
+        public async Task<IEnumerable<ArchitectResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return _mapper.Map<List<CustomersResponseDto>>(data.ToList());
+            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
+            return _mapper.Map<List<ArchitectResponseDto>>(architectData.ToList());
         }
 
-        public async Task<JsonRepsonse<CustomersResponseDto>> GetFilterArchitectsData(CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<ArchitectResponseDto>> GetFilterArchitectsData(ArchitectDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
             var architectFilteredData = FilterArchitectData(dataTableFilterDto, architectData);
-            var architectGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(architectFilteredData).AsQueryable(), dataTableFilterDto);
-            return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, architectGridData.TotalCount, architectGridData.TotalCount, architectGridData);
+            var architectGridData = new PagedList<ArchitectResponseDto>(_mapper.Map<List<ArchitectResponseDto>>(architectFilteredData).AsQueryable(), dataTableFilterDto);
+            return new JsonRepsonse<ArchitectResponseDto>(dataTableFilterDto.Draw, architectGridData.TotalCount, architectGridData.TotalCount, architectGridData);
         }
 
-        public async Task<CustomersRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        public async Task<ArchitectRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await ArchitectGetById(Id, cancellationToken);
-            return _mapper.Map<CustomersRequestDto>(data);
+            return _mapper.Map<ArchitectRequestDto>(data);
         }
 
-        public async Task<CustomersRequestDto> CreateArchitects(CustomersRequestDto model, CancellationToken cancellationToken)
+        public async Task<ArchitectRequestDto> CreateArchitects(ArchitectRequestDto model, CancellationToken cancellationToken)
         {
             var architectToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
@@ -62,6 +63,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 architectToInsert.RefferedBy = 0;
                 architectToInsert.CustomerTypeId = (int)CustomerTypeEnum.Architect;
+                architectToInsert.Discount = model.Discount != null ? model.Discount : 0;
                 architectToInsert.IsDeleted = false;
                 architectToInsert.TenantId = _currentUser.TenantId;
                 architectToInsert.CreatedBy = _currentUser.UserId;
@@ -77,10 +79,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Architect data is not saved");
             }
 
-            return _mapper.Map<CustomersRequestDto>(data);
+            return _mapper.Map<ArchitectRequestDto>(data);
         }
 
-        public async Task<CustomersRequestDto> UpdateArchitects(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken)
+        public async Task<ArchitectRequestDto> UpdateArchitects(Int64 Id, ArchitectRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await ArchitectGetById(Id, cancellationToken);
             oldData.UpdatedBy = _currentUser.UserId;
@@ -88,10 +90,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-            return _mapper.Map<CustomersRequestDto>(data);
+            return _mapper.Map<ArchitectRequestDto>(data);
         }
 
-        public async Task SendSMSToArchitects(CustomersSendSMSDto model, CancellationToken cancellationToken)
+        public async Task SendSMSToArchitects(ArchitectsSendSMSDto model, CancellationToken cancellationToken)
         {
             //List<string> architectEmailList = new List<string>();
             foreach (var item in model.CustomerList)
@@ -135,7 +137,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data;
         }
 
-        private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
+        private static void MapToDbObject(ArchitectRequestDto model, Customers oldData)
         {
             oldData.CustomerTypeId = model.CustomerTypeId;
             oldData.FirstName = model.FirstName;
@@ -145,9 +147,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
+            oldData.Discount = model.Discount != null ? model.Discount : 0;
         }
 
-        private async Task SaveArchitectAddress(CustomersRequestDto model, Customers data, CancellationToken cancellationToken)
+        private async Task SaveArchitectAddress(ArchitectRequestDto model, Customers data, CancellationToken cancellationToken)
         {
             CustomerAddresses catDto = new CustomerAddresses()
             {
@@ -168,7 +171,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.CommitTransactionAsync();
         }
 
-        private static IQueryable<Customers> FilterArchitectData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<Customers> architectAllData)
+        private static IQueryable<Customers> FilterArchitectData(ArchitectDataTableFilterDto dataTableFilterDto, IQueryable<Customers> architectAllData)
         {
             if (dataTableFilterDto != null)
             {

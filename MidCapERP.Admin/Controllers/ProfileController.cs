@@ -80,7 +80,8 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> DeleteTenantBankDetail(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBankDetailBL.DeleteTenantBankDetail(Id, cancellationToken);
-            return RedirectToAction("_TenantBankDetailPartial");
+            //return RedirectToAction("_TenantBankDetailPartial");
+            return Json(true);
         }
     }
 }

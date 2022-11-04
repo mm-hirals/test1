@@ -6,19 +6,16 @@ using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IToastNotification _toastNotification;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -47,7 +44,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillCustomerTypesDropDown(cancellationToken);
+            await FillArchitectDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -56,7 +53,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Update", "Customer", new { id = data.CustomerId });
         }
 
@@ -74,7 +70,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> CreateCustomerAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return View("_CustomerAddressPartial");
         }
 
@@ -82,7 +77,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
-            await FillCustomerTypesDropDown(cancellationToken);
+            await FillArchitectDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -92,7 +87,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(Int64 Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
@@ -109,7 +103,6 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(Id, customersAddressRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("CustomerEdit");
         }
 
@@ -141,18 +134,22 @@ namespace MidCapERP.Admin.Controllers
 
         #region Private Method
 
-        private async Task FillCustomerTypesDropDown(CancellationToken cancellationToken)
+        private async Task FillArchitectDropDown(CancellationToken cancellationToken)
         {
-            IEnumerable<CustomerTypeEnum> customerTypesData = Enum.GetValues(typeof(CustomerTypeEnum))
-                                        .Cast<CustomerTypeEnum>();
-
-            IEnumerable<SelectListItem> customerTypesSelectedList = from value in customerTypesData
-                                                                    select new SelectListItem()
-                                                                    {
-                                                                        Text = Convert.ToString(value),
-                                                                        Value = Convert.ToString((int)value),
-                                                                    };
-            ViewBag.CustomerType = customerTypesSelectedList;
+            try
+            {
+                var architectData = await _unitOfWorkBL.ArchitectsBL.GetAll(cancellationToken);
+                var data = architectData.Select(a => new SelectListItem
+                {
+                    Value = Convert.ToString(a.CustomerId),
+                    Text = a.FirstName + " " + a.LastName
+                }).ToList();
+                ViewBag.ArchitectSelectItemList = data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         #endregion Private Method

@@ -16,7 +16,7 @@
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                 data-ajax="true" data-ajax-method="post" 
                 data-ajax-complete="CategoryModel.onSuccess" 
-                data-ajax-failure="CategoryModel.onFailed">
+                data-ajax-failure="CategoryModel.onFailed" id="frmCreateCategory">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @*<input asp-for="LookupValueId" hidden class="form-control" />*@
@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner" id="btnSaveCategory">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>

@@ -9,7 +9,7 @@
       data-ajax="true" data-ajax-method="post"
       data-ajax-complete="ProductModel.onProductMaterialSuccess"
       data-ajax-failure="ProductModel.onProductMaterialFailed"
-      data-ajax-update="#divProductMaterialPartial" data-ajax-mode="replace">
+      data-ajax-update="#divProductMaterialPartial" data-ajax-mode="replace" id="frmProductMaterial">
     <div class="row">
         <input type="hidden" asp-for="ProductId" />
         <div class="col-md-8">
@@ -40,7 +40,7 @@
                             <tr>
                                 <td>
                                     <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="@ViewBag.RawMaterialSubjectTypeId">
-                                    <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
+                                    <select data-tabindex="-1" class="drpSelect2 form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
                                         <option value="" selected>Select Raw Material</option>
                                         @foreach (var item in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
                                         {
@@ -78,7 +78,7 @@
                                     <tr>
                                         <td>
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="@ViewBag.RawMaterialSubjectTypeId">
-                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
+                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="drpSelect2 form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
                                                 @foreach (var list in (List<ProductMaterialListItem>)ViewBag.RawMaterialDropDownData)
                                                 {
                                                     <option value="@list.Value" UnitPrice="@list.UnitPrice" data-value="true">@list.Text</option>
@@ -142,7 +142,7 @@
                             <tr>
                                 <td>
                                     <input type="hidden" data-name="ProductMaterialRequestDto[{ID}].SubjectTypeId" data-readonly="readonly" class="form-control" value="@ViewBag.PolishSubjectTypeId">
-                                    <select data-tabindex="-1" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
+                                    <select data-tabindex="-1" class="drpSelect2 form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" data-readonly="readonly">
                                         <option value="" selected>Select Polish</option>
                                         @foreach (var item in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
                                         {
@@ -179,7 +179,7 @@
                                     <tr>
                                         <td>
                                             <input type="hidden" asp-for="ProductMaterialRequestDto[i].SubjectTypeId" readonly="readonly" class="form-control" value="@ViewBag.PolishSubjectTypeId">
-                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
+                                            <select tabindex="-1" asp-for="ProductMaterialRequestDto[i].SubjectId" class="drpSelect2 form-select material" data-name="ProductMaterialRequestDto[{ID}].SubjectId" readonly="readonly">
                                                 @foreach (var list in (List<ProductMaterialListItem>)ViewBag.PolishDropDownData)
                                                 {
                                                     <option value="@list.Value" UnitPrice="@list.UnitPrice">@list.Text</option>
@@ -279,7 +279,7 @@
                     <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                         Cancel
                     </a>
-                    <input type="submit" value="Save" class="btn btn-primary ms-2" />
+                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner btnProductMaterial">Save</button>
                 </div>
             </div>
         </div>
@@ -304,3 +304,6 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+<script>
+    InitSelect2();
+</script>

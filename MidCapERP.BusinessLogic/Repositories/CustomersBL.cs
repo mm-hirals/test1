@@ -78,13 +78,13 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText))
+            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText))
                 .Select(x => new MegaSearchResponse
                 (
-                    x.CustomerId, 
-                    x.FirstName + " " + x.LastName, 
-                    x.PhoneNumber, 
-                    null, 
+                    x.CustomerId,
+                    x.FirstName + " " + x.LastName,
+                    x.PhoneNumber,
+                    null,
                     x.CustomerTypeId == (int)CustomerTypeEnum.Architect ? "Architect" : "Customer")
                 ).Take(10).ToList();
             return response;
@@ -94,7 +94,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => x.FirstName.StartsWith(searchText) || x.LastName.StartsWith(searchText) || (x.FirstName + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
+            var data = architectCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
             return data.ToList();
         }
 
@@ -114,7 +114,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<CustomersResponseDto>> SearchCustomer(string customerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo) || x.FirstName.StartsWith(customerNameOrEmailOrMobileNo) || x.LastName.StartsWith(customerNameOrEmailOrMobileNo) || x.EmailId.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
+            var customerData = customerAllData.Where(x => x.PhoneNumber.StartsWith(customerNameOrEmailOrMobileNo) || (x.FirstName + " " + x.LastName).StartsWith(customerNameOrEmailOrMobileNo));
             return _mapper.Map<List<CustomersResponseDto>>(customerData.ToList());
         }
 
@@ -171,20 +171,14 @@ namespace MidCapERP.BusinessLogic.Repositories
 
             try
             {
+                customerToInsert.CustomerTypeId = (int)CustomerTypeEnum.Customer;
+                customerToInsert.Discount = model.Discount != null ? model.Discount : 0;
                 customerToInsert.IsDeleted = false;
                 customerToInsert.TenantId = _currentUser.TenantId;
                 customerToInsert.CreatedBy = _currentUser.UserId;
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
 
-                if (model.RefferedNumber != null)
-                {
-                    await AddCustomerAndReferralUser(model, customerToInsert, cancellationToken);
-                }
-                else
-                {
-                    customerToInsert.RefferedBy = 0;
-                }
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
 
                 await SaveCustomerAddress(model, data, cancellationToken);
@@ -238,29 +232,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        //public async Task<CustomersApiResponseDto> GetCustomerByMobileNumberOrEmailId(string phoneNumberOrEmailId, CancellationToken cancellationToken)
-        //{
-        //    var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-        //    var customerMobileNumberOrEmailId = customerAllData.FirstOrDefault(x => x.PhoneNumber == phoneNumberOrEmailId || x.EmailId == phoneNumberOrEmailId);
-        //    if (customerMobileNumberOrEmailId == null)
-        //    {
-        //        throw new Exception("Customer not found");
-        //    }
-        //    if (customerMobileNumberOrEmailId.RefferedBy != null)
-        //    {
-        //        var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-        //        var refferedByCustomerData = await CustomerGetByRefferedId((long)customerMobileNumberOrEmailId.RefferedBy, cancellationToken);
-        //        if (refferedByCustomerData == null)
-        //        {
-        //            return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
-        //        }
-        //        var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
-        //        customerApiResponseData.Reffered = refferedCustomerResponseData;
-        //        return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
-        //    }
-        //    else
-        //        return _mapper.Map<CustomersApiResponseDto>(customerMobileNumberOrEmailId);
-        //}
+        public async Task<CustomersApiResponseDto> GetCustomerByIdAPI(Int64 id, CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkDA.CustomersDA.GetById(id, cancellationToken);
+            if (customerData == null)
+            {
+                throw new Exception("Customer not found");
+            }
+            if (customerData.RefferedBy != null)
+            {
+                var customerApiResponseData = _mapper.Map<CustomersApiResponseDto>(customerData);
+                var refferedByCustomerData = await CustomerGetByRefferedId((long)customerData.RefferedBy, cancellationToken);
+                if (refferedByCustomerData == null)
+                {
+                    return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+                }
+                var refferedCustomerResponseData = _mapper.Map<CustomersApiResponseDto>(refferedByCustomerData);
+                customerApiResponseData.Reffered = refferedCustomerResponseData;
+                return _mapper.Map<CustomersApiResponseDto>(customerApiResponseData);
+            }
+            else
+                return _mapper.Map<CustomersApiResponseDto>(customerData);
+        }
 
         #region PrivateMethods
 
@@ -292,7 +285,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private static void MapToDbObject(CustomersRequestDto model, Customers oldData)
         {
-            oldData.CustomerTypeId = model.CustomerTypeId;
+            oldData.CustomerTypeId = (int)CustomerTypeEnum.Customer;
             oldData.FirstName = model.FirstName;
             oldData.LastName = model.LastName;
             oldData.EmailId = model.EmailId;
@@ -300,6 +293,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
+            oldData.Discount = model.Discount != null ? model.Discount : 0;
+            oldData.RefferedBy = model.RefferedBy;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -312,33 +307,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
             oldData.CustomerTypeId = model.CustomerTypeId;
-        }
-
-        private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)
-        {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            if (customerExistOrNot != null)
-            {
-                customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-            }
-            else
-            {
-                Customers refferedCustomer = new Customers()
-                {
-                    TenantId = _currentUser.TenantId,
-                    LastName = String.Empty,
-                    FirstName = model.RefferedName != null ? model.RefferedName : "",
-                    PhoneNumber = model.RefferedNumber,
-                    CustomerTypeId = (int)CustomerTypeEnum.Architect,
-                    RefferedBy = 0,
-                    CreatedBy = _currentUser.UserId,
-                    CreatedDate = DateTime.Now,
-                    CreatedUTCDate = DateTime.UtcNow,
-                };
-                var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
-                customerToInsert.RefferedBy = customer.CustomerId;
-            }
+            oldData.RefferedBy = model.RefferedBy;
         }
 
         private async Task SaveCustomerAddress(CustomersRequestDto model, Customers data, CancellationToken cancellationToken)

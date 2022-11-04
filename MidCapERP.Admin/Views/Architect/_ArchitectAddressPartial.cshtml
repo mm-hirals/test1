@@ -1,4 +1,4 @@
-﻿@model MidCapERP.Dto.CustomerAddresses.CustomerAddressesRequestDto
+﻿@model MidCapERP.Dto.ArchitectAddresses.ArchitectAddressesRequestDto
 @{
     string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateArchitectAddresses" : "CreateArchitectAddress";
 }
@@ -15,7 +15,7 @@
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                   data-ajax="true" data-ajax-method="post"
                   data-ajax-complete="ArchitectAddressesModel.onSuccess"
-                  data-ajax-failure="ArchitectAddressesModel.onFailed">
+                  data-ajax-failure="ArchitectAddressesModel.onFailed" id="frmArchitectAddress">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerAddressId" hidden class="form-control" />
@@ -30,7 +30,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="AddressType" class="form-label"></label><span class="required">*</span>
-                                <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="form-control form-select">
+                                <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="drpSelect2 form-control form-select">
                                     <option value="" hidden disabled selected>Select Address Type</option>
                                     <option value="Home">Home</option>
                                     <option value="Office">Office</option>
@@ -70,21 +70,21 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="City" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="City" class="form-control" />
+                                <input asp-for="City" class="form-control" onkeypress='return restrictNumber(event)' />
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="State" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="State" class="form-control" />
+                                <input asp-for="State" class="form-control" onkeypress='return restrictNumber(event)' />
                                 <span asp-validation-for="State" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="ZipCode" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="ZipCode" class="form-control" />
+                                <input asp-for="ZipCode" class="form-control" type="number" min="0" />
                                 <span asp-validation-for="ZipCode" class="text-danger"></span>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner btn-architectAddress">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -110,8 +110,10 @@
     </div>
 </div>
 
-@section Scripts {
-    @{
-        <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
-    }
-} 
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}
+
+<script>
+    InitSelect2($("#divArchitectAddressModal"));
+</script>

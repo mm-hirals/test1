@@ -73,7 +73,7 @@ namespace MidCapERP.Dto.Tenant
         public decimal? ProductWSPPercentage { get; set; }
 
         [Required]
-        [DisplayName("Architect Discount %")]
+        [DisplayName("Architect Commission %")]
         public decimal? ArchitectDiscount { get; set; }
 
         [Required]

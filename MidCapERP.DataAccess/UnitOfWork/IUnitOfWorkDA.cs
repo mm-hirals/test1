@@ -30,6 +30,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IOrderDA OrderDA { get; }
         IOrderSetDA OrderSetDA { get; }
         IOrderSetItemDA OrderSetItemDA { get; }
+        IOrderSetItemImageDA OrderSetItemImageDA { get; }
+        IOrderSetItemReceivableDA OrderSetItemReceivableDA { get; }
         IActivityLogsDA ActivityLogsDA { get; }
         IOrderAddressDA OrderAddressDA { get; }
         ITenantSMTPDetailDA TenantSMTPDetailDA { get; }

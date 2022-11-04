@@ -7,114 +7,61 @@
 <div class="">
     <div class="card mb-3">
         <div class="card-prpoduct-cotent--wrapper">
-            <form asp-action="@action" method="post" class="modal-form--wrapper">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmCusomerDetails">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="CustomerTypeId" class="form-label"></label><span class="required">*</span>
-                                    </label>
-                                    <select asp-for="CustomerTypeId" data-val="true" class="form-control customerType form-select"
-                                            asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.CustomerType,"Value", "Text"))">
-                                                <option value="" hidden disabled selected>Select Customer Type</option>
-                                    </select>
-                                    <span asp-validation-for="CustomerTypeId" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
-                                    </label>
-                                    <input asp-for="FirstName" class="form-control" />
-                                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
-                                    </label>
-                                    <input asp-for="LastName" class="form-control" />
-                                    <span asp-validation-for="LastName" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="EmailId" class="form-label"></label>
+                                <input asp-for="EmailId" class="form-control" />
+                                <span asp-validation-for="EmailId" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="EmailId" class="form-label"></label>
-                                    </label>
-                                    <input asp-for="EmailId" class="form-control" />
-                                    <span asp-validation-for="EmailId" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
+                                <input asp-for="PhoneNumber" class="form-control" type="number" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
-                                    </label>
-                                    <input asp-for="PhoneNumber" class="form-control" type="number" />
-                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="AltPhoneNumber" class="form-label"></label>
+                                <input asp-for="AltPhoneNumber" class="form-control" />
+                                <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="AltPhoneNumber" class="form-label"></label>
-                                    </label>
-                                    <input asp-for="AltPhoneNumber" class="form-control" />
-                                    <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="RefferedBy" class="form-label"></label>
+                                <select asp-for="RefferedBy" data-val="true" class="form-control form-select"
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ArchitectSelectItemList, "Value", "Text"))">
+                                    <option value="" hidden disabled selected>Select Architect</option>
+                                </select>
+                                <span asp-validation-for="RefferedBy" class="text-danger"></span>
                             </div>
                         </div>
-                        @if (@action == "Create")
-                        {
-                            <div class="col-md-3">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="RefferedNumber" class="form-label"></label>
-                                        </label>
-                                        <input asp-for="RefferedNumber" class="form-control refferedNumber" />
-                                        <span asp-validation-for="RefferedNumber" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="product-info--item">
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            <label asp-for="RefferedName" class="form-label"></label>
-                                        </label>
-                                        <input asp-for="RefferedName" class="form-control refferedName" />
-                                        <span asp-validation-for="RefferedName" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="GSTNo" class="form-label"></label>
-                                    </label>
-                                    <input asp-for="GSTNo" class="form-control" />
-                                    <span asp-validation-for="GSTNo" class="text-danger"></span>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label asp-for="GSTNo" class="form-label"></label>
+                                <input asp-for="GSTNo" class="form-control" />
+                                <span asp-validation-for="GSTNo" class="text-danger"></span>
                             </div>
                         </div>
                         @if (Model == null)
@@ -142,7 +89,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label>
+                                    <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="CustomerAddressesRequestDto.Area" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.Area" class="text-danger"></span>
                                 </div>
@@ -150,35 +97,31 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label><span class="required">*</span>
-                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control" onkeypress='return restrictNumber(event)' />
                                     <span asp-validation-for="CustomerAddressesRequestDto.City" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label><span class="required">*</span>
-                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control" onkeypress='return restrictNumber(event)' />
                                     <span asp-validation-for="CustomerAddressesRequestDto.State" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label><span class="required">*</span>
-                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" type="number" min="0" class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
                                 </div>
                             </div>
                         }
                         <div class="col-md-3">
-                            <div class="product-info--item">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <label asp-for="IsSubscribe" class="form-label"></label>
-                                    </label>
-                                    <div class="custom-control custom-switch">
-                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isSubscribe" data-val="true">
-                                        <label class="custom-control-label" for="isSubscribe">Active</label>
-                                    </div>
+                            <div class="form-group">
+                                <label asp-for="IsSubscribe" class="form-label"></label>
+                                <div class="custom-control custom-switch">
+                                    <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isSubscribe" data-val="true">
+                                    <label class="custom-control-label" for="isSubscribe">Active</label>
                                 </div>
                             </div>
                         </div>
@@ -188,7 +131,7 @@
                             <div class="c-card--wrapper c-card-sm--wrapper">
                                 <div class="c-card--footer">
                                     <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
-                                    <input type="submit" value="Save" class="btn btn-primary ms-2" id="dataSave" />
+                                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner customerSave" id="dataSave">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +155,7 @@
                     <div class="c-card--header">
                         <h4 class="c-card--header-title">Address Details</h4>
                         <div class="c-card--header-action">
-                            <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary"
+                            <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary has-spinner"
                            data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                         </div>
@@ -240,4 +183,4 @@
         <script asp-src-include="~/js/Customer.js"></script>
         <script asp-src-include="~/js/CustomerAddresses.js"></script>
     }
-} 
+    }

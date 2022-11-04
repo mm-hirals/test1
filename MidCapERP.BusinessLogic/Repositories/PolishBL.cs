@@ -9,6 +9,7 @@ using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Paging;
 using MidCapERP.Dto.Polish;
+using MidCapERP.Dto.Product;
 using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -41,7 +42,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return polishAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.PolishId, x.Title, x.ModelNo, x.ImagePath, "Polish", polishSubjectTypeId)).Take(10).ToList();
         }
 
-        public async Task<PolishApiResponseDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<ProductForDetailsByModuleNoResponceDto> GetPolishForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
             var polishAlldata = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
@@ -50,7 +51,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 throw new Exception("Polish Data not found");
             }
-            return new PolishApiResponseDto(polishdata.PolishId, polishdata.Title, polishdata.ModelNo, polishdata.CompanyId, polishdata.UnitId, polishdata.UnitPrice, polishdata.ImagePath, polishSubjectTypeId);
+
+            string polishImage = "";
+            if (!string.IsNullOrEmpty(polishdata.ImagePath))
+                polishImage = "https://midcaperp.magnusminds.net/" + polishdata.ImagePath;
+            return new ProductForDetailsByModuleNoResponceDto(polishdata.PolishId, 0, polishdata.Title, polishdata.ModelNo, 0, 0, 0, 0, 0, false, 0, "", "", polishdata.UnitPrice, "", polishImage, polishSubjectTypeId);
         }
 
         public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(PolishDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

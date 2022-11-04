@@ -16,3 +16,6 @@ $("input[type='checkbox']").click(function () {
         }
     });
 });
+$(document).on('submit', '#frmCreateUpdateRolePermission', function (e) {
+    $('#btnCreateUpdateRolePermission').buttonLoader('start');
+});

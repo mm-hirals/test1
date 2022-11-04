@@ -1,7 +1,6 @@
 ﻿@model MidCapERP.Dto.Product.ProductRequestDto
-
 <form asp-action="CreateProductBasicDetail" asp-controller="Product"
-      method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data">
+      method="post" class="modal-form--wrapper productInfoForm" enctype="multipart/form-data" id="frmProductInfoForm">
     <div class="card-product--wrapper mb-2">
         <input type="hidden" asp-for="ProductId" class="form-control" />
         <div class="card-prpoduct-cotent--wrapper">
@@ -12,14 +11,14 @@
                             <label asp-for="CategoryId" class="form-label"></label><span class="required">*</span>
                             @if (Model?.ProductId > 0)
                             {
-                                <select asp-for="CategoryId" data-val="true" class="form-control" readonly="readonly"
+                                <select asp-for="CategoryId" data-val="true" class="form-control drpSelect2" readonly="readonly"
                                     asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
                                     <option value="" selected>Select Category</option>
                                 </select>
                             }
                             else
                             {
-                                <select asp-for="CategoryId" data-val="true" class="form-control form-select"
+                                <select asp-for="CategoryId" data-val="true" class="form-control form-select drpSelect2"
                                     asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
                                     <option value="" selected>Select Category</option>
                                 </select>
@@ -91,7 +90,7 @@
                         <a class="btn btn-danger" asp-action="Index" asp-controller="Product">
                             Cancel
                         </a>
-                        <input type="submit" value="Save" class="btn btn-primary ms-2 productSubmit" />
+                        <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner productSubmit">Save</button>
                     </div>
                 </div>
             </div>
@@ -102,9 +101,10 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
-
 <script type="text/javascript">
-    /*code: 48-57 Numbers*/
+    InitSelect2();
+
+ /*code: 48-57 Numbers*/
     function restrictAlphabets(evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))

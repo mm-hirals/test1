@@ -4,6 +4,8 @@ var ProductModel = {};
 var tblProduct;
 var value_check = new Array();
 
+InitSelect2();
+
 $(function () {
     tblProduct = $("#tblProduct").DataTable({
         "searching": false,
@@ -57,7 +59,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a class="btn btn-icon btn-outline-primary" href="/Product/Update/' + o.productId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="ProductModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Product/Delete/' + o.productId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.productId + '" class="btn btn-icon btn-outline-danger delete-productDetails" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ],
@@ -69,9 +71,6 @@ $("#lnkProductFilter").click(function () {
     $("#FilterCard").slideToggle("slow");
 });
 
-ProductModel.onDelete = function () {
-    tblProduct.ajax.reload();
-}
 
 $("#categoryName,#productTitle,#modelNo").keyup("input", function () {
     tblProduct.ajax.reload(null, false);
@@ -191,3 +190,30 @@ $("#multiSelectProduct").click(function () {
         toastr.error('Please select products to print.');
     }
 });
+
+$(document).delegate(".delete-productDetails", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteProduct);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteProduct(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Product/Delete?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblProduct.ajax.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

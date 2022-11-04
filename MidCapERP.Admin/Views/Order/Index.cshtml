@@ -25,7 +25,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="form-label">Please Select Reffered By</label>
-                                   <select id="refferedBy" data-val="true" class="form-control form-select"
+                            <select id="refferedBy" data-val="true" class="drpSelect2 form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
                                              <option value="">Select Reffered</option>
                                     </select>
@@ -47,7 +47,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                            <label class="form-label">Staus</label>
-                           <select id="status" class="form-control form-select">
+                            <select id="status" class="drpSelect2 form-control form-select">
                                 <option>Please Select Status</option>
                                 <option value="@Inquiry">Inquiry</option>
                                 <option value="@PendingForApproval">Pending For Approval</option>
@@ -97,4 +97,4 @@
 
     <script asp-src-include="~/js/Order.js" ></script>
     }
-}
+}  
