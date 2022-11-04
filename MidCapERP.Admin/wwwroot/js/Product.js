@@ -14,7 +14,6 @@ $(document).ready(function () {
 });
 
 $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
-    debugger;
     var tabId = $(e.target).attr("id")
     if (tabId == "nav-images-tab") {
         $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());

@@ -111,7 +111,6 @@ function DeleteAddress(id) {
             url: "/Architect/DeleteArchitectAddresses/?Id=" + id,
             type: "GET",
             success: function (response) {
-                debugger;
                 message("Deleted!", "Your record has been deleted.", "success");
                 tblArchitectAddresses.ajax.reload();
             },
