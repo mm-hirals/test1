@@ -37,9 +37,15 @@ namespace MidCapERP.CronJob.Services.Email
                             List<string> emailList = new List<string>();
                             emailList.Add(item.ReceiverEmail);
                             await _emailHelper.SendEmail(subject: item.MessageSubject, htmlContent: item.MessageBody, to: emailList);
+
+                            item.Status = (int)NotificationManagementEnum.Completed;
+                            item.UpdatedDate = DateTime.Now;
+                            item.UpdatedUTCDate = DateTime.UtcNow;
+                            item.UpdatedBy = _currentUser.UserId;
+                            await _notificationManagementDA.UpdateNotification((int)item.NotificationManagementID, item, cancellationToken);
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         item.Status = (int)NotificationManagementEnum.Failed;
                         item.UpdatedDate = DateTime.Now;
