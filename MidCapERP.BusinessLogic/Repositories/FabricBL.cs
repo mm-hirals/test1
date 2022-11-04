@@ -10,6 +10,7 @@ using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Fabric;
 using MidCapERP.Dto.Paging;
+using MidCapERP.Dto.Product;
 using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -42,7 +43,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return frabricAlldata.Where(x => x.ModelNo.StartsWith(modelno)).Select(x => new SearchResponse(x.FabricId, x.Title, x.ModelNo, x.ImagePath, "Fabric", fabricSubjectTypeId)).Take(10).ToList();
         }
 
-        public async Task<FabricApiResponseDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
+        public async Task<ProductForDetailsByModuleNoResponceDto> GetFabricForDetailsByModuleNo(string modelno, CancellationToken cancellationToken)
         {
             var fabricSubjectTypeId = await GetFabricSubjectTypeId(cancellationToken);
             var frabricAlldata = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
@@ -53,7 +54,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(fabricData.TenantId, cancellationToken);
             fabricData.UnitPrice = CommonMethod.GetCalculatedPrice(fabricData.UnitPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
-            return new FabricApiResponseDto(fabricData.FabricId, fabricData.Title, fabricData.ModelNo, fabricData.CompanyId, fabricData.UnitId, fabricData.UnitPrice, fabricData.ImagePath, fabricSubjectTypeId);
+            string fabricImage = "";
+            if (!string.IsNullOrEmpty(fabricData.ImagePath))
+                fabricImage = "https://midcaperp.magnusminds.net/" + fabricData.ImagePath;
+
+            return new ProductForDetailsByModuleNoResponceDto(fabricData.FabricId, 0, fabricData.Title, fabricData.ModelNo, 0, 0, 0, 0, 0, false, 0, "", "", fabricData.UnitPrice, "", fabricImage, fabricSubjectTypeId);
         }
 
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(FabricDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

@@ -79,13 +79,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             var architectAddresses = _mapper.Map<CustomerAddresses>(model);
             architectAddresses.AddressType = model.AddressType != "" ? model.AddressType : "Home";
-            architectAddresses.Street1 = model.Street1 != null ? model.Street1 : String.Empty;
+            architectAddresses.Street1 = model.Street1;
             architectAddresses.Street2 = model.Street2 != null ? model.Street2 : String.Empty;
-            architectAddresses.Area = model.Area != null ? model.Area : String.Empty;
+            architectAddresses.Area = model.Area;
             architectAddresses.Landmark = model.Landmark != null ? model.Landmark : String.Empty;
-            architectAddresses.City = model.City != null ? model.City : String.Empty;
-            architectAddresses.State = model.State != null ? model.State : String.Empty;
-            architectAddresses.ZipCode = model.ZipCode != null ? model.ZipCode : String.Empty;
+            architectAddresses.City = model.City;
+            architectAddresses.State = model.State;
+            architectAddresses.ZipCode = model.ZipCode;
             architectAddresses.IsDeleted = false;
             architectAddresses.CreatedBy = _currentUser.UserId;
             architectAddresses.CreatedDate = DateTime.Now;

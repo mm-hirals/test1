@@ -56,6 +56,8 @@ $("#phoneNumber").keyup("input", function () {
 });
 
 UserModel.onComplete = function () {
+    $('#btnCreateUser').buttonLoader('stop');
+    $('#btnCreateUpdateUser').buttonLoader('stop');
     $("#divUserModal").modal('show');
 }
 
@@ -65,12 +67,24 @@ UserModel.onDelete = function () {
 }
 
 UserModel.onSuccess = function (xhr) {
+    $('#btnCreateUser').buttonLoader('stop');
+    $('#btnCreateUpdateUser').buttonLoader('stop');
     tblUser.ajax.reload(null, false);
     $("#divUserModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 UserModel.onFailed = function (xhr) {
+    $('#btnCreateUser').buttonLoader('stop');
+    $('#btnCreateUpdateUser').buttonLoader('stop');
     tblUser.ajax.reload(null, false);
     $("#divUserModal").modal('hide');
 };
+
+$(document).delegate("#btnCreateUser", "click", function () {
+    $('#btnCreateUser').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateUpdateUser', function (e) {
+    $('#btnCreateUpdateUser').buttonLoader('start');
+});

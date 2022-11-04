@@ -41,6 +41,8 @@ namespace MidCapERP.Dto.OrderSetItem
         public decimal TotalAmount { get; set; }
 
         public string? Comment { get; set; }
+        public DateTime? ReceiveDate { get; set; }
+        public decimal? ProvidedMaterial { get; set; }
 
         [JsonIgnore]
         [Required]

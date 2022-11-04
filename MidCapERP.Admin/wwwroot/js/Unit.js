@@ -42,6 +42,8 @@ $("#unitName").on("input", function () {
 
 UnitModel.onComplete = function () {
     $("#divUnitModal").modal('show');
+    $('#btnCreateUnit').buttonLoader('stop');
+    $('#btnCreateUpdateUnit').buttonLoader('stop');
 }
 
 UnitModel.onDelete = function () {
@@ -50,12 +52,24 @@ UnitModel.onDelete = function () {
 }
 
 UnitModel.onSuccess = function (xhr) {
+    $('#btnCreateUnit').buttonLoader('stop');
+    $('#btnCreateUpdateUnit').buttonLoader('stop');
     tblUnit.ajax.reload(null, false);
     $("#divUnitModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 UnitModel.onFailed = function (xhr) {
+    $('#btnCreateUnit').buttonLoader('stop');
+    $('#btnCreateUpdateUnit').buttonLoader('stop');
     tblUnit.ajax.reload(null, false);
     $("#divUnitModal").modal('hide');
 };
+
+$(document).delegate("#btnCreateUnit", "click", function () {
+    $('#btnCreateUnit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateUpdateUnit', function (e) {
+    $('#btnCreateUpdateUnit').buttonLoader('start');
+});

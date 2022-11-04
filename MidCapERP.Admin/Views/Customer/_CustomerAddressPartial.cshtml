@@ -15,7 +15,7 @@
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                   data-ajax="true" data-ajax-method="post"
                   data-ajax-complete="CustomerAddressesModel.onSuccess"
-                  data-ajax-failure="CustomerAddressesModel.onFailed">
+                  data-ajax-failure="CustomerAddressesModel.onFailed" id="frmCustomerAddress">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerAddressId" hidden class="form-control" />
@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="AddressType" class="form-label"></label>
+                                <label asp-for="AddressType" class="form-label"></label><span class="required">*</span>
                                 <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="drpSelect2 form-control form-select">
                                     <option value="" hidden disabled selected>Select Address Type</option>
                                     <option value="Home">Home</option>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="Street1" class="form-label"></label>
+                                <label asp-for="Street1" class="form-label"></label><span class="required">*</span>
                                 <input asp-for="Street1" class="form-control" />
                                 <span asp-validation-for="Street1" class="text-danger"></span>
                             </div>
@@ -62,29 +62,29 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="Area" class="form-label"></label>
+                                <label asp-for="Area" class="form-label"></label><span class="required">*</span>
                                 <input asp-for="Area" class="form-control" />
                                 <span asp-validation-for="Area" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="City" class="form-label"></label>
-                                <input asp-for="City" class="form-control" />
+                                <label asp-for="City" class="form-label"></label><span class="required">*</span>
+                                <input asp-for="City" class="form-control" onkeypress='return restrictNumber(event)' />
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="State" class="form-label"></label>
-                                <input asp-for="State" class="form-control" />
+                                <label asp-for="State" class="form-label"></label><span class="required">*</span>
+                                <input asp-for="State" class="form-control" onkeypress='return restrictNumber(event)'/>
                                 <span asp-validation-for="State" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="ZipCode" class="form-label"></label>
-                                <input asp-for="ZipCode" class="form-control" />
+                                <label asp-for="ZipCode" class="form-label"></label><span class="required">*</span>
+                                <input asp-for="ZipCode" class="form-control" type="number" min="0" />
                                 <span asp-validation-for="ZipCode" class="text-danger"></span>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner CustomerAddressDetails">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>

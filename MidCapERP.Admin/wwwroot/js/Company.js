@@ -41,6 +41,8 @@ $("#companyName").on("input", function () {
 });
 
 CompanyModel.onComplete = function () {
+    $('#btnSaveCompany').buttonLoader('stop');
+    $('#btnCreateUpdateCompany').buttonLoader('stop');
     $("#divCompanyModal").modal('show');
 }
 
@@ -50,12 +52,24 @@ CompanyModel.onDelete = function () {
 }
 
 CompanyModel.onSuccess = function (xhr) {
+    $('#btnSaveCompany').buttonLoader('stop');
+    $('#btnCreateUpdateCompany').buttonLoader('stop');
     tblCompany.ajax.reload(null, false);
     $("#divCompanyModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 CompanyModel.onFailed = function (xhr) {
+    $('#btnSaveCompany').buttonLoader('stop');
+    $('#btnCreateUpdateCompany').buttonLoader('stop');
     tblCompany.ajax.reload(null, false);
     $("#divCompanyModal").modal('hide');
 };
+
+$(document).delegate("#btnSaveCompany", "click", function () {
+    $('#btnSaveCompany').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmSaveCompany', function (e) {
+    $('#btnCreateUpdateCompany').buttonLoader('start');
+});

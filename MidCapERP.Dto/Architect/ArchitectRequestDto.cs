@@ -52,8 +52,9 @@ namespace MidCapERP.Dto.Architect
 
         public ArchitectAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
 
+        [DisplayName("Architect Commission %")]
         [JsonIgnore]
-        public decimal Discount { get; set; }
+        public decimal? Discount { get; set; }
 
         [DisplayName("Subscribe Newsletters/Greetings")]
         public bool IsSubscribe { get; set; }

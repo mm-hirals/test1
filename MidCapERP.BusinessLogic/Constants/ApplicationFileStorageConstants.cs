@@ -13,6 +13,8 @@
             public static readonly string QRCode = @"\Files\QRCode\";
             public static readonly string QRImageTenantBankDetail = @"\Files\QRImageTenant\";
             public static readonly string OrganizationLogo = @"\Files\Profile\";
+            public static readonly string OrderSetItem = @"\Files\OrderSetItem\";
+            public static readonly string OrderSetItemReceive = @"\Files\OrderSetItemReceive\";
         }
     }
 }

@@ -33,8 +33,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<ArchitectResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return _mapper.Map<List<ArchitectResponseDto>>(data.ToList());
+            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
+            return _mapper.Map<List<ArchitectResponseDto>>(architectData.ToList());
         }
 
         public async Task<JsonRepsonse<ArchitectResponseDto>> GetFilterArchitectsData(ArchitectDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -62,6 +63,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 architectToInsert.RefferedBy = 0;
                 architectToInsert.CustomerTypeId = (int)CustomerTypeEnum.Architect;
+                architectToInsert.Discount = model.Discount != null ? model.Discount : 0;
                 architectToInsert.IsDeleted = false;
                 architectToInsert.TenantId = _currentUser.TenantId;
                 architectToInsert.CreatedBy = _currentUser.UserId;
@@ -145,6 +147,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
+            oldData.Discount = model.Discount != null ? model.Discount : 0;
         }
 
         private async Task SaveArchitectAddress(ArchitectRequestDto model, Customers data, CancellationToken cancellationToken)

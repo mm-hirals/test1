@@ -16,7 +16,8 @@ namespace MidCapERP.Dto.CustomerAddresses
         [DisplayName("Street1")]
         [MaxLength(200)]
         [MinLength(0, ErrorMessage = "Please enter 6 digits")]
-        public string? Street1 { get; set; } = String.Empty;
+        [Required]
+        public string? Street1 { get; set; }
 
         [DisplayName("Street2")]
         public string? Street2 { get; set; }
@@ -25,18 +26,22 @@ namespace MidCapERP.Dto.CustomerAddresses
         public string? Landmark { get; set; } = String.Empty;
 
         [DisplayName("Area")]
-        public string? Area { get; set; } = String.Empty;
+        [Required]
+        public string Area { get; set; }
 
         [DisplayName("City")]
-        public string? City { get; set; } = String.Empty;
+        [Required]
+        public string City { get; set; }
 
         [DisplayName("State")]
-        public string? State { get; set; } = String.Empty;
+        [Required]
+        public string State { get; set; }
 
         [DisplayName("Pincode")]
         [MaxLength(6)]
         [MinLength(6, ErrorMessage = "Please enter 6 digits")]
-        public string? ZipCode { get; set; } = String.Empty;
+        [Required]
+        public string ZipCode { get; set; }
 
         [DisplayName("IsDefault")]
         public bool IsDefault { get; set; } = false;

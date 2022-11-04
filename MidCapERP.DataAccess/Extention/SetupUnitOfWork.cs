@@ -43,6 +43,8 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IOrderAddressDA, OrderAddressDA>();
             services.AddScoped<ITenantSMTPDetailDA, TenantSMTPDetailDA>();
             services.AddScoped<INotificationManagementDA, NotificationManagementDA>();
+            services.AddScoped<IOrderSetItemImageDA, OrderSetItemImageDA>();
+            services.AddScoped<IOrderSetItemReceivableDA, OrderSetItemReceivableDA>();
 
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();

@@ -1,5 +1,6 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Polish;
+using MidCapERP.Dto.Product;
 using MidCapERP.Dto.SearchResponse;
 
 namespace MidCapERP.BusinessLogic.Interface
@@ -16,7 +17,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<IList<SearchResponse>> GetPolishForDropDownByModuleNo(string modelno, CancellationToken cancellation);
 
-        public Task<PolishApiResponseDto> GetPolishForDetailsByModuleNo(string detailsModelNo, CancellationToken cancellation);
+        public Task<ProductForDetailsByModuleNoResponceDto> GetPolishForDetailsByModuleNo(string detailsModelNo, CancellationToken cancellation);
 
         public Task<PolishRequestDto> CreatePolish(PolishRequestDto model, CancellationToken cancellationToken);
 

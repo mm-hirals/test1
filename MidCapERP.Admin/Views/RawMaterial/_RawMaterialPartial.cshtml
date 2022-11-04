@@ -16,7 +16,7 @@
             <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
                   data-ajax="true" data-ajax-method="post"
                   data-ajax-complete="RawMaterialModel.onSuccess"
-                  data-ajax-failure="RawMaterialModel.onFailed">
+                  data-ajax-failure="RawMaterialModel.onFailed" id="frmCreateUpdateRawMaterial">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="RawMaterialId" hidden class="form-control" />
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner" id="btnCreateUpdateRawMaterial">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>

@@ -1,3 +1,22 @@
+(function ($) {
+    $.fn.buttonLoader = function (action) {
+        var self = $(this);
+        if (action == 'start') {
+            if ($(self).attr("disabled") == "disabled") {
+                return false;
+            }
+            $(self).attr("disabled", true);
+            $(self).append('<i class="bx bx-loader-alt btn-spinner"></i>');
+            $(self).addClass('active');
+        }
+        if (action == 'stop') {
+            $(self).find('.btn-spinner').remove();
+            $(self).removeClass('active');
+            $(self).attr("disabled", false);
+        }
+    }
+})(jQuery);
+
 document.addEventListener("DOMContentLoaded", function (event) {
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),
