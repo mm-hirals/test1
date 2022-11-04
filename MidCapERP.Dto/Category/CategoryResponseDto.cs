@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.Category
     public class CategoryResponseDto
     {
         public long CategoryId { get; set; }
-        public long CategoryTypeId { get; set; }
+        public string? CategoryName { get; set; }
         public int LookupValueId { get; set; }
         public int LookupId { get; set; }
 
@@ -14,8 +14,6 @@ namespace MidCapERP.Dto.Category
 
         [DisplayName("Category Name")]
         public string LookupValueName { get; set; }
-        public int TenantId { get; set; }
-
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

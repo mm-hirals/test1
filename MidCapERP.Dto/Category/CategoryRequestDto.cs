@@ -1,5 +1,4 @@
-﻿using MidCapERP.Dto.Constants;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MidCapERP.Dto.Category

@@ -1,22 +1,19 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class CategoriesDA : ICategoriesDA
     {
         private readonly ISqlRepository<Categories> _categories;
+        private readonly CurrentUser _currentUser;
 
-        public CategoriesDA(ISqlRepository<Categories> categories)
+        public CategoriesDA(ISqlRepository<Categories> categories, CurrentUser currentUser)
         {
             _categories = categories;
+            _currentUser = currentUser;
         }
 
         public async Task<Categories> CreateCategory(Categories model, CancellationToken cancellationToken)
