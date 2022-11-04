@@ -110,9 +110,11 @@
     </div>
 </div>
 
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         <script src="~/js/CustomerAddresses.js" asp-append-version="true"></script>
     }
     }
