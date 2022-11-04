@@ -30,7 +30,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="AddressType" class="form-label"></label><span class="required">*</span>
-                                <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="form-control form-select">
+                                <select asp-for="AddressType" id="AddressTypeId" data-val="true" class="drpSelect2 form-control form-select">
                                     <option value="" hidden disabled selected>Select Address Type</option>
                                     <option value="Home">Home</option>
                                     <option value="Office">Office</option>
@@ -77,7 +77,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="State" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="State" class="form-control" onkeypress='return restrictNumber(event)'/>
+                                <input asp-for="State" class="form-control" onkeypress='return restrictNumber(event)' />
                                 <span asp-validation-for="State" class="text-danger"></span>
                             </div>
                         </div>
@@ -113,3 +113,11 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+@section Scripts {
+    @{
+        <script asp-src-include="~/js/CustomerAddresses.js"></script>
+    }
+    }
+    <script>
+        InitSelect2($("#divCustomerAddressModal"));
+    </script>

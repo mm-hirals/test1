@@ -4,6 +4,8 @@ var ProductModel = {};
 var tblProduct;
 var value_check = new Array();
 
+InitSelect2();
+
 $(function () {
     tblProduct = $("#tblProduct").DataTable({
         "searching": false,

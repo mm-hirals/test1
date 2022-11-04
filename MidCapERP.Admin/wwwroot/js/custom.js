@@ -131,3 +131,18 @@ new Chart("myCharts", {
     }
 });
 
+function InitSelect2(objParent) {
+    if (!$.isEmptyObject(objParent)) {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+            dropdownParent: objParent
+        });
+    }
+    else {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+        });
+    }
+}
