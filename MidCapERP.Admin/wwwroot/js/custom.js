@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 $('.sub-menu').hide();
 $(".submenu-link").click(function () {
     $(this).parent(".submenu-item").children(".sub-menu").slideToggle("500");
-});	
+});
 
 /*===== LOGIN PASSWORD SHOW =====*/
 $(".toggle-password").click(function () {
@@ -112,3 +112,18 @@ new Chart("myCharts", {
     }
 });
 
+function InitSelect2(objParent) {
+    if (!$.isEmptyObject(objParent)) {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+            dropdownParent: objParent
+        });
+    }
+    else {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+        });
+    }
+}

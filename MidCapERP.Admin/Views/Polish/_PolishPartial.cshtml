@@ -39,7 +39,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="CompanyId" class="form-label"></label><span class="text-danger">*</span>
-                                <select asp-for="CompanyId" data-val="true" class="form-control form-select"
+                                <select asp-for="CompanyId" data-val="true" class="drpSelect2 form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CompanySelectItemList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Company</option>
                                 </select>
@@ -49,7 +49,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="UnitId" class="form-label"></label><span class="text-danger">*</span>
-                                <select asp-for="UnitId" data-val="true" class="form-control form-select"
+                                <select asp-for="UnitId" data-val="true" class="drpSelect2 form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Unit</option>
                                 </select>
@@ -94,3 +94,6 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+<script>
+    InitSelect2($("#divPolishModal"));
+</script>
