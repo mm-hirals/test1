@@ -24,7 +24,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCategory" href="/Category/Update/' + o.lookupValueId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="CategoryModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" data-ajax-confirm="Are you sure you want to delete?" href="/Category/Delete/' + o.lookupValueId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.lookupValueId + '" class="btn btn-icon btn-outline-danger btnRemoveCategory"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -46,11 +46,7 @@ CategoryModel.onComplete = function () {
     $("#divCategoryModal").modal('show');
 }
 
-  CategoryModel.onDelete = function () {
-        tblCategory.ajax.reload(null, false);
-        toastr.error('Data deleted successfully.');
-  }
-
+  
 CategoryModel.onSuccess = function (xhr) {
     $('#btnCreateCategory').buttonLoader('stop');
     $('#btnSaveCategory').buttonLoader('stop');
@@ -73,3 +69,27 @@ $(document).delegate("#btnCreateCategory", "click", function () {
 $(document).on('submit', '#frmCreateCategory', function (e) {
     $('#btnSaveCategory').buttonLoader('start');
 });
+
+$(document).delegate(".btnRemoveCategory", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteCategory);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteCategory(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Category/Delete/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblCategory.ajax.reload();
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

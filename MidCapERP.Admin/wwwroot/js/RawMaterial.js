@@ -27,7 +27,7 @@ $(function () {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="RawMaterialModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateRawMaterial" href="/RawMaterial/Update/' + o.rawMaterialId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a data-ajax-complete="RawMaterialModel.onDelete" data-ajax="true" data-ajax-confirm="Are you sure you want to delete?" class="btn btn-icon btn-outline-danger" data-ajax-mode="replace" href="/RawMaterial/Delete/' + o.rawMaterialId + '"><i class="bx bxs-trash"></i></a></div>';
+                        '<a id="' + o.rawMaterialId + '" class="btn btn-icon btn-outline-danger btnRawMaterial" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -47,11 +47,6 @@ RawMaterialModel.onComplete = function () {
     $('#btnCreateRawMaterial').buttonLoader('stop');
     $('#btnCreateUpdateRawMaterial').buttonLoader('stop');
     $("#divRawMaterialModal").modal('show');
-}
-
-RawMaterialModel.onDelete = function () {
-    tblRawMaterial.ajax.reload(null, false);
-    toastr.error('Data deleted successfully.');
 }
 
 RawMaterialModel.onSuccess = function (xhr) {
@@ -76,3 +71,30 @@ $(document).delegate("#btnCreateRawMaterial", "click", function () {
 $(document).on('submit', '#frmCreateUpdateRawMaterial', function (e) {
     $('#btnCreateUpdateRawMaterial').buttonLoader('start');
 });
+
+$(document).delegate(".btnRawMaterial", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteRawMaterial);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteRawMaterial(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/RawMaterial/Delete/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblRawMaterial.ajax.reload(null, false);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}
