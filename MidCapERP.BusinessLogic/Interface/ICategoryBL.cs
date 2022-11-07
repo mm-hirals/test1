@@ -1,5 +1,6 @@
 ﻿using MidCapERP.Dto.Category;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -20,5 +21,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CategoryRequestDto> UpdateCategory(long Id, CategoryRequestDto model, CancellationToken cancellationToken);
 
         public Task<CategoryRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken);
+        public Task<bool> ValidateCategoryName(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken);
+
     }
 }

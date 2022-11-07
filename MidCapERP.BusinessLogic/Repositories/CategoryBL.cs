@@ -102,6 +102,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<bool> ValidateCategoryName(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllCategories = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
+
+            if (categoryRequestDto.CategoryId > 0)
+            {
+                var getCategoryById = getAllCategories.First(c => c.CategoryId == categoryRequestDto.CategoryId);
+                if (getCategoryById.CategoryName.Trim() == categoryRequestDto.CategoryName.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllCategories.Any(c => c.CategoryName.Trim() == categoryRequestDto.CategoryName.Trim() && c.CategoryId != categoryRequestDto.CategoryId);
+                }
+            }
+            else
+            {
+                return !getAllCategories.Any(c => c.CategoryName.Trim() == categoryRequestDto.CategoryName.Trim());
+            }
+        }
+
         #region PrivateMethods
 
         private void UpdateCategory(Categories oldData)

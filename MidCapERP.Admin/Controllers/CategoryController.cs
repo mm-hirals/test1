@@ -91,5 +91,11 @@ namespace MidCapERP.Admin.Controllers
 
             ViewBag.CategoryProductType = categoryProductTypeList;
         }
+
+        // Category Name Validation
+        public async Task<bool> DuplicateCategoryName(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.CategoryBL.ValidateCategoryName(categoryRequestDto, cancellationToken);
+        }
     }
 }
