@@ -614,18 +614,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (productRequestDto.ProductId > 0)
             {
                 var getProductById = getAllProduct.First(p => p.ProductId == productRequestDto.ProductId);
-                if (getProductById.ModelNo == productRequestDto.ModelNo)
+                if (getProductById.ModelNo.Trim() == productRequestDto.ModelNo.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo && p.ProductId != productRequestDto.ProductId);
+                    return !getAllProduct.Any(p => p.ModelNo.Trim() == productRequestDto.ModelNo.Trim() && p.ProductId != productRequestDto.ProductId);
                 }
             }
             else
             {
-                return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo);
+                return !getAllProduct.Any(p => p.ModelNo.Trim() == productRequestDto.ModelNo.Trim());
             }
         }
 

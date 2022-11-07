@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,6 +15,7 @@ namespace MidCapERP.Dto.Polish
 
         [DisplayName("Model No")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Maximum 50 characters")]
+        [Remote("DuplicateModelNo", "Polish", AdditionalFields = nameof(PolishId), ErrorMessage = "Model no already exist. Please enter a different model no.")]
         public string ModelNo { get; set; }
 
         [DisplayName("Company Name")]

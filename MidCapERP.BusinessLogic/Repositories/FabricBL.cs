@@ -136,6 +136,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<bool> ValidateModelNo(FabricRequestDto fabricRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllFabric = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+
+            if (fabricRequestDto.FabricId > 0)
+            {
+                var getFabricById = getAllFabric.First(p => p.FabricId == fabricRequestDto.FabricId);
+                if (getFabricById.ModelNo.Trim() == fabricRequestDto.ModelNo.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllFabric.Any(p => p.ModelNo.Trim() == fabricRequestDto.ModelNo.Trim() && p.FabricId != fabricRequestDto.FabricId);
+                }
+            }
+            else
+            {
+                return !getAllFabric.Any(p => p.ModelNo.Trim() == fabricRequestDto.ModelNo.Trim());
+            }
+        }
+
         #region Private Method
 
         private async Task<Fabrics> GetFabricById(int Id, CancellationToken cancellationToken)

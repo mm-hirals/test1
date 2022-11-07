@@ -18,5 +18,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<RawMaterialRequestDto> UpdateRawMaterial(int Id, RawMaterialRequestDto model, CancellationToken cancellationToken);
 
         public Task<RawMaterialRequestDto> DeleteRawMaterial(int Id, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateRawMaterialTitle(RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken);
     }
 }

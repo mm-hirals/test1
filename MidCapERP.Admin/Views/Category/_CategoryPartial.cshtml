@@ -14,9 +14,9 @@
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
-                data-ajax="true" data-ajax-method="post" 
-                data-ajax-complete="CategoryModel.onSuccess" 
-                data-ajax-failure="CategoryModel.onFailed" id="frmCreateCategory">
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="CategoryModel.onSuccess"
+                  data-ajax-failure="CategoryModel.onFailed" id="frmCreateCategory">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="CategoryId" />

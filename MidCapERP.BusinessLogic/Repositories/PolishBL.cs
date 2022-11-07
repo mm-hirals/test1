@@ -133,6 +133,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<bool> ValidateModelNo(PolishRequestDto polishRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllPolish = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+
+            if (polishRequestDto.PolishId > 0)
+            {
+                var getPolishById = getAllPolish.First(p => p.PolishId == polishRequestDto.PolishId);
+                if (getPolishById.ModelNo.Trim() == polishRequestDto.ModelNo.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllPolish.Any(p => p.ModelNo.Trim() == polishRequestDto.ModelNo.Trim() && p.PolishId != polishRequestDto.PolishId);
+                }
+            }
+            else
+            {
+                return !getAllPolish.Any(p => p.ModelNo.Trim() == polishRequestDto.ModelNo.Trim());
+            }
+        }
+
         #region Private Method
 
         private async Task<Polish> GetPolishById(int Id, CancellationToken cancellationToken)

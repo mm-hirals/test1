@@ -11,7 +11,7 @@ namespace MidCapERP.Admin.Controllers
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
 
-        public UnitController(IUnitOfWorkBL unitOfWorkBL,IStringLocalizer<BaseController> localizer) : base(localizer)
+        public UnitController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
         }
@@ -67,6 +67,12 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.UnitBL.DeleteUnit(Id, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        // Unit Name Validation
+        public async Task<bool> DuplicateUnitName(UnitRequestDto unitRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.UnitBL.ValidateUnitName(unitRequestDto, cancellationToken);
         }
     }
 }
