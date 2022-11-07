@@ -6,8 +6,6 @@ using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Architect;
 using MidCapERP.Dto.ArchitectAddresses;
 
-using NToastNotify;
-
 namespace MidCapERP.Admin.Controllers
 {
     public class ArchitectController : BaseController
@@ -125,6 +123,11 @@ namespace MidCapERP.Admin.Controllers
             {
                 return Json(ex.Message);
             }
+        }
+
+        public async Task<bool> DuplicateArchitectPhoneNumber(ArchitectRequestDto architectRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.ArchitectsBL.ValidateArchitectPhoneNumber(architectRequestDto, cancellationToken);
         }
     }
 }

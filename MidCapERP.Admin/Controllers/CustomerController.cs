@@ -132,6 +132,11 @@ namespace MidCapERP.Admin.Controllers
         {
         }
 
+        public async Task<bool> DuplicateCustomerPhoneNumber(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.CustomersBL.ValidateCustomerPhoneNumber(customersRequestDto, cancellationToken);
+        }
+
         #region Private Method
 
         private async Task FillArchitectDropDown(CancellationToken cancellationToken)
