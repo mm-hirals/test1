@@ -251,7 +251,7 @@
                 public const string Delete = "Permissions.RolePermission.Delete";
             }
 
-            public static class CustomerAddresses
+            public static class CustomerAddress
             {
                 public const string View = "Permissions.CustomerAddresses.View";
                 public const string Create = "Permissions.CustomerAddresses.Create";
@@ -259,7 +259,7 @@
                 public const string Delete = "Permissions.CustomerAddresses.Delete";
             }
 
-            public static class CustomerTypes
+            public static class CustomerType
             {
                 public const string View = "Permissions.CustomerTypes.View";
             }
