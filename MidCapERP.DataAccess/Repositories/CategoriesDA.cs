@@ -2,6 +2,7 @@
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
 
 namespace MidCapERP.DataAccess.Repositories
 {
@@ -22,6 +23,16 @@ namespace MidCapERP.DataAccess.Repositories
         public async Task<IQueryable<Categories>> GetAll(CancellationToken cancellationToken)
         {
             return await _categories.GetAsync(cancellationToken, x => x.IsDeleted == false);
+        }
+
+        public async Task<Categories> GetById(long Id, CancellationToken cancellationToken)
+        {
+            return await _categories.GetByIdAsync(Id, cancellationToken);
+        }
+
+        public async Task<Categories> UpdateCategory(long Id, Categories model, CancellationToken cancellationToken)
+        {
+            return await _categories.UpdateAsync(model, cancellationToken);
         }
     }
 }

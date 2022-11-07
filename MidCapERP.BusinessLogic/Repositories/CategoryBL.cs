@@ -25,10 +25,6 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<CategoryResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            //int lookupId = await GetLookupId(cancellationToken);
-            //var data = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            //return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.LookupId == lookupId).ToList());
-
             var data = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
             return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.CategoryTypeId == (int)ProductCategoryTypesEnum.Product).ToList());
         }
@@ -42,10 +38,8 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            long categoryTypeId = await GetCategoryTypeId(cancellationToken);
             var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
             var categoryResponseData = (from x in categoryAllData
-                                        where x.CategoryTypeId == categoryTypeId
                                         select new CategoryResponseDto()
                                         {
                                             CategoryId = x.CategoryId,
@@ -69,7 +63,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CategoryResponseDto>(categoryData);
         }
 
-        public async Task<CategoryRequestDto> GetById(int Id, CancellationToken cancellationToken)
+        public async Task<CategoryRequestDto> GetById(long Id, CancellationToken cancellationToken)
         {
             var categoryData = await GetCategoryById(Id, cancellationToken);
             return _mapper.Map<CategoryRequestDto>(categoryData);
@@ -88,12 +82,12 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
-        public async Task<CategoryRequestDto> UpdateCategory(int Id, CategoryRequestDto model, CancellationToken cancellationToken)
+        public async Task<CategoryRequestDto> UpdateCategory(long Id, CategoryRequestDto model, CancellationToken cancellationToken)
         {
             var oldData = await GetCategoryById(Id, cancellationToken);
             UpdateCategory(oldData);
             MapToDbObject(model, oldData);
-            var categoryUpdatedata = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, oldData, cancellationToken);
+            var categoryUpdatedata = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, oldData, cancellationToken);
             var _mappedUser = _mapper.Map<CategoryRequestDto>(categoryUpdatedata);
             return _mappedUser;
         }
@@ -103,29 +97,32 @@ namespace MidCapERP.BusinessLogic.Repositories
             var categoryToUpdate = await GetCategoryById(Id, cancellationToken);
             categoryToUpdate.IsDeleted = true;
             UpdateCategory(categoryToUpdate);
-            var categoryDeletedata = await _unitOfWorkDA.LookupValuesDA.UpdateLookupValue(Id, categoryToUpdate, cancellationToken);
+            var categoryDeletedata = await _unitOfWorkDA.CategoriesDA.UpdateCategory(Id, categoryToUpdate, cancellationToken);
             var _mappedUser = _mapper.Map<CategoryRequestDto>(categoryDeletedata);
             return _mappedUser;
         }
 
         #region PrivateMethods
 
-        private void UpdateCategory(LookupValues oldData)
+        private void UpdateCategory(Categories oldData)
         {
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
         }
 
-        private static void MapToDbObject(CategoryRequestDto model, LookupValues oldData)
+        private static void MapToDbObject(CategoryRequestDto model, Categories oldData)
         {
-            oldData.LookupValueName = model.CategoryName;
-            //oldData.LookupValueId = model.LookupValueId;
+            oldData.CategoryName = model.CategoryName;
+            oldData.IsFixedPrice = model.IsFixedPrice;
+            oldData.CategoryTypeId = model.CategoryTypeId;
+            oldData.RSPPercentage = Convert.ToDecimal(model.RSPPercentage);
+            oldData.WSPPercentage = Convert.ToDecimal(model.WSPPercentage);
         }
 
-        private async Task<LookupValues> GetCategoryById(int Id, CancellationToken cancellationToken)
+        private async Task<Categories> GetCategoryById(long Id, CancellationToken cancellationToken)
         {
-            var categoryDataById = await _unitOfWorkDA.LookupValuesDA.GetById(Id, cancellationToken);
+            var categoryDataById = await _unitOfWorkDA.CategoriesDA.GetById(Id, cancellationToken);
             if (categoryDataById == null)
             {
                 throw new Exception("Category not found");
@@ -138,13 +135,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
             var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Category)).Select(x => x.LookupId).FirstOrDefault();
             return lookupId;
-        }
-
-        private async Task<long> GetCategoryTypeId(CancellationToken cancellationToken)
-        {
-            var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
-            var categoryTypeId = categoryAllData.Where(x => x.CategoryId == (int)MasterPagesEnum.Category).Select(x => x.CategoryTypeId).FirstOrDefault();
-            return categoryTypeId;
         }
 
         private static IQueryable<CategoryResponseDto> FilterCategoryData(CategoryDataTableFilterDto categoryDataTableFilterDto, IQueryable<CategoryResponseDto> categoryResponseDto)

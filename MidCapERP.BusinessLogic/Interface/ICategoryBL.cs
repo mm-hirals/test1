@@ -13,11 +13,11 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CategoryResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 
-        public Task<CategoryRequestDto> GetById(int Id, CancellationToken cancellationToken);
+        public Task<CategoryRequestDto> GetById(long Id, CancellationToken cancellationToken);
 
         public Task<CategoryRequestDto> CreateCategory(CategoryRequestDto model, CancellationToken cancellationToken);
 
-        public Task<CategoryRequestDto> UpdateCategory(int Id, CategoryRequestDto model, CancellationToken cancellationToken);
+        public Task<CategoryRequestDto> UpdateCategory(long Id, CategoryRequestDto model, CancellationToken cancellationToken);
 
         public Task<CategoryRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken);
     }

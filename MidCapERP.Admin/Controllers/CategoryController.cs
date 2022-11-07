@@ -36,6 +36,45 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            BindCategoryType();
+            return PartialView("_CategoryPartial");
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
+        public async Task<IActionResult> Create(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CategoryBL.CreateCategory(categoryRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
+        public async Task<IActionResult> Update(long Id, CancellationToken cancellationToken)
+        {
+            var category = await _unitOfWorkBL.CategoryBL.GetById(Id, cancellationToken);
+            BindCategoryType();
+            return PartialView("_CategoryPartial", category);
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
+        public async Task<IActionResult> Update(long Id, CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CategoryBL.UpdateCategory(Id, categoryRequestDto, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.Category.Delete)]
+        public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        public void BindCategoryType()
+        {
             var categoryProductType = from ProductCategoryTypesEnum e in Enum.GetValues(typeof(ProductCategoryTypesEnum))
                                       select new
                                       {
@@ -51,39 +90,6 @@ namespace MidCapERP.Admin.Controllers
                                 }).ToList();
 
             ViewBag.CategoryProductType = categoryProductTypeList;
-            return PartialView("_CategoryPartial");
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
-        public async Task<IActionResult> Create(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.CategoryBL.CreateCategory(categoryRequestDto, cancellationToken);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
-        {
-            var category = await _unitOfWorkBL.CategoryBL.GetById(Id, cancellationToken);
-            return PartialView("_CategoryPartial", category);
-        }
-
-        [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.CategoryBL.UpdateCategory(Id, categoryRequestDto, cancellationToken);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Delete)]
-        public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
-        {
-            await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
-            return RedirectToAction("Index");
         }
     }
 }
