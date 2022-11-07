@@ -78,7 +78,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText))
+            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText) && (x.CustomerTypeId == (int)CustomerTypeEnum.Architect || x.CustomerTypeId == (int)CustomerTypeEnum.Customer))
                 .Select(x => new MegaSearchResponse
                 (
                     x.CustomerId,
