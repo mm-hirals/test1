@@ -11,6 +11,7 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
+using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -92,10 +93,17 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken)
         {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
-            return data.ToList();
+            var architectCustomerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var data = architectCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText))
+                .Select(p => new CustomerApiDropDownResponceDto
+                {
+                    RefferedById = p.CustomerId,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    MobileNo = p.PhoneNumber,
+                    CustomerType = p.CustomerTypeId == (int)CustomerTypeEnum.Architect ? "Architect" : "Customer"
+                }).Take(10).ToList();
+            return data;
         }
 
         public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
