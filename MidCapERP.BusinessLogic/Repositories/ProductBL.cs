@@ -54,10 +54,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             long categoryTypeId = await GetCategoryTypeId(cancellationToken);
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
-            var cateagoryData = categoryAllData.Where(x => x.CategoryTypeId == categoryTypeId);
+            var categoryData = categoryAllData.Where(x => x.CategoryTypeId == categoryTypeId);
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var productResponseData = (from x in productAllData
-                                       join y in cateagoryData on x.CategoryId equals y.CategoryId
+                                       join y in categoryData.Where(a => a.CategoryId == (int)MasterPagesEnum.Category) on x.CategoryId equals (int)MasterPagesEnum.Category
                                        join z in allUsers on x.CreatedBy equals z.UserId
                                        join u in allUsers on x.UpdatedBy equals (int?)u.UserId into updated
                                        from updatedMat in updated.DefaultIfEmpty()
