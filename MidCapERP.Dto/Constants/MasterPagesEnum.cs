@@ -16,4 +16,10 @@
         Fabrics = 4,
         Customers = 5
     }
+
+    public enum ProductCategoryTypesEnum
+    {
+        Product = 1,
+        Fabric = 2
+    }
 }

@@ -32,6 +32,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IProductDA, ProductDA>();
             services.AddScoped<IProductImageDA, ProductImageDA>();
             services.AddScoped<IProductMaterialDA, ProductMaterialDA>();
+            services.AddScoped<ICategoriesDA, CategoriesDA>();
             services.AddScoped<IRoleDA, RoleDA>();
             services.AddScoped<IRolePermissionDA, RolePermissionDA>();
             services.AddScoped<IOTPLoginDA, OTPLoginDA>();
