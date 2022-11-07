@@ -57,7 +57,7 @@
                                     <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" onkeypress="return isNumberKey(event)" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
+                                    <input type="number" data-name="ProductMaterialRequestDto[{ID}].Qty" min="0" onkeypress="return isNumberKey(event)" data-readonly="readonly" class="form-control quantity" placeholder="Qty">
                                 </td>
                                 <td>
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly>
@@ -158,7 +158,7 @@
                                     <input type="text" data-readonly="readonly" class="form-control materialPrice" placeholder="Unit Price" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" data-name="ProductMaterialRequestDto[{ID}].Qty" data-readonly="readonly" class="form-control quantity" onkeypress="return isNumberKey(event)" placeholder="Qty">
+                                    <input type="number" data-name="ProductMaterialRequestDto[{ID}].Qty" min="0" data-readonly="readonly" class="form-control quantity" onkeypress="return isNumberKey(event)" placeholder="Qty">
                                 </td>
                                 <td>
                                     <input type="text" data-name="ProductMaterialRequestDto[{ID}].CostPrice" data-readonly="readonly" class="form-control costPrice" placeholder="Cost Price" readonly>
