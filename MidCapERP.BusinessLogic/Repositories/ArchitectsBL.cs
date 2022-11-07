@@ -137,7 +137,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 else
                 {
-                    return !getArchitectData.Any(c => c.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim() && c.PhoneNumber != architectRequestDto.PhoneNumber);
+                    return !getArchitectData.Any(c => c.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim());
                 }
             }
             else

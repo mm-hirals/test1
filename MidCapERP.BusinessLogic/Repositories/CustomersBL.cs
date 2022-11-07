@@ -274,7 +274,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 else
                 {
-                    return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim() && c.PhoneNumber != customerRequestDto.PhoneNumber);
+                    return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
                 }
             }
             else
