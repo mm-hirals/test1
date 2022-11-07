@@ -29,13 +29,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CategoryResponseDto>>(data.Where(x => x.CategoryTypeId == (int)ProductCategoryTypesEnum.Product).ToList());
         }
 
-        public async Task<CategoryResponseDto> GetCategorySearchByCategoryName(string searchName, CancellationToken cancellationToken)
-        {
-            int lookupId = await GetLookupId(cancellationToken);
-            var categoryAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            return _mapper.Map<CategoryResponseDto>(categoryAllData.FirstOrDefault(x => x.LookupId == lookupId && x.LookupValueName == searchName));
-        }
-
         public async Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
@@ -55,12 +48,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             var categoryFilteredData = FilterCategoryData(dataTableFilterDto, categoryResponseData);
             var categoryData = new PagedList<CategoryResponseDto>(categoryFilteredData, dataTableFilterDto);
             return new JsonRepsonse<CategoryResponseDto>(dataTableFilterDto.Draw, categoryData.TotalCount, categoryData.TotalCount, categoryData);
-        }
-
-        public async Task<CategoryResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken)
-        {
-            var categoryData = await GetCategoryById(Id, cancellationToken);
-            return _mapper.Map<CategoryResponseDto>(categoryData);
         }
 
         public async Task<CategoryRequestDto> GetById(long Id, CancellationToken cancellationToken)
@@ -150,13 +137,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 throw new Exception("Category not found");
             }
             return categoryDataById;
-        }
-
-        private async Task<int> GetLookupId(CancellationToken cancellationToken)
-        {
-            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
-            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Category)).Select(x => x.LookupId).FirstOrDefault();
-            return lookupId;
         }
 
         private static IQueryable<CategoryResponseDto> FilterCategoryData(CategoryDataTableFilterDto categoryDataTableFilterDto, IQueryable<CategoryResponseDto> categoryResponseDto)

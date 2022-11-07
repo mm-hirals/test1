@@ -1,6 +1,5 @@
 ﻿using MidCapERP.Dto.Category;
 using MidCapERP.Dto.DataGrid;
-using MidCapERP.Dto.Product;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -8,11 +7,7 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<CategoryResponseDto>> GetAll(CancellationToken cancellationToken);
 
-        public Task<CategoryResponseDto> GetCategorySearchByCategoryName(string searchName, CancellationToken cancellation);
-
         public Task<JsonRepsonse<CategoryResponseDto>> GetFilterCategoryData(CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
-
-        public Task<CategoryResponseDto> GetDetailsById(int Id, CancellationToken cancellationToken);
 
         public Task<CategoryRequestDto> GetById(long Id, CancellationToken cancellationToken);
 
@@ -21,7 +16,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CategoryRequestDto> UpdateCategory(long Id, CategoryRequestDto model, CancellationToken cancellationToken);
 
         public Task<CategoryRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken);
-        public Task<bool> ValidateCategoryName(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken);
 
+        public Task<bool> ValidateCategoryName(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken);
     }
 }

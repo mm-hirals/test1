@@ -19,17 +19,16 @@
                 data-ajax-failure="CategoryModel.onFailed" id="frmCreateCategory">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    @*<input asp-for="LookupValueId" hidden class="form-control" />*@
+                    <input type="hidden" asp-for="CategoryId" />
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <input type="hidden" asp-for="CategoryId" />
                                 <label asp-for="CategoryName" class="form-label"></label><span class="text-danger">*</span>
                                 <input asp-for="CategoryName" class="form-control" />
                                 <span asp-validation-for="CategoryName" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-12">
+                        @*<div class="col-12">
                             <div class="form-group">
                                 <label asp-for="CategoryTypeId" class="form-label"></label><span class="text-danger">*</span>
                                 <select asp-for="CategoryTypeId" data-val="true" class="form-control form-select"
@@ -38,7 +37,7 @@
                                 </select>
                                 <span asp-validation-for="CategoryTypeId" class="text-danger"></span>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="custom-control custom-switch">
@@ -47,7 +46,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        @*<div class="col-12">
                             <div class="form-group">
                                 <label asp-for="RSPPercentage" class="form-label"></label><span class="text-danger">*</span>
                                 <input asp-for="RSPPercentage" type="text" class="form-control pwidth" max="999.99" onkeypress='return restrictAlphabets(event)'>
@@ -60,7 +59,7 @@
                                 <input asp-for="WSPPercentage" type="text" class="form-control pwidth" max="999.99" onkeypress='return restrictAlphabets(event)'>
                                 <span asp-validation-for="WSPPercentage" class="text-danger"></span>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">

@@ -51,13 +51,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            long categoryTypeId = await GetCategoryTypeId(cancellationToken);
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
             var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
-            var categoryData = categoryAllData.Where(x => x.CategoryTypeId == categoryTypeId);
+            var categoryData = categoryAllData.Where(x => x.CategoryTypeId == (int)ProductCategoryTypesEnum.Product);
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var productResponseData = (from x in productAllData
-                                       join y in categoryData.Where(a => a.CategoryId == (int)MasterPagesEnum.Category) on x.CategoryId equals (int)MasterPagesEnum.Category
+                                       join y in categoryData on x.CategoryId equals y.CategoryId
                                        join z in allUsers on x.CreatedBy equals z.UserId
                                        join u in allUsers on x.UpdatedBy equals (int?)u.UserId into updated
                                        from updatedMat in updated.DefaultIfEmpty()
@@ -785,13 +784,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
-        }
-
-        private async Task<long> GetCategoryTypeId(CancellationToken cancellationToken)
-        {
-            var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
-            var categoryTypeId = categoryAllData.Where(x => x.CategoryId == (int)MasterPagesEnum.Category).Select(x => x.CategoryTypeId).FirstOrDefault();
-            return categoryTypeId;
         }
 
         private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)
