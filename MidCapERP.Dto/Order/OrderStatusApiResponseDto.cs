@@ -6,6 +6,8 @@ namespace MidCapERP.Dto.Order
     {
         public long OrderId { get; set; }
 
+        public long OrderSetItemId { get; set; }
+
         [DisplayName("Order No")]
         public string? OrderNo { get; set; }
 
