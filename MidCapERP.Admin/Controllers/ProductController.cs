@@ -258,8 +258,8 @@ namespace MidCapERP.Admin.Controllers
             var categorySelectedList = categoryTypeData.Select(a =>
                                  new SelectListItem
                                  {
-                                     Value = Convert.ToString(a.LookupValueId),
-                                     Text = a.LookupValueName
+                                     Value = Convert.ToString(a.CategoryId),
+                                     Text = a.CategoryName
                                  }).ToList();
             ViewBag.CategorySelectedList = categorySelectedList;
         }

@@ -25,6 +25,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IProductDA ProductDA { get; }
         IProductImageDA ProductImageDA { get; }
         IProductMaterialDA ProductMaterialDA { get; }
+        ICategoriesDA CategoriesDA { get; }
         IRoleDA RoleDA { get; }
         IRolePermissionDA RolePermissionDA { get; }
         IOrderDA OrderDA { get; }

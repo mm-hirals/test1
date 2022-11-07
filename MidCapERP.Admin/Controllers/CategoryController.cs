@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.Category;
+using MidCapERP.Dto.Constants;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -34,6 +36,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            BindCategoryType();
             return PartialView("_CategoryPartial");
         }
 
@@ -47,15 +50,16 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(long Id, CancellationToken cancellationToken)
         {
             var category = await _unitOfWorkBL.CategoryBL.GetById(Id, cancellationToken);
+            BindCategoryType();
             return PartialView("_CategoryPartial", category);
         }
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
-        public async Task<IActionResult> Update(int Id, CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(long Id, CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CategoryBL.UpdateCategory(Id, categoryRequestDto, cancellationToken);
             return RedirectToAction("Index");
@@ -67,6 +71,31 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        public void BindCategoryType()
+        {
+            var categoryProductType = from ProductCategoryTypesEnum e in Enum.GetValues(typeof(ProductCategoryTypesEnum))
+                                      select new
+                                      {
+                                          Value = (int)e,
+                                          Text = e.ToString()
+                                      };
+
+            var categoryProductTypeList = categoryProductType.Select(a =>
+                                new SelectListItem
+                                {
+                                    Value = Convert.ToString(a.Value),
+                                    Text = a.Text
+                                }).ToList();
+
+            ViewBag.CategoryProductType = categoryProductTypeList;
+        }
+
+        // Category Name Validation
+        public async Task<bool> DuplicateCategoryName(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.CategoryBL.ValidateCategoryName(categoryRequestDto, cancellationToken);
         }
     }
 }
