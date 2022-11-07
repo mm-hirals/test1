@@ -41,21 +41,55 @@ $("#categoryName").on("input", function () {
 });
 
 CategoryModel.onComplete = function () {
+    $('#btnCreateCategory').buttonLoader('stop');
+    $('#btnSaveCategory').buttonLoader('stop');
     $("#divCategoryModal").modal('show');
 }
 
-  CategoryModel.onDelete = function () {
-        tblCategory.ajax.reload(null, false);
-        toastr.error('Data deleted successfully.');
-  }
-
+  
 CategoryModel.onSuccess = function (xhr) {
+    $('#btnCreateCategory').buttonLoader('stop');
+    $('#btnSaveCategory').buttonLoader('stop');
     tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
 CategoryModel.onFailed = function (xhr) {
+    $('#btnCreateCategory').buttonLoader('stop');
+    $('#btnSaveCategory').buttonLoader('stop');
     tblCategory.ajax.reload(null, false);
     $("#divCategoryModal").modal('hide');
 };
+
+$(document).delegate("#btnCreateCategory", "click", function () {
+    $('#btnCreateCategory').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmCreateCategory', function (e) {
+    $('#btnSaveCategory').buttonLoader('start');
+});
+
+$(document).delegate(".btnRemoveCategory", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteCategory);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteCategory(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Category/Delete/?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblCategory.ajax.reload();
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

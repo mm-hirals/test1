@@ -11,6 +11,7 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
+using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -92,10 +93,17 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken)
         {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectCustomerData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            var data = architectCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText)).Select(p => new CustomerApiDropDownResponceDto { RefferedById = p.CustomerId, FirstName = p.FirstName, LastName = p.LastName }).Take(10);
-            return data.ToList();
+            var architectCustomerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var data = architectCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText))
+                .Select(p => new CustomerApiDropDownResponceDto
+                {
+                    RefferedById = p.CustomerId,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    MobileNo = p.PhoneNumber,
+                    CustomerType = p.CustomerTypeId == (int)CustomerTypeEnum.Architect ? "Architect" : "Customer"
+                }).Take(10).ToList();
+            return data;
         }
 
         public async Task<CustomersResponseDto> GetCustomerForDetailsByMobileNo(string searchText, CancellationToken cancellationToken)
@@ -179,14 +187,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
 
-                if (model.RefferedNumber != null)
-                {
-                    await AddCustomerAndReferralUser(model, customerToInsert, cancellationToken);
-                }
-                else
-                {
-                    customerToInsert.RefferedBy = 0;
-                }
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
 
                 await SaveCustomerAddress(model, data, cancellationToken);
@@ -301,7 +301,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.AltPhoneNumber = model.AltPhoneNumber;
             oldData.GSTNo = model.GSTNo;
             oldData.IsSubscribe = model.IsSubscribe;
-            oldData.Discount = model.Discount != null ? model.Discount : 0.0m;
+            oldData.Discount = model.Discount != null ? model.Discount : 0;
+            oldData.RefferedBy = model.RefferedBy;
         }
 
         private static void MapToDbObject(CustomerApiRequestDto model, Customers oldData)
@@ -315,34 +316,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.IsSubscribe = model.IsSubscribe;
             oldData.CustomerTypeId = model.CustomerTypeId;
             oldData.RefferedBy = model.RefferedBy;
-        }
-
-        private async Task AddCustomerAndReferralUser(CustomersRequestDto model, Customers customerToInsert, CancellationToken cancellationToken)
-        {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var customerExistOrNot = customerAllData.FirstOrDefault(p => p.PhoneNumber == Convert.ToString(model.RefferedNumber) && p.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            if (customerExistOrNot != null)
-            {
-                customerToInsert.RefferedBy = customerExistOrNot.CustomerId;
-            }
-            else
-            {
-                Customers refferedCustomer = new Customers()
-                {
-                    TenantId = _currentUser.TenantId,
-                    LastName = String.Empty,
-                    FirstName = model.RefferedName != null ? model.RefferedName : "",
-                    PhoneNumber = model.RefferedNumber,
-                    CustomerTypeId = (int)CustomerTypeEnum.Architect,
-                    RefferedBy = 0,
-                    Discount = model.Discount != null ? model.Discount : 0,
-                    CreatedBy = _currentUser.UserId,
-                    CreatedDate = DateTime.Now,
-                    CreatedUTCDate = DateTime.UtcNow,
-                };
-                var customer = await _unitOfWorkDA.CustomersDA.CreateCustomers(refferedCustomer, cancellationToken);
-                customerToInsert.RefferedBy = customer.CustomerId;
-            }
         }
 
         private async Task SaveCustomerAddress(CustomersRequestDto model, Customers data, CancellationToken cancellationToken)

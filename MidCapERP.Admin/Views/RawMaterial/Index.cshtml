@@ -9,8 +9,8 @@
         <div class="c-card--header-action">
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkRawMaterialFilter"><i class='bx bx-plus me-1'></i>Filters</a>
             <a asp-controller="RawMaterial" asp-action="Create"
-               class="btn btn-primary" data-ajax="true" data-ajax-mode="replace"
-               data-ajax-complete="RawMaterialModel.onComplete" data-ajax-update="#divUpdateRawMaterial">Create New</a>
+               class="btn btn-primary has-spinner" data-ajax="true" data-ajax-mode="replace"
+               data-ajax-complete="RawMaterialModel.onComplete" data-ajax-update="#divUpdateRawMaterial" id="btnCreateRawMaterial">Create New</a>
         </div>
     </div>
     <div class="c-card--body">

@@ -318,7 +318,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             await DeleteProductMaterials(productMainRequestDto.ProductId, cancellationToken);
             await SaveProductMaterials(productMainRequestDto, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productMainRequestDto.ProductId, "ProductMaterial Created", ActivityLogStringConstant.Create, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productMainRequestDto.ProductId, "Product Material Created", ActivityLogStringConstant.Create, cancellationToken);
             await UpdateProductCost(productMainRequestDto, cancellationToken);
             return productMainRequestDto;
         }
@@ -381,7 +381,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     getProductById.Features = model.Features;
                     getProductById.Comments = model.Comments;
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductDetail Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Detail Updated", ActivityLogStringConstant.Update, cancellationToken);
                     var _mappedUser = _mapper.Map<ProductRequestDto>(data);
                     return _mappedUser;
                 }
@@ -407,7 +407,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                         getProductById.Status = (int)ProductStatusEnum.UnPublished;
 
                     await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductStatus Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Status Updated", ActivityLogStringConstant.Update, cancellationToken);
                 }
             }
             else
@@ -425,7 +425,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     UpdateData(getProductById);
                     getProductById.CostPrice = model.CostPrice;
                     var data = await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
-                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "ProductCost Updated", ActivityLogStringConstant.Update, cancellationToken);
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Product Cost Updated", ActivityLogStringConstant.Update, cancellationToken);
                     return _mapper.Map<ProductRequestDto>(data);
                 }
 
@@ -594,11 +594,11 @@ namespace MidCapERP.BusinessLogic.Repositories
                 ProductResponseDto productResponseDto = new ProductResponseDto();
                 var getProductById = await GetProductById(item, cancellationToken);
                 var categoryName = await _unitOfWorkDA.LookupValuesDA.GetById(getProductById.CategoryId, cancellationToken);
-                
+
                 productResponseDto = _mapper.Map<ProductResponseDto>(getProductById);
                 productResponseDto.CategoryName = categoryName.LookupValueName;
                 productResponseDto.QRImage = path + getProductById.QRImage;
-                
+
                 var tenantLogo = await _unitOfWorkDA.TenantDA.GetById(getProductById.TenantId, cancellationToken);
                 if (tenantLogo != null && !string.IsNullOrEmpty(tenantLogo.LogoPath))
                     productResponseDto.TenantLogo = path + tenantLogo.LogoPath;
@@ -606,6 +606,28 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productResponseList.Add(productResponseDto);
             }
             return productResponseList;
+        }
+
+        public async Task<bool> ValidateModelNo(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllProduct = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+
+            if (productRequestDto.ProductId > 0)
+            {
+                var getProductById = getAllProduct.First(p => p.ProductId == productRequestDto.ProductId);
+                if (getProductById.ModelNo == productRequestDto.ModelNo)
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo && p.ProductId != productRequestDto.ProductId);
+                }
+            }
+            else
+            {
+                return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo);
+            }
         }
 
         #region API Methods

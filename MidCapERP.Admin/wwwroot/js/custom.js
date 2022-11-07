@@ -1,3 +1,47 @@
+(function ($) {
+    $.fn.buttonLoader = function (action) {
+        var self = $(this);
+        if (action == 'start') {
+            if ($(self).attr("disabled") == "disabled") {
+                return false;
+            }
+            $(self).attr("disabled", true);
+            $(self).append('<i class="bx bx-loader-alt btn-spinner"></i>');
+            $(self).addClass('active');
+        }
+        if (action == 'stop') {
+            $(self).find('.btn-spinner').remove();
+            $(self).removeClass('active');
+            $(self).attr("disabled", false);
+        }
+    }
+})(jQuery);
+
+function message(title, message, type) {
+    swal(title, message, type);
+}
+function errorMessage(title, message, type) {
+    swal(title, message, type);
+}
+
+// function
+function SweetAlert(title, id, callback) {
+    swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this record! " + title,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        closeOnConfirm: false
+    },
+        function (isConfirm) {
+            if (isConfirm) {
+                callback(id);
+            }
+        }
+    );
+}
 document.addEventListener("DOMContentLoaded", function (event) {
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),
@@ -46,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 $('.sub-menu').hide();
 $(".submenu-link").click(function () {
     $(this).parent(".submenu-item").children(".sub-menu").slideToggle("500");
-});	
+});
 
 /*===== LOGIN PASSWORD SHOW =====*/
 $(".toggle-password").click(function () {
@@ -112,3 +156,18 @@ new Chart("myCharts", {
     }
 });
 
+function InitSelect2(objParent) {
+    if (!$.isEmptyObject(objParent)) {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+            dropdownParent: objParent
+        });
+    }
+    else {
+        $(".drpSelect2").select2({
+            placeholder: "Please Select",
+            allowClear: false,
+        });
+    }
+}

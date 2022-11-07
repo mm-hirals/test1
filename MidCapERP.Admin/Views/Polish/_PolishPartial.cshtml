@@ -14,10 +14,10 @@
                     <i class='bx bx-x'></i>
                 </button>
             </div>
-            <form asp-action="@action" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+            <form asp-action="@action" method="post" class="modal-form--wrapper has-spinner" enctype="multipart/form-data"
                   data-ajax="true" data-ajax-method="post"
                   data-ajax-complete="PolishModel.onSuccess"
-                  data-ajax-failure="PolishModel.onFailed">
+                  data-ajax-failure="PolishModel.onFailed" id="frmCreateUpdatePolish">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="PolishId" hidden class="form-control" />
@@ -39,7 +39,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="CompanyId" class="form-label"></label><span class="text-danger">*</span>
-                                <select asp-for="CompanyId" data-val="true" class="form-control form-select"
+                                <select asp-for="CompanyId" data-val="true" class="drpSelect2 form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CompanySelectItemList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Company</option>
                                 </select>
@@ -49,7 +49,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="UnitId" class="form-label"></label><span class="text-danger">*</span>
-                                <select asp-for="UnitId" data-val="true" class="form-control form-select"
+                                <select asp-for="UnitId" data-val="true" class="drpSelect2 form-control form-select"
                                         asp-items="@(new SelectList((List<SelectListItem>)ViewBag.UnitSelectItemList, "Value", "Text"))">
                                     <option value="" hidden disabled selected>Select Unit</option>
                                 </select>
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner" id="btnCreateUpdatePolish">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -94,3 +94,6 @@
 @{
     await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
 }
+<script>
+    InitSelect2($("#divPolishModal"));
+</script>

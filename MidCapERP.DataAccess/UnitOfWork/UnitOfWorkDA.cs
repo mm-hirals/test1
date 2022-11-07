@@ -34,12 +34,14 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public ITenantBankDetailDA TenantBankDetailDA { get; }
         public IOrderSetDA OrderSetDA { get; }
         public IOrderSetItemDA OrderSetItemDA { get; }
+        public IOrderSetItemImageDA OrderSetItemImageDA { get; }
+        public IOrderSetItemReceivableDA OrderSetItemReceivableDA { get; }
         public IActivityLogsDA ActivityLogsDA { get; }
         public IOrderAddressDA OrderAddressDA { get; }
         public ITenantSMTPDetailDA TenantSMTPDetailDA { get; }
         public INotificationManagementDA NotificationManagementDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, ICategoriesDA categoriesDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA, INotificationManagementDA notificationManagementDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, ICategoriesDA categoriesDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA, INotificationManagementDA notificationManagementDA, IOrderSetItemImageDA orderSetItemImageDA, IOrderSetItemReceivableDA orderSetItemReceivableDA)
         {
             this._context = context;
             this.ContractorsDA = contractorsDA;
@@ -74,6 +76,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
             this.OrderAddressDA = orderAddressDA;
             this.TenantSMTPDetailDA = tenantSMTPDetailDA;
             this.NotificationManagementDA = notificationManagementDA;
+            this.OrderSetItemImageDA = orderSetItemImageDA;
+            this.OrderSetItemReceivableDA = orderSetItemReceivableDA;
         }
 
         #region TransactionMethod

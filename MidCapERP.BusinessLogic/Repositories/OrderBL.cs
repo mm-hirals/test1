@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -21,18 +24,26 @@ namespace MidCapERP.BusinessLogic.Repositories
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         public readonly CurrentUser _currentUser;
+        private readonly IFileStorageService _fileStorageService;
 
-        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             return _mapper.Map<List<OrderResponseDto>>(data);
+        }
+
+        public async Task<OrderResponseDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+            return _mapper.Map<OrderResponseDto>(data);
         }
 
         public async Task<JsonRepsonse<OrderResponseDto>> GetFilterOrderData(OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
@@ -185,18 +196,15 @@ namespace MidCapERP.BusinessLogic.Repositories
             var orderAllData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var orderEnum = Enum.GetValues(typeof(OrderStatusEnum)).Cast<OrderStatusEnum>().ToList();
             int statusValue = 0;
-            foreach (var item in orderEnum)
-            {
-                if (status == Convert.ToString(item))
-                    statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(item));
-            }
 
-            var enumOrderData = orderAllData.Where(x => x.CreatedBy == _currentUser.UserId && x.Status == statusValue).ToList();
-            foreach (var orderData in enumOrderData)
+            if (status == Enum.GetName(typeof(OrderStatusEnum), OrderStatusEnum.MaterialReceive))
             {
+                var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+                var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
                 var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-                var orderResponseData = (from x in enumOrderData
+                var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
                                          join y in customerData on x.CustomerID equals y.CustomerId
+                                         join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
                                          select new OrderStatusApiResponseDto()
                                          {
                                              OrderId = x.OrderId,
@@ -205,9 +213,36 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
                                              OrderStatus = status,
                                              OrderDate = x.CreatedDate
-                                         }).ToList();
+                                         }).Distinct().ToList();
                 orderStatusApiResponseDto = orderResponseData;
             }
+            else
+            {
+                foreach (var item in orderEnum)
+                {
+                    if (status == Convert.ToString(item))
+                        statusValue = (int)Enum.Parse(typeof(OrderStatusEnum), Convert.ToString(item));
+                }
+
+                var enumOrderData = orderAllData.Where(x => x.CreatedBy == _currentUser.UserId && x.Status == statusValue).ToList();
+                foreach (var orderData in enumOrderData)
+                {
+                    var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                    var orderResponseData = (from x in enumOrderData
+                                             join y in customerData on x.CustomerID equals y.CustomerId
+                                             select new OrderStatusApiResponseDto()
+                                             {
+                                                 OrderId = x.OrderId,
+                                                 OrderNo = x.OrderNo,
+                                                 CustomerName = y.FirstName + " " + y.LastName,
+                                                 TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
+                                                 OrderStatus = status,
+                                                 OrderDate = x.CreatedDate
+                                             }).ToList();
+                    orderStatusApiResponseDto = orderResponseData;
+                }
+            }
+
             return orderStatusApiResponseDto;
         }
 
@@ -299,6 +334,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
                                                  Comment = x.Comment,
+                                                 ReceiveDate = x.ReceiveDate,
+                                                 ProvidedMaterial = x.ProvidedMaterial,
                                                  Status = x.MakingStatus
                                              }).ToList();
 
@@ -448,6 +485,41 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
 
+        public async Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, CancellationToken cancellationToken)
+        {
+            var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+            orderData.OrderSetApiResponseDto.ForEach(x => x.OrderSetItemResponseDto = x.OrderSetItemResponseDto.Where(x => x.ReceiveDate != null).ToList());
+            return orderData;
+        }
+
+        public async Task<OrderApiResponseDto> UpdateOrderReceiveMaterial(OrderUpdateReceiveMaterialAPI model, CancellationToken cancellationToken)
+        {
+            if (model.MaterialImage == null)
+                throw new Exception("Please upload an received material image.");
+
+            OrderSetItemReceivable orderSetItemReceivable = new OrderSetItemReceivable();
+            orderSetItemReceivable.OrderSetItemId = model.OrderSetItemId;
+            orderSetItemReceivable.ReceivedDate = DateTime.Now;
+            orderSetItemReceivable.ProvidedMaterial = model.ReceivedMaterial;
+            orderSetItemReceivable.ReceivedFrom = model.ReceivedFrom;
+            orderSetItemReceivable.ReceivedBy = _currentUser.UserId;
+            orderSetItemReceivable.Comment = model.Comment;
+            orderSetItemReceivable.CreatedBy = _currentUser.UserId;
+            orderSetItemReceivable.CreatedDate = DateTime.Now;
+            orderSetItemReceivable.CreatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderSetItemReceivableDA.CreateOrderSetItemReceivable(orderSetItemReceivable, cancellationToken);
+
+            OrderSetItemImage orderSetItemImage = new OrderSetItemImage();
+            orderSetItemImage.OrderSetItemId = model.OrderSetItemId;
+            orderSetItemImage.DrawImage = await _fileStorageService.StoreFile(model.MaterialImage, ApplicationFileStorageConstants.FilePaths.OrderSetItemReceive);
+            orderSetItemImage.CreatedBy = _currentUser.UserId;
+            orderSetItemImage.CreatedDate = DateTime.Now;
+            orderSetItemImage.CreatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderSetItemImageDA.CreateOrderSetItemImage(orderSetItemImage, cancellationToken);
+
+            return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
+        }
+
         public async Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
         {
             try
@@ -552,8 +624,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<Int64> GetOrderReceivableCount(CancellationToken cancellationToken)
         {
-            //var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
-            return 0;
+            var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+            var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
+                                     join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
+                                     select new OrderStatusApiResponseDto()
+                                     {
+                                         OrderId = x.OrderId,
+                                     }).Distinct().Count();
+            return orderResponseData;
         }
 
         public async Task<Int64> GetOrderApprovedCount(CancellationToken cancellationToken)
@@ -791,6 +870,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var discountAmountP = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
                 oldOrderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmountP;
                 oldOrderSetItem.Comment = orderSetItemRequestDto.Comment;
+                oldOrderSetItem.ReceiveDate = orderSetItemRequestDto.ReceiveDate;
+                oldOrderSetItem.ProvidedMaterial = orderSetItemRequestDto.ProvidedMaterial;
                 oldOrderSetItem.UpdatedBy = _currentUser.UserId;
                 oldOrderSetItem.UpdatedDate = DateTime.Now;
                 oldOrderSetItem.UpdatedUTCDate = DateTime.UtcNow;
@@ -834,6 +915,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var discountAmount = Math.Round(Math.Round(((orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) * orderSetItemRequestDto.DiscountPrice / 100)), 2);
                 orderSetItem.TotalAmount = (orderSetItemRequestDto.UnitPrice * orderSetItemRequestDto.Quantity) - discountAmount;
                 orderSetItem.Comment = orderSetItemRequestDto.Comment;
+                orderSetItem.ReceiveDate = orderSetItemRequestDto.ReceiveDate;
+                orderSetItem.ProvidedMaterial = orderSetItemRequestDto.ProvidedMaterial;
                 orderSetItem.MakingStatus = (int)ProductStatusEnum.Pending;
                 orderSetItem.CreatedBy = _currentUser.UserId;
                 orderSetItem.CreatedDate = DateTime.Now;

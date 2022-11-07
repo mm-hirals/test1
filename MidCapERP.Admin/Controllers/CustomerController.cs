@@ -1,23 +1,21 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using NToastNotify;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IToastNotification _toastNotification;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -35,7 +33,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.View)]
         public async Task<IActionResult> GetCustomerAddressesData([FromForm] CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(dataTableFilterDto, cancellationToken);
@@ -46,6 +44,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
+            await FillArchitectDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -54,12 +53,11 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return RedirectToAction("Update", "Customer", new { id = data.CustomerId });
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Create)]
         public async Task<IActionResult> CreateCustomerAddress(int customerId, CancellationToken cancellationToken)
         {
             CustomerAddressesRequestDto dto = new();
@@ -68,11 +66,10 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Create)]
         public async Task<IActionResult> CreateCustomerAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Saved Successfully!");
             return View("_CustomerAddressPartial");
         }
 
@@ -80,6 +77,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
+            await FillArchitectDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -89,12 +87,11 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> Update(Int64 Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Update)]
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var customersAddress = await _unitOfWorkBL.CustomerAddressesBL.GetById(Id, cancellationToken);
@@ -102,16 +99,15 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Update)]
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(Id, customersAddressRequestDto, cancellationToken);
-            _toastNotification.AddSuccessToastMessage("Data Update Successfully!");
             return RedirectToAction("CustomerEdit");
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Delete)]
         public async Task<IActionResult> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);
@@ -135,5 +131,27 @@ namespace MidCapERP.Admin.Controllers
         public async Task Import_Export_Customer(CancellationToken cancellationToken)
         {
         }
+
+        #region Private Method
+
+        private async Task FillArchitectDropDown(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var architectData = await _unitOfWorkBL.ArchitectsBL.GetAll(cancellationToken);
+                var data = architectData.Select(a => new SelectListItem
+                {
+                    Value = Convert.ToString(a.CustomerId),
+                    Text = a.FirstName + " " + a.LastName
+                }).ToList();
+                ViewBag.ArchitectSelectItemList = data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        #endregion Private Method
     }
 }

@@ -3,28 +3,28 @@ window.counter = 0;
 var ProductModel = {};
 $(document).ready(function () {
     $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
-    if ($("#hdnProductId").val() > 0) {
-        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-        $("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
-    }
+    $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+    //if ($("#hdnProductId").val() > 0) {
+    //    $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+    //    $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+    //    $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+    //    $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
+    //    //$("#divProductWorkflowPartial").load('/Product/CreateProductWorkFlow' + "?ProductId=" + document.getElementById("hdnProductId").value);
+    //}
 });
 
-//$(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
-//    debugger;
-//    var tabId = $(e.target).attr("id")
-//    if (tabId == "nav-images-tab") {
-//        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-//    } else if (tabId == "nav-rowmaterial-tab") {
-//        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
-//    } else if (tabId == "nav-detail-tab") {
-//        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
-//    } else if (tabId == "nav-productActivity") {
-//        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
-//    }
-//});
+$(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
+    var tabId = $(e.target).attr("id")
+    if (tabId == "nav-images-tab") {
+        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+    } else if (tabId == "nav-rowmaterial-tab") {
+        $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
+    } else if (tabId == "nav-detail-tab") {
+        $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
+    } else if (tabId == "nav-productActivity-tab") {
+        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
+    }
+});
 
 $(document).on("#lnkProductFilter", "click", (function () {
     $(this).toggleClass("filter-icon");
@@ -141,6 +141,8 @@ $(document).on("change", "select.material", (function () {
     $(this).parent().parent().find("input.Unit").attr('value', unit);
 
     $("span.materialErrorMsg").hide();
+    if (val == "")
+        $(this).parent().parent().find("input.quantity").val("");
 }));
 
 $(document).on("click", ".minus-icon", function () {
@@ -152,13 +154,31 @@ $(document).on("click", ".minus-icon", function () {
 });
 
 ProductModel.onSuccess = function (xhr) {
+    $('.productDetailsSubmit').buttonLoader('stop');
+    toastr.success('Information saved successfully.');
 };
 
 ProductModel.onFailed = function (xhr) {
+    $('.productDetailsSubmit').buttonLoader('stop');
 };
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
+    $('.btnProductMaterial').buttonLoader('stop');
+    toastr.success('Information saved successfully.');
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
+    $('.btnProductMaterial').buttonLoader('stop');
 };
+
+$(document).on('submit', '#frmProductInfoForm', function (e) {
+    $('.productSubmit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmProductDetail', function (e) {
+    $('.productDetailsSubmit').buttonLoader('start');
+});
+
+$(document).on('submit', '#frmProductMaterial', function (e) {
+    $('.btnProductMaterial').buttonLoader('start');
+});

@@ -10,6 +10,8 @@ namespace MidCapERP.BusinessLogic.Interface
     {
         public Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken);
 
+        public Task<OrderResponseDto> GetById(Int64 Id, CancellationToken cancellationToken);
+
         public Task<JsonRepsonse<OrderResponseDto>> GetFilterOrderData(OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
 
         public Task<OrderResponseDto> GetOrderDetailData(long Id, CancellationToken cancellationToken);
@@ -31,6 +33,10 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<OrderApiResponseDto> UpdateOrderAdvanceAmountAPI(Int64 orderSetItemId, decimal discountPrice, CancellationToken cancellationToken);
 
         public Task<OrderApiResponseDto> UpdateOrderSendForApproval(OrderUpdateStatusAPI model, CancellationToken cancellationToken);
+
+        public Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, CancellationToken cancellationToken);
+
+        public Task<OrderApiResponseDto> UpdateOrderReceiveMaterial(OrderUpdateReceiveMaterialAPI model, CancellationToken cancellationToken);
 
         public Task DeleteOrderAPI(OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken);
 

@@ -15,7 +15,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="TenantId" class="control-label"></label>
-                    <select asp-for="TenantId" data-val="true" class="form-control"
+                    <select asp-for="TenantId" data-val="true" class="drpSelect2 form-control"
                             asp-items="@(new SelectList((List<SelectListItem>)ViewBag.FillUserDropDown, "Value", "Text"))">
                         <option value="" hidden disabled selected>Select Tenant</option>
                     </select>

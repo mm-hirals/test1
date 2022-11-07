@@ -133,14 +133,12 @@ namespace MidCapERP.Admin.Controllers
             if (productMainRequestDto.ProductMaterialRequestDto.Count > 0)
             {
                 await _unitOfWorkBL.ProductBL.CreateProductMaterial(productMainRequestDto, cancellationToken);
-                return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
             }
             else
             {
                 await _unitOfWorkBL.ProductBL.UpdateProductCost(productMainRequestDto, cancellationToken);
             }
-
-            throw new Exception("Please Add Material");
+            return RedirectToAction("CreateProductMaterial", "Product", new { productId = productMainRequestDto.ProductId });
         }
 
         [HttpGet]
@@ -244,6 +242,12 @@ namespace MidCapERP.Admin.Controllers
             {
                 throw new Exception("No Product Found!");
             }
+        }
+
+        // Model No Validation
+        public async Task<bool> DuplicateModelNo(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.ProductBL.ValidateModelNo(productRequestDto, cancellationToken);
         }
 
         #region Private Method
