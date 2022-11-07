@@ -16,5 +16,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<ArchitectRequestDto> UpdateArchitects(Int64 Id, ArchitectRequestDto model, CancellationToken cancellationToken);
 
         public Task SendSMSToArchitects(ArchitectsSendSMSDto model, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateArchitectPhoneNumber(ArchitectRequestDto architectRequestDto, CancellationToken cancellationToken);
     }
 }

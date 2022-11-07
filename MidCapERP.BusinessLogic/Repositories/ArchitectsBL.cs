@@ -125,6 +125,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<bool> ValidateArchitectPhoneNumber(ArchitectRequestDto architectRequestDto, CancellationToken cancellationToken)
+        {
+            var getArchitectData = await GetAll(cancellationToken);
+            if (architectRequestDto.CustomerId > 0)
+            {
+                var getCustomerId = getArchitectData.First(c => c.CustomerId == architectRequestDto.CustomerId);
+                if (getCustomerId.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getArchitectData.Any(c => c.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim() && c.PhoneNumber != architectRequestDto.PhoneNumber);
+                }
+            }
+            else
+            {
+                return !getArchitectData.Any(c => c.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim());
+            }
+        }
+
         #region PrivateMethods
 
         private async Task<Customers> ArchitectGetById(Int64 Id, CancellationToken cancellationToken)
