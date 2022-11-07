@@ -71,7 +71,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("CustomerAddress/{customerId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.View)]
         public async Task<ApiResponse> GetCustomerAddress(long customerId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerById(customerId, cancellationToken);
@@ -83,7 +83,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("GetCustomerAddress/{customerAddressId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddresses.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.View)]
         public async Task<ApiResponse> GetCustomerAddressById(long customerAddressId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerAddressById(customerAddressId, cancellationToken);

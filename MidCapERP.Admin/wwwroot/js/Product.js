@@ -155,6 +155,7 @@ $(document).on("click", ".minus-icon", function () {
 
 ProductModel.onSuccess = function (xhr) {
     $('.productDetailsSubmit').buttonLoader('stop');
+    toastr.success('Information saved successfully.');
 };
 
 ProductModel.onFailed = function (xhr) {
@@ -163,22 +164,21 @@ ProductModel.onFailed = function (xhr) {
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
     $('.btnProductMaterial').buttonLoader('stop');
+    toastr.success('Information saved successfully.');
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
     $('.btnProductMaterial').buttonLoader('stop');
 };
+
 $(document).on('submit', '#frmProductInfoForm', function (e) {
     $('.productSubmit').buttonLoader('start');
-    toastr.success('Information saved successfully.');
 });
 
 $(document).on('submit', '#frmProductDetail', function (e) {
     $('.productDetailsSubmit').buttonLoader('start');
-    toastr.success('Information saved successfully.');
 });
 
 $(document).on('submit', '#frmProductMaterial', function (e) {
     $('.btnProductMaterial').buttonLoader('start');
-    toastr.success('Information saved successfully.');
 });
