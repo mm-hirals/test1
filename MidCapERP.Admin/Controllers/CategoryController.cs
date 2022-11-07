@@ -24,7 +24,7 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
-        public async Task<IActionResult>  GetCategoryData([FromForm] CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategoryData([FromForm] CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var categoryfilterdata = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
             return Ok(categoryfilterdata);
@@ -67,6 +67,12 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        // Category Name Validation
+        public async Task<bool> DuplicateCategoryName(CategoryRequestDto catRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.CategoryBL.ValidateCategoryName(catRequestDto, cancellationToken);
         }
     }
 }

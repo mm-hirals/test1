@@ -18,5 +18,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CompanyRequestDto> UpdateCompany(int Id, CompanyRequestDto model, CancellationToken cancellationToken);
 
         public Task<CompanyRequestDto> DeleteCompany(int Id, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateCompanyName(CompanyRequestDto comRequestDto, CancellationToken cancellationToken);
     }
 }

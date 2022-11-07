@@ -111,6 +111,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<bool> ValidateCategoryName(CategoryRequestDto catRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllCategory = await GetAll(cancellationToken);
+
+            if (catRequestDto.LookupValueId > 0)
+            {
+                var getCategoryById = getAllCategory.First(c => c.LookupValueId == catRequestDto.LookupValueId);
+                if (getCategoryById.LookupValueName.Trim() == catRequestDto.LookupValueName.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllCategory.Any(c => c.LookupValueName.Trim() == catRequestDto.LookupValueName.Trim() && c.LookupValueId != catRequestDto.LookupValueId);
+                }
+            }
+            else
+            {
+                return !getAllCategory.Any(c => c.LookupValueName.Trim() == catRequestDto.LookupValueName.Trim());
+            }
+        }
+
         #region PrivateMethods
 
         private void UpdateCategory(LookupValues oldData)

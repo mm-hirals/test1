@@ -14,7 +14,7 @@ namespace MidCapERP.BusinessLogic.Repositories
     public class RoleBL : IRoleBL
     {
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly IUnitOfWorkDA _unitOfWorkDA; 
+        private readonly IUnitOfWorkDA _unitOfWorkDA;
         private readonly CurrentUser _currentUser;
         private readonly IMapper _mapper;
 
@@ -92,18 +92,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (roleRequestDto.Id != null)
             {
                 var getRoleById = getAllRole.First(p => p.Id == roleRequestDto.Id);
-                if (getRoleById.Name == roleRequestDto.Name)
+                if (getRoleById.Name.Trim() == roleRequestDto.Name.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getAllRole.Any(p => p.Name == roleRequestDto.Name + "_" + Convert.ToString(_currentUser.TenantId) && p.Id != roleRequestDto.Id);
+                    return !getAllRole.Any(p => p.Name.Trim() == roleRequestDto.Name.Trim() + "_" + Convert.ToString(_currentUser.TenantId) && p.Id != roleRequestDto.Id);
                 }
             }
             else
             {
-                return !getAllRole.Any(p => p.Name == roleRequestDto.Name + "_" + Convert.ToString(_currentUser.TenantId));
+                return !getAllRole.Any(p => p.Name.Trim() == roleRequestDto.Name.Trim() + "_" + Convert.ToString(_currentUser.TenantId));
             }
         }
 

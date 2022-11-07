@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.Constants;
+﻿using Microsoft.AspNetCore.Mvc;
+using MidCapERP.Dto.Constants;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,6 +12,7 @@ namespace MidCapERP.Dto.Company
 
         [DisplayName("Company Name")]
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Maximum 50 characters")]
+        [Remote("DuplicateCompanyName", "Company", AdditionalFields = nameof(LookupValueId), ErrorMessage = "Company Name already exist. Please enter a different Company Name.")]
         public string LookupValueName { get; set; }
 
         public bool IsDeleted { get; set; }

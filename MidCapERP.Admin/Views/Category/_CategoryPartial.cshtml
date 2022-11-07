@@ -1,6 +1,6 @@
 ﻿@model MidCapERP.Dto.Category.CategoryRequestDto
 @{
-    string action = (Model != null ) ? "Update" : "Create";
+    string action = (Model != null) ? "Update" : "Create";
 }
 
 <!-- Modal -->
@@ -14,12 +14,12 @@
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
-                data-ajax="true" data-ajax-method="post" 
-                data-ajax-complete="CategoryModel.onSuccess" 
-                data-ajax-failure="CategoryModel.onFailed" id="frmCreateCategory">
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="CategoryModel.onSuccess"
+                  data-ajax-failure="CategoryModel.onFailed" id="frmCreateCategory">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    @*<input asp-for="LookupValueId" hidden class="form-control" />*@
+                    <input asp-for="LookupValueId" hidden class="form-control" />
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">

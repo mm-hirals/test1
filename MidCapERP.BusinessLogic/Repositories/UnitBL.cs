@@ -106,6 +106,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<UnitRequestDto>(data);
         }
 
+        public async Task<bool> ValidateUnitName(UnitRequestDto unitRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllUnit = await GetAll(cancellationToken);
+
+            if (unitRequestDto.LookupValueId > 0)
+            {
+                var getUnitById = getAllUnit.First(c => c.LookupValueId == unitRequestDto.LookupValueId);
+                if (getUnitById.LookupValueName.Trim() == unitRequestDto.LookupValueName.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllUnit.Any(c => c.LookupValueName.Trim() == unitRequestDto.LookupValueName.Trim() && c.LookupValueId != unitRequestDto.LookupValueId);
+                }
+            }
+            else
+            {
+                return !getAllUnit.Any(c => c.LookupValueName.Trim() == unitRequestDto.LookupValueName.Trim());
+            }
+        }
+
         #region PrivateMethods
 
         private static void MapToDbObject(UnitRequestDto model, LookupValues oldData)
