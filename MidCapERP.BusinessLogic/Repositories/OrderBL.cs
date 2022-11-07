@@ -490,6 +490,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
         {
             var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+            var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            orderData.OrderSetApiResponseDto = orderData.OrderSetApiResponseDto.Where(x => x.OrderSetId == orderSetItemData.OrderSetId).ToList();
             orderData.OrderSetApiResponseDto.ForEach(x => x.OrderSetItemResponseDto = x.OrderSetItemResponseDto.Where(x => x.OrderSetItemId == orderSetItemId && x.ReceiveDate != null).ToList());
             return orderData;
         }
@@ -633,7 +635,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                      select new OrderStatusApiResponseDto()
                                      {
                                          OrderId = x.OrderId,
-                                     }).Distinct().Count();
+                                     }).Count();
             return orderResponseData;
         }
 
