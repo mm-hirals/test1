@@ -68,11 +68,5 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);
             return RedirectToAction("Index");
         }
-
-        // Category Name Validation
-        public async Task<bool> DuplicateCategoryName(CategoryRequestDto catRequestDto, CancellationToken cancellationToken)
-        {
-            return await _unitOfWorkBL.CategoryBL.ValidateCategoryName(catRequestDto, cancellationToken);
-        }
     }
 }

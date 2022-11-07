@@ -101,6 +101,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<bool> ValidateRawMaterialTitle(RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllRawMaterial = await _unitOfWorkDA.RawMaterialDA.GetAll(cancellationToken);
+
+            if (rawMaterialRequestDto.RawMaterialId > 0)
+            {
+                var getRawMaterialById = getAllRawMaterial.First(c => c.RawMaterialId == rawMaterialRequestDto.RawMaterialId);
+                if (getRawMaterialById.Title.Trim() == rawMaterialRequestDto.Title.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllRawMaterial.Any(c => c.Title.Trim() == rawMaterialRequestDto.Title.Trim() && c.RawMaterialId != rawMaterialRequestDto.RawMaterialId);
+                }
+            }
+            else
+            {
+                return !getAllRawMaterial.Any(c => c.Title.Trim() == rawMaterialRequestDto.Title.Trim());
+            }
+        }
+
         #region PrivateMethods
 
         private static void MapToDbObject(RawMaterialRequestDto model, RawMaterial oldData)

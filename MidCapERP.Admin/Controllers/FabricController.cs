@@ -79,6 +79,12 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        // Model No Validation
+        public async Task<bool> DuplicateModelNo(FabricRequestDto fabricRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.FabricBL.ValidateModelNo(fabricRequestDto, cancellationToken);
+        }
+
         #region Private Method
 
         private async Task FillCompanyNameDropDown(CancellationToken cancellationToken)
@@ -102,6 +108,7 @@ namespace MidCapERP.Admin.Controllers
             }).ToList();
             ViewBag.UnitSelectItemList = unitDataSelectedList;
         }
+
         private async Task FillViewBags(CancellationToken cancellationToken)
         {
             var tenantDetails = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
@@ -109,6 +116,7 @@ namespace MidCapERP.Admin.Controllers
             ViewBag.RetailerSP = tenantDetails != null && tenantDetails?.FabricRSPPercentage > 0 ? tenantDetails.FabricRSPPercentage : 0;
             ViewBag.RoundTo = tenantDetails != null && tenantDetails?.AmountRoundMultiple > 0 ? tenantDetails.AmountRoundMultiple : 0;
         }
+
         #endregion Private Method
     }
 }

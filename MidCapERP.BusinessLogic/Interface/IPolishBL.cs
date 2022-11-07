@@ -24,5 +24,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<PolishRequestDto> UpdatePolish(int Id, PolishRequestDto model, CancellationToken cancellationToken);
 
         public Task<PolishRequestDto> DeletePolish(int Id, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateModelNo(PolishRequestDto fabricRequestDto, CancellationToken cancellationToken);
     }
 }

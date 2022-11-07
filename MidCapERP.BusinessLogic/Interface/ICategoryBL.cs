@@ -20,7 +20,5 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CategoryRequestDto> UpdateCategory(int Id, CategoryRequestDto model, CancellationToken cancellationToken);
 
         public Task<CategoryRequestDto> DeleteCategory(int Id, CancellationToken cancellationToken);
-
-        public Task<bool> ValidateCategoryName(CategoryRequestDto productRequestDto, CancellationToken cancellationToken);
     }
 }

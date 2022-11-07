@@ -72,6 +72,12 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        // Title Validation
+        public async Task<bool> DuplicateRawMaterialTitle(RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.RawMaterialBL.ValidateRawMaterialTitle(rawMaterialRequestDto, cancellationToken);
+        }
+
         #region Private Method
 
         private async Task FillUnitNameDropDown(CancellationToken cancellationToken)
