@@ -74,7 +74,7 @@ namespace MidCapERP.Dto.Tenant
 
         [Required]
         [DisplayName("Interior Commission %")]
-        public decimal? InteriorDiscount { get; set; }
+        public decimal? ArchitectDiscount { get; set; }
 
         [Required]
         [DisplayName("Fabric Retailer SP %")]

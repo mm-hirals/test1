@@ -82,7 +82,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.GSTNo = model.GSTNo;
             oldData.ProductRSPPercentage = model.ProductRSPPercentage;
             oldData.ProductWSPPercentage = model.ProductWSPPercentage;
-            oldData.InteriorDiscount = model.InteriorDiscount;
+            oldData.ArchitectDiscount = model.ArchitectDiscount;
             oldData.FabricRSPPercentage = model.FabricRSPPercentage;
             oldData.FabricWSPPercentage = model.FabricWSPPercentage;
             oldData.AmountRoundMultiple = model.AmountRoundMultiple;
