@@ -171,3 +171,14 @@ function InitSelect2(objParent) {
         });
     }
 }
+
+function restrictAlphabets(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+
+function restrictNumber(e) {
+    return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
+}
