@@ -49,5 +49,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken);
 
         public Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken);
+
+        public Task<OrderResponseDto> GetOrderDetailsAnonymous(string orderNo, CancellationToken cancellationToken);
     }
 }
