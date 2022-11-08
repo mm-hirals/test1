@@ -590,26 +590,29 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Inquiry);
         }
 
-        public async Task<OrderResponseDto> GetOrderDetailsAnonymous(long Id, CancellationToken cancellationToken)
+        public async Task<OrderResponseDto> GetOrderDetailsAnonymous(string orderNo, CancellationToken cancellationToken)
         {
             try
             {
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
-                if (Id > 0)
+                if (orderNo != null)
                 {
-                    orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
+                    var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+                    orderResponseDto = _mapper.Map<OrderResponseDto>(orderData.Where(x => x.OrderNo == orderNo).FirstOrDefault());
+                    if (orderResponseDto != null)
+                    {
+                        // Get Order Addresses
+                        await GetOrderAddress(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
 
-                    // Get Order Addresses
-                    await GetOrderAddress(Id, orderResponseDto, cancellationToken);
+                        // Get customer data
+                        await GetCustomerData(orderResponseDto, cancellationToken);
 
-                    // Get customer data
-                    await GetCustomerData(orderResponseDto, cancellationToken);
+                        // Get Order Sets Data
+                        await GetOrderSetData(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
 
-                    // Get Order Sets Data
-                    await GetOrderSetData(Id, orderResponseDto, cancellationToken);
-
-                    // Get Order Set Items Data
-                    await GetOrderSetItemData(Id, orderResponseDto, cancellationToken);
+                        // Get Order Set Items Data
+                        await GetOrderSetItemData(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
+                    }
                 }
                 return orderResponseDto;
             }
