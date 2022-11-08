@@ -4,6 +4,8 @@ var CustomerModel = {};
 var tblCustomer;
 var value_check = new Array();
 
+InitSelect2();
+
 $(function () {
     tblCustomer = $("#tblCustomer").DataTable({
         "searching": false,
@@ -16,6 +18,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.refferedBy = $("#refferedBy").val().trim();
                 d.customerName = $("#customerName").val().trim();
                 d.customerMobileNo = $("#customerMobileNo").val().trim();
                 d.customerFromDate = $("#customerFromDate").val().trim();
@@ -65,6 +68,10 @@ $("#customerFromDate").on("input", function () {
 });
 
 $("#customerToDate").on("input", function () {
+    tblCustomer.ajax.reload(null, false);
+});
+
+$('#refferedBy').change(function () {
     tblCustomer.ajax.reload(null, false);
 });
 
