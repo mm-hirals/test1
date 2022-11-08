@@ -363,27 +363,27 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             if (dataTableFilterDto != null)
             {
+                if (dataTableFilterDto.RefferedBy != null && dataTableFilterDto.RefferedBy != 0)
+                {
+                    customerAllData = customerAllData.Where(p => p.RefferedBy == dataTableFilterDto.RefferedBy);
+                }
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
                 {
                     customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
                 }
-
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerMobileNo))
                 {
                     customerAllData = customerAllData.Where(p => p.PhoneNumber.StartsWith(dataTableFilterDto.customerMobileNo));
                 }
-
                 if (dataTableFilterDto.customerFromDate != DateTime.MinValue)
                 {
                     customerAllData = customerAllData.Where(p => p.CreatedDate > dataTableFilterDto.customerFromDate || p.UpdatedDate > dataTableFilterDto.customerFromDate);
                 }
-
                 if (dataTableFilterDto.customerToDate != DateTime.MinValue)
                 {
                     customerAllData = customerAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate < dataTableFilterDto.customerToDate);
                 }
             }
-
             return customerAllData;
         }
 

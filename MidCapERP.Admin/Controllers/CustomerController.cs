@@ -21,6 +21,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            await FillRefferedDropDown(cancellationToken);
             return View();
         }
 
@@ -44,7 +45,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillInteriorDropDown(cancellationToken);
+            await FillRefferedDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -77,7 +78,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
-            await FillInteriorDropDown(cancellationToken);
+            await FillRefferedDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -139,17 +140,20 @@ namespace MidCapERP.Admin.Controllers
 
         #region Private Method
 
-        private async Task FillInteriorDropDown(CancellationToken cancellationToken)
+        private async Task FillRefferedDropDown(CancellationToken cancellationToken)
         {
             try
             {
-                var interiorData = await _unitOfWorkBL.InteriorsBL.GetAll(cancellationToken);
-                var data = interiorData.Select(a => new SelectListItem
-                {
-                    Value = Convert.ToString(a.CustomerId),
-                    Text = a.FirstName + " " + a.LastName
-                }).ToList();
-                ViewBag.InteriorSelectItemList = data;
+                var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+
+                var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
+                                        p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
+                                        new SelectListItem
+                                        {
+                                            Value = Convert.ToString(a.CustomerId),
+                                            Text = Convert.ToString(a.FirstName + " " + a.LastName)
+                                        }).ToList();
+                ViewBag.ReferedBySelectItemList = referedByDataSelectedList;
             }
             catch (Exception ex)
             {
