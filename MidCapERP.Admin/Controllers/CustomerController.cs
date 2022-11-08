@@ -146,7 +146,7 @@ namespace MidCapERP.Admin.Controllers
             {
                 var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
 
-                var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
+                var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Interior || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
                                         p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
                                         new SelectListItem
                                         {
