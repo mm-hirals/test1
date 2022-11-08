@@ -21,6 +21,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            FillRefferedDropDown(cancellationToken);
             return View();
         }
 
@@ -44,7 +45,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillArchitectDropDown(cancellationToken);
+            await FillCustomerDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -77,7 +78,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
-            await FillArchitectDropDown(cancellationToken);
+            await FillCustomerDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -139,12 +140,12 @@ namespace MidCapERP.Admin.Controllers
 
         #region Private Method
 
-        private async Task FillArchitectDropDown(CancellationToken cancellationToken)
+        private async Task FillCustomerDropDown(CancellationToken cancellationToken)
         {
             try
             {
-                var architectData = await _unitOfWorkBL.ArchitectsBL.GetAll(cancellationToken);
-                var data = architectData.Select(a => new SelectListItem
+                var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+                var data = customerData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect || x.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(a => new SelectListItem
                 {
                     Value = Convert.ToString(a.CustomerId),
                     Text = a.FirstName + " " + a.LastName
@@ -155,6 +156,20 @@ namespace MidCapERP.Admin.Controllers
             {
                 throw;
             }
+        }
+
+        private async void FillRefferedDropDown(CancellationToken cancellationToken)
+        {
+            var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+
+            var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
+                                    p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
+                                    new SelectListItem
+                                    {
+                                        Value = Convert.ToString(a.CustomerId),
+                                        Text = Convert.ToString(a.FirstName + " " + a.LastName)
+                                    }).ToList();
+            ViewBag.ReferedBySelectItemList = referedByDataSelectedList;
         }
 
         #endregion Private Method

@@ -41,6 +41,15 @@
                         <input id="customerToDate" type="date" class="form-control" placeholder="To Date" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Please Select Reffered By</label>
+                        <select id="refferedBy" data-val="true" class="drpSelect2 form-control form-select"
+                                asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
+                            <option>Select Reffered</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         <partial name="_CustomerTable" />
@@ -85,4 +94,4 @@
 
         <script asp-src-include="~/js/Customer.js"></script>
     }
-} 
+    } 
