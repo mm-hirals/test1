@@ -3,7 +3,7 @@
     public enum CustomerTypeEnum
     {
         Customer = 1,
-        Architect = 2,
+        Interior = 2,
         Wholesaler = 3
     }
 }

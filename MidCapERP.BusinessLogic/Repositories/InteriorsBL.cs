@@ -7,14 +7,14 @@ using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
-using MidCapERP.Dto.Architect;
 using MidCapERP.Dto.DataGrid;
+using MidCapERP.Dto.Interior;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
-    public class ArchitectsBL : IArchitectsBL
+    public class InteriorsBL : IInteriorsBL
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
@@ -22,7 +22,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly ISendSMSservice _sendSMSservice;
         private readonly IEmailHelper _emailHelper;
 
-        public ArchitectsBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, ISendSMSservice sendSMSservice, IEmailHelper emailHelper)
+        public InteriorsBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, ISendSMSservice sendSMSservice, IEmailHelper emailHelper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
@@ -31,78 +31,78 @@ namespace MidCapERP.BusinessLogic.Repositories
             _emailHelper = emailHelper;
         }
 
-        public async Task<IEnumerable<ArchitectResponseDto>> GetAll(CancellationToken cancellationToken)
+        public async Task<IEnumerable<InteriorResponseDto>> GetAll(CancellationToken cancellationToken)
         {
-            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            return _mapper.Map<List<ArchitectResponseDto>>(architectData.ToList());
+            var interiorAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var interiorData = interiorAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            return _mapper.Map<List<InteriorResponseDto>>(interiorData.ToList());
         }
 
-        public async Task<JsonRepsonse<ArchitectResponseDto>> GetFilterArchitectsData(ArchitectDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<JsonRepsonse<InteriorResponseDto>> GetFilterInteriorsData(InteriorDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            var architectAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var architectData = architectAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
-            var architectFilteredData = FilterArchitectData(dataTableFilterDto, architectData);
-            var architectGridData = new PagedList<ArchitectResponseDto>(_mapper.Map<List<ArchitectResponseDto>>(architectFilteredData).AsQueryable(), dataTableFilterDto);
-            return new JsonRepsonse<ArchitectResponseDto>(dataTableFilterDto.Draw, architectGridData.TotalCount, architectGridData.TotalCount, architectGridData);
+            var interiorAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var interiorData = interiorAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var interiorFilteredData = FilterInteriorData(dataTableFilterDto, interiorData);
+            var interiorGridData = new PagedList<InteriorResponseDto>(_mapper.Map<List<InteriorResponseDto>>(interiorFilteredData).AsQueryable(), dataTableFilterDto);
+            return new JsonRepsonse<InteriorResponseDto>(dataTableFilterDto.Draw, interiorGridData.TotalCount, interiorGridData.TotalCount, interiorGridData);
         }
 
-        public async Task<ArchitectRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
+        public async Task<InteriorRequestDto> GetById(Int64 Id, CancellationToken cancellationToken)
         {
-            var data = await ArchitectGetById(Id, cancellationToken);
-            return _mapper.Map<ArchitectRequestDto>(data);
+            var data = await InteriorGetById(Id, cancellationToken);
+            return _mapper.Map<InteriorRequestDto>(data);
         }
 
-        public async Task<ArchitectRequestDto> CreateArchitects(ArchitectRequestDto model, CancellationToken cancellationToken)
+        public async Task<InteriorRequestDto> CreateInteriors(InteriorRequestDto model, CancellationToken cancellationToken)
         {
-            var architectToInsert = _mapper.Map<Customers>(model);
+            var interiorToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
             await _unitOfWorkDA.BeginTransactionAsync();
 
             try
             {
-                architectToInsert.RefferedBy = 0;
-                architectToInsert.CustomerTypeId = (int)CustomerTypeEnum.Architect;
-                architectToInsert.Discount = model.Discount != null ? model.Discount : 0;
-                architectToInsert.IsDeleted = false;
-                architectToInsert.TenantId = _currentUser.TenantId;
-                architectToInsert.CreatedBy = _currentUser.UserId;
-                architectToInsert.CreatedDate = DateTime.Now;
-                architectToInsert.CreatedUTCDate = DateTime.UtcNow;
-                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(architectToInsert, cancellationToken);
+                interiorToInsert.RefferedBy = 0;
+                interiorToInsert.CustomerTypeId = (int)CustomerTypeEnum.Interior;
+                interiorToInsert.Discount = model.Discount != null ? model.Discount : 0;
+                interiorToInsert.IsDeleted = false;
+                interiorToInsert.TenantId = _currentUser.TenantId;
+                interiorToInsert.CreatedBy = _currentUser.UserId;
+                interiorToInsert.CreatedDate = DateTime.Now;
+                interiorToInsert.CreatedUTCDate = DateTime.UtcNow;
+                data = await _unitOfWorkDA.CustomersDA.CreateCustomers(interiorToInsert, cancellationToken);
 
-                await SaveArchitectAddress(model, data, cancellationToken);
+                await SaveInteriorAddress(model, data, cancellationToken);
             }
             catch (Exception e)
             {
                 await _unitOfWorkDA.rollbackTransactionAsync();
-                throw new Exception("Architect data is not saved");
+                throw new Exception("Interior data is not saved");
             }
 
-            return _mapper.Map<ArchitectRequestDto>(data);
+            return _mapper.Map<InteriorRequestDto>(data);
         }
 
-        public async Task<ArchitectRequestDto> UpdateArchitects(Int64 Id, ArchitectRequestDto model, CancellationToken cancellationToken)
+        public async Task<InteriorRequestDto> UpdateInteriors(Int64 Id, InteriorRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await ArchitectGetById(Id, cancellationToken);
+            var oldData = await InteriorGetById(Id, cancellationToken);
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-            return _mapper.Map<ArchitectRequestDto>(data);
+            return _mapper.Map<InteriorRequestDto>(data);
         }
 
-        public async Task SendSMSToArchitects(ArchitectsSendSMSDto model, CancellationToken cancellationToken)
+        public async Task SendSMSToInteriors(InteriorsSendSMSDto model, CancellationToken cancellationToken)
         {
-            //List<string> architectEmailList = new List<string>();
+            //List<string> interiorEmailList = new List<string>();
             foreach (var item in model.CustomerList)
             {
-                var architectData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
-                if (architectData != null)
+                var interiorData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
+                if (interiorData != null)
                 {
-                    //architectEmailList.Add(architectData.EmailId);
-                    //await _emailHelper.SendEmail(model.Subject, model.Message, architectEmailList);
+                    //interiorEmailList.Add(interiorData.EmailId);
+                    //await _emailHelper.SendEmail(model.Subject, model.Message, interiorEmailList);
                     NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
                     {
                         EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
@@ -111,8 +111,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                         NotificationMethod = NotificationMethodConstant.Email,
                         MessageSubject = model.Subject,
                         MessageBody = model.Message,
-                        ReceiverEmail = architectData.EmailId,
-                        ReceiverMobile = architectData.PhoneNumber,
+                        ReceiverEmail = interiorData.EmailId,
+                        ReceiverMobile = interiorData.PhoneNumber,
                         Status = 0,
                         CreatedBy = _currentUser.UserId,
                         CreatedDate = DateTime.Now,
@@ -125,40 +125,40 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<bool> ValidateArchitectPhoneNumber(ArchitectRequestDto architectRequestDto, CancellationToken cancellationToken)
+        public async Task<bool> ValidateInteriorPhoneNumber(InteriorRequestDto interiorRequestDto, CancellationToken cancellationToken)
         {
-            var getArchitectData = await GetAll(cancellationToken);
-            if (architectRequestDto.CustomerId > 0)
+            var getInteriorData = await GetAll(cancellationToken);
+            if (interiorRequestDto.CustomerId > 0)
             {
-                var getCustomerId = getArchitectData.First(c => c.CustomerId == architectRequestDto.CustomerId);
-                if (getCustomerId.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim())
+                var getCustomerId = getInteriorData.First(c => c.CustomerId == interiorRequestDto.CustomerId);
+                if (getCustomerId.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getArchitectData.Any(c => c.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim());
+                    return !getInteriorData.Any(c => c.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim());
                 }
             }
             else
             {
-                return !getArchitectData.Any(c => c.PhoneNumber.Trim() == architectRequestDto.PhoneNumber.Trim());
+                return !getInteriorData.Any(c => c.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim());
             }
         }
 
         #region PrivateMethods
 
-        private async Task<Customers> ArchitectGetById(Int64 Id, CancellationToken cancellationToken)
+        private async Task<Customers> InteriorGetById(Int64 Id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.CustomersDA.GetById(Id, cancellationToken);
             if (data == null)
             {
-                throw new Exception("Architect not found");
+                throw new Exception("Interior not found");
             }
             return data;
         }
 
-        private static void MapToDbObject(ArchitectRequestDto model, Customers oldData)
+        private static void MapToDbObject(InteriorRequestDto model, Customers oldData)
         {
             oldData.CustomerTypeId = model.CustomerTypeId;
             oldData.FirstName = model.FirstName;
@@ -171,7 +171,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldData.Discount = model.Discount != null ? model.Discount : 0;
         }
 
-        private async Task SaveArchitectAddress(ArchitectRequestDto model, Customers data, CancellationToken cancellationToken)
+        private async Task SaveInteriorAddress(InteriorRequestDto model, Customers data, CancellationToken cancellationToken)
         {
             CustomerAddresses catDto = new CustomerAddresses()
             {
@@ -192,32 +192,32 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.CommitTransactionAsync();
         }
 
-        private static IQueryable<Customers> FilterArchitectData(ArchitectDataTableFilterDto dataTableFilterDto, IQueryable<Customers> architectAllData)
+        private static IQueryable<Customers> FilterInteriorData(InteriorDataTableFilterDto dataTableFilterDto, IQueryable<Customers> interiorAllData)
         {
             if (dataTableFilterDto != null)
             {
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
                 {
-                    architectAllData = architectAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
+                    interiorAllData = interiorAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
                 }
 
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerMobileNo))
                 {
-                    architectAllData = architectAllData.Where(p => p.PhoneNumber.StartsWith(dataTableFilterDto.customerMobileNo));
+                    interiorAllData = interiorAllData.Where(p => p.PhoneNumber.StartsWith(dataTableFilterDto.customerMobileNo));
                 }
 
                 if (dataTableFilterDto.customerFromDate != DateTime.MinValue)
                 {
-                    architectAllData = architectAllData.Where(p => p.CreatedDate > dataTableFilterDto.customerFromDate || p.UpdatedDate > dataTableFilterDto.customerFromDate);
+                    interiorAllData = interiorAllData.Where(p => p.CreatedDate > dataTableFilterDto.customerFromDate || p.UpdatedDate > dataTableFilterDto.customerFromDate);
                 }
 
                 if (dataTableFilterDto.customerToDate != DateTime.MinValue)
                 {
-                    architectAllData = architectAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate > dataTableFilterDto.customerToDate);
+                    interiorAllData = interiorAllData.Where(p => p.CreatedDate < dataTableFilterDto.customerToDate || p.UpdatedDate > dataTableFilterDto.customerToDate);
                 }
             }
 
-            return architectAllData;
+            return interiorAllData;
         }
 
         #endregion PrivateMethods

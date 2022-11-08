@@ -159,9 +159,9 @@
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="ArchitectDiscount" class="form-label"></label>
-                                                <input asp-for="ArchitectDiscount" type="number" class="form-control" min="0" max="100" placeholder="Architect Discount %">
-                                                <span asp-validation-for="ArchitectDiscount" class="text-danger"></span>
+                                                <label asp-for="InteriorDiscount" class="form-label"></label>
+                                                <input asp-for="InteriorDiscount" type="number" class="form-control" min="0" max="100" placeholder="Interior Discount %">
+                                                <span asp-validation-for="InteriorDiscount" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -253,6 +253,6 @@
 
 @section Scripts {
     @{
-    <script asp-src-include="~/js/Profile.js"></script>
+        <script asp-src-include="~/js/Profile.js"></script>
     }
     }

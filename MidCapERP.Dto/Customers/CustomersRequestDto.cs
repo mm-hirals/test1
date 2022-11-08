@@ -45,7 +45,7 @@ namespace MidCapERP.Dto.Customers
         [StringLength(50, MinimumLength = 2, ErrorMessage = "The Minimum 2 characters, Maximum 15 characters.")]
         public string? GSTNo { get; set; }
 
-        [DisplayName("Architect Name")]
+        [DisplayName("Interior Name")]
         public long? RefferedBy { get; set; }
 
         public CustomerAddressesRequestDto? CustomerAddressesRequestDto { get; set; }

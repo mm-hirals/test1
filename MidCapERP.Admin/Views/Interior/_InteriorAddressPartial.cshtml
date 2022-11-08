@@ -1,21 +1,21 @@
-﻿@model MidCapERP.Dto.ArchitectAddresses.ArchitectAddressesRequestDto
+﻿@model MidCapERP.Dto.InteriorAddresses.InteriorAddressesRequestDto
 @{
-    string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateArchitectAddresses" : "CreateArchitectAddress";
+    string action = (Model != null && Model.CustomerAddressId != 0) ? "UpdateInteriorAddresses" : "CreateInteriorAddress";
 }
 <!-- Modal -->
-<div class="modal right fade" id="divArchitectAddressModal" tabindex="-1" aria-labelledby="ArchitectAddressModalLabel" aria-hidden="true">
+<div class="modal right fade" id="divInteriorAddressModal" tabindex="-1" aria-labelledby="InteriorAddressModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="ArchitectAddressModalLabel">Architect Address</h5>
+                <h5 class="modal-title" id="InteriorAddressModalLabel">Interior Address</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper"
                   data-ajax="true" data-ajax-method="post"
-                  data-ajax-complete="ArchitectAddressesModel.onSuccess"
-                  data-ajax-failure="ArchitectAddressesModel.onFailed" id="frmArchitectAddress">
+                  data-ajax-complete="InteriorAddressesModel.onSuccess"
+                  data-ajax-failure="InteriorAddressesModel.onFailed" id="frmInteriorAddress">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerAddressId" hidden class="form-control" />
@@ -94,15 +94,15 @@
                                     <label class="form-label">
                                         IsDefault
                                     </label>
-                                    <input asp-for="IsDefault" type="checkbox" class="custom-control-input" id="isDefaultCheckArchitectAddress" data-val="true">
-                                    <label class="custom-control-label" for="isDefaultCheckArchitectAddress">Active</label>
+                                    <input asp-for="IsDefault" type="checkbox" class="custom-control-input" id="isDefaultCheckInteriorAddress" data-val="true">
+                                    <label class="custom-control-label" for="isDefaultCheckInteriorAddress">Active</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="submit" value="Save" class="btn btn-primary has-spinner btn-architectAddress">Save</button>
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner btn-interiorAddress">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -115,5 +115,5 @@
 }
 
 <script>
-    InitSelect2($("#divArchitectAddressModal"));
+    InitSelect2($("#divInteriorAddressModal"));
 </script>

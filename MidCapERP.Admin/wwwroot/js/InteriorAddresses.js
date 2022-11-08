@@ -1,16 +1,16 @@
 ﻿'use strict';
 
-var ArchitectAddressesModel = {};
-var tblArchitectAddresses;
+var InteriorAddressesModel = {};
+var tblInteriorAddresses;
 
 $(function () {
-    tblArchitectAddresses = $("#tblArchitectAddresses").DataTable({
+    tblInteriorAddresses = $("#tblInteriorAddresses").DataTable({
         "searching": false,
         "processing": true,
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "/Architect/GetArchitectAddressesData",
+            "url": "/Interior/GetInteriorAddressesData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
@@ -50,7 +50,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="ArchitectAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateArchitectAddresses" href="/Architect/UpdateArchitectAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
+                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="InteriorAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateInteriorAddresses" href="/Interior/UpdateInteriorAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
                         '<a id="' + o.customerAddressId + '" class="btn btn-icon btn-outline-danger btnRemoveAddress" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
@@ -58,34 +58,33 @@ $(function () {
     });
 });
 
-$("#lnkArchitectAddressFilter").click(function () {
+$("#lnkInteriorAddressFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
 
-ArchitectAddressesModel.onComplete = function () {
+InteriorAddressesModel.onComplete = function () {
     $('#customersId').buttonLoader('stop');
-    $("#divArchitectAddressModal").modal('show');
+    $("#divInteriorAddressModal").modal('show');
 }
 
-
-ArchitectAddressesModel.onSuccess = function (xhr) {
-    $('.btn-architectAddress').buttonLoader('stop');
+InteriorAddressesModel.onSuccess = function (xhr) {
+    $('.btn-interiorAddress').buttonLoader('stop');
     $('#customersId').buttonLoader('stop');
-    tblArchitectAddresses.ajax.reload(null, false);
-    $("#divArchitectAddressModal").modal('hide');
+    tblInteriorAddresses.ajax.reload(null, false);
+    $("#divInteriorAddressModal").modal('hide');
     toastr.success('Information saved successfully.');
 };
 
-ArchitectAddressesModel.onFailed = function (xhr) {
-    $('.btn-architectAddress').buttonLoader('stop');
+InteriorAddressesModel.onFailed = function (xhr) {
+    $('.btn-interiorAddress').buttonLoader('stop');
     $('#customersId').buttonLoader('stop');
-    tblArchitectAddresses.ajax.reload(null, false);
-    $("#divArchitectAddressModal").modal('hide');
+    tblInteriorAddresses.ajax.reload(null, false);
+    $("#divInteriorAddressModal").modal('hide');
 };
 
-$(document).on('submit', '#frmArchitectAddress', function (e) {
-    $('.btn-architectAddress').buttonLoader('start');
+$(document).on('submit', '#frmInteriorAddress', function (e) {
+    $('.btn-interiorAddress').buttonLoader('start');
 });
 
 $(document).delegate("#customersId", "click", function () {
@@ -108,11 +107,11 @@ $(document).delegate(".btnRemoveAddress", "click", function () {
 function DeleteAddress(id) {
     if (!$.isEmptyObject(id) && id > 0) {
         $.ajax({
-            url: "/Architect/DeleteArchitectAddresses/?Id=" + id,
+            url: "/Interior/DeleteInteriorAddresses/?Id=" + id,
             type: "GET",
             success: function (response) {
                 message("Deleted!", "Your record has been deleted.", "success");
-                tblArchitectAddresses.ajax.reload();
+                tblInteriorAddresses.ajax.reload();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 errorMessage("Oops...", "Something went wrong!", "error");
