@@ -3,7 +3,6 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -90,29 +89,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto.CreatedByName = userFullname.FullName;
 
                 // Get Order Addresses
-                var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
-                orderResponseDto.OrderAddressesResponseDto = _mapper.Map<List<OrderAddressesResponseDto>>(orderAddressesData.ToList());
+                await GetOrderAddress(Id, orderResponseDto, cancellationToken);
 
                 // Get customer data
-                var customerById = await _unitOfWorkDA.CustomersDA.GetById(orderResponseDto.CustomerID, cancellationToken);
-                if (customerById != null)
-                {
-                    CustomersResponseDto customerModel = new CustomersResponseDto();
-                    if (customerById.RefferedBy > 0)
-                    {
-                        var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-                        var referredById = customerAllData.Where(x => x.CustomerId == customerById.RefferedBy).FirstOrDefault();
-                        if (referredById != null)
-                        {
-                            customerModel.RefferedName = referredById.FirstName + " " + referredById.LastName;
-                        }
-                    }
-                    customerModel.FirstName = customerById.FirstName;
-                    customerModel.LastName = customerById.LastName;
-                    customerModel.PhoneNumber = customerById.PhoneNumber;
-                    customerModel.EmailId = customerById.EmailId;
-                    orderResponseDto.customersResponseDto = customerModel;
-                }
+                await GetCustomerData(orderResponseDto, cancellationToken);
                 return orderResponseDto;
             }
             catch (Exception e)
@@ -130,57 +110,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
 
                 // Get Order Sets Data
-                var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
-                var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
-                orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
+                await GetOrderSetData(Id, orderResponseDto, cancellationToken);
 
                 // Get Order Set Items Data
-                var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-                var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
-                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
-                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
-                var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
-                foreach (var item in orderResponseDto.OrderSetResponseDto)
-                {
-                    var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-
-                    var orderSetItemsData = (from x in orderSetItemDataById
-
-                                             join y in productData on x.SubjectId equals y.ProductId into productM
-                                             from productMat in productM.DefaultIfEmpty()
-
-                                             join z in polishData on x.SubjectId equals z.PolishId into polishM
-                                             from polishMat in polishM.DefaultIfEmpty()
-
-                                             join a in fabricData on x.SubjectId equals a.FabricId into fabricM
-                                             from fabricMat in fabricM.DefaultIfEmpty()
-
-                                             select new OrderSetItemResponseDto
-                                             {
-                                                 OrderSetItemId = x.OrderSetItemId,
-                                                 OrderId = x.OrderId,
-                                                 OrderSetId = x.OrderSetId,
-                                                 SubjectTypeId = x.SubjectTypeId,
-                                                 SubjectId = x.SubjectId,
-                                                 ProductImage = x.ProductImage,
-                                                 Width = x.Width,
-                                                 Height = x.Height,
-                                                 Depth = x.Depth,
-                                                 Quantity = x.Quantity,
-                                                 ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
-                                                 ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
-                                                 UnitPrice = x.UnitPrice,
-                                                 DiscountPrice = x.DiscountPrice,
-                                                 TotalAmount = x.TotalAmount,
-                                                 Comment = x.Comment,
-                                                 Status = x.MakingStatus
-                                             }).ToList();
-
-                    item.OrderSetItemResponseDto = orderSetItemsData;
-                    item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
-                }
+                await GetOrderSetItemData(Id, orderResponseDto, cancellationToken);
 
                 return orderResponseDto;
             }
@@ -653,6 +586,35 @@ namespace MidCapERP.BusinessLogic.Repositories
             return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Inquiry);
         }
 
+        public async Task<OrderResponseDto> GetOrderDetailsAnonymous(long Id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OrderResponseDto orderResponseDto = new OrderResponseDto();
+                if (Id > 0)
+                {
+                    orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
+
+                    // Get Order Addresses
+                    await GetOrderAddress(Id, orderResponseDto, cancellationToken);
+
+                    // Get customer data
+                    await GetCustomerData(orderResponseDto, cancellationToken);
+
+                    // Get Order Sets Data
+                    await GetOrderSetData(Id, orderResponseDto, cancellationToken);
+
+                    // Get Order Set Items Data
+                    await GetOrderSetItemData(Id, orderResponseDto, cancellationToken);
+                }
+                return orderResponseDto;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
         #region Private Method
 
         private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)
@@ -1017,6 +979,93 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
             orderResponseDto.PayableAmount = ((orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount) - orderResponseDto.AdvanceAmount;
             return orderResponseDto;
+        }
+
+        private async Task GetOrderAddress(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
+            orderResponseDto.OrderAddressesResponseDto = _mapper.Map<List<OrderAddressesResponseDto>>(orderAddressesData.ToList());
+        }
+
+        private async Task GetCustomerData(OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var customerById = await _unitOfWorkDA.CustomersDA.GetById(orderResponseDto.CustomerID, cancellationToken);
+            if (customerById != null)
+            {
+                CustomersResponseDto customerModel = new CustomersResponseDto();
+                if (customerById.RefferedBy > 0)
+                {
+                    var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                    var referredById = customerAllData.Where(x => x.CustomerId == customerById.RefferedBy).FirstOrDefault();
+                    if (referredById != null)
+                    {
+                        customerModel.RefferedName = referredById.FirstName + " " + referredById.LastName;
+                    }
+                }
+                customerModel.FirstName = customerById.FirstName;
+                customerModel.LastName = customerById.LastName;
+                customerModel.PhoneNumber = customerById.PhoneNumber;
+                customerModel.EmailId = customerById.EmailId;
+                //customerModel.EmailId = customerById.EmailId != null ? customerById.EmailId : "";
+                orderResponseDto.customersResponseDto = customerModel;
+            }
+        }
+
+        private async Task GetOrderSetData(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
+            var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
+            orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
+        }
+
+        private async Task GetOrderSetItemData(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+            var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+            var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
+            var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
+            foreach (var item in orderResponseDto.OrderSetResponseDto)
+            {
+                var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
+
+                var orderSetItemsData = (from x in orderSetItemDataById
+
+                                         join y in productData on x.SubjectId equals y.ProductId into productM
+                                         from productMat in productM.DefaultIfEmpty()
+
+                                         join z in polishData on x.SubjectId equals z.PolishId into polishM
+                                         from polishMat in polishM.DefaultIfEmpty()
+
+                                         join a in fabricData on x.SubjectId equals a.FabricId into fabricM
+                                         from fabricMat in fabricM.DefaultIfEmpty()
+
+                                         select new OrderSetItemResponseDto
+                                         {
+                                             OrderSetItemId = x.OrderSetItemId,
+                                             OrderId = x.OrderId,
+                                             OrderSetId = x.OrderSetId,
+                                             SubjectTypeId = x.SubjectTypeId,
+                                             SubjectId = x.SubjectId,
+                                             ProductImage = x.ProductImage,
+                                             Width = x.Width,
+                                             Height = x.Height,
+                                             Depth = x.Depth,
+                                             Quantity = x.Quantity,
+                                             ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
+                                             ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
+                                             UnitPrice = x.UnitPrice,
+                                             DiscountPrice = x.DiscountPrice,
+                                             TotalAmount = x.TotalAmount,
+                                             Comment = x.Comment,
+                                             Status = x.MakingStatus
+                                         }).ToList();
+
+                item.OrderSetItemResponseDto = orderSetItemsData;
+                item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
+            }
         }
 
         #endregion Private Method
