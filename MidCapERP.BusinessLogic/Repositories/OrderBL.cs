@@ -601,6 +601,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                     orderResponseDto = _mapper.Map<OrderResponseDto>(orderData.Where(x => x.OrderNo == orderNo).FirstOrDefault());
                     if (orderResponseDto != null)
                     {
+                        orderResponseDto.PayableAmount = ((orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount) - orderResponseDto.AdvanceAmount;
+
                         // Get Order Addresses
                         await GetOrderAddress(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
 
@@ -1013,7 +1015,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerModel.LastName = customerById.LastName;
                 customerModel.PhoneNumber = customerById.PhoneNumber;
                 customerModel.EmailId = customerById.EmailId;
-                //customerModel.EmailId = customerById.EmailId != null ? customerById.EmailId : "";
                 orderResponseDto.customersResponseDto = customerModel;
             }
         }
