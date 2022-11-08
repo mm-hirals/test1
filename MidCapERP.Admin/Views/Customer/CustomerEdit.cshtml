@@ -51,7 +51,7 @@
                             <div class="form-group">
                                 <label asp-for="RefferedBy" class="form-label"></label>
                                 <select asp-for="RefferedBy" data-val="true" class="form-control form-select"
-                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ArchitectSelectItemList, "Value", "Text"))">
+                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
                                     <option>Please Select</option>
                                 </select>
                                 <span asp-validation-for="RefferedBy" class="text-danger"></span>
