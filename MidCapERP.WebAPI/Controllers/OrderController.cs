@@ -44,11 +44,11 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
-        [HttpGet("GetReceiveMaterial/{id}")]
+        [HttpGet("GetReceiveMaterial/{id}/{orderSetItemId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
-        public async Task<ApiResponse> GetOrderbyReceiveMaterial(long id, CancellationToken cancellationToken)
+        public async Task<ApiResponse> GetOrderbyReceiveMaterial(long id, long orderSetItemId, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.GetOrderReceiveMaterial(id, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.GetOrderReceiveMaterial(id, orderSetItemId, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);

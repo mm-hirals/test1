@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.ArchitectAddresses;
+﻿using Microsoft.AspNetCore.Mvc;
+using MidCapERP.Dto.ArchitectAddresses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -32,6 +33,7 @@ namespace MidCapERP.Dto.Architect
         [Required]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits.")]
+        [Remote("DuplicateArchitectPhoneNumber", "Architect", AdditionalFields = nameof(CustomerId), ErrorMessage = "Phone Number already exist. Please enter  a different Phone Number.")]
         public string PhoneNumber { get; set; }
 
         [DisplayName("Alt. Phone Number")]

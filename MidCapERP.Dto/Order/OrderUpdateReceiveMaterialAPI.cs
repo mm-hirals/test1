@@ -9,9 +9,6 @@ namespace MidCapERP.Dto.Order
         public Int64 OrderId { get; set; }
 
         [Required]
-        public Int64 OrderSetId { get; set; }
-
-        [Required]
         public Int64 OrderSetItemId { get; set; }
 
         [Required]
