@@ -265,21 +265,22 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<bool> ValidateCustomerPhoneNumber(CustomersRequestDto customerRequestDto, CancellationToken cancellationToken)
         {
             var getAllCustomer = await GetAll(cancellationToken);
+            var customerAndInteriorData = getAllCustomer.Where(p=> p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             if (customerRequestDto.CustomerId > 0)
             {
-                var getCustomerById = getAllCustomer.First(c => c.CustomerId == customerRequestDto.CustomerId);
+                var getCustomerById = customerAndInteriorData.First(c => c.CustomerId == customerRequestDto.CustomerId);
                 if (getCustomerById.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
+                    return !customerAndInteriorData.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
                 }
             }
             else
             {
-                return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
+                return !customerAndInteriorData.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
             }
         }
 
