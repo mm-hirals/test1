@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.DataAccess.Generic;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -20,8 +21,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly IUserTenantMappingBL _userTenantMappingBL;
+        private readonly IEmailHelper _emailHelper;
 
-        public UserBL(IUnitOfWorkDA unitOfWorkDA, CurrentUser currentUser, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper, IUserTenantMappingBL userTenantMappingBL)
+        public UserBL(IUnitOfWorkDA unitOfWorkDA, CurrentUser currentUser, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper, IUserTenantMappingBL userTenantMappingBL, IEmailHelper emailHelper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _currentUser = currentUser;
@@ -29,6 +31,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             _roleManager = roleManager;
             _mapper = mapper;
             _userTenantMappingBL = userTenantMappingBL;
+            _emailHelper = emailHelper;
         }
 
         public async Task<IQueryable<ApplicationUser>> GetAllUsers(CancellationToken cancellationToken)
@@ -168,6 +171,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             userById.IsDeleted = true;
             await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
             return _mapper.Map<UserRequestDto>(userById);
+        }
+
+        public async Task<UserResponseDto> GetUserByUsername(string username, CancellationToken cancellationToken)
+        {
+            // Get ApplicationUser by Id
+            var userAllData = await GetAllUsersData(cancellationToken);
+            return _mapper.Map<UserResponseDto>(await userAllData.FirstOrDefaultAsync(p => p.UserName == username));
+        }
+
+        public async Task SendForgotPasswordMail(List<string> emailList,string htmlContent, CancellationToken cancellationToken)
+        {
+            var subject = "Reset your password";
+            try
+            {
+                await _emailHelper.SendEmail(subject, htmlContent, emailList);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
         }
 
         #region Private Method

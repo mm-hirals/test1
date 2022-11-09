@@ -182,3 +182,15 @@ function restrictAlphabets(evt) {
 function restrictNumber(e) {
     return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
 }
+
+$.fn.extend({
+    trackChanges: function () {
+        $(":input", this).change(function () {
+            $(this.form).data("changed", true);
+        });
+    }
+    ,
+    isChanged: function () {
+        return this.data("changed");
+    }
+});

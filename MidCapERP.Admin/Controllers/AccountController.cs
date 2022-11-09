@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.Repositories;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Localizer.JsonString;
+using MidCapERP.Dto.User;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
 using NToastNotify;
+using Razor.Templating.Core;
+using System.Configuration;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -15,13 +20,17 @@ namespace MidCapERP.Admin.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IToastNotification _toastNotification;
         private readonly IStringLocalizer<BaseController> _localizer;
+        private readonly IUserBL _userBL;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer)
+        public AccountController(IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IToastNotification toastNotification, IStringLocalizer<BaseController> localizer,IUserBL userBL, IConfiguration configuration)
         {
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _tokenService = tokenService;
             _toastNotification = toastNotification;
+            _userBL = userBL;
+            _configuration = configuration;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
@@ -71,7 +80,39 @@ namespace MidCapERP.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ForgotPassword(CancellationToken cancellationToken)
         {
-            return View();
+            return View();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        }
+
+        /// <summary>
+        /// Forgot Password functionality
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string userName, CancellationToken cancellationToken)
+        {
+            if (userName != null || userName != string.Empty)
+            {
+                UserResponseDto  user = await _userBL.GetUserByUsername(userName,cancellationToken);
+                
+                if(user != null)
+                {
+                    
+                    string forgotPasswordUrl = _configuration["AppSettings:HostURL"] + MagnusMinds.Utility.Encryption.Encrypt(Convert.ToString(user.UserId), true, ApplicationIdentityConstants.EncryptionSecret);
+                    var renderedString = await RazorTemplateEngine.RenderAsync("~/Views/Account/ForgotPasswordEmailTemplate.cshtml", forgotPasswordUrl);
+                    List<string> emailList = new List<string>();
+                    emailList.Add("mm.rutulp@gmail.com");
+
+                    await _userBL.SendForgotPasswordMail(emailList,renderedString,cancellationToken);
+                    return RedirectToAction("Login", "Account");
+                }
+                throw new Exception("User not found");
+            }
+            else
+            {
+                throw new Exception("User not found");
+            }
         }
 
         /// <summary>
