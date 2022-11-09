@@ -148,15 +148,23 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
-            var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerTypeId = model.CustomerTypeId;
-            customerToInsert.IsDeleted = false;
-            customerToInsert.TenantId = _currentUser.TenantId;
-            customerToInsert.CreatedBy = _currentUser.UserId;
-            customerToInsert.CreatedDate = DateTime.Now;
-            customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-            return _mapper.Map<CustomerApiRequestDto>(data);
+            var getAllCustomer = await GetAll(cancellationToken);
+            var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+            if (customerExistOrNot != null)
+                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
+            else
+            {
+                var customerToInsert = _mapper.Map<Customers>(model);
+                customerToInsert.CustomerTypeId = model.CustomerTypeId;
+                customerToInsert.IsDeleted = false;
+                customerToInsert.TenantId = _currentUser.TenantId;
+                customerToInsert.CreatedBy = _currentUser.UserId;
+                customerToInsert.CreatedDate = DateTime.Now;
+                customerToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                return _mapper.Map<CustomerApiRequestDto>(data);
+            }
         }
 
         public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
@@ -244,7 +252,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var customerData = await _unitOfWorkDA.CustomersDA.GetById(id, cancellationToken);
             if (customerData == null)
             {
-                throw new Exception("Customer not found");
+                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
             }
             if (customerData.RefferedBy != null)
             {
@@ -265,7 +273,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<bool> ValidateCustomerPhoneNumber(CustomersRequestDto customerRequestDto, CancellationToken cancellationToken)
         {
             var getAllCustomer = await GetAll(cancellationToken);
-            var customerAndInteriorData = getAllCustomer.Where(p=> p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             if (customerRequestDto.CustomerId > 0)
             {
                 var getCustomerById = customerAndInteriorData.First(c => c.CustomerId == customerRequestDto.CustomerId);
