@@ -65,5 +65,29 @@ namespace MidCapERP.Admin.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("PageNotFoundError")]
+        public async Task<IActionResult> PageNotFoundError(CancellationToken cancellationToken)
+        {
+            return View("PageNotFoundError");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("InternalServerError")]
+        public async Task<IActionResult> InternalServerError(CancellationToken cancellationToken)
+        {
+            return View("InternalServerError");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("BadRequestError")]
+        public async Task<IActionResult> BadRequestError(CancellationToken cancellationToken)
+        {
+            return View("BadRequestError");
+        }
     }
 }

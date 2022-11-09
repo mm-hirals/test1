@@ -20,6 +20,10 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<UserRequestDto> DeleteUser(int Id, CancellationToken cancellationToken);
 
+        public Task<bool> ValidateUserEmail(UserRequestDto userRequestDto, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateUserPhoneNumber(UserRequestDto userRequestDto, CancellationToken cancellationToken);
+
         public Task<UserResponseDto> GetUserByUsername(string username, CancellationToken cancellationToken);
         public Task SendForgotPasswordMail(List<string> emailList, string htmlContent, CancellationToken cancellationToken);
     }

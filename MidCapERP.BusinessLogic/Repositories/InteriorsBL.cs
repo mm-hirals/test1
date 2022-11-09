@@ -63,7 +63,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 interiorToInsert.RefferedBy = 0;
                 interiorToInsert.CustomerTypeId = (int)CustomerTypeEnum.Interior;
-                interiorToInsert.Discount = model.Discount != null ? model.Discount : 0;
+                interiorToInsert.Discount = model.Discount;
                 interiorToInsert.IsDeleted = false;
                 interiorToInsert.TenantId = _currentUser.TenantId;
                 interiorToInsert.CreatedBy = _currentUser.UserId;
@@ -127,22 +127,23 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<bool> ValidateInteriorPhoneNumber(InteriorRequestDto interiorRequestDto, CancellationToken cancellationToken)
         {
-            var getInteriorData = await GetAll(cancellationToken);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerAndInteriorData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             if (interiorRequestDto.CustomerId > 0)
             {
-                var getCustomerId = getInteriorData.First(c => c.CustomerId == interiorRequestDto.CustomerId);
+                var getCustomerId = customerAndInteriorData.First(c => c.CustomerId == interiorRequestDto.CustomerId);
                 if (getCustomerId.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getInteriorData.Any(c => c.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim());
+                    return !customerAndInteriorData.Any(c => c.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim());
                 }
             }
             else
             {
-                return !getInteriorData.Any(c => c.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim());
+                return !customerAndInteriorData.Any(c => c.PhoneNumber.Trim() == interiorRequestDto.PhoneNumber.Trim());
             }
         }
 
