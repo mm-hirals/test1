@@ -91,10 +91,6 @@ $(document).delegate("#customersId", "click", function () {
     $('#customersId').buttonLoader('start');
 });
 
-function restrictNumber(e) {
-    return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
-}
-
 $(document).delegate(".btnRemoveAddress", "click", function () {
     if (!$.isEmptyObject(this.id) && this.id > 0) {
         SweetAlert("Home", this.id, DeleteAddress);
