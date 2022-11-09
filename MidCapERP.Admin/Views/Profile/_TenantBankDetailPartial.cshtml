@@ -19,7 +19,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label asp-for="BankName" class="form-label"></label>
+                                    <label asp-for="BankName" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="BankName" class="form-control" />
                                     <span asp-validation-for="BankName" class="text-danger"></span>
                                 </div>
@@ -28,7 +28,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label asp-for="AccountName" class="form-label"></label>
+                                    <label asp-for="AccountName" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="AccountName" class="form-control" />
                                     <span asp-validation-for="AccountName" class="text-danger"></span>
                                 </div>
@@ -37,7 +37,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label asp-for="AccountNo" class="form-label"></label>
+                                    <label asp-for="AccountNo" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="AccountNo" class="form-control" />
                                     <span asp-validation-for="AccountNo" class="text-danger"></span>
                                 </div>
@@ -46,7 +46,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label asp-for="BranchName" class="form-label"></label>
+                                    <label asp-for="BranchName" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="BranchName" class="form-control" />
                                     <span asp-validation-for="BranchName" class="text-danger"></span>
                                 </div>
@@ -55,7 +55,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label asp-for="AccountType" class="form-label"></label>
+                                    <label asp-for="AccountType" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="AccountType" class="form-control" />
                                     <span asp-validation-for="AccountType" class="text-danger"></span>
                                 </div>
@@ -64,7 +64,7 @@
                         <div class="col-12">
                             <div class="product-info--item">
                                 <div class="form-group">
-                                    <label asp-for="IFSCCode" class="form-label"></label>
+                                    <label asp-for="IFSCCode" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="IFSCCode" class="form-control" />
                                     <span asp-validation-for="IFSCCode" class="text-danger"></span>
                                 </div>
@@ -98,3 +98,7 @@
         </div>
     </div>
 </div>
+
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}
