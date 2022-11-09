@@ -134,23 +134,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (status == Enum.GetName(typeof(OrderStatusEnum), OrderStatusEnum.MaterialReceive))
             {
                 var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+                var orderSetData = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
                 var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
                 var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
                 var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
                 var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
                                          join y in customerData on x.CustomerID equals y.CustomerId
                                          join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
+                                         join s in orderSetData on z.OrderSetId equals s.OrderSetId
                                          join a in orderSetItemReceivableData on z.OrderSetItemId equals a.OrderSetItemId into orderSetItemReceivables
                                          from b in orderSetItemReceivables.DefaultIfEmpty()
                                          select new OrderStatusApiResponseDto()
                                          {
                                              OrderId = x.OrderId,
                                              OrderSetItemId = z.OrderSetItemId,
+                                             OrderSetItem = s.SetName,
                                              OrderNo = x.OrderNo,
                                              CustomerName = y.FirstName + " " + y.LastName,
-                                             TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
+                                             TotalAmount = 0,
                                              OrderStatus = status,
                                              OrderDate = x.CreatedDate,
+                                             ReceiveDate = z.ReceiveDate,
+                                             ProvidedMaterial = z.ProvidedMaterial,
                                              IsOrderItemReceivable = (b == null) ? true : false
                                          }).Where(x => x.IsOrderItemReceivable).ToList();
                 orderStatusApiResponseDto = orderResponseData;
@@ -173,6 +178,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              {
                                                  OrderId = x.OrderId,
                                                  OrderSetItemId = 0,
+                                                 OrderSetItem = "",
                                                  OrderNo = x.OrderNo,
                                                  CustomerName = y.FirstName + " " + y.LastName,
                                                  TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
