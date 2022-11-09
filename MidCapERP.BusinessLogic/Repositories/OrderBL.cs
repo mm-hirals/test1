@@ -242,6 +242,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
                 var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
 
+                var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
+                var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
                 {
                     var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
@@ -254,6 +257,10 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                                              from polishMat in polishM.DefaultIfEmpty()
                                              join a in fabricData on x.SubjectId equals a.FabricId into fabricM
+
+                                             join osi in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals osi.OrderId
+                                             join osir in orderSetItemReceivableData on osi.OrderSetItemId equals osir.OrderSetItemId into orderSetItemReceivables
+                                             from osirData in orderSetItemReceivables.DefaultIfEmpty()
 
                                              from fabricMat in fabricM.DefaultIfEmpty()
                                              select new OrderSetItemApiResponseDto
@@ -276,7 +283,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Comment = x.Comment,
                                                  ReceiveDate = x.ReceiveDate,
                                                  ProvidedMaterial = x.ProvidedMaterial,
-                                                 Status = x.MakingStatus
+                                                 Status = x.MakingStatus,
+                                                 IsItemReceived = (osirData != null) ? true : false
                                              }).ToList();
 
                     item.OrderSetItemResponseDto = orderSetItemsData;
