@@ -1,16 +1,24 @@
 ﻿using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.Interface;
 using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto;
 
 namespace MidCapERP.DataAccess.Repositories
 {
     public class TenantSMTPDetailDA : ITenantSMTPDetailDA
     {
         private readonly ISqlRepository<TenantSMTPDetail> _tenantSMTPDetail;
+        private readonly CurrentUser _currentUser;
 
-        public TenantSMTPDetailDA(ISqlRepository<TenantSMTPDetail> tenantSMTPDetail)
+        public TenantSMTPDetailDA(ISqlRepository<TenantSMTPDetail> tenantSMTPDetail, CurrentUser currentUser)
         {
             _tenantSMTPDetail = tenantSMTPDetail;
+            _currentUser = currentUser;
+        }
+
+        public async Task<IQueryable<TenantSMTPDetail>> GetAll(CancellationToken cancellationToken)
+        {
+            return await _tenantSMTPDetail.GetAsync(cancellationToken, x => x.TenantID == _currentUser.TenantId && x.IsDeleted == false);
         }
 
         public async Task<TenantSMTPDetail> TenantSMTPDetailGetById(long Id, CancellationToken cancellationToken)

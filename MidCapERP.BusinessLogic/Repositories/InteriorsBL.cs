@@ -95,14 +95,11 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task SendSMSToInteriors(InteriorsSendSMSDto model, CancellationToken cancellationToken)
         {
-            //List<string> interiorEmailList = new List<string>();
             foreach (var item in model.CustomerList)
             {
                 var interiorData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
                 if (interiorData != null)
                 {
-                    //interiorEmailList.Add(interiorData.EmailId);
-                    //await _emailHelper.SendEmail(model.Subject, model.Message, interiorEmailList);
                     NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
                     {
                         EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
