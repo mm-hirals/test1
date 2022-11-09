@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace MidCapERP.Dto.Order
 {
@@ -22,5 +23,8 @@ namespace MidCapERP.Dto.Order
 
         [DisplayName("Order Date")]
         public DateTime OrderDate { get; set; }
+
+        [JsonIgnore]
+        public bool IsOrderItemReceivable { get; set; }
     }
 }

@@ -179,7 +179,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             try
             {
                 customerToInsert.CustomerTypeId = (int)CustomerTypeEnum.Customer;
-                customerToInsert.Discount = model.Discount != null ? model.Discount : 0;
+                customerToInsert.Discount = model.Discount;
                 customerToInsert.IsDeleted = false;
                 customerToInsert.TenantId = _currentUser.TenantId;
                 customerToInsert.CreatedBy = _currentUser.UserId;

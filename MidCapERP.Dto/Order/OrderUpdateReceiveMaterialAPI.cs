@@ -18,7 +18,7 @@ namespace MidCapERP.Dto.Order
         public string ReceivedFrom { get; set; }
 
         [Required]
-        public IFormFile MaterialImage { get; set; }
+        public List<IFormFile> MaterialImage { get; set; }
 
         public string? Comment { get; set; }
     }

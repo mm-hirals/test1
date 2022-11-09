@@ -63,7 +63,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 interiorToInsert.RefferedBy = 0;
                 interiorToInsert.CustomerTypeId = (int)CustomerTypeEnum.Interior;
-                interiorToInsert.Discount = model.Discount != null ? model.Discount : 0;
+                interiorToInsert.Discount = model.Discount;
                 interiorToInsert.IsDeleted = false;
                 interiorToInsert.TenantId = _currentUser.TenantId;
                 interiorToInsert.CreatedBy = _currentUser.UserId;

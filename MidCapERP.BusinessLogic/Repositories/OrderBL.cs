@@ -3,6 +3,7 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -135,9 +136,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
                 var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
                 var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
                 var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
                                          join y in customerData on x.CustomerID equals y.CustomerId
                                          join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
+                                         join a in orderSetItemReceivableData on z.OrderSetItemId equals a.OrderSetItemId into orderSetItemReceivables
+                                         from b in orderSetItemReceivables.DefaultIfEmpty()
                                          select new OrderStatusApiResponseDto()
                                          {
                                              OrderId = x.OrderId,
@@ -146,8 +150,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              CustomerName = y.FirstName + " " + y.LastName,
                                              TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
                                              OrderStatus = status,
-                                             OrderDate = x.CreatedDate
-                                         }).ToList();
+                                             OrderDate = x.CreatedDate,
+                                             IsOrderItemReceivable = (b == null) ? true : false
+                                         }).Where(x => x.IsOrderItemReceivable).ToList();
                 orderStatusApiResponseDto = orderResponseData;
             }
             else
@@ -431,7 +436,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<OrderApiResponseDto> UpdateOrderReceiveMaterial(OrderUpdateReceiveMaterialAPI model, CancellationToken cancellationToken)
         {
-            if (model.MaterialImage == null)
+            if (model.MaterialImage == null && !model.MaterialImage.Any())
                 throw new Exception("Please upload an received material image.");
 
             OrderSetItemReceivable orderSetItemReceivable = new OrderSetItemReceivable();
@@ -446,13 +451,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderSetItemReceivable.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderSetItemReceivableDA.CreateOrderSetItemReceivable(orderSetItemReceivable, cancellationToken);
 
-            OrderSetItemImage orderSetItemImage = new OrderSetItemImage();
-            orderSetItemImage.OrderSetItemId = model.OrderSetItemId;
-            orderSetItemImage.DrawImage = await _fileStorageService.StoreFile(model.MaterialImage, ApplicationFileStorageConstants.FilePaths.OrderSetItemReceive);
-            orderSetItemImage.CreatedBy = _currentUser.UserId;
-            orderSetItemImage.CreatedDate = DateTime.Now;
-            orderSetItemImage.CreatedUTCDate = DateTime.UtcNow;
-            await _unitOfWorkDA.OrderSetItemImageDA.CreateOrderSetItemImage(orderSetItemImage, cancellationToken);
+            foreach (var item in model.MaterialImage)
+            {
+                OrderSetItemImage orderSetItemImage = new OrderSetItemImage();
+                orderSetItemImage.OrderSetItemId = model.OrderSetItemId;
+                orderSetItemImage.DrawImage = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.OrderSetItemReceive);
+                orderSetItemImage.CreatedBy = _currentUser.UserId;
+                orderSetItemImage.CreatedDate = DateTime.Now;
+                orderSetItemImage.CreatedUTCDate = DateTime.UtcNow;
+                await _unitOfWorkDA.OrderSetItemImageDA.CreateOrderSetItemImage(orderSetItemImage, cancellationToken);
+            }
 
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
@@ -563,12 +571,16 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+            var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
             var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
                                      join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
+                                     join a in orderSetItemReceivableData on z.OrderSetItemId equals a.OrderSetItemId into orderSetItemReceivables
+                                     from b in orderSetItemReceivables.DefaultIfEmpty()
                                      select new OrderStatusApiResponseDto()
                                      {
                                          OrderId = x.OrderId,
-                                     }).Count();
+                                         IsOrderItemReceivable = (b == null) ? true : false
+                                     }).ToList().Count(x => x.IsOrderItemReceivable);
             return orderResponseData;
         }
 
