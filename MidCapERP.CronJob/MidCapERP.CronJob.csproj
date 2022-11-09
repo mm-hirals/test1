@@ -10,7 +10,6 @@
     <PackageReference Include="Cronos" Version="0.7.1" />
     <PackageReference Include="MagnusMinds.Utility" Version="5.0.6" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.8" />
-    <PackageReference Include="ncrontab" Version="3.3.1" />
   </ItemGroup>
 
   <ItemGroup>
