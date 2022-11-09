@@ -90,29 +90,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto.CreatedByName = userFullname.FullName;
 
                 // Get Order Addresses
-                var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
-                orderResponseDto.OrderAddressesResponseDto = _mapper.Map<List<OrderAddressesResponseDto>>(orderAddressesData.ToList());
+                await GetOrderAddress(Id, orderResponseDto, cancellationToken);
 
                 // Get customer data
-                var customerById = await _unitOfWorkDA.CustomersDA.GetById(orderResponseDto.CustomerID, cancellationToken);
-                if (customerById != null)
-                {
-                    CustomersResponseDto customerModel = new CustomersResponseDto();
-                    if (customerById.RefferedBy > 0)
-                    {
-                        var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-                        var referredById = customerAllData.Where(x => x.CustomerId == customerById.RefferedBy).FirstOrDefault();
-                        if (referredById != null)
-                        {
-                            customerModel.RefferedName = referredById.FirstName + " " + referredById.LastName;
-                        }
-                    }
-                    customerModel.FirstName = customerById.FirstName;
-                    customerModel.LastName = customerById.LastName;
-                    customerModel.PhoneNumber = customerById.PhoneNumber;
-                    customerModel.EmailId = customerById.EmailId;
-                    orderResponseDto.customersResponseDto = customerModel;
-                }
+                await GetCustomerData(orderResponseDto, cancellationToken);
                 return orderResponseDto;
             }
             catch (Exception e)
@@ -130,57 +111,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderResponseDto = await GetOrderById(Id, orderResponseDto, cancellationToken);
 
                 // Get Order Sets Data
-                var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
-                var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
-                orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
+                await GetOrderSetData(Id, orderResponseDto, cancellationToken);
 
                 // Get Order Set Items Data
-                var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-                var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
-                var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
-                var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
-                var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
-                var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
-                var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
-                foreach (var item in orderResponseDto.OrderSetResponseDto)
-                {
-                    var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
-
-                    var orderSetItemsData = (from x in orderSetItemDataById
-
-                                             join y in productData on x.SubjectId equals y.ProductId into productM
-                                             from productMat in productM.DefaultIfEmpty()
-
-                                             join z in polishData on x.SubjectId equals z.PolishId into polishM
-                                             from polishMat in polishM.DefaultIfEmpty()
-
-                                             join a in fabricData on x.SubjectId equals a.FabricId into fabricM
-                                             from fabricMat in fabricM.DefaultIfEmpty()
-
-                                             select new OrderSetItemResponseDto
-                                             {
-                                                 OrderSetItemId = x.OrderSetItemId,
-                                                 OrderId = x.OrderId,
-                                                 OrderSetId = x.OrderSetId,
-                                                 SubjectTypeId = x.SubjectTypeId,
-                                                 SubjectId = x.SubjectId,
-                                                 ProductImage = x.ProductImage,
-                                                 Width = x.Width,
-                                                 Height = x.Height,
-                                                 Depth = x.Depth,
-                                                 Quantity = x.Quantity,
-                                                 ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
-                                                 ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
-                                                 UnitPrice = x.UnitPrice,
-                                                 DiscountPrice = x.DiscountPrice,
-                                                 TotalAmount = x.TotalAmount,
-                                                 Comment = x.Comment,
-                                                 Status = x.MakingStatus
-                                             }).ToList();
-
-                    item.OrderSetItemResponseDto = orderSetItemsData;
-                    item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
-                }
+                await GetOrderSetItemData(Id, orderResponseDto, cancellationToken);
 
                 return orderResponseDto;
             }
@@ -202,9 +136,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
                 var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
                 var customerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
                 var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
                                          join y in customerData on x.CustomerID equals y.CustomerId
                                          join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
+                                         join a in orderSetItemReceivableData on z.OrderSetItemId equals a.OrderSetItemId into orderSetItemReceivables
+                                         from b in orderSetItemReceivables.DefaultIfEmpty()
                                          select new OrderStatusApiResponseDto()
                                          {
                                              OrderId = x.OrderId,
@@ -213,8 +150,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              CustomerName = y.FirstName + " " + y.LastName,
                                              TotalAmount = (x.TotalAmount + x.GSTTaxAmount) - x.AdvanceAmount,
                                              OrderStatus = status,
-                                             OrderDate = x.CreatedDate
-                                         }).ToList();
+                                             OrderDate = x.CreatedDate,
+                                             IsOrderItemReceivable = (b == null) ? true : false
+                                         }).Where(x => x.IsOrderItemReceivable).ToList();
                 orderStatusApiResponseDto = orderResponseData;
             }
             else
@@ -498,7 +436,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<OrderApiResponseDto> UpdateOrderReceiveMaterial(OrderUpdateReceiveMaterialAPI model, CancellationToken cancellationToken)
         {
-            if (model.MaterialImage == null)
+            if (model.MaterialImage == null && !model.MaterialImage.Any())
                 throw new Exception("Please upload an received material image.");
 
             OrderSetItemReceivable orderSetItemReceivable = new OrderSetItemReceivable();
@@ -513,13 +451,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderSetItemReceivable.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.OrderSetItemReceivableDA.CreateOrderSetItemReceivable(orderSetItemReceivable, cancellationToken);
 
-            OrderSetItemImage orderSetItemImage = new OrderSetItemImage();
-            orderSetItemImage.OrderSetItemId = model.OrderSetItemId;
-            orderSetItemImage.DrawImage = await _fileStorageService.StoreFile(model.MaterialImage, ApplicationFileStorageConstants.FilePaths.OrderSetItemReceive);
-            orderSetItemImage.CreatedBy = _currentUser.UserId;
-            orderSetItemImage.CreatedDate = DateTime.Now;
-            orderSetItemImage.CreatedUTCDate = DateTime.UtcNow;
-            await _unitOfWorkDA.OrderSetItemImageDA.CreateOrderSetItemImage(orderSetItemImage, cancellationToken);
+            foreach (var item in model.MaterialImage)
+            {
+                OrderSetItemImage orderSetItemImage = new OrderSetItemImage();
+                orderSetItemImage.OrderSetItemId = model.OrderSetItemId;
+                orderSetItemImage.DrawImage = await _fileStorageService.StoreFile(item, ApplicationFileStorageConstants.FilePaths.OrderSetItemReceive);
+                orderSetItemImage.CreatedBy = _currentUser.UserId;
+                orderSetItemImage.CreatedDate = DateTime.Now;
+                orderSetItemImage.CreatedUTCDate = DateTime.UtcNow;
+                await _unitOfWorkDA.OrderSetItemImageDA.CreateOrderSetItemImage(orderSetItemImage, cancellationToken);
+            }
 
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
@@ -630,12 +571,16 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+            var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
             var orderResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
                                      join z in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals z.OrderId
+                                     join a in orderSetItemReceivableData on z.OrderSetItemId equals a.OrderSetItemId into orderSetItemReceivables
+                                     from b in orderSetItemReceivables.DefaultIfEmpty()
                                      select new OrderStatusApiResponseDto()
                                      {
                                          OrderId = x.OrderId,
-                                     }).Count();
+                                         IsOrderItemReceivable = (b == null) ? true : false
+                                     }).ToList().Count(x => x.IsOrderItemReceivable);
             return orderResponseData;
         }
 
@@ -655,6 +600,40 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var data = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             return data.Count(x => x.CreatedBy == _currentUser.UserId && x.Status == (int)OrderStatusEnum.Inquiry);
+        }
+
+        public async Task<OrderResponseDto> GetOrderDetailsAnonymous(string orderNo, CancellationToken cancellationToken)
+        {
+            try
+            {
+                OrderResponseDto orderResponseDto = new OrderResponseDto();
+                if (orderNo != null)
+                {
+                    var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+                    orderResponseDto = _mapper.Map<OrderResponseDto>(orderData.Where(x => x.OrderNo == orderNo).FirstOrDefault());
+                    if (orderResponseDto != null)
+                    {
+                        orderResponseDto.PayableAmount = ((orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount) - orderResponseDto.AdvanceAmount;
+
+                        // Get Order Addresses
+                        await GetOrderAddress(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
+
+                        // Get customer data
+                        await GetCustomerData(orderResponseDto, cancellationToken);
+
+                        // Get Order Sets Data
+                        await GetOrderSetData(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
+
+                        // Get Order Set Items Data
+                        await GetOrderSetItemData(orderResponseDto.OrderId, orderResponseDto, cancellationToken);
+                    }
+                }
+                return orderResponseDto;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         #region Private Method
@@ -1021,6 +1000,92 @@ namespace MidCapERP.BusinessLogic.Repositories
             orderResponseDto = _mapper.Map<OrderResponseDto>(orderById);
             orderResponseDto.PayableAmount = ((orderResponseDto.GrossTotal - orderResponseDto.Discount) + orderResponseDto.GSTTaxAmount) - orderResponseDto.AdvanceAmount;
             return orderResponseDto;
+        }
+
+        private async Task GetOrderAddress(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var orderAddressesData = await _unitOfWorkDA.OrderAddressDA.GetOrderAddressesByOrderId(Id, cancellationToken);
+            orderResponseDto.OrderAddressesResponseDto = _mapper.Map<List<OrderAddressesResponseDto>>(orderAddressesData.ToList());
+        }
+
+        private async Task GetCustomerData(OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var customerById = await _unitOfWorkDA.CustomersDA.GetById(orderResponseDto.CustomerID, cancellationToken);
+            if (customerById != null)
+            {
+                CustomersResponseDto customerModel = new CustomersResponseDto();
+                if (customerById.RefferedBy > 0)
+                {
+                    var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                    var referredById = customerAllData.Where(x => x.CustomerId == customerById.RefferedBy).FirstOrDefault();
+                    if (referredById != null)
+                    {
+                        customerModel.RefferedName = referredById.FirstName + " " + referredById.LastName;
+                    }
+                }
+                customerModel.FirstName = customerById.FirstName;
+                customerModel.LastName = customerById.LastName;
+                customerModel.PhoneNumber = customerById.PhoneNumber;
+                customerModel.EmailId = customerById.EmailId;
+                orderResponseDto.customersResponseDto = customerModel;
+            }
+        }
+
+        private async Task GetOrderSetData(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
+            var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
+            orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
+        }
+
+        private async Task GetOrderSetItemData(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
+        {
+            var productData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+            var polishData = await _unitOfWorkDA.PolishDA.GetAll(cancellationToken);
+            var fabricData = await _unitOfWorkDA.FabricDA.GetAll(cancellationToken);
+            var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
+            var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
+            var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
+            var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
+            foreach (var item in orderResponseDto.OrderSetResponseDto)
+            {
+                var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
+
+                var orderSetItemsData = (from x in orderSetItemDataById
+
+                                         join y in productData on x.SubjectId equals y.ProductId into productM
+                                         from productMat in productM.DefaultIfEmpty()
+
+                                         join z in polishData on x.SubjectId equals z.PolishId into polishM
+                                         from polishMat in polishM.DefaultIfEmpty()
+
+                                         join a in fabricData on x.SubjectId equals a.FabricId into fabricM
+                                         from fabricMat in fabricM.DefaultIfEmpty()
+
+                                         select new OrderSetItemResponseDto
+                                         {
+                                             OrderSetItemId = x.OrderSetItemId,
+                                             OrderId = x.OrderId,
+                                             OrderSetId = x.OrderSetId,
+                                             SubjectTypeId = x.SubjectTypeId,
+                                             SubjectId = x.SubjectId,
+                                             ProductImage = x.ProductImage,
+                                             Width = x.Width,
+                                             Height = x.Height,
+                                             Depth = x.Depth,
+                                             Quantity = x.Quantity,
+                                             ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
+                                             ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
+                                             UnitPrice = x.UnitPrice,
+                                             DiscountPrice = x.DiscountPrice,
+                                             TotalAmount = x.TotalAmount,
+                                             Comment = x.Comment,
+                                             Status = x.MakingStatus
+                                         }).ToList();
+
+                item.OrderSetItemResponseDto = orderSetItemsData;
+                item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
+            }
         }
 
         #endregion Private Method

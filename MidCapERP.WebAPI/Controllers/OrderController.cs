@@ -120,7 +120,7 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPatch("ReceiveMaterial")]
         [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
-        public async Task<ApiResponse> UpdateOrderReceiveMaterial([FromBody] OrderUpdateReceiveMaterialAPI orderUpdateReceiveMaterialAPI, CancellationToken cancellationToken)
+        public async Task<ApiResponse> UpdateOrderReceiveMaterial([FromForm] OrderUpdateReceiveMaterialAPI orderUpdateReceiveMaterialAPI, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderReceiveMaterial(orderUpdateReceiveMaterialAPI, cancellationToken);
             if (data == null)
