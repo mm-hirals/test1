@@ -72,6 +72,18 @@ namespace MidCapERP.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        // User Phone Number Validation
+        public async Task<bool> DuplicateUserPhoneNumber(UserRequestDto userRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.UserBL.ValidateUserPhoneNumber(userRequestDto, cancellationToken);
+        }
+
+        // User Email Validation
+        public async Task<bool> DuplicateUserEmail(UserRequestDto userRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.UserBL.ValidateUserEmail(userRequestDto, cancellationToken);
+        }
+
         #region Private Method
 
         private async Task FillAspNetRoleDropDown(CancellationToken cancellationToken)
