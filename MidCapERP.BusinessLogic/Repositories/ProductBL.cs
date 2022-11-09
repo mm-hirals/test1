@@ -51,20 +51,19 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<JsonRepsonse<ProductResponseDto>> GetFilterProductData(ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
-            int lookupId = await GetCategoryLookupId(cancellationToken);
             var productAllData = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
-            var lookupValuesAllData = await _unitOfWorkDA.LookupValuesDA.GetAll(cancellationToken);
-            var cateagoryData = lookupValuesAllData.Where(x => x.LookupId == lookupId);
+            var categoryAllData = await _unitOfWorkDA.CategoriesDA.GetAll(cancellationToken);
+            var categoryData = categoryAllData.Where(x => x.CategoryTypeId == (int)ProductCategoryTypesEnum.Product);
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             var productResponseData = (from x in productAllData
-                                       join y in cateagoryData on x.CategoryId equals y.LookupValueId
+                                       join y in categoryData on x.CategoryId equals y.CategoryId
                                        join z in allUsers on x.CreatedBy equals z.UserId
                                        join u in allUsers on x.UpdatedBy equals (int?)u.UserId into updated
                                        from updatedMat in updated.DefaultIfEmpty()
                                        select new ProductResponseDto()
                                        {
                                            ProductId = x.ProductId,
-                                           CategoryName = y.LookupValueName,
+                                           CategoryName = y.CategoryName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
                                            Status = x.Status,
@@ -615,18 +614,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (productRequestDto.ProductId > 0)
             {
                 var getProductById = getAllProduct.First(p => p.ProductId == productRequestDto.ProductId);
-                if (getProductById.ModelNo == productRequestDto.ModelNo)
+                if (getProductById.ModelNo.Trim() == productRequestDto.ModelNo.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo && p.ProductId != productRequestDto.ProductId);
+                    return !getAllProduct.Any(p => p.ModelNo.Trim() == productRequestDto.ModelNo.Trim() && p.ProductId != productRequestDto.ProductId);
                 }
             }
             else
             {
-                return !getAllProduct.Any(p => p.ModelNo == productRequestDto.ModelNo);
+                return !getAllProduct.Any(p => p.ModelNo.Trim() == productRequestDto.ModelNo.Trim());
             }
         }
 
@@ -785,13 +784,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             productMaterialToInsert.CreatedDate = DateTime.Now;
             productMaterialToInsert.CreatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.ProductMaterialDA.CreateProductMaterial(productMaterialToInsert, cancellationToken);
-        }
-
-        private async Task<int> GetCategoryLookupId(CancellationToken cancellationToken)
-        {
-            var lookupsAllData = await _unitOfWorkDA.LookupsDA.GetAll(cancellationToken);
-            var lookupId = lookupsAllData.Where(x => x.LookupName == nameof(MasterPagesEnum.Category)).Select(x => x.LookupId).FirstOrDefault();
-            return lookupId;
         }
 
         private async Task<int> GetUnitLookupId(CancellationToken cancellationToken)

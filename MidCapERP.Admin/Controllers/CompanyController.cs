@@ -68,5 +68,11 @@ namespace MidCapERP.Admin.Controllers
             await _unitOfWorkBL.CompanyBL.DeleteCompany(Id, cancellationToken);
             return RedirectToAction("Index");
         }
+
+        // Company Name Validation
+        public async Task<bool> DuplicateCompanyName(CompanyRequestDto comRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.CompanyBL.ValidateCompanyName(comRequestDto, cancellationToken);
+        }
     }
 }

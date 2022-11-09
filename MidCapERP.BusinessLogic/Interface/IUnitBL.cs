@@ -18,5 +18,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<UnitRequestDto> UpdateUnit(int Id, UnitRequestDto model, CancellationToken cancellationToken);
 
         public Task<UnitRequestDto> DeleteUnit(int Id, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateUnitName(UnitRequestDto unitRequestDto, CancellationToken cancellationToken);
     }
 }

@@ -11,7 +11,6 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
-using static MidCapERP.Core.Constants.ApplicationIdentityConstants.Permissions;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -79,7 +78,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText))
+            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText) && (x.CustomerTypeId == (int)CustomerTypeEnum.Architect || x.CustomerTypeId == (int)CustomerTypeEnum.Customer))
                 .Select(x => new MegaSearchResponse
                 (
                     x.CustomerId,
@@ -261,6 +260,27 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             else
                 return _mapper.Map<CustomersApiResponseDto>(customerData);
+        }
+
+        public async Task<bool> ValidateCustomerPhoneNumber(CustomersRequestDto customerRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllCustomer = await GetAll(cancellationToken);
+            if (customerRequestDto.CustomerId > 0)
+            {
+                var getCustomerById = getAllCustomer.First(c => c.CustomerId == customerRequestDto.CustomerId);
+                if (getCustomerById.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
+                }
+            }
+            else
+            {
+                return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
+            }
         }
 
         #region PrivateMethods

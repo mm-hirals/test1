@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
-using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Polish;
 
 namespace MidCapERP.Admin.Controllers
@@ -73,6 +72,12 @@ namespace MidCapERP.Admin.Controllers
         {
             await _unitOfWorkBL.PolishBL.DeletePolish(Id, cancellationToken);
             return RedirectToAction("Index");
+        }
+
+        // Model No Validation
+        public async Task<bool> DuplicateModelNo(PolishRequestDto polishRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.PolishBL.ValidateModelNo(polishRequestDto, cancellationToken);
         }
 
         #region Private Method

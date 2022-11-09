@@ -109,6 +109,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mappedUser;
         }
 
+        public async Task<bool> ValidateCompanyName(CompanyRequestDto comRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllCompany = await GetAll(cancellationToken);
+
+            if (comRequestDto.LookupValueId > 0)
+            {
+                var getCompanyById = getAllCompany.First(c => c.LookupValueId == comRequestDto.LookupValueId);
+                if (getCompanyById.LookupValueName.Trim() == comRequestDto.LookupValueName.Trim())
+                {
+                    return true;
+                }
+                else
+                {
+                    return !getAllCompany.Any(c => c.LookupValueName.Trim() == comRequestDto.LookupValueName.Trim() && c.LookupValueId != comRequestDto.LookupValueId);
+                }
+            }
+            else
+            {
+                return !getAllCompany.Any(c => c.LookupValueName.Trim() == comRequestDto.LookupValueName.Trim());
+            }
+        }
+
         #region PrivateMethods
 
         private static void MapToDbObject(CompanyRequestDto model, LookupValues oldData)
