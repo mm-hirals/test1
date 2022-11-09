@@ -1,25 +1,25 @@
 ﻿'use strict';
 
-var ArchitectModel = {};
-var tblArchitect;
+var InteriorModel = {};
+var tblInterior;
 var value_check = new Array();
 
 $(function () {
-    tblArchitect = $("#tblArchitect").DataTable({
+    tblInterior = $("#tblInterior").DataTable({
         "searching": false,
         "processing": true,
         "serverSide": true,
         "filter": true,
         "iDisplayLength": 50,
         "ajax": {
-            "url": "/Architect/GetArchitectsData",
+            "url": "/Interior/GetInteriorsData",
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.customerName = $("#architectName").val().trim();
-                d.customerMobileNo = $("#architectMobileNo").val().trim();
-                d.customerFromDate = $("#architectFromDate").val().trim();
-                d.customerToDate = $("#architectToDate").val().trim();
+                d.customerName = $("#interiorName").val().trim();
+                d.customerMobileNo = $("#interiorMobileNo").val().trim();
+                d.customerFromDate = $("#interiorFromDate").val().trim();
+                d.customerToDate = $("#interiorToDate").val().trim();
             }
         },
         "columnDefs": [
@@ -45,42 +45,42 @@ $(function () {
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
-                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Architect/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Interior/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
                 }
             }
         ]
     });
 });
 
-$('#architectName').keyup(function () {
-    tblArchitect.ajax.reload(null, false);
+$('#interiorName').keyup(function () {
+    tblInterior.ajax.reload(null, false);
 });
 
-$('#architectMobileNo').keyup(function () {
-    tblArchitect.ajax.reload(null, false);
+$('#interiorMobileNo').keyup(function () {
+    tblInterior.ajax.reload(null, false);
 });
 
-$("#architectFromDate").on("input", function () {
-    tblArchitect.ajax.reload(null, false);
+$("#interiorFromDate").on("input", function () {
+    tblInterior.ajax.reload(null, false);
 });
 
-$("#architectToDate").on("input", function () {
-    tblArchitect.ajax.reload(null, false);
+$("#interiorToDate").on("input", function () {
+    tblInterior.ajax.reload(null, false);
 });
 
-$("#lnkArchitectFilter").click(function () {
+$("#lnkInteriorFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
 });
 
-ArchitectModel.onSuccess = function (xhr) {
-    tblArchitect.ajax.reload(null, false);
-    $("#divArchitectModal").modal('hide');
+InteriorModel.onSuccess = function (xhr) {
+    tblInterior.ajax.reload(null, false);
+    $("#divInteriorModal").modal('hide');
 };
 
-ArchitectModel.onFailed = function (xhr) {
-    tblArchitect.ajax.reload(null, false);
-    $("#divArchitectModal").modal('hide');
+InteriorModel.onFailed = function (xhr) {
+    tblInterior.ajax.reload(null, false);
+    $("#divInteriorModal").modal('hide');
 };
 
 // Check all checkbox values and store it in array
@@ -101,7 +101,7 @@ $("#selectall").click(function () {
 });
 
 // Check single checkbox value and store it in array
-$('#tblArchitect').on('click', 'input[type="checkbox"]', function () {
+$('#tblInterior').on('click', 'input[type="checkbox"]', function () {
     if ($(this).prop("checked")) {
         value_check.push($(this).val());
     }
@@ -114,13 +114,13 @@ $('#tblArchitect').on('click', 'input[type="checkbox"]', function () {
 });
 
 // On button click open modal popup
-$("#multiSelectArchitect").click(function () {
+$("#multiSelectInterior").click(function () {
     if (value_check.length > 0) {
         $("#sendSMSModal").modal('show');
     }
     else {
-        //Swal.fire('Please select architect to send message.')
-        toastr.error('Please select architect to send message.');
+        //Swal.fire('Please select interior to send message.')
+        toastr.error('Please select interior to send message.');
     }
 });
 
@@ -137,17 +137,17 @@ $(".sendSMSToClient").click(function () {
         $("#errorMessage").hide();
 
         if ($("#selectall").prop('checked')) {
-            var architectName = $("#architectName").val().trim();
-            var architectMobileNo = $("#architectMobileNo").val().trim();
-            var architectFromDate = $("#architectFromDate").val().trim();
-            var architectToDate = $("#architectToDate").val().trim();
+            var interiorName = $("#interiorName").val().trim();
+            var interiorMobileNo = $("#interiorMobileNo").val().trim();
+            var interiorFromDate = $("#interiorFromDate").val().trim();
+            var interiorToDate = $("#interiorToDate").val().trim();
         }
 
         var data = {
-            CustomerName: architectName,
-            CustomerMobileNo: architectMobileNo,
-            CustomerFromDate: architectFromDate,
-            CustomerToDate: architectToDate,
+            CustomerName: interiorName,
+            CustomerMobileNo: interiorMobileNo,
+            CustomerFromDate: interiorFromDate,
+            CustomerToDate: interiorToDate,
             IsCheckedAll: $("#selectall").prop('checked'),
             CustomerList: value_check,
             Message: $("#txtMessage").val(),
@@ -155,7 +155,7 @@ $(".sendSMSToClient").click(function () {
         };
         console.log(data);
         $.ajax({
-            url: "/Architect/MultipleSendArchitect",
+            url: "/Interior/MultipleSendInterior",
             type: "POST",
             data: { model: data },
             success: function (response) {
@@ -176,11 +176,7 @@ $('#sendSMSModal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
 })
 
-$(document).on('submit', '#frmArchitectEdit', function (e) {
+$(document).on('submit', '#frmInteriorEdit', function (e) {
     $('#dataSave').buttonLoader('start');
     toastr.success('Information saved successfully.');
 });
-
-function restrictNumber(e) {
-    return (e.charCode > 64 && e.charCode < 91) || (e.charCode > 96 && e.charCode < 123) || e.charCode == 32;
-} 

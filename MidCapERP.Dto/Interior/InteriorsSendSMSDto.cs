@@ -1,6 +1,6 @@
-﻿namespace MidCapERP.Dto.Architect
+﻿namespace MidCapERP.Dto.Interior
 {
-    public class ArchitectsSendSMSDto
+    public class InteriorsSendSMSDto
     {
         public string CustomerName { get; set; }
         public string CustomerMobileNo { get; set; }

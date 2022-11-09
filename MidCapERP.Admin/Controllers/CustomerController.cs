@@ -112,7 +112,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);
-            return RedirectToAction("CustomerEdit");
+            return Json(true);
         }
 
         [HttpPost]
@@ -142,11 +142,11 @@ namespace MidCapERP.Admin.Controllers
 
         private async Task FillRefferedDropDown(CancellationToken cancellationToken)
         {
-            try 
+            try
             {
                 var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
 
-                var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Architect || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
+                var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Interior || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
                                         p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
                                         new SelectListItem
                                         {

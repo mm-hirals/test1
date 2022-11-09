@@ -78,29 +78,29 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<IEnumerable<MegaSearchResponse>> GetCustomerForDropDownByMobileNo(string searchText, CancellationToken cancellationToken)
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText) && (x.CustomerTypeId == (int)CustomerTypeEnum.Architect || x.CustomerTypeId == (int)CustomerTypeEnum.Customer))
+            var response = customerAllData.Where(x => x.PhoneNumber.StartsWith(searchText) || (x.FirstName + " " + x.LastName).StartsWith(searchText) && (x.CustomerTypeId == (int)CustomerTypeEnum.Interior || x.CustomerTypeId == (int)CustomerTypeEnum.Customer))
                 .Select(x => new MegaSearchResponse
                 (
                     x.CustomerId,
                     x.FirstName + " " + x.LastName,
                     x.PhoneNumber,
                     null,
-                    x.CustomerTypeId == (int)CustomerTypeEnum.Architect ? "Architect" : "Customer")
+                    x.CustomerTypeId == (int)CustomerTypeEnum.Interior ? "Interior" : "Customer")
                 ).Take(10).ToList();
             return response;
         }
 
         public async Task<IEnumerable<CustomerApiDropDownResponceDto>> GetSearchCustomerForDropDownNameOrPhoneNumber(string searchText, CancellationToken cancellationToken)
         {
-            var architectCustomerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            var data = architectCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText))
+            var interiorCustomerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var data = interiorCustomerData.Where(x => (x.FirstName + " " + x.LastName).StartsWith(searchText))
                 .Select(p => new CustomerApiDropDownResponceDto
                 {
                     RefferedById = p.CustomerId,
                     FirstName = p.FirstName,
                     LastName = p.LastName,
                     MobileNo = p.PhoneNumber,
-                    CustomerType = p.CustomerTypeId == (int)CustomerTypeEnum.Architect ? "Architect" : "Customer"
+                    CustomerType = p.CustomerTypeId == (int)CustomerTypeEnum.Interior ? "Interior" : "Customer"
                 }).Take(10).ToList();
             return data;
         }
@@ -179,7 +179,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             try
             {
                 customerToInsert.CustomerTypeId = (int)CustomerTypeEnum.Customer;
-                customerToInsert.Discount = model.Discount != null ? model.Discount : 0;
+                customerToInsert.Discount = model.Discount;
                 customerToInsert.IsDeleted = false;
                 customerToInsert.TenantId = _currentUser.TenantId;
                 customerToInsert.CreatedBy = _currentUser.UserId;

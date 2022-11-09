@@ -8,6 +8,6 @@
 
         public Task<int> GetCustomerCount(CancellationToken cancellationToken);
 
-        public Task<int> GetArchitectCount(CancellationToken cancellationToken);
+        public Task<int> GetInteriorCount(CancellationToken cancellationToken);
     }
 }
