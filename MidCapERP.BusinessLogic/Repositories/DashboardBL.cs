@@ -1,7 +1,6 @@
 ﻿using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
-using MidCapERP.Dto.Constants;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -32,10 +31,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             return allCustomerData.Count(x => x.CustomerTypeId == (int)CustomerTypeEnum.Customer);
         }
 
-        public async Task<int> GetArchitectCount(CancellationToken cancellationToken)
+        public async Task<int> GetInteriorCount(CancellationToken cancellationToken)
         {
             var allCustomerData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-            return allCustomerData.Count(x => x.CustomerTypeId == (int)CustomerTypeEnum.Architect);
+            return allCustomerData.Count(x => x.CustomerTypeId == (int)CustomerTypeEnum.Interior);
         }
     }
 }

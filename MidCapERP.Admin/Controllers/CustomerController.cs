@@ -21,6 +21,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            await FillRefferedDropDown(cancellationToken);
             return View();
         }
 
@@ -44,7 +45,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
-            await FillArchitectDropDown(cancellationToken);
+            await FillRefferedDropDown(cancellationToken);
             return PartialView("CustomerEdit");
         }
 
@@ -77,7 +78,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
-            await FillArchitectDropDown(cancellationToken);
+            await FillRefferedDropDown(cancellationToken);
             var customers = await _unitOfWorkBL.CustomersBL.GetById(Id, cancellationToken);
             return View("CustomerEdit", customers);
         }
@@ -111,7 +112,7 @@ namespace MidCapERP.Admin.Controllers
         public async Task<IActionResult> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);
-            return RedirectToAction("CustomerEdit");
+            return Json(true);
         }
 
         [HttpPost]
@@ -139,17 +140,20 @@ namespace MidCapERP.Admin.Controllers
 
         #region Private Method
 
-        private async Task FillArchitectDropDown(CancellationToken cancellationToken)
+        private async Task FillRefferedDropDown(CancellationToken cancellationToken)
         {
             try
             {
-                var architectData = await _unitOfWorkBL.ArchitectsBL.GetAll(cancellationToken);
-                var data = architectData.Select(a => new SelectListItem
-                {
-                    Value = Convert.ToString(a.CustomerId),
-                    Text = a.FirstName + " " + a.LastName
-                }).ToList();
-                ViewBag.ArchitectSelectItemList = data;
+                var customerData = await _unitOfWorkBL.CustomersBL.GetAll(cancellationToken);
+
+                var referedByDataSelectedList = customerData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Interior || p.CustomerTypeId == (int)CustomerTypeEnum.Customer).Select(
+                                        p => new { p.CustomerId, p.FirstName, p.LastName }).Select(a =>
+                                        new SelectListItem
+                                        {
+                                            Value = Convert.ToString(a.CustomerId),
+                                            Text = Convert.ToString(a.FirstName + " " + a.LastName)
+                                        }).ToList();
+                ViewBag.ReferedBySelectItemList = referedByDataSelectedList;
             }
             catch (Exception ex)
             {

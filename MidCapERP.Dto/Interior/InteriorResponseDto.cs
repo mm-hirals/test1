@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace MidCapERP.Dto.Architect
+namespace MidCapERP.Dto.Interior
 {
-    public class ArchitectResponseDto
+    public class InteriorResponseDto
     {
         public long CustomerId { get; set; }
 
@@ -28,7 +28,7 @@ namespace MidCapERP.Dto.Architect
         [DisplayName("GST No")]
         public string? GSTNo { get; set; }
 
-        public ArchitectResponseDto? Reffered { get; set; }
+        public InteriorResponseDto? Reffered { get; set; }
 
         [DisplayName("Reffered Name")]
         public string? RefferedName { get; set; }

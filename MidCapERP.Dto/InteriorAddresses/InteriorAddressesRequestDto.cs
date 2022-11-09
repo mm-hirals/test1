@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MidCapERP.Dto.ArchitectAddresses
+namespace MidCapERP.Dto.InteriorAddresses
 {
-    public class ArchitectAddressesRequestDto
+    public class InteriorAddressesRequestDto
     {
         public long CustomerAddressId { get; set; }
 

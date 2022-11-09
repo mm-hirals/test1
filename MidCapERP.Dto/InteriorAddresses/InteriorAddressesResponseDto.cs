@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace MidCapERP.Dto.ArchitectAddresses
+namespace MidCapERP.Dto.InteriorAddresses
 {
-    public class ArchitectAddressesResponseDto
+    public class InteriorAddressesResponseDto
     {
         public long CustomerAddressId { get; set; }
         public long CustomerId { get; set; }

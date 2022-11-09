@@ -1,9 +1,9 @@
 ﻿using MidCapERP.Dto.DataGrid;
 using Newtonsoft.Json;
 
-namespace MidCapERP.Dto.ArchitectAddresses
+namespace MidCapERP.Dto.InteriorAddresses
 {
-    public class ArchitectAddressDataTableFilterDto : DataTableFilterDto
+    public class InteriorAddressDataTableFilterDto : DataTableFilterDto
     {
         [JsonProperty("customerId")]
         public int customerId { get; set; }
