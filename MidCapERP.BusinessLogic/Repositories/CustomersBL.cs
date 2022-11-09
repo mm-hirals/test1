@@ -260,7 +260,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var customerData = await _unitOfWorkDA.CustomersDA.GetById(id, cancellationToken);
             if (customerData == null)
             {
-                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
+                throw new Exception("Customer not found");
             }
             if (customerData.RefferedBy != null)
             {
