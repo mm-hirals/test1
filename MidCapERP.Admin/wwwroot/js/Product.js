@@ -32,8 +32,8 @@ $(document).on("#lnkProductFilter", "click", (function () {
 }));
 
 $(document).on("click", ".add-icon", (function () {
-    if ($(this).parent().parent().find("input.quantity").val() > 0 && $(this).parent().parent().find("input.quantity").val() < 1000) {
-        if ($(this).parent().parent().find("select").val() != "") {
+    if ($(this).parent().parent().find("select").val() != "") {
+        if ($(this).parent().parent().find("input.quantity").val() > 0 && $(this).parent().parent().find("input.quantity").val() < 1000) {
             var htmlStringToAppend = $(this).parent().parent()[0].outerHTML.replaceAll("{ID}", counter)
             htmlStringToAppend = htmlStringToAppend.replaceAll("add-icon", "minus-icon")
             htmlStringToAppend = htmlStringToAppend.replaceAll("bx-plus", "bx-minus")
@@ -44,12 +44,11 @@ $(document).on("click", ".add-icon", (function () {
             emptyFields($(this).parent().parent())
             calculateCostPrice();
         } else {
-            alert("Please select value");
-            //$("span.materialErrorMsg").text("Please select value");
+            toastr.warning("Please enter value between 1-999.");
         }
     }
     else {
-        alert("Please enter value between 1-999");
+        toastr.warning("Please select value.");
     }
 }));
 
@@ -155,6 +154,7 @@ $(document).on("click", ".minus-icon", function () {
 
 ProductModel.onSuccess = function (xhr) {
     $('.productDetailsSubmit').buttonLoader('stop');
+    toastr.success('Information saved successfully.');
 };
 
 ProductModel.onFailed = function (xhr) {
@@ -163,22 +163,21 @@ ProductModel.onFailed = function (xhr) {
 
 ProductModel.onProductMaterialSuccess = function (xhr) {
     $('.btnProductMaterial').buttonLoader('stop');
+    toastr.success('Information saved successfully.');
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
     $('.btnProductMaterial').buttonLoader('stop');
 };
+
 $(document).on('submit', '#frmProductInfoForm', function (e) {
     $('.productSubmit').buttonLoader('start');
-    toastr.success('Information saved successfully.');
 });
 
 $(document).on('submit', '#frmProductDetail', function (e) {
     $('.productDetailsSubmit').buttonLoader('start');
-    toastr.success('Information saved successfully.');
 });
 
 $(document).on('submit', '#frmProductMaterial', function (e) {
     $('.btnProductMaterial').buttonLoader('start');
-    toastr.success('Information saved successfully.');
 });

@@ -244,6 +244,12 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
+        // Model No Validation
+        public async Task<bool> DuplicateModelNo(ProductRequestDto productRequestDto, CancellationToken cancellationToken)
+        {
+            return await _unitOfWorkBL.ProductBL.ValidateModelNo(productRequestDto, cancellationToken);
+        }
+
         #region Private Method
 
         private async Task FillCategoryDropDown(CancellationToken cancellationToken)
@@ -252,8 +258,8 @@ namespace MidCapERP.Admin.Controllers
             var categorySelectedList = categoryTypeData.Select(a =>
                                  new SelectListItem
                                  {
-                                     Value = Convert.ToString(a.LookupValueId),
-                                     Text = a.LookupValueName
+                                     Value = Convert.ToString(a.CategoryId),
+                                     Text = a.CategoryName
                                  }).ToList();
             ViewBag.CategorySelectedList = categorySelectedList;
         }

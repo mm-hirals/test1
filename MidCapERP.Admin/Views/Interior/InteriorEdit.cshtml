@@ -1,4 +1,4 @@
-﻿@model MidCapERP.Dto.Architect.ArchitectRequestDto
+﻿@model MidCapERP.Dto.Interior.InteriorRequestDto
 @{
     string action = (Model != null && Model.CustomerId != 0) ? "Update" : "Create";
     Layout = "_Layout";
@@ -7,7 +7,7 @@
 <div class="">
     <div class="card mb-3">
         <div class="card-prpoduct-cotent--wrapper">
-            <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmArchitectEdit">
+            <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmInteriorEdit">
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
@@ -37,7 +37,7 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="PhoneNumber" class="form-control" type="number" />
+                                <input asp-for="PhoneNumber" class="form-control" type="number" min="0" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="Discount" class="form-label"></label>
-                                <input asp-for="Discount" type="number" class="form-control" min="0" max="100" placeholder="Architect Discount %">
+                                <input asp-for="Discount" type="number" class="form-control" min="0" max="100" placeholder="Interior Discount %">
                                 <span asp-validation-for="Discount" class="text-danger"></span>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                         <div class="col-12">
                             <div class="c-card--wrapper c-card-sm--wrapper">
                                 <div class="c-card--footer">
-                                    <a class="btn btn-danger" href="/Architect/Index">Cancel</a>
+                                    <a class="btn btn-danger" href="/Interior/Index">Cancel</a>
                                     <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner" id="dataSave">Save</button>
                                 </div>
                             </div>
@@ -153,16 +153,16 @@
                     <div class="c-card--header">
                         <h4 class="c-card--header-title">Address Details</h4>
                         <div class="c-card--header-action">
-                            <a asp-controller="Architect" asp-action="CreateArchitectAddress" class="btn btn-primary has-spinner"
-                           data-ajax-complete="ArchitectAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateArchitectAddresses"
+                            <a asp-controller="Interior" asp-action="CreateInteriorAddress" class="btn btn-primary has-spinner"
+                           data-ajax-complete="InteriorAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateInteriorAddresses"
                            data-ajax="true" data-ajax-mode="replace">Create New</a>
                         </div>
                     </div>
                     <div class="c-card--body">
                         <div class="row">
                             <div class="col-12">
-                                <partial name="_ArchitectAddressesTable" model="null" />
-                                <div id="divUpdateArchitectAddresses"></div>
+                                <partial name="_InteriorAddressesTable" model="null" />
+                                <div id="divUpdateInteriorAddresses"></div>
                             </div>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Architect.js"></script>
-        <script asp-src-include="~/js/ArchitectAddresses.js"></script>
+        <script asp-src-include="~/js/Interior.js"></script>
+        <script asp-src-include="~/js/InteriorAddresses.js"></script>
     }
-    } 
+}

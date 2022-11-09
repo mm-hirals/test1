@@ -24,10 +24,18 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("/OrderDetail/{id}")]
-        public async Task<IActionResult> OrderDetail(int Id, CancellationToken cancellationToken)
+        [Route("/OrderDetail/{orderNo}")]
+        public async Task<IActionResult> OrderDetail(string orderNo, CancellationToken cancellationToken)
         {
-            return View("OrderDetail");
+            var data = await _unitOfWorkBL.OrderBL.GetOrderDetailsAnonymous(orderNo, cancellationToken);
+            if (data != null)
+            {
+                return View("OrderDetail", data);
+            }
+            else
+            {
+                throw new Exception("Please enter valid order no!");
+            }
         }
     }
 }

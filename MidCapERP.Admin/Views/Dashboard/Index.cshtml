@@ -32,11 +32,11 @@
     </div>
 
     <div class="col-md-3">
-        <a asp-action="Index" asp-controller="Architect">
+        <a asp-action="Index" asp-controller="Interior">
             <div class="dashboard-card d-flex justify-content-between p-3 rounded align-items-start">
                 <div>
-                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Architects</h6>
-                    <h2 class="mb-0 text-white pt-1">@ViewBag.ArchitectCount</h2>
+                    <h6 class="mb-3 font-size-16 text-white text-uppercase pt-2 fw-bold">Interiors</h6>
+                    <h2 class="mb-0 text-white pt-1">@ViewBag.InteriorCount</h2>
                 </div>
                 <div>
                     <i class='bx bx-grid-alt dashboard-icon'></i>
@@ -78,31 +78,31 @@
             </div>
             <div class="c-card--body">
                 <canvas id="myCharts" width="100%" class="dashboard-canvas"></canvas>
-                 <div class="py-3 pb-0">
+                <div class="py-3 pb-0">
 
-                <div class="d-flex align-items-center">
-                    <div class="recent-avtar me-3 d-flex justify-content-center align-items-center">
-                        <i class='bx bx-check'></i>
+                    <div class="d-flex align-items-center">
+                        <div class="recent-avtar me-3 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-check'></i>
+                        </div>
+                        <div class="dash-titles pt-1">
+                            <h6>Delivered Orders</h6>
+                        </div>
+                        <div class=" ms-auto my-auto">
+                            <h6 class="recent-box-right mb-0">1,575</h6>
+                        </div>
                     </div>
-                    <div class="dash-titles pt-1">
-                        <h6>Delivered Orders</h6>
-                    </div>
-                    <div class=" ms-auto my-auto">
-                        <h6 class="recent-box-right mb-0">1,575</h6>
+                    <div class="d-flex mt-2 align-items-center">
+                        <div class="recent-avtar-danger me-3 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-x'></i>
+                        </div>
+                        <div class="dash-titles pt-1">
+                            <h6>Cancelled Orders</h6>
+                        </div>
+                        <div class=" ms-auto my-auto">
+                            <h6 class="recent-box-right mb-0">100</h6>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex mt-2 align-items-center">
-                    <div class="recent-avtar-danger me-3 d-flex justify-content-center align-items-center">
-                        <i class='bx bx-x'></i>
-                    </div>
-                    <div class="dash-titles pt-1">
-                        <h6>Cancelled Orders</h6>
-                    </div>
-                    <div class=" ms-auto my-auto">
-                        <h6 class="recent-box-right mb-0">100</h6>
-                    </div>
-                </div>
-            </div>
             </div>
 
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,11 +8,13 @@ namespace MidCapERP.Dto.Fabric
     public class FabricRequestDto
     {
         public int FabricId { get; set; }
+
         [DisplayName("Title")]
         [StringLength(150, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 150 characters")]
         public string Title { get; set; }
 
         [DisplayName("Model No")]
+        [Remote("DuplicateModelNo", "Fabric", AdditionalFields = nameof(FabricId), ErrorMessage = "Model no already exist. Please enter a different model no.")]
         public string ModelNo { get; set; }
 
         [DisplayName("Company Name")]

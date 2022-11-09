@@ -1,11 +1,12 @@
-﻿using MidCapERP.Dto.ArchitectAddresses;
+﻿using Microsoft.AspNetCore.Mvc;
+using MidCapERP.Dto.InteriorAddresses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MidCapERP.Dto.Architect
+namespace MidCapERP.Dto.Interior
 {
-    public class ArchitectRequestDto
+    public class InteriorRequestDto
     {
         public long CustomerId { get; set; }
 
@@ -32,6 +33,7 @@ namespace MidCapERP.Dto.Architect
         [Required]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits.")]
+        [Remote("DuplicateInteriorPhoneNumber", "Interior", AdditionalFields = nameof(CustomerId), ErrorMessage = "Phone Number already exist. Please enter  a different Phone Number.")]
         public string PhoneNumber { get; set; }
 
         [DisplayName("Alt. Phone Number")]
@@ -50,9 +52,9 @@ namespace MidCapERP.Dto.Architect
         [DisplayName("Reffered Name")]
         public string? RefferedName { get; set; }
 
-        public ArchitectAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
+        public InteriorAddressesRequestDto? CustomerAddressesRequestDto { get; set; }
 
-        [DisplayName("Architect Commission %")]
+        [DisplayName("Interior Commission %")]
         [JsonIgnore]
         public decimal? Discount { get; set; }
 

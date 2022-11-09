@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,6 +11,7 @@ namespace MidCapERP.Dto.RawMaterial
 
         [DisplayName("Title")]
         [StringLength(150, MinimumLength = 2, ErrorMessage = "Minimum 2 characters, Maximum 150 characters")]
+        [Remote("DuplicateRawMaterialTitle", "RawMaterial", AdditionalFields = nameof(RawMaterialId), ErrorMessage = "Title already exist. Please enter a different Title.")]
         public string Title { get; set; }
 
         [DisplayName("Unit Name")]

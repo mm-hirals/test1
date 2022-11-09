@@ -34,7 +34,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderApiResponseDto> UpdateOrderSendForApproval(OrderUpdateStatusAPI model, CancellationToken cancellationToken);
 
-        public Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, CancellationToken cancellationToken);
+        public Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken);
 
         public Task<OrderApiResponseDto> UpdateOrderReceiveMaterial(OrderUpdateReceiveMaterialAPI model, CancellationToken cancellationToken);
 
@@ -49,5 +49,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<Int64> GetOrderPendingApprovalCount(CancellationToken cancellationToken);
 
         public Task<Int64> GetOrderFollowUpCount(CancellationToken cancellationToken);
+
+        public Task<OrderResponseDto> GetOrderDetailsAnonymous(string orderNo, CancellationToken cancellationToken);
     }
 }

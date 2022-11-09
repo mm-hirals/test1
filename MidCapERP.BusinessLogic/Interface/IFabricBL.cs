@@ -24,5 +24,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<FabricRequestDto> UpdateFabric(int Id, FabricRequestDto model, CancellationToken cancellationToken);
 
         public Task<FabricRequestDto> DeleteFabric(int Id, CancellationToken cancellationToken);
+
+        public Task<bool> ValidateModelNo(FabricRequestDto fabricRequestDto, CancellationToken cancellationToken);
     }
 }

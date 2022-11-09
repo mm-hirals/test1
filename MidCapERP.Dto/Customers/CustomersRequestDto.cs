@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.CustomerAddresses;
+﻿using Microsoft.AspNetCore.Mvc;
+using MidCapERP.Dto.CustomerAddresses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -32,6 +33,7 @@ namespace MidCapERP.Dto.Customers
         [Required]
         [MaxLength(10)]
         [MinLength(10, ErrorMessage = "Please enter 10 digits.")]
+        [Remote("DuplicateCustomerPhoneNumber", "Customer", AdditionalFields = nameof(CustomerId), ErrorMessage = "Phone Number already exist. Please enter a different Phone Number.")]
         public string PhoneNumber { get; set; }
 
         [DisplayName("Alt. Phone Number")]
@@ -43,7 +45,7 @@ namespace MidCapERP.Dto.Customers
         [StringLength(50, MinimumLength = 2, ErrorMessage = "The Minimum 2 characters, Maximum 15 characters.")]
         public string? GSTNo { get; set; }
 
-        [DisplayName("Architect Name")]
+        [DisplayName("Reffered By")]
         public long? RefferedBy { get; set; }
 
         public CustomerAddressesRequestDto? CustomerAddressesRequestDto { get; set; }

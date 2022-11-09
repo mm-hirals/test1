@@ -1,4 +1,6 @@
-﻿@{
+﻿@using MidCapERP.Core.Constants
+@model MidCapERP.Dto.Order.OrderResponseDto
+@{
     Layout = "_LayoutAnonymous";
     ViewData["Title"] = "Order Detail";
 }
@@ -9,341 +11,229 @@
             <div class="col-12">
                 <div class="c-card--wrapper">
                     <div class="c-card--body py-2">
-                        <h5 class="order-number-title m-0"><span class="order-text">Order Number</span><span class="order-number">#R28764-20221031</span></h5>
-                        <span class="order-time-text">31 October 2022  at 07:02 PM</span>
+                        <h5 class="order-number-title m-0"><span class="order-text">Order Number</span><span class="order-number">#@Model.OrderNo</span></h5>
+                        <span class="order-time-text">@Model.CreatedDateFormat</span>
                     </div>
                 </div>
             </div>
             <div class="col-12 mt-2">
                 <div class="row">
                     <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12">
-                       <div class="co-md-12 mb-2">
+                        <div class="co-md-12 mb-2">
                             <div class="c-card--wrapper">
-                            <div class="c-card--header py-2">
-                                <h4 class="c-card--header-title">Item Summary</h4>
-                            </div>
-
-                            <div class="c-card--body pb-0 py-2">
-                                <div class="order-details-product c-card--wrapper mb-2">
-                                    <div class="c-card--header py-2">
-                                        <h4 class="c-card--header-title">Sofa</h4>
-                                    </div>
-
-                                    <div class="order-deatils-item-card border-bottom pt-0">
-                                        <div class="order-details-header py-2">
-                                                <h4 class="order-details-header-title">Row Materail</h4>
-                                            </div>
-                                        <div class="order-details-row p-3 py-2">
-                                            <div class="order-details-col order-img-col">
-                                                <div class="product-order-image">
-                                                    <img src="~/images/No_Image.jpg" class="img-fluid">
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-dimension-col">
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Width:</label>
-                                                    <div class="ordr-value ms-2">60.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Height:</label>
-                                                    <div class="ordr-value ms-2">72.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Depth:</label>
-                                                    <div class="ordr-value ms-2">84.00</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-price-col">
-                                                <div class="order-detail-text">
-                                                    22000.00
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-qty-col">
-                                                <div class="order-detail-text">1</div>
-                                            </div>
-
-                                            <div class="order-details-col order-discount-col">
-                                                <div class="order-detail-text">0.00</div>
-                                            </div>
-
-                                            <div class="order-details-col text-end order-total-col">
-                                                <div class="order-detail-text fw-bold">22000.00</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="order-deatils-item-card">
-                                        <div class="order-details-header py-2">
-                                                <h4 class="order-details-header-title">Row Materail</h4>
-                                            </div>
-                                        <div class="order-details-row p-3 py-2 pt-0">
-                                            <div class="order-details-col order-img-col">
-                                                <div class="product-order-image">
-                                                    <img src="~/images/No_Image.jpg" class="img-fluid">
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-dimension-col">
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Width:</label>
-                                                    <div class="ordr-value ms-2">60.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Height:</label>
-                                                    <div class="ordr-value ms-2">72.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Depth:</label>
-                                                    <div class="ordr-value ms-2">84.00</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-price-col">
-                                                <div class="order-detail-text">
-                                                    22000.00
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-qty-col">
-                                                <div class="order-detail-text">1</div>
-                                            </div>
-
-                                            <div class="order-details-col order-discount-col">
-                                                <div class="order-detail-text">0.00</div>
-                                            </div>
-
-                                            <div class="order-details-col text-end order-total-col">
-                                                <div class="order-detail-text fw-bold">22000.00</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                <div class="c-card--header py-2">
+                                    <h4 class="c-card--header-title">Item Summary</h4>
                                 </div>
-                            </div>
 
-                            <div class="c-card--body pb-2 py-2">
-                                <div class="order-details-product c-card--wrapper mb-2">
-                                    <div class="c-card--header py-2">
-                                        <h4 class="c-card--header-title">Sofa</h4>
-                                    </div>
-
-                                    <div class="order-deatils-item-card">
-                                        <div class="order-details-header py-2">
-                                                <h4 class="order-details-header-title">Row Materail</h4>
-                                            </div>
-                                        <div class="order-details-row p-3 py-2 border-bottom pt-0">
-                                            <div class="order-details-col order-img-col">
-                                                <div class="product-order-image">
-                                                    <img src="~/images/No_Image.jpg" class="img-fluid">
+                                @if (@Model.OrderSetResponseDto != null)
+                                {
+                                    @foreach (var orderSet in @Model.OrderSetResponseDto)
+                                    {
+                                        <div class="c-card--body order-card-box">
+                                            <div class="order-details-product c-card--wrapper">
+                                                <div class="c-card--header py-2">
+                                                    <h4 class="c-card--header-title">@orderSet.SetName</h4>
                                                 </div>
-                                            </div>
 
-                                            <div class="order-details-col order-dimension-col">
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Width:</label>
-                                                    <div class="ordr-value ms-2">60.00</div>
+                                                <div class="order-deatils-item-card  pt-0">
+                                                    <div class="order-details-row p-3 py-2 order-details-row-title">
+                                                        <div class="order-details-col order-img-col">
+                                                            <h4 class="order-title">
+                                                                Product Information
+                                                            </h4>
+                                                        </div>
+
+                                                        <div class="order-details-col order-price-col">
+                                                            <h4 class="order-title">
+                                                                Price
+                                                            </h4>
+                                                        </div>
+
+                                                        <div class="order-details-col order-qty-col">
+                                                            <h4 class="order-title">
+                                                                Qty
+                                                            </h4>
+                                                        </div>
+
+                                                        <div class="order-details-col order-discount-col">
+                                                            <h4 class="order-title">
+                                                                Discount
+                                                            </h4>
+                                                        </div>
+
+                                                        <div class="order-details-col text-end order-total-col">
+                                                            <h4 class="order-title">
+                                                                Total Price
+                                                            </h4>
+                                                        </div>
+                                                    </div>
+
+                                                    @foreach (var orderSetItem in @orderSet.OrderSetItemResponseDto)
+                                                    {
+                                                        <div class="order-detail--card-wrapper">
+                                                            <div class="order-details-row p-3 py-2">
+                                                                <div class="order-details-col order-img-col">
+                                                                    @if (@Model.Status == (int)OrderStatusEnum.Approved)
+                                                                    {
+                                                                        <div class="product-order-image">
+                                                                            <div class="product-deatils-img">
+                                                                                <img src="@orderSetItem.ProductImage" class="img-fluid">
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    <div class="order-details-col order-dimension-col">
+                                                                        <div> <h4 class="order-details-header-title">@orderSetItem.ProductTitle</h4></div>
+                                                                        <div class="product-dimension d-flex">
+                                                                            <label class="order-label pe-1">
+                                                                                <span class="order-dimension-text">Dimension</span><span class="order-dimensions">( W &#x2715; H &#x2715; D )</span>
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="product-dimension mb-1">
+                                                                            <div class="ordr-value">@orderSetItem.Width</div>
+                                                                            <span class="mx-1 cross-icon">&#x2715;</span>
+                                                                            <div class="ordr-value">@orderSetItem.Height</div>
+                                                                            <span class="mx-1 cross-icon">&#x2715;</span>
+                                                                            <div class="ordr-value">@orderSetItem.Depth</div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="order-details-col order-price-col">
+                                                                    <div class="order-detail-text">
+                                                                        @orderSetItem.UnitPrice
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="order-details-col order-qty-col">
+                                                                    <div class="order-detail-text">@orderSetItem.Quantity</div>
+                                                                </div>
+
+                                                                <div class="order-details-col order-discount-col">
+                                                                    <div class="order-detail-text">@orderSetItem.DiscountPrice</div>
+                                                                </div>
+
+                                                                <div class="order-details-col text-end order-total-col">
+                                                                    <div class="order-detail-text fw-bold">@orderSetItem.TotalAmount</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Height:</label>
-                                                    <div class="ordr-value ms-2">72.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Depth:</label>
-                                                    <div class="ordr-value ms-2">84.00</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-price-col">
-                                                <div class="order-detail-text">
-                                                    22000.00
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-qty-col">
-                                                <div class="order-detail-text">1</div>
-                                            </div>
-
-                                            <div class="order-details-col order-discount-col">
-                                                <div class="order-detail-text">0.00</div>
-                                            </div>
-
-                                            <div class="order-details-col text-end order-total-col">
-                                                <div class="order-detail-text fw-bold">22000.00</div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="order-deatils-item-card">
-                                        <div class="order-details-header py-2">
-                                                <h4 class="order-details-header-title">Row Materail</h4>
-                                            </div>
-                                        <div class="order-details-row p-3 py-2 pt-0">
-                                            <div class="order-details-col order-img-col">
-                                                <div class="product-order-image">
-                                                    <img src="~/images/No_Image.jpg" class="img-fluid">
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-dimension-col">
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Width:</label>
-                                                    <div class="ordr-value ms-2">60.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Height:</label>
-                                                    <div class="ordr-value ms-2">72.00</div>
-                                                </div>
-                                                <div class="product-dimension mb-1 d-flex">
-                                                    <label class="order-label pe-1">Depth:</label>
-                                                    <div class="ordr-value ms-2">84.00</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-price-col">
-                                                <div class="order-detail-text">
-                                                    22000.00
-                                                </div>
-                                            </div>
-
-                                            <div class="order-details-col order-qty-col">
-                                                <div class="order-detail-text">1</div>
-                                            </div>
-
-                                            <div class="order-details-col order-discount-col">
-                                                <div class="order-detail-text">0.00</div>
-                                            </div>
-
-                                            <div class="order-details-col text-end order-total-col">
-                                                <div class="order-detail-text fw-bold">22000.00</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
+                                    }
+                                }
                             </div>
-                            
                         </div>
-                       </div>
-
-                       <div class="col-md-12">
-                           <div class="row">
-                               <div class="col-md-6">
-                                   <div class="order-detail-summary c-card--wrapper mb-2">
-                                        <div class="c-card--header py-2">
-                                            <h4 class="c-card--header-title">Shipping Address</h4>
-                                        </div>
-                                        <div class="customer-summary-body c-card--body py-2 pt-1">
-                                             <div class="form-group mb-0">
-                                                <span class="form-label"> 
-                                                    <span class="fw-bold text-black address-name">Vivek Vikrant</span> <br> 20B Bhagyaday Socity,<br>Near Chandra Bhanu High School<br>Ahmedabad,Gujrat 365601
-                                                </span>
-                                             </div>
-                                        </div>
-                                    </div>
-                               </div>
-
-                               <div class="col-md-6">
-                                   <div class="order-detail-summary c-card--wrapper mb-2">
-                                        <div class="c-card--header py-2">
-                                            <h4 class="c-card--header-title">Billing Address</h4>
-                                        </div>
-                                        <div class="customer-summary-body c-card--body py-2 pt-1">
-                                             <div class="form-group mb-0">
-                                                <span class="form-label"> 
-                                                    <span class="fw-bold text-black address-name">Vivek Vikrant</span> <br> 20B Bhagyaday Socity,<br>Near Chandra Bhanu High School<br>Ahmedabad,Gujrat 365601
-                                                </span>
-                                             </div>
-                                        </div>
-                                    </div>
-                               </div>
-
-                           </div>
-                       </div>
-
                     </div>
 
                     <div class="col-xl-5 col-lg-4 col-md-12 col-sm-12">
                         <div class="col-md-12 mb-2">
-                            <div class="order-detail-summary c-card--wrapper">
-                            <div class="c-card--header py-2">
-                                <h4 class="c-card--header-title">Summary</h4>
-                            </div>
-                            <div class="customer-summary-body c-card--body py-2 px-0">
-                                <div class="customer-summary-text pt-0">
-                                    <span class="customer-summary-title">Gross Total Amount</span>
-                                    <span class="customer-summary-value">22000.00</span>
+                            <div class="c-card--wrapper">
+                                <div class="c-card--header py-2 ">
+                                    <h4 class="c-card--header-title">Customer Information</h4>
                                 </div>
-                                <div class="customer-summary-text">
-                                    <span class="customer-summary-title">Discount Amount</span>
-                                    <span class="customer-summary-value">0.00</span>
-                                </div>
-                                <div class="customer-summary-text">
-                                    <span class="customer-summary-title">Total Amount</span>
-                                    <span class="customer-summary-value">22000.00</span>
-                                </div>
-                                 <div class="customer-summary-text">
-                                    <span class="customer-summary-title">GST Tax (18%)</span>
-                                    <span class="customer-summary-value">3960.00</span>
-                                </div>
-                                <div class="customer-summary-text">
-                                    <span class="customer-summary-title">Advance Amount</span>
-                                    <span class="customer-summary-value">0.00</span>
-                                </div>
-                                <div class="customer-summary-text">
-                                    <span class="customer-summary-title">Delivery Date</span>
-                                    <span class="customer-summary-value"></span>
+                                <div class="c-card--body py-2 px-0">
+                                    <div class="customer-detail-information">
+                                        <div class="customer-info-grid pt-0 px-3">
+                                            <span class="customer-info-label">Name</span>
+                                            <span class="customer-info-text">@Model.customersResponseDto.FirstName @Model.customersResponseDto.LastName</span>
+                                        </div>
+                                        <div class="customer-info-grid px-3">
+                                            <span class="customer-info-label">Mobile</span>
+                                            <span class="customer-info-text">@Model.customersResponseDto.PhoneNumber</span>
+                                        </div>
+                                        <div class="customer-info-grid border-0 pb-0 px-3">
+                                            <span class="customer-info-label">Email</span>
+                                            <span class="customer-info-text">@Model.customersResponseDto.EmailId</span>
+                                        </div>
+
+                                    </div>
                                 </div>
 
                             </div>
-                         </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                @if (Model.OrderAddressesResponseDto != null)
+                                {
+                                    foreach (var item in Model.OrderAddressesResponseDto)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="order-detail-summary c-card--wrapper mb-2">
+                                                <div class="c-card--header py-2">
+                                                    <h4 class="c-card--header-title">@item.AddressType Address</h4>
+                                                </div>
+                                                <div class="customer-summary-body c-card--body py-2 pt-1">
+                                                    <div class="form-group mb-0">
+                                                        <span class="form-label">
+                                                            <span class="fw-bold text-black address-name">@Model.customersResponseDto.FirstName @Model.customersResponseDto.LastName</span> <br>
+                                                            @item.Street1 @item.Street2,<br>
+                                                            @item.Area @item.Landmark <br>
+                                                            @item.City, @item.State @item.ZipCode
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
                         </div>
 
                         <div class="col-md-12 mb-2">
                             <div class="order-detail-summary c-card--wrapper">
-                            <div class="customer-summary-body c-card--body py-2 px-0">
-                                <div class="customer-summary-text pb-0">
-                                    <span class="customer-summary-title customer-summary-total">Payable Amount</span>
-                                    <span class="customer-summary-value customer-summary-total">25960.00</span>
+                                <div class="c-card--header py-2">
+                                    <h4 class="c-card--header-title">Summary</h4>
+                                </div>
+                                <div class="customer-summary-body c-card--body py-2 px-0">
+                                    <div class="customer-summary-text pt-0">
+                                        <span class="customer-summary-title">Gross Total Amount</span>
+                                        <span class="customer-summary-value">@Model.GrossTotal</span>
+                                    </div>
+                                    <div class="customer-summary-text">
+                                        <span class="customer-summary-title">Discount Amount</span>
+                                        <span class="customer-summary-value">@Model.Discount</span>
+                                    </div>
+                                    <div class="customer-summary-text">
+                                        <span class="customer-summary-title">Total Amount</span>
+                                        <span class="customer-summary-value">@Model.TotalAmount</span>
+                                    </div>
+                                    <div class="customer-summary-text">
+                                        <span class="customer-summary-title">GST Tax (18%)</span>
+                                        <span class="customer-summary-value">@Model.GSTTaxAmount</span>
+                                    </div>
+                                    <div class="customer-summary-text">
+                                        <span class="customer-summary-title">Advance Amount</span>
+                                        <span class="customer-summary-value">@Model.AdvanceAmount</span>
+                                    </div>
+                                    <div class="customer-summary-text pb-0">
+                                        <span class="customer-summary-title">Delivery Date</span>
+                                        <span class="customer-summary-value">@Model.DeliveryDate</span>
+                                    </div>
+
                                 </div>
                             </div>
-                         </div>
                         </div>
 
-                         <div class="col-md-12 mb-2">
-                           <div class="c-card--wrapper">
-                            <div class="c-card--header py-2 ">
-                                <h4 class="c-card--header-title">Customer Information</h4>
-</div>
-                            <div class="c-card--body py-2 px-0">
-                                <div class="customer-detail-information">
-                                   <div class="customer-info-grid pt-0 px-3">
-                                       <span class="customer-info-label">Name</span>
-                                       <span class="customer-info-text">Vivek Vikrant</span>
-                                   </div>
-                                   <div class="customer-info-grid px-3">
-                                       <span class="customer-info-label">Mobile Number</span>
-                                       <span class="customer-info-text">9844543545</span>
-                                   </div>
-                                   <div class="customer-info-grid border-0 pb-0 px-3">
-                                       <span class="customer-info-label">Email Address</span>
-                                       <span class="customer-info-text">test@gmail.com</span>
-                                   </div>
-                                    
+                        <div class="col-md-12 mb-2">
+                            <div class="order-detail-summary c-card--wrapper">
+                                <div class="customer-summary-body c-card--body py-2">
+                                    <div class="customer-summary-text p-0">
+                                        <span class="customer-summary-title customer-summary-total">Payable Amount</span>
+                                        <span class="customer-summary-value customer-summary-total">@Model.PayableAmount</span>
+                                    </div>
                                 </div>
                             </div>
-                            
-                        </div>
-                        </div>
                         </div>
 
                     </div>
 
                 </div>
+
             </div>
-           
         </div>
+
     </div>
 </div>
