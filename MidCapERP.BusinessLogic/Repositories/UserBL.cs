@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.DataAccess.Generic;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -168,6 +167,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             userById.IsDeleted = true;
             await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(userById));
             return _mapper.Map<UserRequestDto>(userById);
+        }
+
+        public async Task<bool> ValidateUserPhoneNumber(UserRequestDto userRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllUserData = await GetAllUsersData(cancellationToken);
+            if (userRequestDto.Id != null)
+            {
+                var getUserById = getAllUserData.First(p => p.UserId == Convert.ToInt16(userRequestDto.Id));
+                if (getUserById.PhoneNumber.Trim() == userRequestDto.PhoneNumber.Trim())
+                    return true;
+                else
+                    return !getAllUserData.Any(p => p.PhoneNumber.Trim() == userRequestDto.PhoneNumber);
+            }
+            else
+                return !getAllUserData.Any(p => p.PhoneNumber.Trim() == userRequestDto.PhoneNumber);
+        }
+
+        public async Task<bool> ValidateUserEmail(UserRequestDto userRequestDto, CancellationToken cancellationToken)
+        {
+            var getAllUserData = await GetAllUsersData(cancellationToken);
+            if (userRequestDto.Id != null)
+            {
+                var getUserById = getAllUserData.First(p => p.UserId == Convert.ToInt16(userRequestDto.Id));
+                if (getUserById.Email.Trim() == userRequestDto.Email.Trim())
+                    return true;
+                else
+                    return !getAllUserData.Any(p => p.Email.Trim() == userRequestDto.Email);
+            }
+            else
+                return !getAllUserData.Any(p => p.Email.Trim() == userRequestDto.Email);
         }
 
         #region Private Method
