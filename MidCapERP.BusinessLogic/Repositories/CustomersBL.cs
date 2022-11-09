@@ -169,13 +169,21 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await CustomerGetById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
-            MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-            return _mapper.Map<CustomerApiRequestDto>(data);
+            var getAllCustomer = await GetAll(cancellationToken);
+            var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+            if (customerExistOrNot != null)
+                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
+            else
+            {
+                var oldData = await CustomerGetById(Id, cancellationToken);
+                oldData.UpdatedBy = _currentUser.UserId;
+                oldData.UpdatedDate = DateTime.Now;
+                oldData.UpdatedUTCDate = DateTime.UtcNow;
+                MapToDbObject(model, oldData);
+                var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
+                return _mapper.Map<CustomerApiRequestDto>(data);
+            }
         }
 
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
