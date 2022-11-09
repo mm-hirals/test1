@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using MidCapERP.BusinessLogic.Extention;
 using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Localizer.JsonString;
+using MidCapERP.CronJob;
 using MidCapERP.DataAccess.Extention;
 using MidCapERP.Dto;
 using MidCapERP.Infrastructure.Identity.Authorization;
@@ -31,6 +32,7 @@ namespace MidCapERP.Infrastructure.ServiceDependency
             services.SetupUnitOfWorkBL();
             services.SetupAutoMapper();
             services.SetupJsonStrinLocalizer();
+            services.SetupCronJobs();
         }
 
         public static void SetAuthorization(this IServiceCollection services, IConfiguration configuration, string AuthenticationScheme)
