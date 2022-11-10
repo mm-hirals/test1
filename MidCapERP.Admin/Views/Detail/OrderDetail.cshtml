@@ -31,7 +31,7 @@
                                     {
                                         <div class="c-card--body order-card-box">
                                             <div class="order-details-product c-card--wrapper">
-                                                <div class="c-card--header py-2">
+                                                <div class="c-card--header py-2 order-details-title">
                                                     <h4 class="c-card--header-title">@orderSet.SetName</h4>
                                                 </div>
 
@@ -61,7 +61,7 @@
                                                             </h4>
                                                         </div>
 
-                                                        <div class="order-details-col text-end order-total-col">
+                                                        <div class="order-details-col order-total-col">
                                                             <h4 class="order-title">
                                                                 Total Price
                                                             </h4>
@@ -72,49 +72,66 @@
                                                     {
                                                         <div class="order-detail--card-wrapper">
                                                             <div class="order-details-row p-3 py-2">
-                                                                <div class="order-details-col order-img-col">
-                                                                    @if (@Model.Status == (int)OrderStatusEnum.Approved)
-                                                                    {
-                                                                        <div class="product-order-image">
-                                                                            <div class="product-deatils-img">
-                                                                                <img src="@orderSetItem.ProductImage" class="img-fluid">
-                                                                            </div>
-                                                                        </div>
-                                                                    }
-                                                                    <div class="order-details-col order-dimension-col">
-                                                                        <div> <h4 class="order-details-header-title">@orderSetItem.ProductTitle</h4></div>
-                                                                        <div class="product-dimension d-flex">
-                                                                            <label class="order-label pe-1">
-                                                                                <span class="order-dimension-text">Dimension</span><span class="order-dimensions">( W &#x2715; H &#x2715; D )</span>
-                                                                            </label>
-                                                                        </div>
-                                                                        <div class="product-dimension mb-1">
-                                                                            <div class="ordr-value">@orderSetItem.Width</div>
-                                                                            <span class="mx-1 cross-icon">&#x2715;</span>
-                                                                            <div class="ordr-value">@orderSetItem.Height</div>
-                                                                            <span class="mx-1 cross-icon">&#x2715;</span>
-                                                                            <div class="ordr-value">@orderSetItem.Depth</div>
-                                                                        </div>
 
+                                                                <div class="order-details-col order-img-col">
+
+                                                                    <div class="order-detail-subimg-col">
+                                                                        @if (@Model.Status == (int)OrderStatusEnum.Approved)
+                                                                        {
+
+                                                                            <div class="product-order-image">
+                                                                                <div class="product-deatils-img">
+                                                                                    <img src="@orderSetItem.ProductImage" class="img-fluid">
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                        <div class="order-details-col order-dimension-col">
+                                                                            <div> <h4 class="order-details-header-title">@orderSetItem.ProductTitle</h4></div>
+                                                                            <div class="product-dimension d-flex">
+                                                                                <label class="order-label pe-1">
+                                                                                    <span class="order-dimension-text">Dimension</span><span class="order-dimensions">( W &#x2715; H &#x2715; D )</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="product-dimension mb-1">
+                                                                                <div class="ordr-value">@orderSetItem.Width</div>
+                                                                                <span class="mx-1 cross-icon">&#x2715;</span>
+                                                                                <div class="ordr-value">@orderSetItem.Height</div>
+                                                                                <span class="mx-1 cross-icon">&#x2715;</span>
+                                                                                <div class="ordr-value">@orderSetItem.Depth</div>
+                                                                            </div>
+
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="order-details-col order-price-col">
+                                                                    <div class="order-details-mobile-content">
+                                                                        <h4 class="order-details-mobile-title">Price</h4>
+                                                                    </div>
                                                                     <div class="order-detail-text">
                                                                         @orderSetItem.UnitPrice
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="order-details-col order-qty-col">
+                                                                    <div class="order-details-mobile-content">
+                                                                        <h4 class="order-details-mobile-title">Qty</h4>
+                                                                    </div>
                                                                     <div class="order-detail-text">@orderSetItem.Quantity</div>
                                                                 </div>
 
                                                                 <div class="order-details-col order-discount-col">
+                                                                    <div class="order-details-mobile-content">
+                                                                        <h4 class="order-details-mobile-title">Discount</h4>
+                                                                    </div>
                                                                     <div class="order-detail-text">@orderSetItem.DiscountPrice</div>
                                                                 </div>
 
-                                                                <div class="order-details-col text-end order-total-col">
-                                                                    <div class="order-detail-text fw-bold">@orderSetItem.TotalAmount</div>
+                                                                <div class="order-details-col order-total-col">
+                                                                    <div class="order-details-mobile-content">
+                                                                        <h4 class="order-details-mobile-title total-mobile-title">Total Price</h4>
+                                                                    </div>
+                                                                    <div class="total-order-detail-text order-detail-text fw-bold">@orderSetItem.TotalAmount</div>
                                                                 </div>
                                                             </div>
                                                         </div>
