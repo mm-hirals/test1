@@ -138,6 +138,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             oldApplicationUserData.FirstName = model.FirstName;
             oldApplicationUserData.LastName = model.LastName;
             oldApplicationUserData.PhoneNumber = model.PhoneNumber;
+            oldApplicationUserData.UserName = model.Email;
             oldApplicationUserData.Email = model.Email;
             oldApplicationUserData.MobileDeviceId = model.MobileDeviceId;
             var updateUser = await _unitOfWorkDA.UserDA.UpdateUser(_mapper.Map<ApplicationUser>(oldApplicationUserData));
