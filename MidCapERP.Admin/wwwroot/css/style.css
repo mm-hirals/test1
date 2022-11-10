@@ -12736,4 +12736,67 @@ header .btn-check:focus + .btn, header .btn:focus {
   font-weight: 700;
   color: #454545;
   margin-bottom: 0;
+}
+
+.error-body {
+  padding-left: 0px;
+  margin: 0;
+}
+.error-body .bad-request-error--wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 54px);
+}
+@media (max-width: 991px) {
+  .error-body .bad-request-error--wrapper {
+    height: calc(100vh - 78px);
+  }
+}
+@media (max-width: 575px) {
+  .error-body .bad-request-error--wrapper {
+    height: calc(100vh - 102px);
+  }
+}
+.error-body .bad-request-error--wrapper .bad-request-box {
+  padding: 16px;
+}
+.error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box {
+  padding-top: 30px;
+}
+.error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-title {
+  color: #454545;
+  font-weight: bold;
+  margin-bottom: 0;
+  font-size: 48px;
+}
+@media (max-width: 991px) {
+  .error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-title {
+    font-size: 36px;
+  }
+}
+@media (max-width: 767px) {
+  .error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-title {
+    font-size: 36px;
+  }
+}
+@media (max-width: 575px) {
+  .error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-title {
+    font-size: 18px;
+  }
+}
+.error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-content {
+  max-width: 800px;
+  margin: 10px auto 21px;
+  font-size: 16px;
+  color: #202020;
+}
+@media (max-width: 575px) {
+  .error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-content {
+    font-size: 14px;
+  }
+}
+.error-body .bad-request-error--wrapper .bad-request-box .bad-request-error-box .bad-request-back-btn {
+  text-transform: uppercase;
+  font-size: 14px;
 }/*# sourceMappingURL=style.css.map */

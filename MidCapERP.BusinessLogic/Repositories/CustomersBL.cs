@@ -148,26 +148,42 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerApiRequestDto> CreateCustomerApi(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
-            var customerToInsert = _mapper.Map<Customers>(model);
-            customerToInsert.CustomerTypeId = model.CustomerTypeId;
-            customerToInsert.IsDeleted = false;
-            customerToInsert.TenantId = _currentUser.TenantId;
-            customerToInsert.CreatedBy = _currentUser.UserId;
-            customerToInsert.CreatedDate = DateTime.Now;
-            customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-            var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-            return _mapper.Map<CustomerApiRequestDto>(data);
+            var getAllCustomer = await GetAll(cancellationToken);
+            var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+            if (customerExistOrNot == null)
+            {
+                var customerToInsert = _mapper.Map<Customers>(model);
+                customerToInsert.CustomerTypeId = model.CustomerTypeId;
+                customerToInsert.IsDeleted = false;
+                customerToInsert.TenantId = _currentUser.TenantId;
+                customerToInsert.CreatedBy = _currentUser.UserId;
+                customerToInsert.CreatedDate = DateTime.Now;
+                customerToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
+                return _mapper.Map<CustomerApiRequestDto>(data);
+            }
+            else
+                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
         }
 
         public async Task<CustomerApiRequestDto> UpdateCustomerApi(Int64 Id, CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
-            var oldData = await CustomerGetById(Id, cancellationToken);
-            oldData.UpdatedBy = _currentUser.UserId;
-            oldData.UpdatedDate = DateTime.Now;
-            oldData.UpdatedUTCDate = DateTime.UtcNow;
-            MapToDbObject(model, oldData);
-            var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-            return _mapper.Map<CustomerApiRequestDto>(data);
+            var getAllCustomer = await GetAll(cancellationToken);
+            var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+            if (customerExistOrNot == null)
+            {
+                var oldData = await CustomerGetById(Id, cancellationToken);
+                oldData.UpdatedBy = _currentUser.UserId;
+                oldData.UpdatedDate = DateTime.Now;
+                oldData.UpdatedUTCDate = DateTime.UtcNow;
+                MapToDbObject(model, oldData);
+                var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
+                return _mapper.Map<CustomerApiRequestDto>(data);
+            }
+            else
+                 throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
         }
 
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
@@ -265,21 +281,22 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<bool> ValidateCustomerPhoneNumber(CustomersRequestDto customerRequestDto, CancellationToken cancellationToken)
         {
             var getAllCustomer = await GetAll(cancellationToken);
+            var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             if (customerRequestDto.CustomerId > 0)
             {
-                var getCustomerById = getAllCustomer.First(c => c.CustomerId == customerRequestDto.CustomerId);
+                var getCustomerById = customerAndInteriorData.First(c => c.CustomerId == customerRequestDto.CustomerId);
                 if (getCustomerById.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim())
                 {
                     return true;
                 }
                 else
                 {
-                    return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
+                    return !customerAndInteriorData.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
                 }
             }
             else
             {
-                return !getAllCustomer.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
+                return !customerAndInteriorData.Any(c => c.PhoneNumber.Trim() == customerRequestDto.PhoneNumber.Trim());
             }
         }
 

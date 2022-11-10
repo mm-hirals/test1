@@ -1,0 +1,51 @@
+.error-body{
+    padding-left: 0px;
+    margin: 0;
+    .bad-request-error--wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 54px);
+        @include media("<lg"){
+            height: calc(100vh - 78px);
+        }
+        @include media("<sm"){
+            height: calc(100vh - 102px);
+        }
+        .bad-request-box{
+            padding: 16px;
+            .bad-request-error-box{
+                padding-top: 30px;
+                .bad-request-title{
+                    color: $darkGray;
+                    font-weight: bold;
+                    margin-bottom: 0;
+                    font-size: 48px;
+                    @include media("<lg"){
+                        font-size: 36px;
+                    }
+                    @include media("<md"){
+                        font-size: 36px;
+                    }
+                    @include media("<sm"){
+                        font-size: 18px;
+                    }
+                }
+                .bad-request-content{
+                    max-width: 800px;
+                    margin: 10px auto 21px;
+                    font-size: 16px;
+                    color: $black;
+                    @include media("<sm"){
+                        font-size: 14px;
+                    }
+                }
+                .bad-request-back-btn{
+                    text-transform: uppercase;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
+

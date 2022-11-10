@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MidCapERP.BusinessLogic\MidCapERP.BusinessLogic.csproj" />
     <ProjectReference Include="..\MidCapERP.Core\MidCapERP.Core.csproj" />
+    <ProjectReference Include="..\MidCapERP.CronJob\MidCapERP.CronJob.csproj" />
     <ProjectReference Include="..\MidCapERP.Dto\MidCapERP.Dto.csproj" />
     <ProjectReference Include="..\MidCapERP.Infrastructure\MidCapERP.Infrastructure.csproj" />
   </ItemGroup>
