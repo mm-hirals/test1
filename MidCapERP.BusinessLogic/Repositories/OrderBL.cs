@@ -235,7 +235,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
 
                 // Get Order Sets Data
-                var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
+                var orderSetAllData = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
                 var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
                 orderApiResponseDto.OrderSetApiResponseDto = _mapper.Map<List<OrderSetApiResponseDto>>(orderSetDataByOrderId);
 
@@ -246,10 +246,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
                 var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
                 var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
-                var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
-
+                var orderSetItemAllData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
                 var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
-                var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
 
                 foreach (var item in orderApiResponseDto.OrderSetApiResponseDto)
                 {
@@ -257,17 +255,12 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                     var orderSetItemsData = (from x in orderSetItemDataById
                                              join y in productData on x.SubjectId equals y.ProductId into productM
-
                                              from productMat in productM.DefaultIfEmpty()
                                              join z in polishData on x.SubjectId equals z.PolishId into polishM
-
                                              from polishMat in polishM.DefaultIfEmpty()
                                              join a in fabricData on x.SubjectId equals a.FabricId into fabricM
-
-                                             join osi in orderSetItemData.Where(x => x.ReceiveDate != null) on x.OrderId equals osi.OrderId
-                                             join osir in orderSetItemReceivableData on osi.OrderSetItemId equals osir.OrderSetItemId into orderSetItemReceivables
+                                             join osir in orderSetItemReceivableData on x.OrderSetItemId equals osir.OrderSetItemId into orderSetItemReceivables
                                              from osirData in orderSetItemReceivables.DefaultIfEmpty()
-
                                              from fabricMat in fabricM.DefaultIfEmpty()
                                              select new OrderSetItemApiResponseDto
                                              {
@@ -290,7 +283,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  ReceiveDate = x.ReceiveDate,
                                                  ProvidedMaterial = x.ProvidedMaterial,
                                                  Status = x.MakingStatus,
-                                                 IsItemReceived = (osirData != null) ? true : false
+                                                 IsItemReceived = (osirData == null) ? false : true
                                              }).ToList();
 
                     item.OrderSetItemResponseDto = orderSetItemsData;
@@ -1047,7 +1040,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         private async Task GetOrderSetData(long Id, OrderResponseDto orderResponseDto, CancellationToken cancellationToken)
         {
-            var orderSetAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSet(cancellationToken);
+            var orderSetAllData = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
             var orderSetDataByOrderId = orderSetAllData.Where(x => x.OrderId == Id).ToList();
             orderResponseDto.OrderSetResponseDto = _mapper.Map<List<OrderSetResponseDto>>(orderSetDataByOrderId);
         }
@@ -1060,7 +1053,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
             var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
-            var orderSetItemAllData = await _unitOfWorkDA.OrderDA.GetAllOrderSetItem(cancellationToken);
+            var orderSetItemAllData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
             foreach (var item in orderResponseDto.OrderSetResponseDto)
             {
                 var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
