@@ -235,7 +235,14 @@
                                 <input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
                                 <input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
                                 <input type="hidden" id="hdnAmountRoundTo" value="@ViewBag.RoundTo">
-                                <input asp-for="CostPrice" class="form-control" placeholder="Enter Cost Price" onkeypress="return restrictAlphabets(event)">
+                                @if(Model.ProductRequestDto.isFixedPrice == false)
+                                {
+                                    <input asp-for="CostPrice" class="form-control"  readonly="readonly">
+                                }
+                                else
+                                {
+                                   <input asp-for="CostPrice" class="form-control" placeholder="Enter Cost Price" onkeypress="return restrictAlphabets(event)">
+                                }
                                 <span asp-validation-for="ProductRequestDto.CostPrice" class="text-danger"></span>
                             </div>
                         </li>

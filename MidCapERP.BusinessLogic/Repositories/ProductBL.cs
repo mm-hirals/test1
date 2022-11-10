@@ -120,7 +120,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : null,
                                        UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : null,
                                    }).FirstOrDefault();
-
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
                 return productRequestDto;
             }
@@ -206,7 +205,10 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
             var getProductInfoById = await GetById(Id, cancellationToken);
+            var getCategory = await _unitOfWorkDA.CategoriesDA.GetById(getProductInfoById.CategoryId, cancellationToken);
+            bool isFixedPrice = getCategory.IsFixedPrice;
             ProductMainRequestDto productMain = new ProductMainRequestDto();
+            productMain.ProductRequestDto.isFixedPrice = isFixedPrice;
             productMain.ProductId = Id;
             productMain.CostPrice = getProductInfoById.CostPrice;
 

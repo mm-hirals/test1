@@ -69,6 +69,7 @@ namespace MidCapERP.Dto.Product
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
 
+        public bool isFixedPrice { get; set; }
         public int TenantId { get; set; }
         public int Status { get; set; }
         public int CreatedBy { get; set; }
