@@ -18,6 +18,11 @@ namespace MidCapERP.DataAccess.Repositories
             return await _wrkImportFiles.InsertAsync(model, cancellationToken);
         }
 
+        public async Task<WrkImportFiles> Update(WrkImportFiles model, CancellationToken cancellationToken)
+        {
+            return await _wrkImportFiles.UpdateAsync(model, cancellationToken);
+        }
+
         public async Task<IQueryable<WrkImportFiles>> GetAll(CancellationToken cancellationToken)
         {
             return await _wrkImportFiles.GetAsync(cancellationToken);

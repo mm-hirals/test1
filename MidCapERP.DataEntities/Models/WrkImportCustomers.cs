@@ -24,11 +24,11 @@ namespace MidCapERP.DataEntities.Models
         public string? State { get; set; }
         public string? ZipCode { get; set; }
         public int Status { get; set; }
-        public string ErrorMessage { get; set; }
-        public int CreatedBy { get; set; }
+        public string? ErrorMessage { get; set; }
+        public long CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedUTCDate { get; set; }
-        public int? UpdatedBy { get; set; }
+        public long? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
     }

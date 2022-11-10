@@ -9,5 +9,7 @@ namespace MidCapERP.DataAccess.Interface
         public Task<WrkImportCustomers> GetById(Int64 Id, CancellationToken cancellationToken);
 
         public Task<WrkImportCustomers> Create(WrkImportCustomers model, CancellationToken cancellationToken);
+
+        public Task<WrkImportCustomers> Update(WrkImportCustomers model, CancellationToken cancellationToken);
     }
 }

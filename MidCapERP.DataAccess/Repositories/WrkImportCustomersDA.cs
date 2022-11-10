@@ -18,6 +18,11 @@ namespace MidCapERP.DataAccess.Repositories
             return await _wrkImportCustomers.InsertAsync(model, cancellationToken);
         }
 
+        public async Task<WrkImportCustomers> Update(WrkImportCustomers model, CancellationToken cancellationToken)
+        {
+            return await _wrkImportCustomers.UpdateAsync(model, cancellationToken);
+        }
+
         public async Task<IQueryable<WrkImportCustomers>> GetAll(CancellationToken cancellationToken)
         {
             return await _wrkImportCustomers.GetAsync(cancellationToken);

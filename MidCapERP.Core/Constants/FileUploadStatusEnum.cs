@@ -7,5 +7,6 @@
         Completed = 2,
         Failed = 3,
         PartialyCompleted = 4,
+        AlreadyExists = 5
     }
 }
