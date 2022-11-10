@@ -110,7 +110,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             ApplicationUser applicationUser = new ApplicationUser();
             applicationUser.FirstName = model.FirstName;
             applicationUser.LastName = model.LastName;
-            applicationUser.UserName = model.UserName;
+            applicationUser.UserName = model.Email;
             applicationUser.Email = model.Email;
             applicationUser.PhoneNumber = model.PhoneNumber;
             applicationUser.IsActive = true;
