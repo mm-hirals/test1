@@ -42,5 +42,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
         ISendSMSservice SendSMSservice { get; }
         IEmailHelper EmailHelper { get; }
+        IWrkImportFilesBL WrkImportFilesBL { get; }
+        IWrkImportCustomersBL WrkImportCustomersBL { get; }
     }
 }

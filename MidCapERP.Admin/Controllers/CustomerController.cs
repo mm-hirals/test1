@@ -1,21 +1,30 @@
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.WrkImportCustomers;
+using MidCapERP.Dto.WrkImportFiles;
+using System.Data;
+using System.Globalization;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly CurrentUser _currentUser;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _currentUser = currentUser;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -129,8 +138,31 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
-        public async Task Import_Export_Customer(CancellationToken cancellationToken)
+        [HttpGet]
+        public ActionResult ImportCustomer()
         {
+            WrkImportFilesRequestDto wrkImportFilesRequestDto = new WrkImportFilesRequestDto();
+            return View(wrkImportFilesRequestDto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ImportCustomer(WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (entity != null && entity.formFile != null)
+                {
+                    var wrkFileEntity = CovertRequestDtoToWrkImportFilesDto(entity);
+                    var wrkFileData = await _unitOfWorkBL.WrkImportFilesBL.CreateWrkImportFiles(wrkFileEntity, cancellationToken);
+                    var getWrkCustomerList = CustomerFileImport(entity, wrkFileData.WrkImportFileID);
+                    await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return RedirectToAction("Index");
         }
 
         public async Task<bool> DuplicateCustomerPhoneNumber(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
@@ -159,6 +191,92 @@ namespace MidCapERP.Admin.Controllers
             {
                 throw;
             }
+        }
+
+        private static List<WrkImportCustomersDto> CustomerFileImport(WrkImportFilesRequestDto entity, long WrkImportFileID)
+        {
+            string[] customerHeaderArray = { "FirstName", "LastName", "PrimaryContactNumber", "AlternateContactNumber", "EmailID", "GSTNo", "Street1", "Street2", "Landmark", "Area", "City", "State", "PinCode" };
+            List<WrkImportCustomersDto> insertWrkImportCustomersDtos = new List<WrkImportCustomersDto>();
+            DataTable data = new DataTable();
+
+            if (entity.formFile != null && !string.IsNullOrEmpty(entity.formFile.FileName) && entity.formFile.FileName.ToLower().Contains(".csv"))
+            {
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    PrepareHeaderForMatch = args => args.Header.ToLower(),
+                };
+                using (var reader = new StreamReader(entity.formFile.OpenReadStream()))
+                using (var csv = new CsvReader(reader, config))
+                {
+                    csv.Read();
+                    csv.ReadHeader();
+                    string[] csvHeaders = csv.HeaderRecord;
+                    string[] headers = new string[csvHeaders.Length];
+                    for (int i = 0; i < csvHeaders.Length; i++)
+                    {
+                        if (csvHeaders[i] == null)
+                        {
+                            headers[i] = "Column" + (i + 1);
+                        }
+                        else
+                        {
+                            headers[i] = csvHeaders[i].Trim();
+                        }
+                    }
+                    if (headers.SequenceEqual(customerHeaderArray))
+                    {
+                        var records = csv.GetRecords<WrkImportCustomersCSV>().ToList();
+                        if (records != null && records.Count() > 0)
+                        {
+                            foreach (var item in records)
+                            {
+                                WrkImportCustomersDto wrkImportCustomersDto = new WrkImportCustomersDto()
+                                {
+                                    WrkImportFileID = WrkImportFileID,
+                                    AlternateContactNumber = item.AlternateContactNumber != "" ? item.AlternateContactNumber : null,
+                                    Area = item.Area != "" ? item.Area : null,
+                                    City = item.City != "" ? item.City : null,
+                                    EmailID = item.EmailID != "" ? item.EmailID : null,
+                                    FirstName = item.FirstName != "" ? item.FirstName : null,
+                                    GSTNo = item.GSTNo != "" ? item.GSTNo : null,
+                                    Landmark = item.Landmark != "" ? item.Landmark : null,
+                                    LastName = item.LastName != "" ? item.LastName : null,
+                                    PrimaryContactNumber = item.PrimaryContactNumber != "" ? item.PrimaryContactNumber : null,
+                                    State = item.State != "" ? item.State : null,
+                                    Status = (int)FileUploadStatusEnum.Pending,
+                                    Stree2 = item.Stree2 != "" ? item.Stree2 : null,
+                                    Street1 = item.Street1 != "" ? item.Street1 : null,
+                                    ZipCode = item.PinCode != "" ? item.PinCode : null,
+                                };
+                                insertWrkImportCustomersDtos.Add(wrkImportCustomersDto);
+                            }
+                        }
+                    }
+                }
+            }
+            return insertWrkImportCustomersDtos;
+        }
+
+        private WrkImportFilesDto CovertRequestDtoToWrkImportFilesDto(WrkImportFilesRequestDto entity)
+        {
+            int count = 0;
+            using (StreamReader file = new StreamReader(entity.formFile.OpenReadStream()))
+            {
+                while (file.ReadLine() != null)
+                    count++;
+                file.Close();
+            }
+
+            return new WrkImportFilesDto()
+            {
+                FileType = "Customer",
+                ImportFileName = entity.formFile.FileName,
+                TotalRecords = count - 1,
+                Status = (int)FileUploadStatusEnum.Pending,
+                CreatedBy = _currentUser.UserId,
+                CreatedDate = DateTime.Now,
+                CreatedUTCDate = DateTime.UtcNow,
+            };
         }
 
         #endregion Private Method
