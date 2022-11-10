@@ -142,6 +142,19 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data deleted successful", result: null, statusCode: 200);
         }
 
+        [HttpPatch("ApprovedOrDeclined")]
+        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        public async Task<ApiResponse> UpdateOrderApprovedOrDeclined([FromBody] OrderUpdateApproveOrDeclineAPI orderUpdateApproveOrDeclineAPI, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.UpdateOrderApprovedOrDeclinedAPI(orderUpdateApproveOrDeclineAPI, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+
         #region Private Methods
 
         private void ValidationRequest(OrderApiRequestDto orderRequestDto)

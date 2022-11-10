@@ -431,6 +431,18 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
 
+        public async Task<OrderApiResponseDto> UpdateOrderApprovedOrDeclinedAPI(OrderUpdateApproveOrDeclineAPI model, CancellationToken cancellationToken)
+        {
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(model.OrderId, cancellationToken);
+            orderById.Status = Convert.ToInt32(model.IsOrderApproved == true ? OrderStatusEnum.Approved : OrderStatusEnum.Declined);
+            orderById.Comments = model.Comments;
+            orderById.UpdatedBy = _currentUser.UserId;
+            orderById.UpdatedDate = DateTime.Now;
+            orderById.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+            return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
+        }
+
         public async Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
         {
             var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
