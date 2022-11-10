@@ -6,7 +6,6 @@ using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Tenant;
 using MidCapERP.Dto.TenantBankDetail;
-using MidCapERP.Dto.TenantSMTPDetail;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -22,14 +21,14 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             var tenantRequestDto = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
             return View("Index", tenantRequestDto);
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.View)]
         public async Task<IActionResult> GetFilterTenantBankDetailData([FromForm] TenantBankDetailDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.TenantBankDetailBL.GetFilterTenantBankDetailData(dataTableFilterDto, cancellationToken);
@@ -37,7 +36,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.Create)]
         public async Task<IActionResult> UpdateTenant(TenantRequestDto tenantRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBL.UpdateTenant(tenantRequestDto, cancellationToken);
@@ -46,14 +45,14 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.Create)]
         public async Task<IActionResult> CreateTenantBankDetail(CancellationToken cancellationToken)
         {
             return PartialView("_TenantBankDetailPartial");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.Create)]
         public async Task<IActionResult> CreateTenantBankDetail(TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBankDetailBL.CreateTenantBankDetail(tenantBankDetailRequestDto, cancellationToken);
@@ -68,7 +67,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.Create)]
         public async Task<IActionResult> UpdateTenantBankDetail(int Id, TenantBankDetailRequestDto tenantBankDetailRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBankDetailBL.UpdateTenantBankDetail(Id, tenantBankDetailRequestDto, cancellationToken);
@@ -76,7 +75,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Profile.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProfile.Create)]
         public async Task<IActionResult> DeleteTenantBankDetail(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.TenantBankDetailBL.DeleteTenantBankDetail(Id, cancellationToken);

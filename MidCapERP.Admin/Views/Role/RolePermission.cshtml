@@ -46,11 +46,10 @@
                         <table class="table c-table c-table-stripted">
                             <thead>
                                 <tr>
+                                    <th>Application</th>
                                     <th>Modules</th>
-                                    <th>Create</th>
-                                    <th>View</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
+                                    <th>Permissions</th>
+                                    <th>HasCheck</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -58,55 +57,24 @@
                                 {
                                     foreach (var item in Model.ModulePermissionList)
                                     {
-                                        <tr>
-                                            <td>@item.Module</td>
-                                            @foreach (var permission in item.ModulePermissionList)
-                                            {
+                                        @foreach (var module in item.RolePermissionList)
+                                        {
+                                            <tr>
+                                                <td>@item.ApplicationType</td>
+                                                <td>@module.Module</td>
+                                                <td>@Convert.ToString(module.Permission.Replace(item.ApplicationType,"").Replace(module.Module,"").Replace("Permissions","").Replace(".",""))</td>
                                                 <td>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
-                                                        <label class="custom-control-label" for="@permission.Id">Active</label>
+                                                        <input type="checkbox" class="custom-control-input" id="@module.Id" value="@module.Permission" @module.IsChecked>
+                                                        <label class="custom-control-label" for="@module.Id">Active</label><br>
                                                     </div>
                                                 </td>
-                                            }
-                                        </tr>
+                                            </tr>
+                                        }
                                     }
                                 }
                             </tbody>
                         </table>
-                        @*<div class="row">
-                            <div class="col-4">Modules</div>
-                            <div class="col-8">
-                            <div class="row">
-                            <div class="col-md-3">Create</div>
-                            <div class="col-md-3">View</div>
-                            <div class="col-md-3">Update</div>
-                            <div class="col-md-3">Delete</div>
-                            </div>
-                            </div>
-                            </div>
-                            @if (Model != null)
-                            {
-                            foreach (var item in Model.ModulePermissionList)
-                            {
-                            <div class="row">
-                            <div class="col-4">@item.Module</div>
-                            <div class="col-8">
-                            <div class="row">
-                            @foreach (var permission in item.ModulePermissionList)
-                            {
-                            <div class="col-md-3">
-                            <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
-                            <label class="custom-control-label" for="@permission.Id"></label>
-                            </div>
-                            </div>
-                            }
-                            </div>
-                            </div>
-                            </div>
-                            }
-                            }*@
                     </div>
                 </div>
             </div>
@@ -118,6 +86,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
-    <script asp-src-include="~/js/RolePermission.js"></script>
+        <script asp-src-include="~/js/RolePermission.js"></script>
     }
-}
+    }

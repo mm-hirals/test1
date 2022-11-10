@@ -21,7 +21,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> Get(long id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderDetailByOrderIdAPI(id, cancellationToken);
@@ -33,7 +33,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("OrderStatus/{status}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> GetOrderbyStatus(string status, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderForDetailsByStatus(status, cancellationToken);
@@ -45,7 +45,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("GetReceiveMaterial/{id}/{orderSetItemId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> GetOrderbyReceiveMaterial(long id, long orderSetItemId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderReceiveMaterial(id, orderSetItemId, cancellationToken);
@@ -57,7 +57,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("ShareOrder/{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> GetShareOrderByOrderId(long id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetById(id, cancellationToken);
@@ -69,7 +69,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Create)]
         public async Task<ApiResponse> Post([FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
             ValidationRequest(orderRequestApiDto);
@@ -82,7 +82,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Create)]
         public async Task<ApiResponse> Put(Int64 id, [FromBody] OrderApiRequestDto orderRequestApiDto, CancellationToken cancellationToken)
         {
             ValidationRequest(orderRequestApiDto);
@@ -95,7 +95,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPatch("{id}/{advanceAmount}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Create)]
         public async Task<ApiResponse> UpdateOrderAdvanceAmount(Int64 id, decimal advanceAmount, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderAdvanceAmountAPI(id, advanceAmount, cancellationToken);
@@ -107,7 +107,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPatch("SendForApproval")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Create)]
         public async Task<ApiResponse> UpdateOrderSendForApproval([FromBody] OrderUpdateStatusAPI orderUpdateStatusAPI, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderSendForApproval(orderUpdateStatusAPI, cancellationToken);
@@ -119,7 +119,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPatch("ReceiveMaterial")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Create)]
         public async Task<ApiResponse> UpdateOrderReceiveMaterial([FromForm] OrderUpdateReceiveMaterialAPI orderUpdateReceiveMaterialAPI, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderReceiveMaterial(orderUpdateReceiveMaterialAPI, cancellationToken);
@@ -131,7 +131,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPost("DeleteOrder")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Delete)]
         public async Task<ApiResponse> DeleteOrder([FromBody] OrderDeleteApiRequestDto orderDeleteApiRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.OrderBL.DeleteOrderAPI(orderDeleteApiRequestDto, cancellationToken);

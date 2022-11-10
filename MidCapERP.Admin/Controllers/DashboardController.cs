@@ -25,7 +25,10 @@ namespace MidCapERP.Admin.Controllers
             _toastNotification = toastNotification;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.OrdersView)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.CustomersView)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.InteriorsView)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.ProductsView)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             try
@@ -49,7 +52,10 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.OrdersView)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.CustomersView)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.InteriorsView)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalDashboard.ProductsView)]
         public IActionResult IndexNew(CancellationToken cancellationToken)
         {
             return View();

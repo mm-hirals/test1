@@ -24,14 +24,14 @@ namespace MidCapERP.Admin.Controllers
             _commonMethod = commonMethod;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.View)]
         public async Task<IActionResult> GetProductData([FromForm] ProductDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ProductBL.GetFilterProductData(dataTableFilterDto, cancellationToken);
@@ -39,7 +39,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return View("ProductMain");
@@ -142,7 +142,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             ProductMainRequestDto prdMainDto = new ProductMainRequestDto();
@@ -193,7 +193,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ProductBL.DeleteProduct(Id, cancellationToken);
@@ -201,7 +201,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.Create)]
         public async Task<JsonResult> UpdateProductStatus([FromForm] ProductMainRequestDto productMainRequestDto, CancellationToken cancellationToken)
         {
             try

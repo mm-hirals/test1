@@ -19,7 +19,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> Get(int id, CancellationToken cancellationToken)
         {
             var productData = await _unitOfWorkBL.ProductBL.GetByIdAPI(id, cancellationToken);
@@ -31,7 +31,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("detailsModelNo/{modelNo}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, CancellationToken cancellationToken)
         {
             var productDetailsData = await _unitOfWorkBL.ProductBL.GetProductForDetailsByModuleNo(modelNo, cancellationToken);
@@ -43,7 +43,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPost("GetPriceByDimensions")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> GetPriceByDimensions([FromBody] ProductDimensionsApiRequestDto orderCalculationApiRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ProductBL.GetPriceByDimensionsAPI(orderCalculationApiRequestDto, cancellationToken);

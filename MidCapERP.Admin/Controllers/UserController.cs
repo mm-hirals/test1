@@ -17,14 +17,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.View)]
         public async Task<IActionResult> GetUserData([FromForm] UserDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.UserBL.GetFilterUserData(dataTableFilterDto, cancellationToken);
@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillAspNetRoleDropDown(cancellationToken);
@@ -40,7 +40,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.Create)]
         public async Task<IActionResult> Create(UserRequestDto userRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UserBL.CreateUser(userRequestDto, cancellationToken);
@@ -48,7 +48,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             await FillAspNetRoleDropDown(cancellationToken);
@@ -57,7 +57,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.Create)]
         public async Task<IActionResult> Update(int Id, UserRequestDto userRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UserBL.UpdateUser(Id, userRequestDto, cancellationToken);
@@ -65,7 +65,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UserBL.DeleteUser(Id, cancellationToken);

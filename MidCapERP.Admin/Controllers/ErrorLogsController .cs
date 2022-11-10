@@ -16,7 +16,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.ErrorLogs.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalErrorLogs.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View(await GetAllErrorLogs(cancellationToken));
