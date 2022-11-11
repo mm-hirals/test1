@@ -142,7 +142,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPatch("ApprovedOrDeclined")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.Approve)]
         public async Task<ApiResponse> UpdateOrderApprovedOrDeclined([FromBody] OrderUpdateApproveOrDeclineAPI orderUpdateApproveOrDeclineAPI, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.UpdateOrderApprovedOrDeclinedAPI(orderUpdateApproveOrDeclineAPI, cancellationToken);
