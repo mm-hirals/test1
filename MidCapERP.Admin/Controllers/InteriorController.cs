@@ -17,14 +17,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Interior.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Interior.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.View)]
         public async Task<IActionResult> GetInteriorsData([FromForm] InteriorDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.InteriorsBL.GetFilterInteriorsData(dataTableFilterDto, cancellationToken);
@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.InteriorAddresses.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.View)]
         public async Task<IActionResult> GetInteriorAddressesData([FromForm] InteriorAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.InteriorAddressesBL.GetFilterInteriorAddressesData(dataTableFilterDto, cancellationToken);
@@ -40,14 +40,14 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Interior.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("InteriorEdit");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Interior.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> Create(InteriorRequestDto interiorsRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.InteriorsBL.CreateInteriors(interiorsRequestDto, cancellationToken);
@@ -55,7 +55,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.InteriorAddresses.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> CreateInteriorAddress(int customerId, CancellationToken cancellationToken)
         {
             InteriorAddressesRequestDto dto = new();
@@ -64,7 +64,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.InteriorAddresses.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> CreateInteriorAddress(InteriorAddressesRequestDto interiorsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.InteriorAddressesBL.CreateInteriorAddresses(interiorsRequestDto, cancellationToken);
@@ -72,7 +72,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Interior.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
             var interiors = await _unitOfWorkBL.InteriorsBL.GetById(Id, cancellationToken);
@@ -80,7 +80,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Interior.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> Update(Int64 Id, InteriorRequestDto interiorsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.InteriorsBL.UpdateInteriors(Id, interiorsRequestDto, cancellationToken);
@@ -88,7 +88,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.InteriorAddresses.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> UpdateInteriorAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var interiorsAddress = await _unitOfWorkBL.InteriorAddressesBL.GetById(Id, cancellationToken);
@@ -96,7 +96,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.InteriorAddresses.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> UpdateInteriorAddresses(Int64 Id, InteriorAddressesRequestDto interiorsAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.InteriorAddressesBL.UpdateInteriorAddresses(Id, interiorsAddressRequestDto, cancellationToken);
@@ -104,7 +104,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.InteriorAddresses.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Delete)]
         public async Task<IActionResult> DeleteInteriorAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.InteriorAddressesBL.DeleteInteriorAddresses(Id, cancellationToken);

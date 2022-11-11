@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.Core.Constants;
-using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
 using NToastNotify;
@@ -24,7 +23,7 @@ namespace MidCapERP.Admin.Controllers
             _toastNotification = toastNotification;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
@@ -63,6 +62,7 @@ namespace MidCapERP.Admin.Controllers
             else
                 return Redirect(returnUrl);
         }
+
         /// <summary>
         ///
         /// </summary>

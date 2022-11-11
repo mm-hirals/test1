@@ -17,14 +17,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.View)]
         public async Task<IActionResult> GetPolishData([FromForm] PolishDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.PolishBL.GetFilterPolishData(dataTableFilterDto, cancellationToken);
@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCompanyNameDropDown(cancellationToken);
@@ -41,7 +41,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.Create)]
         public async Task<IActionResult> Create(PolishRequestDto PolishRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.PolishBL.CreatePolish(PolishRequestDto, cancellationToken);
@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             await FillCompanyNameDropDown(cancellationToken);
@@ -59,7 +59,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.Create)]
         public async Task<IActionResult> Update(int Id, PolishRequestDto PolishRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.PolishBL.UpdatePolish(Id, PolishRequestDto, cancellationToken);
@@ -67,7 +67,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Polish.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalPolish.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.PolishBL.DeletePolish(Id, cancellationToken);

@@ -17,14 +17,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.View)]
         public async Task<IActionResult> GetRawMaterialData([FromForm] RawMaterialDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.RawMaterialBL.GetFilterRawMaterialData(dataTableFilterDto, cancellationToken);
@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillUnitNameDropDown(cancellationToken);
@@ -40,7 +40,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.Create)]
         public async Task<IActionResult> Create(RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.RawMaterialBL.CreateRawMaterial(rawMaterialRequestDto, cancellationToken);
@@ -48,7 +48,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             await FillUnitNameDropDown(cancellationToken);
@@ -57,7 +57,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.Create)]
         public async Task<IActionResult> Update(int Id, RawMaterialRequestDto rawMaterialRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.RawMaterialBL.UpdateRawMaterial(Id, rawMaterialRequestDto, cancellationToken);
@@ -65,7 +65,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.RawMaterial.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRawMaterial.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.RawMaterialBL.DeleteRawMaterial(Id, cancellationToken);

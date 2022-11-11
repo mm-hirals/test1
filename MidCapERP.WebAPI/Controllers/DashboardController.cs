@@ -18,7 +18,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("OrderReceivableCount")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppDashboard.ReceivableOrdersView)]
         public async Task<ApiResponse> OrderReceivableCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderReceivableCount(cancellationToken);
@@ -30,7 +30,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("OrderApprovedCount")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppDashboard.ApprovedOrdersView)]
         public async Task<ApiResponse> OrderApprovedCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderApprovedCount(cancellationToken);
@@ -42,7 +42,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("OrderPendingApprovalCount")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppDashboard.PendingOrdersView)]
         public async Task<ApiResponse> OrderPendingApprovalCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderPendingApprovalCount(cancellationToken);
@@ -54,7 +54,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("OrderFollowUpCount")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Dashboard.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppDashboard.FollowupOrdersView)]
         public async Task<ApiResponse> OrderFollowUpCount(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetOrderFollowUpCount(cancellationToken);
