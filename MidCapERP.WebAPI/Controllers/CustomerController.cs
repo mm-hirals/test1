@@ -21,7 +21,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
         public async Task<ApiResponse> Get(Int64 id, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetCustomerByIdAPI(id, cancellationToken);
@@ -33,7 +33,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> Put(int id, [FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
             ValidationRequest(customerApiRequestDto);
@@ -46,7 +46,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> Post([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
             ValidationRequest(customerApiRequestDto);
@@ -59,7 +59,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("CheckCustomer")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
         public async Task<ApiResponse> CheckCustomers(string phoneNumberOrEmail, CancellationToken cancellationToken)
         {
             bool data = await _unitOfWorkBL.CustomersBL.CheckCustomerExistOrNot(phoneNumberOrEmail, cancellationToken);
@@ -71,7 +71,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("CustomerAddress/{customerId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
         public async Task<ApiResponse> GetCustomerAddress(long customerId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerById(customerId, cancellationToken);
@@ -83,7 +83,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("GetCustomerAddress/{customerAddressId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
         public async Task<ApiResponse> GetCustomerAddressById(long customerAddressId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetCustomerAddressById(customerAddressId, cancellationToken);
@@ -95,7 +95,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPut("CustomerAddress/{customerAddressId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> UpdateCustomerAddress(int customerAddressId, [FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
         {
             ValidationRequest(customerAddressesRequestDto);
@@ -108,7 +108,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpPost("CustomerAddress")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> CreateCustomerAddress([FromBody] CustomerAddressesApiRequestDto customerAddressesRequestDto, CancellationToken cancellationToken)
         {
             ValidationRequest(customerAddressesRequestDto);
@@ -121,7 +121,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpDelete("CustomerAddress/{customerAddressId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> DeleteCustomerAddress(int customerAddressId, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(customerAddressId, cancellationToken);
@@ -133,7 +133,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("Search/{CustomerNameOrEmailOrMobileNo}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
         public async Task<ApiResponse> SearchCustomer(string CustomerNameOrEmailOrMobileNo, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.SearchCustomer(CustomerNameOrEmailOrMobileNo, cancellationToken);
@@ -145,7 +145,7 @@ namespace MidCapERP.WebAPI.Controllers
         }
 
         [HttpGet("SearchForCustomerDropdown/{searchText}")]
-        [Authorize((ApplicationIdentityConstants.Permissions.Customer.View))]
+        [Authorize((ApplicationIdentityConstants.Permissions.AppCustomer.View))]
         public async Task<ApiResponse> SearchDropDownRefferedBy(string searchText, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetSearchCustomerForDropDownNameOrPhoneNumber(searchText, cancellationToken);

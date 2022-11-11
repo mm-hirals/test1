@@ -18,14 +18,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return base.View(await GetAllContractors(cancellationToken));
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.View)]
         public async Task<IActionResult> GetContractorData([FromForm] DataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ContractorsBL.GetFilterContractorData(dataTableFilterDto, cancellationToken);
@@ -33,7 +33,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCategoryDropDown(cancellationToken);
@@ -41,7 +41,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.Create)]
         public async Task<IActionResult> Create(ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ContractorsBL.CreateContractor(contractorsRequestDto, cancellationToken);
@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var contractors = await _unitOfWorkBL.ContractorsBL.GetContractorCategoryMappingById(Id, cancellationToken);
@@ -58,7 +58,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.Create)]
         public async Task<IActionResult> Update(int Id, ContractorsRequestDto contractorsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ContractorsBL.UpdateContractor(Id, contractorsRequestDto, cancellationToken);
@@ -66,7 +66,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Contractor.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalContractor.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ContractorsBL.DeleteContractor(Id, cancellationToken);

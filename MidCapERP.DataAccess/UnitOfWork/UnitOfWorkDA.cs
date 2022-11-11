@@ -13,11 +13,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public IContractorCategoryMappingDA ContractorCategoryMappingDA { get; }
         public ICustomersDA CustomersDA { get; }
         public IErrorLogsDA ErrorLogsDA { get; }
-        public IAccessoriesTypeDA AccessoriesTypeDA { get; }
         public IRawMaterialDA RawMaterialDA { get; }
-        public IAccessoriesDA AccessoriesDA { get; }
         public IFabricDA FabricDA { get; }
-        public IFrameDA FrameDA { get; }
         public IPolishDA PolishDA { get; }
         public ITenantDA TenantDA { get; }
         public IUserTenantMappingDA UserTenantMappingDA { get; }
@@ -41,43 +38,40 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public ITenantSMTPDetailDA TenantSMTPDetailDA { get; }
         public INotificationManagementDA NotificationManagementDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IAccessoriesTypeDA accessoriesTypesDA, IRawMaterialDA rawMaterialDA, IAccessoriesDA accessoriesDA, IFabricDA fabricDA, IFrameDA frameDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, ICategoriesDA categoriesDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA, INotificationManagementDA notificationManagementDA, IOrderSetItemImageDA orderSetItemImageDA, IOrderSetItemReceivableDA orderSetItemReceivableDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IRawMaterialDA rawMaterialDA, IFabricDA fabricDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, ICategoriesDA categoriesDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA, INotificationManagementDA notificationManagementDA, IOrderSetItemImageDA orderSetItemImageDA, IOrderSetItemReceivableDA orderSetItemReceivableDA)
         {
-            this._context = context;
-            this.ContractorsDA = contractorsDA;
-            this.LookupsDA = lookupsDA;
-            this.SubjectTypesDA = subjectTypesDA;
-            this.LookupValuesDA = lookupValuesDA;
-            this.ContractorCategoryMappingDA = contractorCategoryMappingDa;
-            this.CustomersDA = customersDA;
-            this.ErrorLogsDA = errorLogsDA;
-            this.AccessoriesTypeDA = accessoriesTypesDA;
-            this.RawMaterialDA = rawMaterialDA;
-            this.AccessoriesDA = accessoriesDA;
-            this.FabricDA = fabricDA;
-            this.FrameDA = frameDA;
-            this.PolishDA = polishDA;
-            this.UserTenantMappingDA = userTenantMappingDA;
-            this.TenantDA = tenantDA;
-            this.UserDA = userDA;
-            this.CustomerAddressesDA = customerAddressesDA;
-            this.CustomerTypesDA = customerTypesDA;
-            this.ProductDA = productDA;
-            this.ProductImageDA = productImageDA;
-            this.ProductMaterialDA = productMaterialDA;
-            this.CategoriesDA = categoriesDA;
-            this.RoleDA = roleDA;
-            this.RolePermissionDA = rolePermissionDA;
-            this.OrderDA = orderDA;
-            this.TenantBankDetailDA = tenantBankDetailDA;
-            this.OrderSetDA = orderSetDA;
-            this.OrderSetItemDA = orderSetItemDA;
-            this.ActivityLogsDA = activityLogsDA;
-            this.OrderAddressDA = orderAddressDA;
-            this.TenantSMTPDetailDA = tenantSMTPDetailDA;
-            this.NotificationManagementDA = notificationManagementDA;
-            this.OrderSetItemImageDA = orderSetItemImageDA;
-            this.OrderSetItemReceivableDA = orderSetItemReceivableDA;
+            _context = context;
+            ContractorsDA = contractorsDA;
+            LookupsDA = lookupsDA;
+            SubjectTypesDA = subjectTypesDA;
+            LookupValuesDA = lookupValuesDA;
+            ContractorCategoryMappingDA = contractorCategoryMappingDa;
+            CustomersDA = customersDA;
+            ErrorLogsDA = errorLogsDA;
+            RawMaterialDA = rawMaterialDA;
+            FabricDA = fabricDA;
+            PolishDA = polishDA;
+            UserTenantMappingDA = userTenantMappingDA;
+            TenantDA = tenantDA;
+            UserDA = userDA;
+            CustomerAddressesDA = customerAddressesDA;
+            CustomerTypesDA = customerTypesDA;
+            ProductDA = productDA;
+            ProductImageDA = productImageDA;
+            ProductMaterialDA = productMaterialDA;
+            CategoriesDA = categoriesDA;
+            RoleDA = roleDA;
+            RolePermissionDA = rolePermissionDA;
+            OrderDA = orderDA;
+            TenantBankDetailDA = tenantBankDetailDA;
+            OrderSetDA = orderSetDA;
+            OrderSetItemDA = orderSetItemDA;
+            ActivityLogsDA = activityLogsDA;
+            OrderAddressDA = orderAddressDA;
+            TenantSMTPDetailDA = tenantSMTPDetailDA;
+            NotificationManagementDA = notificationManagementDA;
+            OrderSetItemImageDA = orderSetItemImageDA;
+            OrderSetItemReceivableDA = orderSetItemReceivableDA;
         }
 
         #region TransactionMethod

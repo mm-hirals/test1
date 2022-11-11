@@ -25,7 +25,7 @@ namespace MidCapERP.WebAPI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{searchText}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppMegaSearch.View)]
         public async Task<ApiResponse> MegaSearch(string searchText, CancellationToken cancellationToken)
         {
             List<MegaSearchResponse> productData = new List<MegaSearchResponse>();

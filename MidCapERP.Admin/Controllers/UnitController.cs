@@ -16,14 +16,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.View)]
         public async Task<IActionResult> GetUnitData([FromForm] UnitDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.UnitBL.GetFilterUnitData(dataTableFilterDto, cancellationToken);
@@ -31,14 +31,14 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_UnitPartial");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.Create)]
         public async Task<IActionResult> Create(UnitRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UnitBL.CreateUnit(lookupsRequestDto, cancellationToken);
@@ -46,7 +46,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var lookups = await _unitOfWorkBL.UnitBL.GetById(Id, cancellationToken);
@@ -54,7 +54,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.Create)]
         public async Task<IActionResult> Update(int Id, UnitRequestDto lookupsRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UnitBL.UpdateUnit(Id, lookupsRequestDto, cancellationToken);
@@ -62,7 +62,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Unit.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUnit.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.UnitBL.DeleteUnit(Id, cancellationToken);

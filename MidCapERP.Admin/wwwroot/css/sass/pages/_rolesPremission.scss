@@ -1,0 +1,79 @@
+.card-main--warpper {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.3%;
+
+    .main-list--warpper {
+        flex: 0 0 24%;
+        max-width: 24%;
+        margin: 0 0 15px;
+        padding: 0px;
+        border: 1px solid rgba($black, 0.08);
+        border-radius: 5px;
+        overflow: hidden;
+        .permission--title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;            
+            background-color: $offWhite;
+            padding: 5px 14px 5px 10px;            
+            color: $primary;
+            margin: 0;
+            span{
+                font-weight: 700;
+                font-size: 18px;
+            }
+            .custom-control {
+                margin-left: 15px;
+            }
+        }
+
+        .sub-list--wrapper {
+            padding: 5px 0 0;
+            margin: 0 15px 15px;            
+            list-style-type: none;
+            position: relative;
+            &:before {
+                position: absolute;
+                content: "";
+                border-left:1px dashed $gray;
+                height: calc(100% - 12px);
+                width: 1px;
+                top: 0;
+                left: 0;
+            }
+        }
+
+        .sub-list-item--wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 0 0 0 40px;
+            margin: 0;
+            justify-content: space-between;
+
+            &:before {
+                position: absolute;
+                content: "";
+                height: 1px;
+                width: 35px;
+                border-top: 1px dashed $gray;
+                left: 0;
+                top: calc(50% - 1px);
+            }
+
+            .custom-control {
+                margin-left: 15px;
+            }
+
+            +.sub-list-item--wrapper {
+                margin-top: 10px;
+            }
+        }
+    }
+}

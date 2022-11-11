@@ -36,80 +36,52 @@
     {
         <nav class="product-nav-tab--sticky">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Role Claims</button>
+                @foreach (var item in Model.ModulePermissionList)
+                {
+                    <button class="nav-link @(item.ApplicationType == "Portal" ? "active" : "")" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail_@item.ApplicationType" type="button" role="tab" aria-controls="nav-home" aria-selected="true">@item.ApplicationType Permissions</button>
+                }
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
-                <div class="c-card--wrapper c-card-sm--wrapper">
-                    <div class="c-card--body">
-                        <table class="table c-table c-table-stripted">
-                            <thead>
-                                <tr>
-                                    <th>Modules</th>
-                                    <th>Create</th>
-                                    <th>View</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model != null)
+            @foreach (var item in Model.ModulePermissionList)
+            {
+                <div class="tab-pane fade @(item.ApplicationType == "Portal" ? "active show" : "")" id="nav-detail_@item.ApplicationType" role="tabpanel" aria-labelledby="nav-images-tab">
+                    <div class="c-card--wrapper c-card-sm--wrapper">
+                        <div class="c-card--body">
+                            <ul class="card-main--warpper">
+                                @foreach (var module in item.RolePermissionList.DistinctBy(x => x.Module))
                                 {
-                                    foreach (var item in Model.ModulePermissionList)
-                                    {
-                                        <tr>
-                                            <td>@item.Module</td>
-                                            @foreach (var permission in item.ModulePermissionList)
+                                    <li class="main-list--warpper">
+                                        <div class="permission--title">
+                                            <span>
+                                                @module.Module
+                                            </span>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="@item.ApplicationType@module.Module" @module.IsChecked>
+                                                <label class="custom-control-label" for="@item.ApplicationType@module.Module">Active</label><br>
+                                            </div>
+                                        </div>
+                                        <ul class="sub-list--wrapper">
+                                            @foreach (var permission in item.RolePermissionList.Where(x => x.Module == module.Module))
                                             {
-                                                <td>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
-                                                        <label class="custom-control-label" for="@permission.Id">Active</label>
+                                                <li class="sub-list-item--wrapper">
+                                                    <div>
+                                                        @Convert.ToString(permission.Permission.Replace("Permissions.","").Replace(item.ApplicationType + ".","").Replace(permission.Module + ".",""))
                                                     </div>
-                                                </td>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input childPermission" id="@permission.Permission" value="@permission.Permission" @permission.IsChecked>
+                                                        <label class="custom-control-label" for="@permission.Permission">Active</label><br>
+                                                    </div>
+                                                </li>
                                             }
-                                        </tr>
-                                    }
+                                        </ul>
+                                    </li>
                                 }
-                            </tbody>
-                        </table>
-                        @*<div class="row">
-                            <div class="col-4">Modules</div>
-                            <div class="col-8">
-                            <div class="row">
-                            <div class="col-md-3">Create</div>
-                            <div class="col-md-3">View</div>
-                            <div class="col-md-3">Update</div>
-                            <div class="col-md-3">Delete</div>
-                            </div>
-                            </div>
-                            </div>
-                            @if (Model != null)
-                            {
-                            foreach (var item in Model.ModulePermissionList)
-                            {
-                            <div class="row">
-                            <div class="col-4">@item.Module</div>
-                            <div class="col-8">
-                            <div class="row">
-                            @foreach (var permission in item.ModulePermissionList)
-                            {
-                            <div class="col-md-3">
-                            <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
-                            <label class="custom-control-label" for="@permission.Id"></label>
-                            </div>
-                            </div>
-                            }
-                            </div>
-                            </div>
-                            </div>
-                            }
-                            }*@
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     }
 </div>
@@ -118,6 +90,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
-    <script asp-src-include="~/js/RolePermission.js"></script>
+        <script asp-src-include="~/js/RolePermission.js"></script>
     }
-}
+    }
