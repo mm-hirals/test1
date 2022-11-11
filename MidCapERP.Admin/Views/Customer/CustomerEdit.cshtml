@@ -60,7 +60,7 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="GSTNo" class="form-label"></label>
-                                <input asp-for="GSTNo" class="form-control" min="2" onkeyup="limit(this,15);"/>
+                                <input asp-for="GSTNo" class="form-control" minlength="2" onkeyup="limit(this,15);"/>
                                 <span asp-validation-for="GSTNo" class="text-danger"></span>
                             </div>
                         </div>
