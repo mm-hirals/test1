@@ -235,7 +235,7 @@
                                 <input type="hidden" id="hdnRetailerSP" value="@ViewBag.RetailerSP">
                                 <input type="hidden" id="hdnWholesalerSP" value="@ViewBag.WholesalerSP">
                                 <input type="hidden" id="hdnAmountRoundTo" value="@ViewBag.RoundTo">
-                                @if(Model.ProductRequestDto.isFixedPrice == false)
+                                @if(Model.isFixedPrice == false)
                                 {
                                     <input asp-for="CostPrice" class="form-control"  readonly="readonly">
                                 }

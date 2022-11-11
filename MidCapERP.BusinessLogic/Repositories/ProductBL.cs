@@ -208,7 +208,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             var getCategory = await _unitOfWorkDA.CategoriesDA.GetById(getProductInfoById.CategoryId, cancellationToken);
             bool isFixedPrice = getCategory.IsFixedPrice;
             ProductMainRequestDto productMain = new ProductMainRequestDto();
-            productMain.ProductRequestDto.isFixedPrice = isFixedPrice;
+            productMain.isFixedPrice = isFixedPrice;
             productMain.ProductId = Id;
             productMain.CostPrice = getProductInfoById.CostPrice;
 
