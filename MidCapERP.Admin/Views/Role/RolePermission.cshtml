@@ -52,25 +52,25 @@
                                 @foreach (var module in item.RolePermissionList.DistinctBy(x => x.Module))
                                 {
                                     <li class="main-list--warpper">
-                                        <h3 class="permission--title">
+                                        <div class="permission--title">
                                             <span>
                                                 @module.Module
                                             </span>
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="@module.Id" value="@module.Permission" @module.IsChecked>
-                                                <label class="custom-control-label" for="@module.Id">Active</label><br>
+                                                <input type="checkbox" class="custom-control-input" id="@module.Module" @module.IsChecked>
+                                                <label class="custom-control-label" for="@module.Module">Active</label><br>
                                             </div>
-                                        </h3>
+                                        </div>
                                         <ul class="sub-list--wrapper">
                                             @foreach (var permission in item.RolePermissionList.Where(x => x.Module == module.Module))
                                             {
                                                 <li class="sub-list-item--wrapper">
                                                     <div>
-                                                        @Convert.ToString(permission.Permission.Replace(item.ApplicationType,"").Replace(permission.Module,"").Replace("Permissions","").Replace(".",""))
+                                                        @Convert.ToString(permission.Permission.Replace("Permissions.","").Replace(item.ApplicationType + ".","").Replace(permission.Module + ".",""))
                                                     </div>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="@permission.Id" value="@permission.Permission" @permission.IsChecked>
-                                                        <label class="custom-control-label" for="@permission.Id">Active</label><br>
+                                                        <input type="checkbox" class="custom-control-input childPermission" id="@permission.Permission" value="@permission.Permission" @permission.IsChecked>
+                                                        <label class="custom-control-label" for="@permission.Permission">Active</label><br>
                                                     </div>
                                                 </li>
                                             }
