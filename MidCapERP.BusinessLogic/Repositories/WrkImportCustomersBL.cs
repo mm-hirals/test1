@@ -22,15 +22,25 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<List<WrkImportCustomersDto>> CreateWrkCustomer(List<WrkImportCustomersDto> model, CancellationToken cancellationToken)
         {
-            foreach (var item in model)
+            try
             {
-                var wrkCustomer = _mapper.Map<WrkImportCustomers>(item);
-                wrkCustomer.CreatedBy = _currentUser.UserId;
-                wrkCustomer.CreatedDate = DateTime.Now;
-                wrkCustomer.CreatedUTCDate = DateTime.UtcNow;
-                await _unitOfWorkDA.WrkImportCustomersDA.Create(wrkCustomer, cancellationToken);
+                await _unitOfWorkDA.BeginTransactionAsync();
+                foreach (var item in model)
+                {
+                    var wrkCustomer = _mapper.Map<WrkImportCustomers>(item);
+                    wrkCustomer.CreatedBy = _currentUser.UserId;
+                    wrkCustomer.CreatedDate = DateTime.Now;
+                    wrkCustomer.CreatedUTCDate = DateTime.UtcNow;
+                    await _unitOfWorkDA.WrkImportCustomersDA.Create(wrkCustomer, cancellationToken);
+                }
+                await _unitOfWorkDA.CommitTransactionAsync();
+                return _mapper.Map<List<WrkImportCustomersDto>>(model);
             }
-            return _mapper.Map<List<WrkImportCustomersDto>>(model);
+            catch (Exception)
+            {
+                await _unitOfWorkDA.rollbackTransactionAsync();
+                throw;
+            }
         }
 
         public async Task<IEnumerable<WrkImportCustomersDto>> GetAll(CancellationToken cancellationToken)

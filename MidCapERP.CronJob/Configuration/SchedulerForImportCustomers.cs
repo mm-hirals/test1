@@ -18,7 +18,7 @@ namespace MidCapERP.CronJob.Configuration
 
         public override async Task DoWork(CancellationToken cancellationToken)
         {
-            await _importCustomers.ImportCustomersFromCsvFile(cancellationToken);
+            //await _importCustomers.ImportCustomersFromCsvFile(cancellationToken);
         }
 
         public override async Task StopAsync(CancellationToken cancellationToken)

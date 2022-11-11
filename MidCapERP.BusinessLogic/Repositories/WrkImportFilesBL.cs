@@ -9,7 +9,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 {
     public class WrkImportFilesBL : IWrkImportFilesBL
     {
-        private IUnitOfWorkDA _unitOfWorkDA;
+        private readonly IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
         public readonly CurrentUser _currentUser;
 

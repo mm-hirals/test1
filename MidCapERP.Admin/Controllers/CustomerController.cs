@@ -18,13 +18,15 @@ namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
-        private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private IUnitOfWorkBL _unitOfWorkBL;
         private readonly CurrentUser _currentUser;
+        private readonly IServiceScopeFactory serviceScopeFactory;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser, IStringLocalizer<BaseController> localizer, IServiceScopeFactory serviceScopeFactory) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _currentUser = currentUser;
+            this.serviceScopeFactory = serviceScopeFactory;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -146,7 +148,8 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ImportCustomer(WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
+        public async Task<ActionResult> ImportCustomer([FromServices]IServiceScopeFactory
+                                    serviceScopeFactory, WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
         {
             try
             {
@@ -155,12 +158,21 @@ namespace MidCapERP.Admin.Controllers
                     var wrkFileEntity = CovertRequestDtoToWrkImportFilesDto(entity);
                     var wrkFileData = await _unitOfWorkBL.WrkImportFilesBL.CreateWrkImportFiles(wrkFileEntity, cancellationToken);
                     var getWrkCustomerList = CustomerFileImport(entity, wrkFileData.WrkImportFileID);
-                    await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
+
+                    Task.Run(async () =>
+                    {
+                        using (var scope = serviceScopeFactory.CreateScope())
+                        {
+                            _unitOfWorkBL = scope.ServiceProvider.GetRequiredService<IUnitOfWorkBL>();
+                            await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
+                            await _unitOfWorkBL.CustomersBL.ImportCustomers(wrkFileData.WrkImportFileID, cancellationToken);
+                        }
+                    }, cancellationToken).ConfigureAwait(false);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
             return RedirectToAction("Index");
         }
@@ -226,7 +238,7 @@ namespace MidCapERP.Admin.Controllers
                     if (headers.SequenceEqual(customerHeaderArray))
                     {
                         var records = csv.GetRecords<WrkImportCustomersCSV>().ToList();
-                        if (records != null && records.Count() > 0)
+                        if (records != null && records.Count > 0)
                         {
                             foreach (var item in records)
                             {
@@ -260,7 +272,7 @@ namespace MidCapERP.Admin.Controllers
         private WrkImportFilesDto CovertRequestDtoToWrkImportFilesDto(WrkImportFilesRequestDto entity)
         {
             int count = 0;
-            using (StreamReader file = new StreamReader(entity.formFile.OpenReadStream()))
+            using (StreamReader file = new(entity.formFile.OpenReadStream()))
             {
                 while (file.ReadLine() != null)
                     count++;
@@ -274,6 +286,7 @@ namespace MidCapERP.Admin.Controllers
                 TotalRecords = count - 1,
                 Status = (int)FileUploadStatusEnum.Pending,
                 CreatedBy = _currentUser.UserId,
+                TenantId = _currentUser.TenantId,
                 CreatedDate = DateTime.Now,
                 CreatedUTCDate = DateTime.UtcNow,
             };

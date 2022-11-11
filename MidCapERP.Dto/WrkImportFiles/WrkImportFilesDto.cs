@@ -4,6 +4,7 @@
     {
         public long WrkImportFileID { get; set; }
         public string FileType { get; set; }
+        public long TenantId { get; set; }
         public string ImportFileName { get; set; }
         public int TotalRecords { get; set; }
         public int? Success { get; set; }

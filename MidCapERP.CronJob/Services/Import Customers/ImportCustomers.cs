@@ -27,6 +27,8 @@ namespace MidCapERP.CronJob.Services.Import_Customers
         {
             try
             {
+                int successCount = 0;
+                int failedCount = 0;
                 await _unitOfWorkDA.BeginTransactionAsync();
                 var getWrkFiles = _wrkImportFilesDA.GetAll(cancellationToken).Result
                     .Where(x => x.FileType == "Customer" && x.Status == (int)FileUploadStatusEnum.Pending);
@@ -44,53 +46,59 @@ namespace MidCapERP.CronJob.Services.Import_Customers
                 // Get Customer data from WrkImportCustomer Table
                 if (getWrkFiles != null && getWrkFiles.ToList().Count > 0)
                 {
-                    var getWrkCustomers = _unitOfWorkDA.WrkImportCustomersDA.GetAll(cancellationToken).Result.Where(x => getWrkFiles.Select(c => c.WrkImportFileID).Contains(x.WrkImportFileID) && x.Status == (int)FileUploadStatusEnum.Pending).ToList();
-
-                    if (getWrkCustomers != null && getWrkCustomers.Count > 0)
+                    foreach (var file in getWrkFiles)
                     {
-                        foreach (var item in getWrkCustomers)
+                        successCount = 0;
+                        failedCount = 0;
+                        var getWrkCustomers = _unitOfWorkDA.WrkImportCustomersDA.GetAll(cancellationToken).Result.Where(x => x.WrkImportFileID == file.WrkImportFileID && x.Status == (int)FileUploadStatusEnum.Pending).ToList();
+
+                        if (getWrkCustomers != null && getWrkCustomers.Count > 0)
                         {
-                            try
+                            foreach (var item in getWrkCustomers)
                             {
-                                //check Customer From customer table with mobile number
-                                var getCustomer = _unitOfWorkDA.CustomersDA.GetAll(cancellationToken).Result.Where(z => z.PhoneNumber == item.PrimaryContactNumber).FirstOrDefault();
-
-                                if (getCustomer == null)
+                                try
                                 {
-                                    //Add Customer in customer Table
-                                    var customer = WrkCustomerToCustomerTable(item);
-                                    var createdCustomer = await _unitOfWorkDA.CustomersDA.CreateCustomers(customer, cancellationToken);
+                                    //check Customer From customer table with mobile number
+                                    var getCustomer = _unitOfWorkDA.CustomersDA.GetAll(cancellationToken).Result.Where(z => z.PhoneNumber == item.PrimaryContactNumber).FirstOrDefault();
 
-                                    //Add address in CustomerAddress Table for new created custmer
-                                    var customerAddress = WrkCustomerToCustomerAddress(createdCustomer.CustomerId, item);
-                                    await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(customerAddress, cancellationToken);
+                                    if (getCustomer == null)
+                                    {
+                                        //Add Customer in customer Table
+                                        var customer = WrkCustomerToCustomerTable(file.TenantId, item);
+                                        var createdCustomer = await _unitOfWorkDA.CustomersDA.CreateCustomers(customer, cancellationToken);
 
-                                    //Update status as completed on WrkImpotCustomers Table
-                                    item.Status = 1;
+                                        //Add address in CustomerAddress Table for new created custmer
+                                        var customerAddress = WrkCustomerToCustomerAddress(createdCustomer.CustomerId, item);
+                                        await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(customerAddress, cancellationToken);
+
+                                        //Update status as completed on WrkImpotCustomers Table
+                                        item.Status = 1;
+                                        item.UpdatedBy = _currentUser.UserId;
+                                        item.UpdatedDate = DateTime.Now;
+                                        item.UpdatedUTCDate = DateTime.UtcNow;
+                                        successCount++;
+                                    }
+                                    else
+                                    {
+                                        //Update status as already exists on WrkImpotCustomers Table
+                                        item.Status = (int)FileUploadStatusEnum.AlreadyExists;
+                                        item.UpdatedBy = _currentUser.UserId;
+                                        item.UpdatedDate = DateTime.Now;
+                                        item.UpdatedUTCDate = DateTime.UtcNow;
+                                        failedCount++;
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    //Update status as failed on WrkImpotCustomers Table
+                                    item.Status = (int)FileUploadStatusEnum.Failed;
                                     item.UpdatedBy = _currentUser.UserId;
                                     item.UpdatedDate = DateTime.Now;
                                     item.UpdatedUTCDate = DateTime.UtcNow;
+                                    throw;
                                 }
-                                else
-                                {
-                                    //Update status as already exists on WrkImpotCustomers Table
-                                    item.Status = (int)FileUploadStatusEnum.AlreadyExists;
-                                    item.UpdatedBy = _currentUser.UserId;
-                                    item.UpdatedDate = DateTime.Now;
-                                    item.UpdatedUTCDate = DateTime.UtcNow;
-                                }
+                                await _unitOfWorkDA.WrkImportCustomersDA.Update(item, cancellationToken);
                             }
-                            catch (Exception)
-                            {
-                                await _unitOfWorkDA.rollbackTransactionAsync();
-                                //Update status as failed on WrkImpotCustomers Table
-                                item.Status = (int)FileUploadStatusEnum.Failed;
-                                item.UpdatedBy = _currentUser.UserId;
-                                item.UpdatedDate = DateTime.Now;
-                                item.UpdatedUTCDate = DateTime.UtcNow;
-                                throw;
-                            }
-                            await _unitOfWorkDA.WrkImportCustomersDA.Update(item, cancellationToken);
                         }
                     }
                 }
@@ -100,22 +108,24 @@ namespace MidCapERP.CronJob.Services.Import_Customers
                     foreach (var item in getWrkFiles)
                     {
                         item.Status = (int)FileUploadStatusEnum.Failed;
-                        item.Failed = (int)FileUploadStatusEnum.Failed;
                         item.UpdatedBy = _currentUser.UserId;
                         item.UpdatedDate = DateTime.Now;
                         item.UpdatedUTCDate = DateTime.UtcNow;
+                        item.Success = successCount;
+                        item.Failed = failedCount;
                         await _unitOfWorkDA.WrkImportFilesDA.Update(item, cancellationToken);
                     }
                 }
                 // Process End - Update Process End date in WrkImportFiles
                 foreach (var item in getWrkFiles)
                 {
-                    item.Success = 1;
                     item.Status = (int)FileUploadStatusEnum.Completed;
                     item.UpdatedBy = _currentUser.UserId;
                     item.ProcessEndDate = DateTime.Now;
                     item.UpdatedDate = DateTime.Now;
                     item.UpdatedUTCDate = DateTime.UtcNow;
+                    item.Success = successCount;
+                    item.Failed = failedCount;
                     await _unitOfWorkDA.WrkImportFilesDA.Update(item, cancellationToken);
                 }
                 await _unitOfWorkDA.CommitTransactionAsync();
@@ -127,17 +137,17 @@ namespace MidCapERP.CronJob.Services.Import_Customers
             }
         }
 
-        public Customers WrkCustomerToCustomerTable(WrkImportCustomers wrkImportCustomers)
+        public Customers WrkCustomerToCustomerTable(int tenantId, WrkImportCustomers wrkImportCustomers)
         {
             return new Customers()
             {
-                AltPhoneNumber = wrkImportCustomers.AlternateContactNumber,
                 FirstName = wrkImportCustomers.FirstName,
                 LastName = wrkImportCustomers.LastName,
                 EmailId = wrkImportCustomers.EmailID,
-                GSTNo = wrkImportCustomers.GSTNo,
                 PhoneNumber = wrkImportCustomers.PrimaryContactNumber,
-                TenantId = _currentUser.TenantId,
+                AltPhoneNumber = wrkImportCustomers.AlternateContactNumber,
+                GSTNo = wrkImportCustomers.GSTNo,
+                TenantId = tenantId,
                 CustomerTypeId = (int)CustomerTypeEnum.Customer,
                 CreatedBy = (int)wrkImportCustomers.CreatedBy,
                 CreatedDate = DateTime.Now,
