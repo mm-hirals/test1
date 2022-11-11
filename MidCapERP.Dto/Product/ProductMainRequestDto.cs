@@ -18,6 +18,7 @@ namespace MidCapERP.Dto.Product
 
         [DisplayName("Cost Price")]
         public decimal CostPrice { get; set; }
+        public bool isFixedPrice { get; set; }
 
         public string Status { get; set; }
         public ProductRequestDto ProductRequestDto { get; set; }
