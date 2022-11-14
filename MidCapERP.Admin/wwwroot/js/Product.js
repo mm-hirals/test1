@@ -155,6 +155,7 @@ $(document).on("click", ".minus-icon", function () {
 ProductModel.onSuccess = function (xhr) {
     $('.productDetailsSubmit').buttonLoader('stop');
     toastr.success('Information saved successfully.');
+    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
 };
 
 ProductModel.onFailed = function (xhr) {
@@ -164,6 +165,7 @@ ProductModel.onFailed = function (xhr) {
 ProductModel.onProductMaterialSuccess = function (xhr) {
     $('.btnProductMaterial').buttonLoader('stop');
     toastr.success('Information saved successfully.');
+    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
@@ -190,6 +192,7 @@ $(document).on("click", ".img-wrap .close", (function () {
         url: "/Product/DeleteProductImage?ProductImageId=" + id,
         type: "GET",
         success: function (response) {
+            $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
         }
     });
 }));

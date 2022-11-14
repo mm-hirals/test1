@@ -40,6 +40,7 @@ if (isDropZoneInit !== false) {
             });
             this.on("success", function (response) {
                 $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+                $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
             });
         }
     });
@@ -55,6 +56,7 @@ $(document).on("click", ".img-wrap .custom-control-input", (function () {
         url: "/Product/ProductImageMarkAsCover?ProductImageId=" + id + "&IsCover=" + $(this).prop('checked'),
         type: "GET",
         success: function (response) {
+            $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
         }
     });
 }));
