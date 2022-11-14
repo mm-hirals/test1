@@ -156,7 +156,7 @@ namespace MidCapERP.Admin.Controllers
                     var wrkFileData = await _unitOfWorkBL.WrkImportFilesBL.CreateWrkImportFiles(wrkFileEntity, cancellationToken);
                     var getWrkCustomerList = _unitOfWorkBL.CustomersBL.CustomerFileImport(entity, wrkFileData.WrkImportFileID);
 
-                    Task.Run(async () =>
+                    _ = Task.Run(async () =>
                     {
                         using (var scope = serviceScopeFactory.CreateScope())
                         {
@@ -167,9 +167,9 @@ namespace MidCapERP.Admin.Controllers
                     }, cancellationToken).ConfigureAwait(false);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
             return RedirectToAction("Index");
         }
