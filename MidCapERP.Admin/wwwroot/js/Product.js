@@ -17,7 +17,7 @@ $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
     var tabId = $(e.target).attr("id")
     if (tabId == "nav-images-tab") {
         $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-    } else if (tabId == "nav-rowmaterial-tab") {
+    } else if (tabId == "nav-rawmaterial-tab") {
         $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
     } else if (tabId == "nav-detail-tab") {
         $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
@@ -181,3 +181,15 @@ $(document).on('submit', '#frmProductDetail', function (e) {
 $(document).on('submit', '#frmProductMaterial', function (e) {
     $('.btnProductMaterial').buttonLoader('start');
 });
+
+$(document).on("click", ".img-wrap .close", (function () {
+    var id = $(this).closest('.img-wrap').find('img').data('imageid');
+    $(this).parent().remove();
+
+    $.ajax({
+        url: "/Product/DeleteProductImage?ProductImageId=" + id,
+        type: "GET",
+        success: function (response) {
+        }
+    });
+}));
