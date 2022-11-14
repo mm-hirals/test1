@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CsvHelper.Configuration;
+using CsvHelper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
@@ -12,6 +14,10 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
+using MidCapERP.Dto.WrkImportCustomers;
+using MidCapERP.Dto.WrkImportFiles;
+using System.Data;
+using System.Globalization;
 using System.Linq.Dynamic.Core;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -302,6 +308,70 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public List<WrkImportCustomersDto> CustomerFileImport(WrkImportFilesRequestDto entity, long WrkImportFileID)
+        {
+            string[] customerHeaderArray = { "FirstName", "LastName", "PrimaryContactNumber", "AlternateContactNumber", "EmailID", "GSTNo", "Street1", "Street2", "Landmark", "Area", "City", "State", "PinCode" };
+            List<WrkImportCustomersDto> insertWrkImportCustomersDtos = new List<WrkImportCustomersDto>();
+            DataTable data = new DataTable();
+
+            if (entity.formFile != null && !string.IsNullOrEmpty(entity.formFile.FileName) && entity.formFile.FileName.ToLower().Contains(".csv"))
+            {
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    PrepareHeaderForMatch = args => args.Header.ToLower(),
+                };
+                using (var reader = new StreamReader(entity.formFile.OpenReadStream()))
+                using (var csv = new CsvReader(reader, config))
+                {
+                    csv.Read();
+                    csv.ReadHeader();
+                    string[] csvHeaders = csv.HeaderRecord;
+                    string[] headers = new string[csvHeaders.Length];
+                    for (int i = 0; i < csvHeaders.Length; i++)
+                    {
+                        if (csvHeaders[i] == null)
+                        {
+                            headers[i] = "Column" + (i + 1);
+                        }
+                        else
+                        {
+                            headers[i] = csvHeaders[i].Trim();
+                        }
+                    }
+                    if (headers.SequenceEqual(customerHeaderArray))
+                    {
+                        var records = csv.GetRecords<WrkImportCustomersCSV>().ToList();
+                        if (records != null && records.Count > 0)
+                        {
+                            foreach (var item in records)
+                            {
+                                WrkImportCustomersDto wrkImportCustomersDto = new WrkImportCustomersDto()
+                                {
+                                    WrkImportFileID = WrkImportFileID,
+                                    AlternateContactNumber = item.AlternateContactNumber != "" ? item.AlternateContactNumber : null,
+                                    Area = item.Area != "" ? item.Area : null,
+                                    City = item.City != "" ? item.City : null,
+                                    EmailID = item.EmailID != "" ? item.EmailID : null,
+                                    FirstName = item.FirstName != "" ? item.FirstName : null,
+                                    GSTNo = item.GSTNo != "" ? item.GSTNo : null,
+                                    Landmark = item.Landmark != "" ? item.Landmark : null,
+                                    LastName = item.LastName != "" ? item.LastName : null,
+                                    PrimaryContactNumber = item.PrimaryContactNumber != "" ? item.PrimaryContactNumber : null,
+                                    State = item.State != "" ? item.State : null,
+                                    Status = (int)FileUploadStatusEnum.Pending,
+                                    Stree2 = item.Stree2 != "" ? item.Stree2 : null,
+                                    Street1 = item.Street1 != "" ? item.Street1 : null,
+                                    ZipCode = item.PinCode != "" ? item.PinCode : null,
+                                };
+                                insertWrkImportCustomersDtos.Add(wrkImportCustomersDto);
+                            }
+                        }
+                    }
+                }
+            }
+            return insertWrkImportCustomersDtos;
+        }
+
         public async Task ImportCustomers(long WrkImportFileID, CancellationToken cancellationToken)
         {
             try
@@ -320,7 +390,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                             if (CustomersTOInsert.FirstOrDefault(x => x.PhoneNumber == item.PrimaryContactNumber) == null)
                             {
                                 Customers createdCustomer = await _unitOfWorkDA.CustomersDA.CreateCustomers(MapToDbObjectCustomer(item, new Customers()), cancellationToken);
-                                await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(MapDbToObjectCustomerAddress(createdCustomer.CustomerId, item, new CustomerAddresses()), cancellationToken);
+                                if (createdCustomer == null)
+                                {
+                                    // Update WrkCustomer for Failed status
+                                    item.Status = (int)FileUploadStatusEnum.Failed;
+                                    await WrkImportCustomersUpdate(item, cancellationToken);
+                                }
+                                else
+                                {
+                                    await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(MapDbToObjectCustomerAddress(createdCustomer.CustomerId, item, new CustomerAddresses()), cancellationToken);
+                                }
 
                                 // Update WrkCustomer for Completed status
                                 item.Status = (int)FileUploadStatusEnum.Completed;
@@ -328,14 +407,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                             }
                             else
                             {
-                                // Update WrkCustomer for Failed status
-                                item.Status = (int)FileUploadStatusEnum.Failed;
+                                // Update WrkCustomer for Already Exists status
+                                item.Status = (int)FileUploadStatusEnum.AlreadyExists;
                                 await WrkImportCustomersUpdate(item, cancellationToken);
                             }
                         }
 
                         //Update WrkImportFiles Table for Count
-
                         var WrkFileData = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
                         if (WrkFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID) != null)
                         {

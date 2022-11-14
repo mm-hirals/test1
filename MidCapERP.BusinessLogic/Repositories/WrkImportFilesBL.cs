@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.Core.Constants;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -20,13 +21,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             _currentUser = currentUser;
         }
 
-        public async Task<WrkImportFilesDto> CreateWrkImportFiles(WrkImportFilesDto model, CancellationToken cancellationToken)
-        {
-            var wrkFiles = _mapper.Map<WrkImportFiles>(model);
-            var data = await _unitOfWorkDA.WrkImportFilesDA.Create(wrkFiles, cancellationToken);
-            return _mapper.Map<WrkImportFilesDto>(data);
-        }
-
         public async Task<IEnumerable<WrkImportFilesDto>> GetAll(CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
@@ -36,6 +30,17 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<WrkImportFilesDto> GetById(long WrkImportFileID, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkDA.WrkImportFilesDA.GetById(WrkImportFileID, cancellationToken);
+            return _mapper.Map<WrkImportFilesDto>(data);
+        }
+
+        public async Task<WrkImportFilesDto> CreateWrkImportFiles(WrkImportFilesDto model, CancellationToken cancellationToken)
+        {
+            model.TenantId = _currentUser.TenantId;
+            model.CreatedBy = _currentUser.UserId;
+            model.CreatedDate = DateTime.Now;
+            model.CreatedUTCDate = DateTime.UtcNow;
+            var wrkFiles = _mapper.Map<WrkImportFiles>(model);
+            var data = await _unitOfWorkDA.WrkImportFilesDA.Create(wrkFiles, cancellationToken);
             return _mapper.Map<WrkImportFilesDto>(data);
         }
     }

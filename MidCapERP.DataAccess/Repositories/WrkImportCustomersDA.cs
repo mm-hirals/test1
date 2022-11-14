@@ -13,16 +13,6 @@ namespace MidCapERP.DataAccess.Repositories
             _wrkImportCustomers = wrkImportCustomers;
         }
 
-        public async Task<WrkImportCustomers> Create(WrkImportCustomers model, CancellationToken cancellationToken)
-        {
-            return await _wrkImportCustomers.InsertAsync(model, cancellationToken);
-        }
-
-        public async Task<WrkImportCustomers> Update(WrkImportCustomers model, CancellationToken cancellationToken)
-        {
-            return await _wrkImportCustomers.UpdateAsync(model, cancellationToken);
-        }
-
         public async Task<IQueryable<WrkImportCustomers>> GetAll(CancellationToken cancellationToken)
         {
             return await _wrkImportCustomers.GetAsync(cancellationToken);
@@ -31,6 +21,16 @@ namespace MidCapERP.DataAccess.Repositories
         public async Task<WrkImportCustomers> GetById(long Id, CancellationToken cancellationToken)
         {
             return await _wrkImportCustomers.GetByIdAsync(Id, cancellationToken);
+        }
+
+        public async Task<WrkImportCustomers> Create(WrkImportCustomers model, CancellationToken cancellationToken)
+        {
+            return await _wrkImportCustomers.InsertAsync(model, cancellationToken);
+        }
+
+        public async Task<WrkImportCustomers> Update(WrkImportCustomers model, CancellationToken cancellationToken)
+        {
+            return await _wrkImportCustomers.UpdateAsync(model, cancellationToken);
         }
     }
 }
