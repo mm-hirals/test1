@@ -13,13 +13,14 @@ if (isDropZoneInit !== false) {
         init: function () {
             var submitButton = document.querySelector("#submit-all");
             var wrapperThis = this;
-
-                submitButton.addEventListener("click", function () {
-                    $('#submit-all').buttonLoader('start');
-                    wrapperThis.processQueue();
+            submitButton.addEventListener("click", function () {
+                $('#submit-all').buttonLoader('start');
+                wrapperThis.processQueue();
+                toastr.success('Image saved successfully.');
+                setTimeout(function () {
                     $('#submit-all').buttonLoader('stop');
-                    toastr.success('Image saved successfully.');
-                });
+                }, 300);
+            });
 
             this.on("addedfile", function (file) {
                 var removeButton = Dropzone.createElement("<button class='btn btn-lg dark'>Remove File</button>");
@@ -56,14 +57,3 @@ $(document).on("click", ".img-wrap .close", (function () {
     });
 }));
 
-$(document).on("click", ".img-wrap .custom-control-input", (function () {
-    var id = $(this).closest('.img-wrap').find('img').data('imageid');
-    console.log(id);
-
-    $.ajax({
-        url: "/Product/ProductImageMarkAsCover?ProductImageId=" + id + "&IsCover=" + $(this).prop('checked'),
-        type: "GET",
-        success: function (response) {
-        }
-    });
-}));
