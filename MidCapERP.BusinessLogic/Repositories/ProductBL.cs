@@ -763,10 +763,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productImageToInsert.CreatedDate = DateTime.Now;
                 productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
-
-                // Update Activity log
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Image Added", ActivityLogStringConstant.Create, cancellationToken);
             }
+            // Update Activity log
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Image Added", ActivityLogStringConstant.Create, cancellationToken);
         }
 
         private async Task SaveProductMaterials(ProductMainRequestDto model, CancellationToken cancellationToken)
