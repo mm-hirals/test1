@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.RolePermission;
+﻿using MidCapERP.Dto.APIResponse;
+using MidCapERP.Dto.RolePermission;
 using System.Security.Claims;
 
 namespace MidCapERP.BusinessLogic.Interface
@@ -12,5 +13,6 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task CreateRoleClaim(RolePermissionRequestDto rolePermissionResponseDto, CancellationToken cancellationToken);
 
         public Task DeleteRoleClaim(RolePermissionRequestDto model, CancellationToken cancellationToken);
+        public Task<List<PermissionsAPIResponse>> GetPermissions(List<RolePermissionResponseDto> allAppPermissions, CancellationToken cancellationToken);
     }
 }
