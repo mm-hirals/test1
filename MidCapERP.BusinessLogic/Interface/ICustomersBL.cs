@@ -1,7 +1,10 @@
-﻿using MidCapERP.Dto.Customers;
+﻿using MidCapERP.DataAccess.Interface;
+using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using MidCapERP.Dto.WrkImportCustomers;
+using MidCapERP.Dto.WrkImportFiles;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -44,5 +47,9 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<CustomersApiResponseDto> GetCustomerByIdAPI(Int64 id, CancellationToken cancellationToken);
 
         public Task<bool> ValidateCustomerPhoneNumber(CustomersRequestDto customerRequestDto, CancellationToken cancellationToken);
+
+        public List<WrkImportCustomersDto> CustomerFileImport(WrkImportFilesRequestDto entity, long WrkImportFileID);
+
+        public Task ImportCustomers(long WrkImportFileID, CancellationToken cancellationToken);
     }
 }

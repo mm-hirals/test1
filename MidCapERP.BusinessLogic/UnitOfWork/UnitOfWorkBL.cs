@@ -40,8 +40,10 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
         public ISendSMSservice SendSMSservice { get; }
         public IEmailHelper EmailHelper { get; }
+        public IWrkImportCustomersBL WrkImportCustomersBL { get; }
+        public IWrkImportFilesBL WrkImportFilesBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IInteriorsBL interiorsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IRawMaterialBL rawMaterialBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IInteriorAddressesBL interiorAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice, IEmailHelper emailHelper)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IInteriorsBL interiorsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IRawMaterialBL rawMaterialBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IInteriorAddressesBL interiorAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice, IEmailHelper emailHelper, IWrkImportCustomersBL wrkImportCustomersBL, IWrkImportFilesBL wrkImportFilesBL)
         {
             _context = context;
             ContractorsBL = contractorsBL;
@@ -73,6 +75,8 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             TenantSMTPDetailBL = tenantSMTPDetailBL;
             SendSMSservice = sendSMSservice;
             EmailHelper = emailHelper;
+            WrkImportCustomersBL = wrkImportCustomersBL;
+            WrkImportFilesBL = wrkImportFilesBL;
         }
 
         #region DisposeMethod
