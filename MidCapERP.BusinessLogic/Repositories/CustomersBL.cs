@@ -2,6 +2,8 @@
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
+using MidCapERP.DataAccess.Interface;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -11,6 +13,7 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
+using System.Net;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -20,13 +23,15 @@ namespace MidCapERP.BusinessLogic.Repositories
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
         private readonly IEmailHelper _emailHelper;
+        private readonly IOTPLoginDA _loginDA;
 
-        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper)
+        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper, IOTPLoginDA otpLoginDA)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
             _emailHelper = emailHelper;
+            _loginDA = otpLoginDA;
         }
 
         public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -183,14 +188,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
             else
-                 throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
+                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
         }
 
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
         {
             var customerToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
-            if(model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
+            if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
                 await _unitOfWorkDA.BeginTransactionAsync();
             try
             {
@@ -203,7 +208,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
-                    await SaveCustomerAddress(model, data, cancellationToken);   
+                    await SaveCustomerAddress(model, data, cancellationToken);
             }
             catch (Exception e)
             {
@@ -298,6 +303,94 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task<string> SendCustomerOtpAPI(CustomersSendOtpDto model, CancellationToken cancellationToken)
+        {
+            string data = string.Empty;
+            //var otpLogin = await _loginDA.GetAll(cancellationToken);
+
+            OTPLogin loginToken = new OTPLogin()
+            {
+                PhoneNumber = model.PhoneNumber,
+                OTP = "0000", //new Random().Next(1, 9999).ToString("D4"),
+                ExpiryTime = DateTime.UtcNow.AddMinutes(10),
+            };
+            var createdToken = await _loginDA.CreateLoginToken(loginToken, cancellationToken);
+            data = createdToken.OTP;
+            return data;
+            //Send OTP to customer through SMS
+            //SendOTPToCustomer(model.PhoneNumber);
+
+        }
+
+        public static string SendOTPToCustomer(string phoneNumber)
+        {
+            string MainUrl = "SMSAPIURL"; //Here need to give SMS API URL
+            string UserName = "username"; //Here need to give username
+            string Password = "Password"; //Here need to give Password
+            string SenderId = "SenderId";
+            string strMobileno = phoneNumber;
+            string URL = "";
+            URL = MainUrl + "username=" + UserName + "&msg_token=" + Password + "&sender_id=" + SenderId + "&mobile=" + strMobileno.Trim() + "";
+            string strResponse = GetResponse(URL);
+            string msg = "";
+            if (strResponse.Equals("Fail"))
+            {
+                msg = "Fail";
+            }
+            else
+            {
+                msg = strResponse;
+            }
+            return msg;
+        }
+
+        public static string GetResponse(string smsURL)
+        {
+            try
+            {
+                WebClient objWebClient = new WebClient();
+                System.IO.StreamReader reader = new System.IO.StreamReader(objWebClient.OpenRead(smsURL));
+                string ResultHTML = reader.ReadToEnd();
+                return ResultHTML;
+            }
+            catch (Exception)
+            {
+                return "Fail";
+            }
+        }
+
+        //public async Task<bool> ValidateCustomerOtpAPI(CustomersSendOtpDto customersSendOtpDto, CancellationToken cancellationToken)
+        //{
+        //    // Get all OTP table data
+        //    //var getAllCustomerOTPData = await GetAll(cancellationToken);
+        //    var customerData = await _loginDA.GetAll(cancellationToken);
+        //    //var customerData = getAllCustomerOTPData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer);
+        //    //if (customersSendOtpDto.CustomerId > 0)
+        //    //{
+            
+        //    var getCustomerById = customerData.Any(c => c.OTP == customersSendOtpDto.OTP);
+        //    if (getCustomerById)
+        //    {
+        //        CreateCustomerApi(customersSendOtpDto, cancellationToken);
+        //    }
+
+        //    //if (getCustomerById.PhoneNumber.Trim() == customersSendOtpDto.PhoneNumber.Trim())
+        //    //{
+        //    //    return true;
+        //    //}
+        //    //else
+        //    //{
+        //    //    return !customerData.Any(c => c.PhoneNumber.Trim() == customersSendOtpDto.PhoneNumber.Trim());
+        //    //}
+
+        //    //}
+        //    //else
+        //    //{
+        //    //    return !customerData.Any(c => c.PhoneNumber.Trim() == customersSendOtpDto.PhoneNumber.Trim());
+        //    //}
+        //}
+
+
         #region PrivateMethods
 
         private async Task<Customers> CustomerGetById(Int64 Id, CancellationToken cancellationToken)
@@ -362,7 +455,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
                 Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
                 Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
-                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : 
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area :
                 String.Empty,
                 City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
                 State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,

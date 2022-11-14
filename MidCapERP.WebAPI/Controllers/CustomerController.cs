@@ -156,6 +156,30 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
+        [HttpPost("SendCustomerOtp")]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
+        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomersSendOtpDto customerSendOtpDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerSendOtpDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        //[HttpPost("ValidateCustomerOtp")]
+        //[Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
+        //public async Task<ApiResponse> ValidateCustomerOtp([FromBody] CustomersSendOtpDto customerSendOtpDto, CancellationToken cancellationToken)
+        //{
+        //    var data = await _unitOfWorkBL.CustomersBL.ValidateCustomerOtpAPI(customerSendOtpDto, cancellationToken);
+        //    if (data == null)
+        //    {
+        //        return new ApiResponse(message: "Invalid OTP", result: data, statusCode: 401);
+        //    }
+        //    return new ApiResponse(message: "OTP verified successfully", result: data, statusCode: 200);
+        //}
+
         #region Private Methods
 
         private void ValidationRequest(CustomerApiRequestDto customersRequestDto)

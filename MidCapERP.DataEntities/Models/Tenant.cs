@@ -32,5 +32,7 @@ namespace MidCapERP.DataEntities.Models
         public decimal? FabricRSPPercentage { get; set; }
         public decimal? FabricWSPPercentage { get; set; }
         public int? AmountRoundMultiple { get; set; }
+        public bool SendOTP { get; set; }
+
     }
 }

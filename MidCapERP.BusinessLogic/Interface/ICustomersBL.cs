@@ -2,6 +2,7 @@
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
+using System.Threading;
 
 namespace MidCapERP.BusinessLogic.Interface
 {
@@ -40,6 +41,10 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<int> GetCustomerCount(CancellationToken cancellationToken);
 
         public Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken);
+
+        public Task<string> SendCustomerOtpAPI(CustomersSendOtpDto model, CancellationToken cancellationToken);
+
+        //public Task<bool> ValidateCustomerOtpAPI(CustomersSendOtpDto model, CancellationToken cancellationToken);
 
         public Task<CustomersApiResponseDto> GetCustomerByIdAPI(Int64 id, CancellationToken cancellationToken);
 
