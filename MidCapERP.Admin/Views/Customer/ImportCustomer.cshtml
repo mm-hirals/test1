@@ -1,0 +1,19 @@
+﻿@model MidCapERP.Dto.WrkImportFiles.WrkImportFilesRequestDto
+@{
+    ViewData["Title"] = "Customers";
+    Layout = "_Layout";
+}
+
+<form asp-action="ImportCustomer" asp-controller="Customer" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <div class="form-group col-md-2">
+            <label>Upload proper .csv file.</label><span class="text-danger"> *</span>
+            <input accept=".csv" asp-for="@Model.formFile" type="file" class="form-control" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" id="submit" class="btn btn-primary mt-4">Upload</button>
+        </div>
+    </div>
+
+</form>

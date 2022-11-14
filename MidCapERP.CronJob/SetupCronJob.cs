@@ -12,6 +12,7 @@ namespace MidCapERP.CronJob
                 c.TimeZoneInfo = TimeZoneInfo.Local;
                 c.CronExpression = @"* * * * *";
             });
+
             services.AddSingleton<ISendGreetingEmailForNotification, SendGreetingEmailForNotification>();
         }
     }

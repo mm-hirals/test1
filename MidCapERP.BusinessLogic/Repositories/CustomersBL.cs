@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using CsvHelper.Configuration;
+using CsvHelper;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -11,6 +14,11 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
+using MidCapERP.Dto.WrkImportCustomers;
+using MidCapERP.Dto.WrkImportFiles;
+using System.Data;
+using System.Globalization;
+using System.Linq.Dynamic.Core;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -183,7 +191,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return _mapper.Map<CustomerApiRequestDto>(data);
             }
             else
-                 throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
+                throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
         }
 
         public async Task<CustomersRequestDto> CreateCustomers(CustomersRequestDto model, CancellationToken cancellationToken)
@@ -298,6 +306,137 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public List<WrkImportCustomersDto> CustomerFileImport(WrkImportFilesRequestDto entity, long WrkImportFileID)
+        {
+            string[] customerHeaderArray = { "FirstName", "LastName", "PrimaryContactNumber", "AlternateContactNumber", "EmailID", "GSTNo", "Street1", "Street2", "Landmark", "Area", "City", "State", "PinCode" };
+            List<WrkImportCustomersDto> insertWrkImportCustomersDtos = new List<WrkImportCustomersDto>();
+            DataTable data = new DataTable();
+
+            if (entity.formFile != null && !string.IsNullOrEmpty(entity.formFile.FileName) && entity.formFile.FileName.ToLower().Contains(".csv"))
+            {
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    PrepareHeaderForMatch = args => args.Header.ToLower(),
+                };
+                using (var reader = new StreamReader(entity.formFile.OpenReadStream()))
+                using (var csv = new CsvReader(reader, config))
+                {
+                    csv.Read();
+                    csv.ReadHeader();
+                    string[] csvHeaders = csv.HeaderRecord;
+                    string[] headers = new string[csvHeaders.Length];
+                    for (int i = 0; i < csvHeaders.Length; i++)
+                    {
+                        if (csvHeaders[i] == null)
+                        {
+                            headers[i] = "Column" + (i + 1);
+                        }
+                        else
+                        {
+                            headers[i] = csvHeaders[i].Trim();
+                        }
+                    }
+                    if (headers.SequenceEqual(customerHeaderArray))
+                    {
+                        var records = csv.GetRecords<WrkImportCustomersCSV>().ToList();
+                        if (records != null && records.Count > 0)
+                        {
+                            foreach (var item in records)
+                            {
+                                WrkImportCustomersDto wrkImportCustomersDto = new WrkImportCustomersDto()
+                                {
+                                    WrkImportFileID = WrkImportFileID,
+                                    AlternateContactNumber = item.AlternateContactNumber != "" ? item.AlternateContactNumber : null,
+                                    Area = item.Area != "" ? item.Area : null,
+                                    City = item.City != "" ? item.City : null,
+                                    EmailID = item.EmailID != "" ? item.EmailID : null,
+                                    FirstName = item.FirstName != "" ? item.FirstName : null,
+                                    GSTNo = item.GSTNo != "" ? item.GSTNo : null,
+                                    Landmark = item.Landmark != "" ? item.Landmark : null,
+                                    LastName = item.LastName != "" ? item.LastName : null,
+                                    PrimaryContactNumber = item.PrimaryContactNumber != "" ? item.PrimaryContactNumber : null,
+                                    State = item.State != "" ? item.State : null,
+                                    Status = (int)FileUploadStatusEnum.Pending,
+                                    Stree2 = item.Stree2 != "" ? item.Stree2 : null,
+                                    Street1 = item.Street1 != "" ? item.Street1 : null,
+                                    ZipCode = item.PinCode != "" ? item.PinCode : null,
+                                };
+                                insertWrkImportCustomersDtos.Add(wrkImportCustomersDto);
+                            }
+                        }
+                    }
+                }
+            }
+            return insertWrkImportCustomersDtos;
+        }
+
+        public async Task ImportCustomers(long WrkImportFileID, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (WrkImportFileID > 0)
+                {
+                    await _unitOfWorkDA.BeginTransactionAsync();
+                    var wrkAllFileData = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
+                    var wrkFileData = wrkAllFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID);
+                    wrkFileData.ProcessStartDate = DateTime.Now;
+                    var getWrkImportCustomers = _unitOfWorkDA.WrkImportCustomersDA.GetAll(cancellationToken).Result.Where(x => x.WrkImportFileID == WrkImportFileID);
+                    if (getWrkImportCustomers != null && getWrkImportCustomers.Count() > 0)
+                    {
+                        var getCustomer = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                        var CustomersTOInsert = getCustomer.Where(x => getWrkImportCustomers.Select(y => y.PrimaryContactNumber).Contains(x.PhoneNumber)).ToList();
+
+                        foreach (var item in getWrkImportCustomers)
+                        {
+                            if (CustomersTOInsert.FirstOrDefault(x => x.PhoneNumber == item.PrimaryContactNumber) == null)
+                            {
+                                Customers createdCustomer = await _unitOfWorkDA.CustomersDA.CreateCustomers(MapToDbObjectCustomer(item, new Customers()), cancellationToken);
+                                if (createdCustomer == null)
+                                {
+                                    // Update WrkCustomer for Failed status
+                                    item.Status = (int)FileUploadStatusEnum.Failed;
+                                    await WrkImportCustomersUpdate(item, cancellationToken);
+                                }
+                                else
+                                {
+                                    await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(MapDbToObjectCustomerAddress(createdCustomer.CustomerId, item, new CustomerAddresses()), cancellationToken);
+                                }
+
+                                // Update WrkCustomer for Completed status
+                                item.Status = (int)FileUploadStatusEnum.Completed;
+                                await WrkImportCustomersUpdate(item, cancellationToken);
+                            }
+                            else
+                            {
+                                // Update WrkCustomer for Already Exists status
+                                item.Status = (int)FileUploadStatusEnum.Failed;
+                                await WrkImportCustomersUpdate(item, cancellationToken);
+                            }
+                        }
+
+                        //Update WrkImportFiles Table for Count
+                        if (wrkFileData != null)
+                        {
+                            wrkFileData.Success = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Completed).Count();
+                            wrkFileData.Failed = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Failed).Count();
+                            wrkFileData.Status = (int)FileUploadStatusEnum.Completed;
+                            wrkFileData.ProcessEndDate = DateTime.Now;
+                            wrkFileData.UpdatedBy = _currentUser.UserId;
+                            wrkFileData.UpdatedDate = DateTime.Now;
+                            wrkFileData.UpdatedUTCDate = DateTime.UtcNow;
+                            await _unitOfWorkDA.WrkImportFilesDA.Update(wrkFileData, cancellationToken);
+                        }
+                    }
+                    await _unitOfWorkDA.CommitTransactionAsync();
+                }
+            }
+            catch (Exception)
+            {
+                await _unitOfWorkDA.rollbackTransactionAsync();
+                throw;
+            }
+        }
+
         #region PrivateMethods
 
         private async Task<Customers> CustomerGetById(Int64 Id, CancellationToken cancellationToken)
@@ -401,6 +540,47 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
             return customerAllData;
+        }
+
+        private Customers MapToDbObjectCustomer(WrkImportCustomers entity, Customers model)
+        {
+            model.FirstName = entity.FirstName;
+            model.LastName = entity.LastName;
+            model.EmailId = entity.EmailID;
+            model.PhoneNumber = entity.PrimaryContactNumber;
+            model.AltPhoneNumber = entity.AlternateContactNumber;
+            model.TenantId = _currentUser.TenantId;
+            model.GSTNo = entity.GSTNo;
+            model.CustomerTypeId = (int)CustomerTypeEnum.Customer;
+            model.CreatedBy = _currentUser.UserId;
+            model.CreatedDate = DateTime.Now;
+            model.CreatedUTCDate = DateTime.UtcNow;
+            return model;
+        }
+
+        private CustomerAddresses MapDbToObjectCustomerAddress(long CustomerId, WrkImportCustomers entity, CustomerAddresses model)
+        {
+            model.Street1 = entity.Street1;
+            model.Street2 = entity.Stree2;
+            model.Landmark = entity.Landmark;
+            model.Area = entity.Area;
+            model.AddressType = "Home";
+            model.City = entity.City;
+            model.State = entity.State;
+            model.ZipCode = entity.ZipCode;
+            model.CustomerId = CustomerId;
+            model.CreatedBy = _currentUser.UserId;
+            model.CreatedDate = DateTime.Now;
+            model.CreatedUTCDate = DateTime.UtcNow;
+            return model;
+        }
+
+        private async Task WrkImportCustomersUpdate(WrkImportCustomers model, CancellationToken cancellationToken)
+        {
+            model.UpdatedBy = _currentUser.UserId;
+            model.UpdatedDate = DateTime.Now;
+            model.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.WrkImportCustomersDA.Update(model, cancellationToken);
         }
 
         #endregion PrivateMethods
