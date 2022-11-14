@@ -1,29 +1,28 @@
-using CsvHelper;
-using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using MidCapERP.Dto.WrkImportCustomers;
 using MidCapERP.Dto.WrkImportFiles;
 using System.Data;
-using System.Globalization;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
         private IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IServiceScopeFactory serviceScopeFactory;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private CurrentUser _currentUser;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, IServiceScopeFactory serviceScopeFactory) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, IServiceScopeFactory serviceScopeFactory, CurrentUser currentUser) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            this.serviceScopeFactory = serviceScopeFactory;
+            _serviceScopeFactory = serviceScopeFactory;
+            _currentUser = currentUser;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
@@ -145,8 +144,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ImportCustomer([FromServices]IServiceScopeFactory
-                                    serviceScopeFactory, WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
+        public async Task<ActionResult> ImportCustomer(WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
         {
             try
             {
@@ -158,9 +156,10 @@ namespace MidCapERP.Admin.Controllers
 
                     _ = Task.Run(async () =>
                     {
-                        using (var scope = serviceScopeFactory.CreateScope())
+                        using (var scope = _serviceScopeFactory.CreateScope())
                         {
                             _unitOfWorkBL = scope.ServiceProvider.GetRequiredService<IUnitOfWorkBL>();
+                            _currentUser = scope.ServiceProvider.GetRequiredService<CurrentUser>();
                             await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
                             await _unitOfWorkBL.CustomersBL.ImportCustomers(wrkFileData.WrkImportFileID, cancellationToken);
                         }

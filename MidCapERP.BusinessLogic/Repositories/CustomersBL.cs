@@ -379,6 +379,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (WrkImportFileID > 0)
                 {
                     await _unitOfWorkDA.BeginTransactionAsync();
+                    var wrkAllFileData = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
+                    var wrkFileData = wrkAllFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID);
+                    wrkFileData.ProcessStartDate = DateTime.Now;
                     var getWrkImportCustomers = _unitOfWorkDA.WrkImportCustomersDA.GetAll(cancellationToken).Result.Where(x => x.WrkImportFileID == WrkImportFileID);
                     if (getWrkImportCustomers != null && getWrkImportCustomers.Count() > 0)
                     {
@@ -408,23 +411,22 @@ namespace MidCapERP.BusinessLogic.Repositories
                             else
                             {
                                 // Update WrkCustomer for Already Exists status
-                                item.Status = (int)FileUploadStatusEnum.AlreadyExists;
+                                item.Status = (int)FileUploadStatusEnum.Failed;
                                 await WrkImportCustomersUpdate(item, cancellationToken);
                             }
                         }
 
                         //Update WrkImportFiles Table for Count
-                        var WrkFileData = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
-                        if (WrkFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID) != null)
+                        if (wrkFileData != null)
                         {
-                            var data = WrkFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID);
-                            data.Success = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Completed).Count();
-                            data.Failed = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Failed).Count();
-                            data.Status = (int)FileUploadStatusEnum.Completed;
-                            data.UpdatedBy = _currentUser.UserId;
-                            data.UpdatedDate = DateTime.Now;
-                            data.UpdatedUTCDate = DateTime.UtcNow;
-                            await _unitOfWorkDA.WrkImportFilesDA.Update(data, cancellationToken);
+                            wrkFileData.Success = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Completed).Count();
+                            wrkFileData.Failed = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Failed).Count();
+                            wrkFileData.Status = (int)FileUploadStatusEnum.Completed;
+                            wrkFileData.ProcessEndDate = DateTime.Now;
+                            wrkFileData.UpdatedBy = _currentUser.UserId;
+                            wrkFileData.UpdatedDate = DateTime.Now;
+                            wrkFileData.UpdatedUTCDate = DateTime.UtcNow;
+                            await _unitOfWorkDA.WrkImportFilesDA.Update(wrkFileData, cancellationToken);
                         }
                     }
                     await _unitOfWorkDA.CommitTransactionAsync();
