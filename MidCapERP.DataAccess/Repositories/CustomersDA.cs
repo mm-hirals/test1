@@ -7,12 +7,17 @@ namespace MidCapERP.DataAccess.Repositories
 {
     public class CustomersDA : ICustomersDA
     {
-        private readonly ISqlRepository<Customers> _customers;
-        private readonly CurrentUser _currentUser;
+        private ISqlRepository<Customers> _customers;
+        private CurrentUser _currentUser;
 
         public CustomersDA(ISqlRepository<Customers> customers, CurrentUser currentUser)
         {
             _customers = customers;
+            _currentUser = currentUser;
+        }
+
+        public async Task CreateScope(CurrentUser currentUser, CancellationToken cancellationToken)
+        {
             _currentUser = currentUser;
         }
 
