@@ -303,7 +303,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<string> SendCustomerOtpAPI(CustomersSendOtpDto model, CancellationToken cancellationToken)
+        public async Task<string> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
             string data = string.Empty;
             //var otpLogin = await _loginDA.GetAll(cancellationToken);

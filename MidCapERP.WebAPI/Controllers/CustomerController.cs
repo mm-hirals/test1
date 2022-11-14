@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
 
@@ -14,10 +15,12 @@ namespace MidCapERP.WebAPI.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly CurrentUser _currentUser;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _currentUser = currentUser;
         }
 
         [HttpGet("{id}")]
@@ -49,13 +52,24 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> Post([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
-            ValidationRequest(customerApiRequestDto);
-            var data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
-            if (data == null)
+            object data = null;
+            // Check Send OTP flag from tenant
+            var tenantResponseDto = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+            if (tenantResponseDto.SendOTP)
             {
-                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+                await SendCustomerOtp(customerApiRequestDto, cancellationToken);
+            }
+            else
+            {
+                ValidationRequest(customerApiRequestDto);
+                data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
+                if (data == null)
+                {
+                    return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+                }
             }
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+
         }
 
         [HttpGet("CheckCustomer")]
@@ -158,14 +172,14 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPost("SendCustomerOtp")]
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
-        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomersSendOtpDto customerSendOtpDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerSendOtpDto, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+            return new ApiResponse(message: "OTP sent successfully", result: data, statusCode: 200);
         }
 
         //[HttpPost("ValidateCustomerOtp")]

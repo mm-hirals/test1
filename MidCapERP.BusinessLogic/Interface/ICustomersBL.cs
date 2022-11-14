@@ -42,7 +42,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken);
 
-        public Task<string> SendCustomerOtpAPI(CustomersSendOtpDto model, CancellationToken cancellationToken);
+        public Task<string> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken);
 
         //public Task<bool> ValidateCustomerOtpAPI(CustomersSendOtpDto model, CancellationToken cancellationToken);
 
