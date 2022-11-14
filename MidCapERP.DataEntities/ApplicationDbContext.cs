@@ -65,5 +65,7 @@ namespace MidCapERP.DataEntities
         public DbSet<OrderAddress> OrderAddress { get; set; }
         public DbSet<TenantSMTPDetail> TenantSMTPDetail { get; set; }
         public DbSet<NotificationManagement> NotificationManagement { get; set; }
+        public DbSet<WrkImportFiles> WrkImportFiles { get; set; }
+        public DbSet<WrkImportCustomers> WrkImportCustomers { get; set; }
     }
 }

@@ -4,18 +4,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.WrkImportFiles;
+using System.Data;
 
 namespace MidCapERP.Admin.Controllers
 {
     public class CustomerController : BaseController
     {
-        private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private IUnitOfWorkBL _unitOfWorkBL;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private CurrentUser _currentUser;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, IServiceScopeFactory serviceScopeFactory, CurrentUser currentUser) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
+            _serviceScopeFactory = serviceScopeFactory;
+            _currentUser = currentUser;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
@@ -129,8 +136,41 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
-        public async Task Import_Export_Customer(CancellationToken cancellationToken)
+        [HttpGet]
+        public ActionResult ImportCustomer()
         {
+            WrkImportFilesRequestDto wrkImportFilesRequestDto = new WrkImportFilesRequestDto();
+            return View(wrkImportFilesRequestDto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ImportCustomer(WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (entity != null && entity.formFile != null)
+                {
+                    var wrkFileEntity = CovertRequestDtoToWrkImportFilesDto(entity);
+                    var wrkFileData = await _unitOfWorkBL.WrkImportFilesBL.CreateWrkImportFiles(wrkFileEntity, cancellationToken);
+                    var getWrkCustomerList = _unitOfWorkBL.CustomersBL.CustomerFileImport(entity, wrkFileData.WrkImportFileID);
+
+                    _ = Task.Run(async () =>
+                    {
+                        using (var scope = _serviceScopeFactory.CreateScope())
+                        {
+                            _unitOfWorkBL = scope.ServiceProvider.GetRequiredService<IUnitOfWorkBL>();
+                            _currentUser = scope.ServiceProvider.GetRequiredService<CurrentUser>();
+                            await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
+                            await _unitOfWorkBL.CustomersBL.ImportCustomers(wrkFileData.WrkImportFileID, cancellationToken);
+                        }
+                    }, cancellationToken).ConfigureAwait(false);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return RedirectToAction("Index");
         }
 
         public async Task<bool> DuplicateCustomerPhoneNumber(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
@@ -159,6 +199,25 @@ namespace MidCapERP.Admin.Controllers
             {
                 throw;
             }
+        }
+
+        private WrkImportFilesDto CovertRequestDtoToWrkImportFilesDto(WrkImportFilesRequestDto entity)
+        {
+            int count = 0;
+            using (StreamReader file = new(entity.formFile.OpenReadStream()))
+            {
+                while (file.ReadLine() != null)
+                    count++;
+                file.Close();
+            }
+
+            return new WrkImportFilesDto()
+            {
+                FileType = Enum.GetName(typeof(CustomerTypeEnum), CustomerTypeEnum.Customer),
+                ImportFileName = entity.formFile.FileName,
+                TotalRecords = count - 1,
+                Status = (int)FileUploadStatusEnum.Pending,
+            };
         }
 
         #endregion Private Method
