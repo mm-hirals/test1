@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using CsvHelper.Configuration;
 using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -26,11 +26,13 @@ namespace MidCapERP.BusinessLogic.Repositories
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         public readonly IMapper _mapper;
-        private readonly CurrentUser _currentUser;
+        private CurrentUser _currentUser;
         private readonly IEmailHelper _emailHelper;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper)
+        public CustomersBL(IServiceScopeFactory serviceScopeFactory, IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper)
         {
+            _serviceScopeFactory = serviceScopeFactory;
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
@@ -198,7 +200,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
-            if(model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
+            if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
                 await _unitOfWorkDA.BeginTransactionAsync();
             try
             {
@@ -211,7 +213,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
                 if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
-                    await SaveCustomerAddress(model, data, cancellationToken);   
+                    await SaveCustomerAddress(model, data, cancellationToken);
             }
             catch (Exception e)
             {
@@ -234,6 +236,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
+            var customerTypeId = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken);
             foreach (var item in model.CustomerList)
             {
                 var customerData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
@@ -241,7 +244,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
                     {
-                        EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
+                        EntityTypeID = customerTypeId,
                         EntityID = item,
                         NotificationType = "Greetings",
                         NotificationMethod = "Email",
@@ -372,68 +375,68 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task ImportCustomers(long WrkImportFileID, CancellationToken cancellationToken)
         {
-            try
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                if (WrkImportFileID > 0)
+                _unitOfWorkDA = scope.ServiceProvider.GetRequiredService<IUnitOfWorkDA>();
+                try
                 {
-                    await _unitOfWorkDA.BeginTransactionAsync();
-                    var wrkAllFileData = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
-                    var wrkFileData = wrkAllFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID);
-                    wrkFileData.ProcessStartDate = DateTime.Now;
-                    var getWrkImportCustomers = _unitOfWorkDA.WrkImportCustomersDA.GetAll(cancellationToken).Result.Where(x => x.WrkImportFileID == WrkImportFileID);
-                    if (getWrkImportCustomers != null && getWrkImportCustomers.Count() > 0)
+                    if (WrkImportFileID > 0)
                     {
-                        var getCustomer = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
-                        var CustomersTOInsert = getCustomer.Where(x => getWrkImportCustomers.Select(y => y.PrimaryContactNumber).Contains(x.PhoneNumber)).ToList();
-
-                        foreach (var item in getWrkImportCustomers)
+                        await _unitOfWorkDA.BeginTransactionAsync();
+                        var wrkAllFileData = await _unitOfWorkDA.WrkImportFilesDA.GetAll(cancellationToken);
+                        var wrkFileData = wrkAllFileData.FirstOrDefault(x => x.WrkImportFileID == WrkImportFileID);
+                        wrkFileData.ProcessStartDate = DateTime.Now;
+                        var getWrkImportCustomersData = await _unitOfWorkDA.WrkImportCustomersDA.GetAll(cancellationToken);
+                        getWrkImportCustomersData = getWrkImportCustomersData.Where(x => x.WrkImportFileID == WrkImportFileID);
+                        if (getWrkImportCustomersData != null && getWrkImportCustomersData.Count() > 0)
                         {
-                            if (CustomersTOInsert.FirstOrDefault(x => x.PhoneNumber == item.PrimaryContactNumber) == null)
+                            await _unitOfWorkDA.CustomersDA.CreateScope(_currentUser, cancellationToken);
+
+                            var getCustomer = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                            var CustomersTOInsert = getCustomer.Where(x => getWrkImportCustomersData.Select(y => y.PrimaryContactNumber).Contains(x.PhoneNumber)).ToList();
+                            foreach (var item in getWrkImportCustomersData.ToList())
                             {
-                                Customers createdCustomer = await _unitOfWorkDA.CustomersDA.CreateCustomers(MapToDbObjectCustomer(item, new Customers()), cancellationToken);
-                                if (createdCustomer == null)
+                                if (CustomersTOInsert.FirstOrDefault(x => x.PhoneNumber == item.PrimaryContactNumber) == null)
                                 {
-                                    // Update WrkCustomer for Failed status
-                                    item.Status = (int)FileUploadStatusEnum.Failed;
-                                    await WrkImportCustomersUpdate(item, cancellationToken);
+                                    Customers createdCustomer = await _unitOfWorkDA.CustomersDA.CreateCustomers(MapToDbObjectCustomer(item, new Customers()), cancellationToken);
+                                    if (createdCustomer == null)
+                                    {
+                                        await WrkImportCustomersUpdate(item.WrkCustomerID, (int)FileUploadStatusEnum.Failed, cancellationToken);
+                                    }
+                                    else
+                                    {
+                                        await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(MapDbToObjectCustomerAddress(createdCustomer.CustomerId, item, new CustomerAddresses()), cancellationToken);
+                                    }
+
+                                    await WrkImportCustomersUpdate(item.WrkCustomerID, (int)FileUploadStatusEnum.Completed, cancellationToken);
                                 }
                                 else
                                 {
-                                    await _unitOfWorkDA.CustomerAddressesDA.CreateCustomerAddress(MapDbToObjectCustomerAddress(createdCustomer.CustomerId, item, new CustomerAddresses()), cancellationToken);
+                                    await WrkImportCustomersUpdate(item.WrkCustomerID, (int)FileUploadStatusEnum.Failed, cancellationToken);
                                 }
-
-                                // Update WrkCustomer for Completed status
-                                item.Status = (int)FileUploadStatusEnum.Completed;
-                                await WrkImportCustomersUpdate(item, cancellationToken);
                             }
-                            else
+
+                            //Update WrkImportFiles Table for Count
+                            if (wrkFileData != null)
                             {
-                                // Update WrkCustomer for Already Exists status
-                                item.Status = (int)FileUploadStatusEnum.Failed;
-                                await WrkImportCustomersUpdate(item, cancellationToken);
+                                wrkFileData.Success = getWrkImportCustomersData.Where(x => x.Status == (int)FileUploadStatusEnum.Completed).Count();
+                                wrkFileData.Failed = getWrkImportCustomersData.Where(x => x.Status == (int)FileUploadStatusEnum.Failed).Count();
+                                wrkFileData.Status = (int)FileUploadStatusEnum.Completed;
+                                wrkFileData.ProcessEndDate = DateTime.Now;
+                                wrkFileData.UpdatedBy = _currentUser.UserId;
+                                wrkFileData.UpdatedDate = DateTime.Now;
+                                wrkFileData.UpdatedUTCDate = DateTime.UtcNow;
+                                await _unitOfWorkDA.WrkImportFilesDA.Update(wrkFileData, cancellationToken);
                             }
                         }
-
-                        //Update WrkImportFiles Table for Count
-                        if (wrkFileData != null)
-                        {
-                            wrkFileData.Success = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Completed).Count();
-                            wrkFileData.Failed = getWrkImportCustomers.Where(x => x.Status == (int)FileUploadStatusEnum.Failed).Count();
-                            wrkFileData.Status = (int)FileUploadStatusEnum.Completed;
-                            wrkFileData.ProcessEndDate = DateTime.Now;
-                            wrkFileData.UpdatedBy = _currentUser.UserId;
-                            wrkFileData.UpdatedDate = DateTime.Now;
-                            wrkFileData.UpdatedUTCDate = DateTime.UtcNow;
-                            await _unitOfWorkDA.WrkImportFilesDA.Update(wrkFileData, cancellationToken);
-                        }
+                        await _unitOfWorkDA.CommitTransactionAsync();
                     }
-                    await _unitOfWorkDA.CommitTransactionAsync();
                 }
-            }
-            catch (Exception)
-            {
-                await _unitOfWorkDA.rollbackTransactionAsync();
-                throw;
+                catch (Exception ex)
+                {
+                    await _unitOfWorkDA.rollbackTransactionAsync();
+                    throw ex;
+                }
             }
         }
 
@@ -501,7 +504,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
                 Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
                 Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
-                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : 
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area :
                 String.Empty,
                 City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
                 State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,
@@ -575,12 +578,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             return model;
         }
 
-        private async Task WrkImportCustomersUpdate(WrkImportCustomers model, CancellationToken cancellationToken)
+        private async Task WrkImportCustomersUpdate(long WrkCustomerID, int status, CancellationToken cancellationToken)
         {
-            model.UpdatedBy = _currentUser.UserId;
-            model.UpdatedDate = DateTime.Now;
-            model.UpdatedUTCDate = DateTime.UtcNow;
-            await _unitOfWorkDA.WrkImportCustomersDA.Update(model, cancellationToken);
+            var getWrkImportCustomers = await _unitOfWorkDA.WrkImportCustomersDA.GetById(WrkCustomerID, cancellationToken);
+            getWrkImportCustomers.Status = status;
+            getWrkImportCustomers.UpdatedBy = _currentUser.UserId;
+            getWrkImportCustomers.UpdatedDate = DateTime.Now;
+            getWrkImportCustomers.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.WrkImportCustomersDA.Update(getWrkImportCustomers, cancellationToken);
         }
 
         #endregion PrivateMethods

@@ -15,14 +15,14 @@ namespace MidCapERP.Admin.Controllers
     public class CustomerController : BaseController
     {
         private IUnitOfWorkBL _unitOfWorkBL;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private CurrentUser _currentUser;
+        private ILogger<CustomerController> _logger;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, IServiceScopeFactory serviceScopeFactory, CurrentUser currentUser) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser, ILogger<CustomerController> logger) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
-            _serviceScopeFactory = serviceScopeFactory;
             _currentUser = currentUser;
+            _logger = logger;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
@@ -153,22 +153,18 @@ namespace MidCapERP.Admin.Controllers
                     var wrkFileEntity = CovertRequestDtoToWrkImportFilesDto(entity);
                     var wrkFileData = await _unitOfWorkBL.WrkImportFilesBL.CreateWrkImportFiles(wrkFileEntity, cancellationToken);
                     var getWrkCustomerList = _unitOfWorkBL.CustomersBL.CustomerFileImport(entity, wrkFileData.WrkImportFileID);
-
+                    _logger.LogWarning("Thread Started");
                     _ = Task.Run(async () =>
                     {
-                        using (var scope = _serviceScopeFactory.CreateScope())
-                        {
-                            _unitOfWorkBL = scope.ServiceProvider.GetRequiredService<IUnitOfWorkBL>();
-                            _currentUser = scope.ServiceProvider.GetRequiredService<CurrentUser>();
-                            await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
-                            await _unitOfWorkBL.CustomersBL.ImportCustomers(wrkFileData.WrkImportFileID, cancellationToken);
-                        }
+                        await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
+                        await _unitOfWorkBL.CustomersBL.ImportCustomers( wrkFileData.WrkImportFileID, cancellationToken);
                     }, cancellationToken).ConfigureAwait(false);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(1, ex, "Error : ImportCustomer");
+                throw ex;
             }
             return RedirectToAction("Index");
         }

@@ -12,10 +12,12 @@ namespace MidCapERP.BusinessLogic.Repositories
     {
         private IUnitOfWorkDA _unitOfWorkDA;
         private readonly IMapper _mapper;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly CurrentUser _currentUser;
 
-        public WrkImportCustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
+        public WrkImportCustomersBL(IServiceScopeFactory serviceScopeFactory, IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser)
         {
+            _serviceScopeFactory = serviceScopeFactory;
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
@@ -23,24 +25,28 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<List<WrkImportCustomersDto>> CreateWrkCustomer(List<WrkImportCustomersDto> model, CancellationToken cancellationToken)
         {
-            try
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                await _unitOfWorkDA.BeginTransactionAsync();
-                foreach (var item in model)
+                _unitOfWorkDA = scope.ServiceProvider.GetRequiredService<IUnitOfWorkDA>();
+                try
                 {
-                    var wrkCustomer = _mapper.Map<WrkImportCustomers>(item);
-                    wrkCustomer.CreatedBy = _currentUser.UserId;
-                    wrkCustomer.CreatedDate = DateTime.Now;
-                    wrkCustomer.CreatedUTCDate = DateTime.UtcNow;
-                    await _unitOfWorkDA.WrkImportCustomersDA.Create(wrkCustomer, cancellationToken);
+                    await _unitOfWorkDA.BeginTransactionAsync();
+                    foreach (var item in model)
+                    {
+                        var wrkCustomer = _mapper.Map<WrkImportCustomers>(item);
+                        wrkCustomer.CreatedBy = _currentUser.UserId;
+                        wrkCustomer.CreatedDate = DateTime.Now;
+                        wrkCustomer.CreatedUTCDate = DateTime.UtcNow;
+                        await _unitOfWorkDA.WrkImportCustomersDA.Create(wrkCustomer, cancellationToken);
+                    }
+                    await _unitOfWorkDA.CommitTransactionAsync();
+                    return _mapper.Map<List<WrkImportCustomersDto>>(model);
                 }
-                await _unitOfWorkDA.CommitTransactionAsync();
-                return _mapper.Map<List<WrkImportCustomersDto>>(model);
-            }
-            catch (Exception)
-            {
-                await _unitOfWorkDA.rollbackTransactionAsync();
-                throw;
+                catch (Exception)
+                {
+                    await _unitOfWorkDA.rollbackTransactionAsync();
+                    throw;
+                }
             }
         }
 
