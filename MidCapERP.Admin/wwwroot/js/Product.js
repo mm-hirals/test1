@@ -17,7 +17,7 @@ $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
     var tabId = $(e.target).attr("id")
     if (tabId == "nav-images-tab") {
         $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
-    } else if (tabId == "nav-rowmaterial-tab") {
+    } else if (tabId == "nav-rawmaterial-tab") {
         $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
     } else if (tabId == "nav-detail-tab") {
         $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
@@ -155,6 +155,7 @@ $(document).on("click", ".minus-icon", function () {
 ProductModel.onSuccess = function (xhr) {
     $('.productDetailsSubmit').buttonLoader('stop');
     toastr.success('Information saved successfully.');
+    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
 };
 
 ProductModel.onFailed = function (xhr) {
@@ -164,6 +165,7 @@ ProductModel.onFailed = function (xhr) {
 ProductModel.onProductMaterialSuccess = function (xhr) {
     $('.btnProductMaterial').buttonLoader('stop');
     toastr.success('Information saved successfully.');
+    $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
 };
 
 ProductModel.onProductMaterialFailed = function (xhr) {
@@ -182,12 +184,27 @@ $(document).on('submit', '#frmProductMaterial', function (e) {
     $('.btnProductMaterial').buttonLoader('start');
 });
 
+$(document).on("click", ".img-wrap .close", (function () {
+    var id = $(this).closest('.img-wrap').find('img').data('imageid');
+    $(this).parent().remove();
+
+    $.ajax({
+        url: "/Product/DeleteProductImage?ProductImageId=" + id,
+        type: "GET",
+        success: function (response) {
+            $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
+        }
+    });
+}));
+
 $(document).on("click", ".img-wrap .custom-control-input", (function () {
     var id = $(this).closest('.img-wrap').find('img').data('imageid');
+
     $.ajax({
         url: "/Product/ProductImageMarkAsCover?ProductImageId=" + id + "&IsCover=" + $(this).prop('checked'),
         type: "GET",
         success: function (response) {
+            $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
         }
     });
 }));

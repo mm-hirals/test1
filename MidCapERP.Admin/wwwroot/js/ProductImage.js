@@ -39,21 +39,12 @@ if (isDropZoneInit !== false) {
                 formData.append("ProductId", $("input.productId").val());
                 formData.append("Files", file);
             });
+            this.on("success", function (response) {
+                $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
+                $("#divProductInfo").load('/Product/CreateProductBasicDetail' + "?ProductId=" + $("#hdnProductId").val());
+            });
         }
     });
     myAwesomeDropzone;
     isDropZoneInit = false;
 }
-
-$(document).on("click", ".img-wrap .close", (function () {
-    var id = $(this).closest('.img-wrap').find('img').data('imageid');
-    $(this).parent().remove();
-
-    $.ajax({
-        url: "/Product/DeleteProductImage?ProductImageId=" + id,
-        type: "GET",
-        success: function (response) {
-        }
-    });
-}));
-
