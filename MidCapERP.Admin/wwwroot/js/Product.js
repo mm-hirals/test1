@@ -181,3 +181,13 @@ $(document).on('submit', '#frmProductDetail', function (e) {
 $(document).on('submit', '#frmProductMaterial', function (e) {
     $('.btnProductMaterial').buttonLoader('start');
 });
+
+$(document).on("click", ".img-wrap .custom-control-input", (function () {
+    var id = $(this).closest('.img-wrap').find('img').data('imageid');
+    $.ajax({
+        url: "/Product/ProductImageMarkAsCover?ProductImageId=" + id + "&IsCover=" + $(this).prop('checked'),
+        type: "GET",
+        success: function (response) {
+        }
+    });
+}));
