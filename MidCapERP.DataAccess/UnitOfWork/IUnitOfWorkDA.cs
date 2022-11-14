@@ -36,6 +36,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
         ITenantBankDetailDA TenantBankDetailDA { get; }
         INotificationManagementDA NotificationManagementDA { get; }
 
+        IWrkImportFilesDA WrkImportFilesDA { get; }
+        IWrkImportCustomersDA WrkImportCustomersDA { get; }
+
         Task BeginTransactionAsync();
 
         Task CommitTransactionAsync();
