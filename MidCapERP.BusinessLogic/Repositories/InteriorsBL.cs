@@ -57,8 +57,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var interiorToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
-            await _unitOfWorkDA.BeginTransactionAsync();
-
+            if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
+                await _unitOfWorkDA.BeginTransactionAsync();
             try
             {
                 interiorToInsert.RefferedBy = 0;
@@ -70,15 +70,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                 interiorToInsert.CreatedDate = DateTime.Now;
                 interiorToInsert.CreatedUTCDate = DateTime.UtcNow;
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(interiorToInsert, cancellationToken);
-
-                await SaveInteriorAddress(model, data, cancellationToken);
+                if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
+                    await SaveInteriorAddress(model, data, cancellationToken);
             }
             catch (Exception e)
             {
                 await _unitOfWorkDA.rollbackTransactionAsync();
                 throw new Exception("Interior data is not saved");
             }
-
             return _mapper.Map<InteriorRequestDto>(data);
         }
 
@@ -95,14 +94,11 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task SendSMSToInteriors(InteriorsSendSMSDto model, CancellationToken cancellationToken)
         {
-            //List<string> interiorEmailList = new List<string>();
             foreach (var item in model.CustomerList)
             {
                 var interiorData = await _unitOfWorkDA.CustomersDA.GetById(item, cancellationToken);
                 if (interiorData != null)
                 {
-                    //interiorEmailList.Add(interiorData.EmailId);
-                    //await _emailHelper.SendEmail(model.Subject, model.Message, interiorEmailList);
                     NotificationManagementRequestDto notificationDto = new NotificationManagementRequestDto()
                     {
                         EntityTypeID = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken),
@@ -127,7 +123,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<bool> ValidateInteriorPhoneNumber(InteriorRequestDto interiorRequestDto, CancellationToken cancellationToken)
         {
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+                var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerAndInteriorData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             if (interiorRequestDto.CustomerId > 0)
             {

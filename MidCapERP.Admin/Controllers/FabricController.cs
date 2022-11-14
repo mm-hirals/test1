@@ -20,14 +20,14 @@ namespace MidCapERP.Admin.Controllers
             _currentUser = currentUser;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.View)]
         public async Task<IActionResult> GetFabricData([FromForm] FabricDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.FabricBL.GetFilterFabricData(dataTableFilterDto, cancellationToken);
@@ -35,7 +35,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillCompanyNameDropDown(cancellationToken);
@@ -45,7 +45,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.Create)]
         public async Task<IActionResult> Create(FabricRequestDto fabricRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.FabricBL.CreateFabric(fabricRequestDto, cancellationToken);
@@ -53,7 +53,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             await FillCompanyNameDropDown(cancellationToken);
@@ -64,7 +64,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.Create)]
         public async Task<IActionResult> Update(int Id, FabricRequestDto fabricRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.FabricBL.UpdateFabric(Id, fabricRequestDto, cancellationToken);
@@ -72,7 +72,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Fabric.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalFabric.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.FabricBL.DeleteFabric(Id, cancellationToken);

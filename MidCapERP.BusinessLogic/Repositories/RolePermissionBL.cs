@@ -29,31 +29,25 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var allClaimsByRole = await GetAllRoleClaimsByRole(Id, cancellationToken);
             List<RolePermissionResponseDto> RolePermissionResponseDto = new List<RolePermissionResponseDto>();
-
             foreach (var item in allPermissions)
             {
-                RolePermissionResponseDto permissionRequestDto = new RolePermissionResponseDto();
-                permissionRequestDto.Module = item.Split(".")[1];
-
-                var rolePermission = RolePermissionResponseDto.FirstOrDefault(p => p.Module == permissionRequestDto.Module);
-                if (rolePermission == null)
+                RolePermissionResponseDto moduleResponseDtoChild = RolePermissionResponseDto.FirstOrDefault(p => p.ApplicationType == item.Split(".")[1]);
+                if (moduleResponseDtoChild == null)
                 {
-                    permissionRequestDto.ModulePermissionList = new List<PermissiongResponseDto>();
-                    RolePermissionResponseDto.Add(permissionRequestDto);
-                    rolePermission = RolePermissionResponseDto.FirstOrDefault(p => p.Module == permissionRequestDto.Module);
+                    moduleResponseDtoChild = new RolePermissionResponseDto();
+                    moduleResponseDtoChild.ApplicationType = item.Split(".")[1];
+                    moduleResponseDtoChild.RolePermissionList = new List<PermissiongResponseDto>();
+                    RolePermissionResponseDto.Add(moduleResponseDtoChild);
                 }
-
                 PermissiongResponseDto permissionResponseDto = new PermissiongResponseDto();
-                permissionResponseDto.Id = item.Split(".")[1] + item.Split(".")[2];
-                permissionResponseDto.PermissionType = item.Split(".")[2];
+                permissionResponseDto.Id = item.Split(".")[2] + item.Split(".")[3];
+                permissionResponseDto.Module = item.Split(".")[2];
+                permissionResponseDto.PermissionType = item.Split(".")[3];
                 permissionResponseDto.Permission = item;
                 if (allClaimsByRole.Any(x => x.Value == item))
-                {
                     permissionResponseDto.IsChecked = "checked";
-                }
-                rolePermission.ModulePermissionList.Add(permissionResponseDto);
+                moduleResponseDtoChild.RolePermissionList.Add(permissionResponseDto);
             }
-
             return RolePermissionResponseDto;
         }
 

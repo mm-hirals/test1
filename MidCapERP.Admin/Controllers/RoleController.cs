@@ -17,14 +17,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Role.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRolePermission.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Role.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRolePermission.View)]
         public async Task<IActionResult> GetRoleData([FromForm] RoleDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.RoleBL.GetFilterRoleData(dataTableFilterDto, cancellationToken);
@@ -32,7 +32,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Role.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRolePermission.Create)]
         public async Task<IActionResult> CreateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.RoleBL.CreateRole(roleRequestDto, cancellationToken);
@@ -43,14 +43,14 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Role.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRolePermission.Create)]
         public async Task<IActionResult> UpdateRole(RoleRequestDto roleRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.RoleBL.UpdateRole(roleRequestDto, cancellationToken);
             return RedirectToAction("Index", "Role");
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRolePermission.View)]
         public async Task<IActionResult> RolePermission(string Id, CancellationToken cancellationToken)
         {
             RoleRequestDto mRoleRequestDto = new RoleRequestDto();
@@ -68,7 +68,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.RolePermission.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalRolePermission.Create)]
         public async Task<JsonResult> CreateRolePermission([FromForm] RolePermissionRequestDto rolePermissionResponseDto, CancellationToken cancellationToken)
         {
             try

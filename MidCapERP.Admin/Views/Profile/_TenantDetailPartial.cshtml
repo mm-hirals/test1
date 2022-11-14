@@ -16,32 +16,37 @@
                                         <input asp-for="TenantId" hidden class="form-control" />
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="TenantName" class="form-label"></label>
+                                                <label asp-for="TenantName" class="form-label"></label><span class="required">*</span>
                                                 <input asp-for="TenantName" type="text" class="form-control" placeholder="Tenant Name">
+                                                <span asp-validation-for="TenantName" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="FirstName" class="form-label"></label>
+                                                <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
                                                 <input asp-for="FirstName" type="text" class="form-control fabric" placeholder="FirstName">
+                                                <span asp-validation-for="FirstName" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="LastName" class="form-label"></label>
+                                                <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
                                                 <input asp-for="LastName" type="text" class="form-control" placeholder="LastName">
+                                                <span asp-validation-for="LastName" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="EmailId" class="form-label"></label>
+                                                <label asp-for="EmailId" class="form-label"></label><span class="required">*</span>
                                                 <input asp-for="EmailId" type="text" class="form-control fabric" placeholder="EmailId">
+                                                <span asp-validation-for="EmailId" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="PhoneNumber" class="form-label"></label>
+                                                <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
                                                 <input asp-for="PhoneNumber" type="number" class="form-control" placeholder="Phonetext">
+                                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-3">
@@ -55,8 +60,9 @@
                                         </div>
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label asp-for="GSTNo" class="form-label"></label>
-                                                <input asp-for="GSTNo" type="number" class="form-control" placeholder="GSTNo">
+                                                <label asp-for="GSTNo" class="form-label"></label><span class="required">*</span>
+                                                <input asp-for="GSTNo" type="number" class="form-control" placeholder="GST No">
+                                                <span asp-validation-for="GSTNo" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>

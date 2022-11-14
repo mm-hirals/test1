@@ -25,7 +25,7 @@ namespace MidCapERP.Admin.Controllers
             _currentUser = currentUser;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             await FillRefferedDropDown(cancellationToken);
@@ -33,7 +33,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
         public async Task<IActionResult> GetCustomersData([FromForm] CustomerDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.GetFilterCustomersData(dataTableFilterDto, cancellationToken);
@@ -41,7 +41,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
         public async Task<IActionResult> GetCustomerAddressesData([FromForm] CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(dataTableFilterDto, cancellationToken);
@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             await FillRefferedDropDown(cancellationToken);
@@ -57,7 +57,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> Create(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CustomersBL.CreateCustomers(customersRequestDto, cancellationToken);
@@ -65,7 +65,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> CreateCustomerAddress(int customerId, CancellationToken cancellationToken)
         {
             CustomerAddressesRequestDto dto = new();
@@ -74,7 +74,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> CreateCustomerAddress(CustomerAddressesRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.CreateCustomerAddresses(customersRequestDto, cancellationToken);
@@ -82,7 +82,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> Update(Int64 Id, CancellationToken cancellationToken)
         {
             await FillRefferedDropDown(cancellationToken);
@@ -91,7 +91,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Customer.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> Update(Int64 Id, CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomersBL.UpdateCustomers(Id, customersRequestDto, cancellationToken);
@@ -99,7 +99,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var customersAddress = await _unitOfWorkBL.CustomerAddressesBL.GetById(Id, cancellationToken);
@@ -107,7 +107,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto customersAddressRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.UpdateCustomerAddresses(Id, customersAddressRequestDto, cancellationToken);
@@ -115,7 +115,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.CustomerAddress.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Delete)]
         public async Task<IActionResult> DeleteCustomerAddresses(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CustomerAddressesBL.DeleteCustomerAddresses(Id, cancellationToken);

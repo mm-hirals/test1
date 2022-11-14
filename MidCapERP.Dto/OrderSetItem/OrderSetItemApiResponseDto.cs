@@ -28,5 +28,6 @@ namespace MidCapERP.Dto.OrderSetItem
         public DateTime? ReceiveDate { get; set; }
         public decimal? ProvidedMaterial { get; set; }
         public int Status { get; set; }
+        public bool IsItemReceived { get; set; }
     }
 }

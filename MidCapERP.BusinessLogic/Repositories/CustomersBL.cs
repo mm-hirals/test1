@@ -198,8 +198,8 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerToInsert = _mapper.Map<Customers>(model);
             Customers data = null;
-            await _unitOfWorkDA.BeginTransactionAsync();
-
+            if(model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
+                await _unitOfWorkDA.BeginTransactionAsync();
             try
             {
                 customerToInsert.CustomerTypeId = (int)CustomerTypeEnum.Customer;
@@ -209,17 +209,15 @@ namespace MidCapERP.BusinessLogic.Repositories
                 customerToInsert.CreatedBy = _currentUser.UserId;
                 customerToInsert.CreatedDate = DateTime.Now;
                 customerToInsert.CreatedUTCDate = DateTime.UtcNow;
-
                 data = await _unitOfWorkDA.CustomersDA.CreateCustomers(customerToInsert, cancellationToken);
-
-                await SaveCustomerAddress(model, data, cancellationToken);
+                if (model.CustomerAddressesRequestDto.State != null && model.CustomerAddressesRequestDto.Area != null && model.CustomerAddressesRequestDto.City != null && model.CustomerAddressesRequestDto.ZipCode != null)
+                    await SaveCustomerAddress(model, data, cancellationToken);   
             }
             catch (Exception e)
             {
                 await _unitOfWorkDA.rollbackTransactionAsync();
                 throw new Exception("Customer data is not saved");
             }
-
             return _mapper.Map<CustomersRequestDto>(data);
         }
 
@@ -503,7 +501,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                 Street1 = model.CustomerAddressesRequestDto.Street1 != null ? model.CustomerAddressesRequestDto.Street1 : String.Empty,
                 Street2 = model.CustomerAddressesRequestDto.Street2 != null ? model.CustomerAddressesRequestDto.Street2 : String.Empty,
                 Landmark = model.CustomerAddressesRequestDto.Landmark != null ? model.CustomerAddressesRequestDto.Landmark : String.Empty,
-                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : String.Empty,
+                Area = model.CustomerAddressesRequestDto.Area != null ? model.CustomerAddressesRequestDto.Area : 
+                String.Empty,
                 City = model.CustomerAddressesRequestDto.City != null ? model.CustomerAddressesRequestDto.City : String.Empty,
                 State = model.CustomerAddressesRequestDto.State != null ? model.CustomerAddressesRequestDto.State : String.Empty,
                 ZipCode = model.CustomerAddressesRequestDto.ZipCode != null ? model.CustomerAddressesRequestDto.ZipCode : String.Empty,
