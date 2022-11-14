@@ -296,6 +296,7 @@ namespace MidCapERP.Infrastructure.Services.Token
         private async Task<TokenResponse> GenerateAuthentication(bool isCookie, ApplicationUser user, CancellationToken cancellationToken)
         {
             string role = (await _userManager.GetRolesAsync(user))[0];
+            var roleDetails = await _roleManager.FindByNameAsync(role);
             string jwtToken = await GenerateJwtToken(user, cancellationToken, isCookie);
 
             var userTenants = await _unitOfWorkDA.UserTenantMappingDA.GetAll(cancellationToken);
@@ -306,7 +307,8 @@ namespace MidCapERP.Infrastructure.Services.Token
             return new TokenResponse(user,
                                      role,
                                      jwtToken,
-                                     tenantId
+                                     tenantId,
+                                     roleDetails.Id
                                      //""//refreshToken.Token
                                      );
         }

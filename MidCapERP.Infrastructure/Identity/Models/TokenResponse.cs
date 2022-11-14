@@ -10,7 +10,8 @@ namespace MidCapERP.Infrastructure.Identity.Models
         public TokenResponse(ApplicationUser user,
                              string role,
                              string token,
-                             string tenantId
+                             string tenantId,
+                             string roleId
                             //string refreshToken
                             )
         {
@@ -20,7 +21,7 @@ namespace MidCapERP.Infrastructure.Identity.Models
             this.EmailAddress = user.Email;
             this.Token = token;
             this.Role = role;
-            this.RoleId = RoleId;
+            this.RoleId = roleId;
             this.TenantId = tenantId;
             //RefreshToken = refreshToken;
         }

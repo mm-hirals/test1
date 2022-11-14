@@ -13,12 +13,13 @@ if (isDropZoneInit !== false) {
         init: function () {
             var submitButton = document.querySelector("#submit-all");
             var wrapperThis = this;
-
             submitButton.addEventListener("click", function () {
                 $('#submit-all').buttonLoader('start');
                 wrapperThis.processQueue();
-                $('#submit-all').buttonLoader('stop');
                 toastr.success('Image saved successfully.');
+                setTimeout(function () {
+                    $('#submit-all').buttonLoader('stop');
+                }, 300);
             });
 
             this.on("addedfile", function (file) {

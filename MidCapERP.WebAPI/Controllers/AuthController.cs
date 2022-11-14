@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoWrapper.Wrappers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using MidCapERP.BusinessLogic.Repositories;
+using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Core.Localizer.JsonString;
+using MidCapERP.DataAccess.UnitOfWork;
+using MidCapERP.Dto;
 using MidCapERP.Dto.APIResponse;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
+using static MagnusMinds.Utility.ApiDefaultResponseModel;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -14,12 +22,16 @@ namespace MidCapERP.WebAPI.Controllers
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public readonly IStringLocalizer<AuthController> _localizer;
+        private readonly IUnitOfWorkBL _unitOfWorkBL;
+        private readonly CurrentUser _currentUser;
 
-        public AuthController(IStringLocalizer<AuthController> localizer, IHttpContextAccessor httpContextAccessor, ITokenService tokenService)
+        public AuthController(IStringLocalizer<AuthController> localizer, IHttpContextAccessor httpContextAccessor, ITokenService tokenService, IUnitOfWorkBL unitOfWorkBL, CurrentUser currentUser)
         {
             _localizer = localizer;
             _httpContextAccessor = httpContextAccessor;
             _tokenService = tokenService;
+            _unitOfWorkBL = unitOfWorkBL;
+            _currentUser = currentUser;
         }
 
         [HttpPost]
@@ -53,6 +65,21 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new MidCapAPIResponse(messageCode: JsonStringResourcesKeys.OTPInvalid, message: _localizer[JsonStringResourcesKeys.OTPInvalid], result: null, statusCode: 404);
             }
+        }
+
+        [HttpGet("GetPermissions")]
+        [Authorize]
+        public async Task<ApiResponse> GetPermissionsAPI(CancellationToken cancellationToken)
+         {
+            var allPermissions = ApplicationIdentityConstants.Permissions.GetAllPermissions();
+            var rolePermissionResponseDto = await _unitOfWorkBL.RolePermissionBL.GetRolePermissions(_currentUser.RoleId, allPermissions, cancellationToken);
+            var appPortalDetails = rolePermissionResponseDto.Where(a => a.ApplicationType == "App").ToList();
+            var permissionsDetails = await _unitOfWorkBL.RolePermissionBL.GetPermissions(appPortalDetails, cancellationToken);
+            if (permissionsDetails == null)
+            {
+                return new ApiResponse(message: "No Data found", result: permissionsDetails, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data found", result: permissionsDetails, statusCode: 200);
         }
     }
 }
