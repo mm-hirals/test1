@@ -179,16 +179,22 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var getAllCustomer = await GetAll(cancellationToken);
             var customerAndInteriorData = getAllCustomer.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
-            var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
-            if (customerExistOrNot == null)
+            var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.CustomerId == Id);
+            if(customerExistOrNot != null)
             {
-                var oldData = await CustomerGetById(Id, cancellationToken);
-                oldData.UpdatedBy = _currentUser.UserId;
-                oldData.UpdatedDate = DateTime.Now;
-                oldData.UpdatedUTCDate = DateTime.UtcNow;
-                MapToDbObject(model, oldData);
-                var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-                return _mapper.Map<CustomerApiRequestDto>(data);
+                bool customerPhonenumer = customerExistOrNot.PhoneNumber == model.PhoneNumber;
+                if (customerPhonenumer == true)
+                {
+                    var oldData = await CustomerGetById(Id, cancellationToken);
+                    oldData.UpdatedBy = _currentUser.UserId;
+                    oldData.UpdatedDate = DateTime.Now;
+                    oldData.UpdatedUTCDate = DateTime.UtcNow;
+                    MapToDbObject(model, oldData);
+                    var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
+                    return _mapper.Map<CustomerApiRequestDto>(data);
+                }
+                else
+                    throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
             }
             else
                 throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
