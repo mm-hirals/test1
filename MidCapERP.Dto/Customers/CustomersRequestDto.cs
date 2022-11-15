@@ -42,7 +42,7 @@ namespace MidCapERP.Dto.Customers
         public string? AltPhoneNumber { get; set; }
 
         [DisplayName("GST No")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "The Minimum 2 characters, Maximum 15 characters.")]
+        [StringLength(15, MinimumLength = 2, ErrorMessage = "The Minimum 2 characters, Maximum 15 characters.")]
         public string? GSTNo { get; set; }
 
         [DisplayName("Reffered By")]
