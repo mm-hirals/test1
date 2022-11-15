@@ -16,14 +16,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.View)]
         public async Task<IActionResult> GetCompanyData([FromForm] CompanyDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.CompanyBL.GetFilterCompanyData(dataTableFilterDto, cancellationToken);
@@ -31,14 +31,14 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             return PartialView("_CompanyPartial");
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.Create)]
         public async Task<IActionResult> Create(CompanyRequestDto lookupRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CompanyBL.CreateCompany(lookupRequestDto, cancellationToken);
@@ -46,7 +46,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             var company = await _unitOfWorkBL.CompanyBL.GetById(Id, cancellationToken);
@@ -54,7 +54,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.Create)]
         public async Task<IActionResult> Update(int Id, CompanyRequestDto companyRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CompanyBL.UpdateCompany(Id, companyRequestDto, cancellationToken);
@@ -62,7 +62,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Company.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCompany.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CompanyBL.DeleteCompany(Id, cancellationToken);

@@ -9,313 +9,220 @@
 
         public static class Roles
         {
-            public static readonly string Administrator = "Administrator_1";
-            public static readonly string SalesRepresentative = "SalesRepresentative_1";
-            public static readonly string Supervisor = "Supervisor_1";
-            public static readonly string Contractor = "Contractor_1";
-            public static readonly string StoreManager = "StoreManager_1";
-            public static readonly string[] RolesSupported = { Administrator, StoreManager, Supervisor, SalesRepresentative, Contractor };
+            public static readonly string SuperAdmin = "SuperAdmin";
+            public static readonly string[] RolesSupported = { SuperAdmin };
         }
 
         public static class Permissions
         {
-            public static List<string> GeneratePermissionsForModule(string module)
+            public static List<string> GeneratePermissionsForModule(string application, string module)
             {
                 return new List<string>()
                 {
-                    $"Permissions.{module}.Create",
-                    $"Permissions.{module}.View",
-                    $"Permissions.{module}.Update",
-                    $"Permissions.{module}.Delete",
+                    $"Permissions.{application}.{module}.View",
+                    $"Permissions.{application}.{module}.Create",
+                    $"Permissions.{application}.{module}.Delete",
                 };
+            }
+
+            public static List<string> GeneratePermissionsForModule(string application, string module, string permission)
+            {
+                return new List<string>() { $"Permissions.{application}.{module}.{permission}" };
             }
 
             public static List<string> GetAllPermissions()
             {
-                return GeneratePermissionsForModule("Users")
-                .Union(GeneratePermissionsForModule("Role"))
-                .Union(GeneratePermissionsForModule("Dashboard"))
-                .Union(GeneratePermissionsForModule("Lookup"))
-                .Union(GeneratePermissionsForModule("Status"))
-                .Union(GeneratePermissionsForModule("Contractor"))
-                .Union(GeneratePermissionsForModule("SubjectType"))
-                .Union(GeneratePermissionsForModule("LookupValues"))
-                .Union(GeneratePermissionsForModule("ContractorCategoryMapping"))
-                .Union(GeneratePermissionsForModule("Customer"))
-                .Union(GeneratePermissionsForModule("ErrorLogs"))
-                .Union(GeneratePermissionsForModule("Category"))
-                .Union(GeneratePermissionsForModule("Company"))
-                .Union(GeneratePermissionsForModule("Unit"))
-                .Union(GeneratePermissionsForModule("FrameType"))
-                .Union(GeneratePermissionsForModule("AccessoriesType"))
-                .Union(GeneratePermissionsForModule("RawMaterial"))
-                .Union(GeneratePermissionsForModule("Accessories"))
-                .Union(GeneratePermissionsForModule("Fabric"))
-                .Union(GeneratePermissionsForModule("Frame"))
-                .Union(GeneratePermissionsForModule("Polish"))
-                .Union(GeneratePermissionsForModule("User"))
-                .Union(GeneratePermissionsForModule("CustomerAddresses"))
-                .Union(GeneratePermissionsForModule("CustomerTypes"))
-                .Union(GeneratePermissionsForModule("Product"))
-                .Union(GeneratePermissionsForModule("RolePermission"))
-                .Union(GeneratePermissionsForModule("Product"))
-                .Union(GeneratePermissionsForModule("Order"))
-                .Union(GeneratePermissionsForModule("Tenant"))
-                .Union(GeneratePermissionsForModule("TenantBankDetail"))
-                .Union(GeneratePermissionsForModule("Profile"))
-                .Union(GeneratePermissionsForModule("Interior"))
-                .Union(GeneratePermissionsForModule("InteriorAddresses"))
-                .ToList();
+                return GeneratePermissionsForModule("Portal", "Dashboard", "OrdersView")
+                    .Union(GeneratePermissionsForModule("Portal", "Dashboard", "CustomersView"))
+                    .Union(GeneratePermissionsForModule("Portal", "Dashboard", "InteriorsView"))
+                    .Union(GeneratePermissionsForModule("Portal", "Dashboard", "ProductsView"))
+                    .Union(GeneratePermissionsForModule("Portal", "Product"))
+                    .Union(GeneratePermissionsForModule("Portal", "Product", "Publish"))
+                    .Union(GeneratePermissionsForModule("Portal", "Product", "CostAnalyser"))
+                    .Union(GeneratePermissionsForModule("Portal", "Order"))
+                    .Union(GeneratePermissionsForModule("Portal", "Customer"))
+                    .Union(GeneratePermissionsForModule("Portal", "Customer", "Import"))
+                    .Union(GeneratePermissionsForModule("Portal", "Customer", "SendGreetings"))
+                    .Union(GeneratePermissionsForModule("Portal", "Interior"))
+                    .Union(GeneratePermissionsForModule("Portal", "Interior", "Import"))
+                    .Union(GeneratePermissionsForModule("Portal", "Interior", "SendGreetings"))
+                    .Union(GeneratePermissionsForModule("Portal", "Category"))
+                    .Union(GeneratePermissionsForModule("Portal", "Company"))
+                    .Union(GeneratePermissionsForModule("Portal", "Unit"))
+                    .Union(GeneratePermissionsForModule("Portal", "RawMaterial"))
+                    .Union(GeneratePermissionsForModule("Portal", "Fabric"))
+                    .Union(GeneratePermissionsForModule("Portal", "Polish"))
+                    .Union(GeneratePermissionsForModule("Portal", "User"))
+                    .Union(GeneratePermissionsForModule("Portal", "RolePermission"))
+                    .Union(GeneratePermissionsForModule("Portal", "Profile", "View"))
+                    .Union(GeneratePermissionsForModule("Portal", "Profile", "Create"))
+                    .Union(GeneratePermissionsForModule("App", "Dashboard", "ApprovedOrdersView"))
+                    .Union(GeneratePermissionsForModule("App", "Dashboard", "PendingOrdersView"))
+                    .Union(GeneratePermissionsForModule("App", "Dashboard", "FollowupOrdersView"))
+                    .Union(GeneratePermissionsForModule("App", "Dashboard", "ReceivableOrdersView"))
+                    .Union(GeneratePermissionsForModule("App", "Customer", "View"))
+                    .Union(GeneratePermissionsForModule("App", "Customer", "Create"))
+                    .Union(GeneratePermissionsForModule("App", "Interior", "View"))
+                    .Union(GeneratePermissionsForModule("App", "Interior", "Create"))
+                    .Union(GeneratePermissionsForModule("App", "Order"))
+                    .Union(GeneratePermissionsForModule("App", "Order", "Approve"))
+                    .Union(GeneratePermissionsForModule("App", "Order", "Decline"))
+                    .Union(GeneratePermissionsForModule("App", "Order", "ShareQuotation"))
+                    .Union(GeneratePermissionsForModule("App", "Order", "MaterialReceive"))
+                    .Union(GeneratePermissionsForModule("App", "MegaSearch", "View"))
+                    .ToList();
             }
 
-            public static bool CheckPermission(string permission)
+            public static class PortalDashboard
             {
-                return GetAllPermissions().Contains(permission);
+                public const string OrdersView = "Permissions.Portal.Dashboard.OrdersView";
+                public const string CustomersView = "Permissions.Portal.Dashboard.CustomersView";
+                public const string InteriorsView = "Permissions.Portal.Dashboard.InteriorsView";
+                public const string ProductsView = "Permissions.Portal.Dashboard.ProductsView";
             }
 
-            public static bool CheckPermission(string permission, string module)
+            public static class PortalProduct
             {
-                return GeneratePermissionsForModule(module).Contains(permission);
+                public const string View = "Permissions.Portal.Product.View";
+                public const string Create = "Permissions.Portal.Product.Create";
+                public const string Delete = "Permissions.Portal.Product.Delete";
+                public const string Publish = "Permissions.Portal.Product.Publish";
+                public const string CostAnalyser = "Permissions.Portal.Product.CostAnalyser";
             }
 
-            public static class Users
+            public static class PortalOrder
             {
-                public const string View = "Permissions.Users.View";
-                public const string Create = "Permissions.Users.Create";
-                public const string Update = "Permissions.Users.Update";
-                public const string Delete = "Permissions.Users.Delete";
+                public const string View = "Permissions.Portal.Order.View";
+                public const string Create = "Permissions.Portal.Order.Create";
+                public const string Delete = "Permissions.Portal.Order.Delete";
             }
 
-            public static class Role
+            public static class PortalCustomer
             {
-                public const string View = "Permissions.Role.View";
-                public const string Create = "Permissions.Role.Create";
-                public const string Update = "Permissions.Role.Update";
-                public const string Delete = "Permissions.Role.Delete";
+                public const string View = "Permissions.Portal.Customer.View";
+                public const string Create = "Permissions.Portal.Customer.Create";
+                public const string Delete = "Permissions.Portal.Customer.Delete";
+                public const string Import = "Permissions.Portal.Customer.Import";
+                public const string SendGreetings = "Permissions.Portal.Customer.SendGreetings";
             }
 
-            public static class Dashboard
+            public static class PortalInterior
             {
-                public const string View = "Permissions.Dashboard.View";
-                public const string Create = "Permissions.Dashboard.Create";
-                public const string Update = "Permissions.Dashboard.Update";
-                public const string Delete = "Permissions.Dashboard.Delete";
+                public const string View = "Permissions.Portal.Interior.View";
+                public const string Create = "Permissions.Portal.Interior.Create";
+                public const string Delete = "Permissions.Portal.Interior.Delete";
+                public const string Import = "Permissions.Portal.Interior.Import";
+                public const string SendGreetings = "Permissions.Portal.Interior.SendGreetings";
             }
 
-            public static class Lookup
+            public static class PortalCategory
             {
-                public const string View = "Permissions.Lookup.View";
-                public const string Create = "Permissions.Lookup.Create";
-                public const string Update = "Permissions.Lookup.Update";
-                public const string Delete = "Permissions.Lookup.Delete";
+                public const string View = "Permissions.Portal.Category.View";
+                public const string Create = "Permissions.Portal.Category.Create";
+                public const string Delete = "Permissions.Portal.Category.Delete";
             }
 
-            public static class Status
+            public static class PortalCompany
             {
-                public const string View = "Permissions.Status.View";
-                public const string Create = "Permissions.Status.Create";
-                public const string Update = "Permissions.Status.Update";
-                public const string Delete = "Permissions.Status.Delete";
+                public const string View = "Permissions.Portal.Company.View";
+                public const string Create = "Permissions.Portal.Company.Create";
+                public const string Delete = "Permissions.Portal.Company.Delete";
             }
 
-            public static class Contractor
+            public static class PortalUnit
             {
-                public const string View = "Permissions.Contractor.View";
-                public const string Create = "Permissions.Contractor.Create";
-                public const string Update = "Permissions.Contractor.Update";
-                public const string Delete = "Permissions.Contractor.Delete";
+                public const string View = "Permissions.Portal.Unit.View";
+                public const string Create = "Permissions.Portal.Unit.Create";
+                public const string Delete = "Permissions.Portal.Unit.Delete";
             }
 
-            public static class SubjectType
+            public static class PortalRawMaterial
             {
-                public const string View = "Permissions.SubjectType.View";
-                public const string Create = "Permissions.SubjectType.Create";
-                public const string Update = "Permissions.SubjectType.Update";
-                public const string Delete = "Permissions.SubjectType.Delete";
+                public const string View = "Permissions.Portal.RawMaterial.View";
+                public const string Create = "Permissions.Portal.RawMaterial.Create";
+                public const string Delete = "Permissions.Portal.RawMaterial.Delete";
             }
 
-            public static class LookupValues
+            public static class PortalFabric
             {
-                public const string View = "Permissions.LookupValues.View";
-                public const string Create = "Permissions.LookupValues.Create";
-                public const string Update = "Permissions.LookupValues.Update";
-                public const string Delete = "Permissions.LookupValues.Delete";
+                public const string View = "Permissions.Portal.Fabric.View";
+                public const string Create = "Permissions.Portal.Fabric.Create";
+                public const string Delete = "Permissions.Portal.Fabric.Delete";
             }
 
-            public static class ContractorCategoryMapping
+            public static class PortalPolish
             {
-                public const string View = "Permissions.ContractorCategoryMapping.View";
-                public const string Create = "Permissions.ContractorCategoryMapping.Create";
-                public const string Update = "Permissions.ContractorCategoryMapping.Update";
-                public const string Delete = "Permissions.ContractorCategoryMapping.Delete";
+                public const string View = "Permissions.Portal.Polish.View";
+                public const string Create = "Permissions.Portal.Polish.Create";
+                public const string Delete = "Permissions.Portal.Polish.Delete";
             }
 
-            public static class Customer
+            public static class PortalUser
             {
-                public const string View = "Permissions.Customer.View";
-                public const string Create = "Permissions.Customer.Create";
-                public const string Update = "Permissions.Customer.Update";
-                public const string Delete = "Permissions.Customer.Delete";
+                public const string View = "Permissions.Portal.User.View";
+                public const string Create = "Permissions.Portal.User.Create";
+                public const string Delete = "Permissions.Portal.User.Delete";
             }
 
-            public static class ErrorLogs
+            public static class PortalRolePermission
+            {
+                public const string View = "Permissions.Portal.RolePermission.View";
+                public const string Create = "Permissions.Portal.RolePermission.Create";
+                public const string Delete = "Permissions.Portal.RolePermission.Delete";
+            }
+
+            public static class PortalProfile
+            {
+                public const string View = "Permissions.Portal.Profile.View";
+                public const string Create = "Permissions.Portal.Profile.Create";
+            }
+
+            public static class PortalErrorLogs
             {
                 public const string View = "Permissions.ErrorLogs.View";
             }
 
-            public static class Category
+            public static class AppDashboard
             {
-                public const string View = "Permissions.Category.View";
-                public const string Create = "Permissions.Category.Create";
-                public const string Update = "Permissions.Category.Update";
-                public const string Delete = "Permissions.Category.Delete";
+                public const string ApprovedOrdersView = "Permissions.App.Dashboard.ApprovedOrdersView";
+                public const string PendingOrdersView = "Permissions.App.Dashboard.PendingOrdersView";
+                public const string FollowupOrdersView = "Permissions.App.Dashboard.FollowupOrdersView";
+                public const string ReceivableOrdersView = "Permissions.App.Dashboard.ReceivableOrdersView";
             }
 
-            public static class Company
+            public static class AppCustomer
             {
-                public const string View = "Permissions.Company.View";
-                public const string Create = "Permissions.Company.Create";
-                public const string Update = "Permissions.Company.Update";
-                public const string Delete = "Permissions.Company.Delete";
+                public const string View = "Permissions.App.Customer.View";
+                public const string Create = "Permissions.App.Customer.Create";
             }
 
-            public static class Unit
+            public static class AppInterior
             {
-                public const string View = "Permissions.Unit.View";
-                public const string Create = "Permissions.Unit.Create";
-                public const string Update = "Permissions.Unit.Update";
-                public const string Delete = "Permissions.Unit.Delete";
+                public const string View = "Permissions.App.Interior.View";
+                public const string Create = "Permissions.App.Interior.Create";
             }
 
-            public static class FrameType
+            public static class AppOrder
             {
-                public const string View = "Permissions.FrameType.View";
-                public const string Create = "Permissions.FrameType.Create";
-                public const string Update = "Permissions.FrameType.Update";
-                public const string Delete = "Permissions.FrameType.Delete";
+                public const string View = "Permissions.App.Order.View";
+                public const string Create = "Permissions.App.Order.Create";
+                public const string Delete = "Permissions.App.Order.Delete";
+                public const string Approve = "Permissions.App.Order.Approve";
+                public const string Decline = "Permissions.App.Order.Decline";
+                public const string ShareQuotation = "Permissions.App.Order.ShareQuotation";
+                public const string MaterialReceive = "Permissions.App.Order.MaterialReceive";
             }
 
-            public static class AccessoriesType
+            public static class AppMegaSearch
             {
-                public const string View = "Permissions.AccessoriesType.View";
-                public const string Create = "Permissions.AccessoriesType.Create";
-                public const string Update = "Permissions.AccessoriesType.Update";
-                public const string Delete = "Permissions.AccessoriesType.Delete";
+                public const string View = "Permissions.App.MegaSearch.View";
             }
 
-            public static class RawMaterial
+            public static class PortalContractor
             {
-                public const string View = "Permissions.RawMaterial.View";
-                public const string Create = "Permissions.RawMaterial.Create";
-                public const string Update = "Permissions.RawMaterial.Update";
-                public const string Delete = "Permissions.RawMaterial.Delete";
-            }
-
-            public static class Accessories
-            {
-                public const string View = "Permissions.Accessories.View";
-                public const string Create = "Permissions.Accessories.Create";
-                public const string Update = "Permissions.Accessories.Update";
-                public const string Delete = "Permissions.Accessories.Delete";
-            }
-
-            public static class Fabric
-            {
-                public const string View = "Permissions.Fabric.View";
-                public const string Create = "Permissions.Fabric.Create";
-                public const string Update = "Permissions.Fabric.Update";
-                public const string Delete = "Permissions.Fabric.Delete";
-            }
-
-            public static class Frame
-            {
-                public const string View = "Permissions.Frame.View";
-                public const string Create = "Permissions.Frame.Create";
-                public const string Update = "Permissions.Frame.Update";
-                public const string Delete = "Permissions.Frame.Delete";
-            }
-
-            public static class Polish
-            {
-                public const string View = "Permissions.Polish.View";
-                public const string Create = "Permissions.Polish.Create";
-                public const string Update = "Permissions.Polish.Update";
-                public const string Delete = "Permissions.Polish.Delete";
-            }
-
-            public static class RolePermission
-            {
-                public const string View = "Permissions.RolePermission.View";
-                public const string Create = "Permissions.RolePermission.Create";
-                public const string Update = "Permissions.RolePermission.Update";
-                public const string Delete = "Permissions.RolePermission.Delete";
-            }
-
-            public static class CustomerAddress
-            {
-                public const string View = "Permissions.CustomerAddresses.View";
-                public const string Create = "Permissions.CustomerAddresses.Create";
-                public const string Update = "Permissions.CustomerAddresses.Update";
-                public const string Delete = "Permissions.CustomerAddresses.Delete";
-            }
-
-            public static class CustomerType
-            {
-                public const string View = "Permissions.CustomerTypes.View";
-            }
-
-            public static class Product
-            {
-                public const string View = "Permissions.Product.View";
-                public const string Create = "Permissions.Product.Create";
-                public const string Update = "Permissions.Product.Update";
-                public const string Delete = "Permissions.Product.Delete";
-            }
-
-            public static class Order
-            {
-                public const string View = "Permissions.Order.View";
-                public const string Create = "Permissions.Order.Create";
-                public const string Update = "Permissions.Order.Update";
-                public const string Delete = "Permissions.Order.Delete";
-            }
-
-            public static class Tenant
-            {
-                public const string View = "Permissions.Tenant.View";
-                public const string Update = "Permissions.Tenant.Update";
-            }
-
-            public static class TenantBankDetail
-            {
-                public const string View = "Permissions.TenantBankDetail.View";
-                public const string Create = "Permissions.TenantBankDetail.Create";
-                public const string Update = "Permissions.TenantBankDetail.Update";
-                public const string Delete = "Permissions.TenantBankDetail.Delete";
-            }
-
-            public static class Profile
-            {
-                public const string View = "Permissions.Profile.View";
-                public const string Create = "Permissions.Profile.Create";
-                public const string Update = "Permissions.Profile.Update";
-                public const string Delete = "Permissions.Profile.Delete";
-            }
-
-            public static class Interior
-            {
-                public const string View = "Permissions.Interior.View";
-                public const string Create = "Permissions.Interior.Create";
-                public const string Update = "Permissions.Interior.Update";
-                public const string Delete = "Permissions.Interior.Delete";
-            }
-
-            public static class InteriorAddresses
-            {
-                public const string View = "Permissions.InteriorAddresses.View";
-                public const string Create = "Permissions.InteriorAddresses.Create";
-                public const string Update = "Permissions.InteriorAddresses.Update";
-                public const string Delete = "Permissions.InteriorAddresses.Delete";
+                public const string View = "Permissions.Portal.Contractor.View";
+                public const string Create = "Permissions.Portal.Contractor.Create";
+                public const string Delete = "Permissions.Portal.Contractor.Delete";
             }
         }
     }

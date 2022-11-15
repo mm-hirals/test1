@@ -13,6 +13,11 @@ namespace MidCapERP.DataAccess.Repositories
             _tenantSMTPDetail = tenantSMTPDetail;
         }
 
+        public async Task<IQueryable<TenantSMTPDetail>> GetAll(CancellationToken cancellationToken)
+        {
+            return await _tenantSMTPDetail.GetAsync(cancellationToken, x => x.IsDeleted == false);
+        }
+
         public async Task<TenantSMTPDetail> TenantSMTPDetailGetById(long Id, CancellationToken cancellationToken)
         {
             return await _tenantSMTPDetail.GetByIdAsync(Id, cancellationToken);

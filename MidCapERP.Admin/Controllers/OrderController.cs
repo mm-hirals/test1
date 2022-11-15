@@ -18,7 +18,7 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.View)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
             FillRefferedDropDown(cancellationToken);
@@ -26,7 +26,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.View)]
         public async Task<IActionResult> GetOrderData([FromForm] OrderDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.OrderBL.GetFilterOrderData(dataTableFilterDto, cancellationToken);
@@ -34,7 +34,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.View)]
         public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
         {
             OrderResponseDto data = new OrderResponseDto();
@@ -55,7 +55,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.View)]
         public async Task<IActionResult> GetOrderSetDetailData(long orderId, CancellationToken cancellationToken)
         {
             if (orderId > 0)
@@ -68,7 +68,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Order.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.View)]
         public async Task<IActionResult> SaveDiscount([FromForm] OrderSetItemRequestDto orderSetItemRequestDto, CancellationToken cancellationToken)
         {
             var orderSetItem = await _unitOfWorkBL.OrderBL.UpdateOrderSetItemDiscount(orderSetItemRequestDto, cancellationToken);

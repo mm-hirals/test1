@@ -23,14 +23,10 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<ICategoryBL, CategoryBL>();
             services.AddScoped<ICompanyBL, CompanyBL>();
             services.AddScoped<IUnitBL, UnitBL>();
-            services.AddScoped<IFrameTypeBL, FrameTypeBL>();
-            services.AddScoped<IAccessoriesTypeBL, AccessoriesTypeBL>();
             services.AddScoped<IRawMaterialBL, RawMaterialBL>();
             services.AddScoped<IFileStorageService, FileStorageService>();
             services.AddScoped<IQRCodeService, QRCodeService>();
-            services.AddScoped<IAccessoriesBL, AccessoriesBL>();
             services.AddScoped<IFabricBL, FabricBL>();
-            services.AddScoped<IFrameBL, FrameBL>();
             services.AddScoped<IPolishBL, PolishBL>();
             services.AddScoped<IUserTenantMappingBL, UserTenantMappingBL>();
             services.AddScoped<IUserBL, UserBL>();
@@ -47,6 +43,8 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<ITenantSMTPDetailBL, TenantSMTPDetailBL>();
             services.AddScoped<ISendSMSservice, SendSMSservice>();
             services.AddScoped<IEmailHelper, EmailHelper>();
+            services.AddScoped<IWrkImportFilesBL, WrkImportFilesBL>();
+            services.AddScoped<IWrkImportCustomersBL, WrkImportCustomersBL>();
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }

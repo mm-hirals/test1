@@ -18,11 +18,8 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IContractorCategoryMappingDA, ContractorCategoryMappingDA>();
             services.AddScoped<ICustomersDA, CustomersDA>();
             services.AddScoped<IErrorLogsDA, ErrorLogsDA>();
-            services.AddScoped<IAccessoriesTypeDA, AccessoriesTypeDA>();
             services.AddScoped<IRawMaterialDA, RawMaterialDA>();
-            services.AddScoped<IAccessoriesDA, AccessoriesDA>();
             services.AddScoped<IFabricDA, FabricDA>();
-            services.AddScoped<IFrameDA, FrameDA>();
             services.AddScoped<IPolishDA, PolishDA>();
             services.AddScoped<ITenantDA, TenantDA>();
             services.AddScoped<IUserTenantMappingDA, UserTenantMappingDA>();
@@ -46,6 +43,8 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<INotificationManagementDA, NotificationManagementDA>();
             services.AddScoped<IOrderSetItemImageDA, OrderSetItemImageDA>();
             services.AddScoped<IOrderSetItemReceivableDA, OrderSetItemReceivableDA>();
+            services.AddScoped<IWrkImportFilesDA, WrkImportFilesDA>();
+            services.AddScoped<IWrkImportCustomersDA, WrkImportCustomersDA>();
 
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();

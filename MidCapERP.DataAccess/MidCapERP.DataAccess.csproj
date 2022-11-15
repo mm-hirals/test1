@@ -13,4 +13,12 @@
     <!--<ProjectReference Include="..\MidCapERP.Dto\MidCapERP.Dto.csproj" />-->
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="E:\Projects\MidCap-ERP\MidCapERP.DataAccess\Repositories\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="E:\Projects\MidCap-ERP\MidCapERP.DataAccess\Repositories\.editorconfig" />
+  </ItemGroup>
+
 </Project>

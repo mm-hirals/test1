@@ -18,14 +18,14 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.View)]
         public async Task<IActionResult> GetCategoryData([FromForm] CategoryDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var categoryfilterdata = await _unitOfWorkBL.CategoryBL.GetFilterCategoryData(dataTableFilterDto, cancellationToken);
@@ -33,7 +33,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.Create)]
         public async Task<IActionResult> Create(CancellationToken cancellationToken)
         {
             BindCategoryType();
@@ -41,7 +41,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Create)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.Create)]
         public async Task<IActionResult> Create(CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CategoryBL.CreateCategory(categoryRequestDto, cancellationToken);
@@ -49,7 +49,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.Create)]
         public async Task<IActionResult> Update(long Id, CancellationToken cancellationToken)
         {
             var category = await _unitOfWorkBL.CategoryBL.GetById(Id, cancellationToken);
@@ -58,7 +58,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Update)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.Create)]
         public async Task<IActionResult> Update(long Id, CategoryRequestDto categoryRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CategoryBL.UpdateCategory(Id, categoryRequestDto, cancellationToken);
@@ -66,7 +66,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
-        [Authorize(ApplicationIdentityConstants.Permissions.Category.Delete)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCategory.Delete)]
         public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.CategoryBL.DeleteCategory(Id, cancellationToken);

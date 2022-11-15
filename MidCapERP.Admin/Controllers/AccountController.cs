@@ -9,8 +9,6 @@ using MidCapERP.Dto.User;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
 using NToastNotify;
-using Razor.Templating.Core;
-using System.Configuration;
 
 namespace MidCapERP.Admin.Controllers
 {
@@ -33,7 +31,7 @@ namespace MidCapERP.Admin.Controllers
             _configuration = configuration;
         }
 
-        [Authorize(ApplicationIdentityConstants.Permissions.Users.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalUser.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             return View();
@@ -72,6 +70,7 @@ namespace MidCapERP.Admin.Controllers
             else
                 return Redirect(returnUrl);
         }
+
         /// <summary>
         ///
         /// </summary>

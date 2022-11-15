@@ -26,7 +26,7 @@ namespace MidCapERP.WebAPI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{modelNo}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> Get(string modelNo, CancellationToken cancellationToken)
         {
             List<SearchResponse> productData = new List<SearchResponse>();
@@ -47,7 +47,7 @@ namespace MidCapERP.WebAPI.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{modelNo}/{subjectTypeId}")]
-        [Authorize(ApplicationIdentityConstants.Permissions.Product.View)]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
         public async Task<ApiResponse> GetDetails(string modelNo, int subjectTypeId, CancellationToken cancellationToken)
         {
             int productSubjectTypeId = await _unitOfWorkBL.ProductBL.GetProductSubjectTypeId(cancellationToken);

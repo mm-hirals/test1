@@ -120,7 +120,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : null,
                                        UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : null,
                                    }).FirstOrDefault();
-
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
                 return productRequestDto;
             }
@@ -206,7 +205,10 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var productMaterialList = await GetProductMaterialById(Id, cancellationToken);
             var getProductInfoById = await GetById(Id, cancellationToken);
+            var getCategory = await _unitOfWorkDA.CategoriesDA.GetById(getProductInfoById.CategoryId, cancellationToken);
+            bool isFixedPrice = getCategory.IsFixedPrice;
             ProductMainRequestDto productMain = new ProductMainRequestDto();
+            productMain.isFixedPrice = isFixedPrice;
             productMain.ProductId = Id;
             productMain.CostPrice = getProductInfoById.CostPrice;
 
@@ -331,6 +333,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (model.Files != null)
                 {
                     await AddImages(model, cancellationToken);
+
+                    // Update UpdatedBy and UpdatedDate
+                    await UpdateDateTime(model.ProductId, cancellationToken);
                     return _mapper.Map<ProductImageRequestDto>(saveImage);
                 }
                 throw new Exception("No Material Image Found");
@@ -448,7 +453,12 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task DeleteProductImage(int productImageId, CancellationToken cancellationToken)
         {
             var deletedProduct = await _unitOfWorkDA.ProductImageDA.DeleteProductImage(productImageId, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), deletedProduct.ProductId, "Product Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
+            if (deletedProduct != null)
+            {
+                // Update UpdatedBy and UpdatedDate
+                await UpdateDateTime(deletedProduct.ProductId, cancellationToken);
+                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), deletedProduct.ProductId, "Product Image Deleted", ActivityLogStringConstant.Delete, cancellationToken);
+            }
         }
 
         public async Task UpdateProductImageMarkAsCover(int productImageId, bool IsCover, CancellationToken cancellationToken)
@@ -458,6 +468,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 getProductImage.IsCover = IsCover;
                 var updatedImage = await _unitOfWorkDA.ProductImageDA.UpdateProductImage(getProductImage, cancellationToken);
+                // Update UpdatedBy and UpdatedDate
+                await UpdateDateTime(getProductImage.ProductId, cancellationToken);
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), updatedImage.ProductId, "Image Updated", ActivityLogStringConstant.Update, cancellationToken);
             }
         }
@@ -751,8 +763,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 productImageToInsert.CreatedDate = DateTime.Now;
                 productImageToInsert.CreatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.ProductImageDA.CreateProductImage(productImageToInsert, cancellationToken);
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Image Added", ActivityLogStringConstant.Create, cancellationToken);
             }
+            // Update Activity log
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), model.ProductId, "Image Added", ActivityLogStringConstant.Create, cancellationToken);
         }
 
         private async Task SaveProductMaterials(ProductMainRequestDto model, CancellationToken cancellationToken)
@@ -815,6 +828,16 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
             }
             return productResponseDto;
+        }
+
+        private async Task UpdateDateTime(long productId, CancellationToken cancellationToken)
+        {
+            var getProductById = await GetProductById(productId, cancellationToken);
+            if (getProductById != null)
+            {
+                UpdateData(getProductById);
+                await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+            }
         }
 
         #endregion Private Method
