@@ -103,7 +103,7 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" type="number" min="0" onkeypress="limit(this,5);" class="form-control" />
+                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" type="text" minlength="0" maxlength="6" onkeypress='return restrictAlphabets(event)' class="form-control" />
                                     <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
                                 </div>
                             </div>
