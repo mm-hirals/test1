@@ -34,16 +34,16 @@ namespace MidCapERP.WebAPI.Controllers
             _currentUser = currentUser;
         }
 
-        [HttpPost]
-        public async Task<MidCapAPIResponse> Post(TokenRequest request, CancellationToken cancellationToken)
-        {
-            request.Username = "kparmar@magnusminds.net";
-            request.Password = "Password@1";
+        //[HttpPost]
+        //public async Task<MidCapAPIResponse> Post(TokenRequest request, CancellationToken cancellationToken)
+        //{
+        //    request.Username = "kparmar@magnusminds.net";
+        //    request.Password = "Password@1";
 
-            string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-            TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, false);
-            return new MidCapAPIResponse(messageCode: JsonStringResourcesKeys.LoginSuccessFull, message: _localizer[JsonStringResourcesKeys.LoginSuccessFull], result: tokenResponse, statusCode: 200);
-        }
+        //    string ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+        //    TokenResponse tokenResponse = await _tokenService.Authenticate(request, ipAddress, cancellationToken, false);
+        //    return new MidCapAPIResponse(messageCode: JsonStringResourcesKeys.LoginSuccessFull, message: _localizer[JsonStringResourcesKeys.LoginSuccessFull], result: tokenResponse, statusCode: 200);
+        //}
 
         [HttpPost("GenerateOTPForAPI")]
         public async Task<MidCapAPIResponse> GenerateOTPForAPI(TokenOtpGenerateRequest request, CancellationToken cancellationToken)
