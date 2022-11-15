@@ -1,0 +1,78 @@
+﻿@model MidCapERP.Dto.ProductQuantities.ProductQuantitiesRequestDto
+
+<!-- Modal -->
+<div class="modal right fade" id="divProductQuantitiesModal" tabindex="-1" aria-labelledby="productQuantitiesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productQuantitiesModalLabel">Product Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <form asp-action="Update" asp-controller="ProductQuantity" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+                  data-ajax="true" data-ajax-method="post"
+                  data-ajax-complete="ProductQuantitiesModel.onSuccess"
+                  data-ajax-failure="ProductQuantitiesModel.onFailed" id="frmCreateUpdateProductQuantities">
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="ProductQuantityId" hidden class="form-control" />
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="CategoryName" class="form-label"></label>
+                                <input asp-for="CategoryName" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="ProductTitle" class="form-label"></label>
+                                <input asp-for="ProductTitle" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="QuantityDateFormat" class="form-label"></label>
+                                <input asp-for="QuantityDateFormat" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="Quantity" class="form-label"></label>
+                                <input asp-for="Quantity" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label asp-for="UpdatedQuantity" class="form-label"></label><span class="text-danger">*</span>
+                                <input type="number" asp-for="UpdatedQuantity" class="form-control" max="9999" maxlength="4" onkeypress="return onlyNumberWithNegative(event)" />
+                                <span asp-validation-for="UpdatedQuantity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @if (Model.activityLogs.Count() > 0)
+                        {
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    @foreach (var item in Model.activityLogs)
+                                    {
+                                        <label class="form-control">@item.Description</label><br />
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" value="Save" class="btn btn-primary has-spinner" id="btnUpdateProductQuantities">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+}
