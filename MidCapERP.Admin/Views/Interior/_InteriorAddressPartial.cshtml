@@ -84,7 +84,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label asp-for="ZipCode" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="ZipCode" class="form-control" type="number" min="0" onkeyup="limit(this,6);" data-val-required="The ZipCode field is required."/>
+                                <input asp-for="ZipCode" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)' data-val-required="The ZipCode field is required."/>
                                 <span asp-validation-for="ZipCode" class="text-danger"></span>
                             </div>
                         </div>
