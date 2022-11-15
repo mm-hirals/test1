@@ -78,6 +78,9 @@ namespace MidCapERP.Dto.Tenant
         [DisplayName("GST No")]
         public string GSTNo { get; set; }
 
+        [DisplayName("Send OTP")]
+        public bool SendOtp { get; set; }
+
         [Required]
         [DisplayName("Product Retailer SP %")]
         public decimal? ProductRSPPercentage { get; set; }
