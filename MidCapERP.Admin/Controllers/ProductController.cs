@@ -58,17 +58,19 @@ namespace MidCapERP.Admin.Controllers
                 return PartialView("_productPartial");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DeleteProductImage(int ProductImageId, CancellationToken cancellationToken)
+        [HttpPost]
+        public async Task<IActionResult> CreateProductBasicDetail(int productId, [FromForm] ProductRequestDto model, CancellationToken cancellationToken)
         {
-            try
+            await FillCategoryDropDown(cancellationToken);
+            if (productId > 0)
             {
-                await _unitOfWorkBL.ProductBL.DeleteProductImage(ProductImageId, cancellationToken);
-                return Json(new { result = "success" });
+                var updateProduct = await _unitOfWorkBL.ProductBL.UpdateProduct(model, cancellationToken);
+                return RedirectToAction("Update", "Product", new { Id = updateProduct.ProductId });
             }
-            catch (Exception)
+            else
             {
-                throw new Exception("Image not deleted");
+                var createProduct = await _unitOfWorkBL.ProductBL.CreateProduct(model, cancellationToken);
+                return RedirectToAction("Update", "Product", new { Id = createProduct.ProductId });
             }
         }
 
@@ -82,6 +84,18 @@ namespace MidCapERP.Admin.Controllers
             }
             else
                 return PartialView("_productDetailPartial");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
+        {
+            if (model.ProductId > 0)
+            {
+                await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
+                return RedirectToAction("CreateProductDetail", "Product", new { productId = model.ProductId });
+            }
+
+            throw new Exception("Product Not Found!");
         }
 
         [HttpGet]
@@ -99,6 +113,34 @@ namespace MidCapERP.Admin.Controllers
                 return PartialView("_productImagePartial");
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CreateProductImage(Int64 productId, ProductMainRequestDto model, CancellationToken cancellationToken)
+        {
+            if (productId > 0)
+            {
+                await _unitOfWorkBL.ProductBL.CreateProductImages(model, cancellationToken);
+                return Json("success");
+            }
+            else
+            {
+                throw new Exception("Please Provide ProductId.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProductImage(int ProductImageId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.ProductBL.DeleteProductImage(ProductImageId, cancellationToken);
+                return Json(new { result = "success" });
+            }
+            catch (Exception)
+            {
+                throw new Exception("Image not deleted");
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> CreateProductMaterial(int productId, CancellationToken cancellationToken)
         {
@@ -112,19 +154,6 @@ namespace MidCapERP.Admin.Controllers
             }
             else
                 return PartialView("_productMaterialPartial");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetProductActivity(int productId, CancellationToken cancellationToken)
-        {
-            return PartialView("_productActivityTable");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> GetProductActivityDataById([FromForm] ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
-        {
-            var data = await _unitOfWorkBL.ProductBL.GetFilterProductActivityData(dataTableFilterDto, cancellationToken);
-            return Ok(data);
         }
 
         [HttpPost]
@@ -142,54 +171,25 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetProductActivity(int productId, CancellationToken cancellationToken)
+        {
+            return PartialView("_productActivityTable");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProductActivityDataById([FromForm] ProductActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.ProductBL.GetFilterProductActivityData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
+        }
+
+        [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.Create)]
         public async Task<IActionResult> Update(int Id, CancellationToken cancellationToken)
         {
             ProductMainRequestDto prdMainDto = new ProductMainRequestDto();
             prdMainDto.ProductId = Id;
             return View("ProductMain", prdMainDto);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateProductBasicDetail(int productId, [FromForm] ProductRequestDto model, CancellationToken cancellationToken)
-        {
-            await FillCategoryDropDown(cancellationToken);
-            if (productId > 0)
-            {
-                var updateProduct = await _unitOfWorkBL.ProductBL.UpdateProduct(model, cancellationToken);
-                return RedirectToAction("Update", "Product", new { Id = updateProduct.ProductId });
-            }
-            else
-            {
-                var createProduct = await _unitOfWorkBL.ProductBL.CreateProduct(model, cancellationToken);
-                return RedirectToAction("Update", "Product", new { Id = createProduct.ProductId });
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateProductDetail(ProductRequestDto model, CancellationToken cancellationToken)
-        {
-            if (model.ProductId > 0)
-            {
-                await _unitOfWorkBL.ProductBL.UpdateProductDetail(model, cancellationToken);
-                return RedirectToAction("CreateProductDetail", "Product", new { productId = model.ProductId });
-            }
-
-            throw new Exception("Product Not Found!");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateProductImage(Int64 productId, ProductMainRequestDto model, CancellationToken cancellationToken)
-        {
-            if (productId > 0)
-            {
-                await _unitOfWorkBL.ProductBL.CreateProductImages(model, cancellationToken);
-                return PartialView("ProductMain");
-            }
-            else
-            {
-                throw new Exception("Please Provide ProductId.");
-            }
         }
 
         [HttpGet]

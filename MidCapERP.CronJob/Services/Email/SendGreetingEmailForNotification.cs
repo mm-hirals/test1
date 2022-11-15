@@ -12,7 +12,6 @@ namespace MidCapERP.CronJob.Services.Email
         private readonly INotificationManagementDA _notificationManagementDA;
         private readonly ISubjectTypesDA _subjectTypesDA;
         private readonly ITenantSMTPDetailDA _tenantSMTPDetailDA;
-
         private readonly IEmailHelper _emailHelper;
         private readonly CurrentUser _currentUser;
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -43,7 +42,8 @@ namespace MidCapERP.CronJob.Services.Email
                             emailList.Add(item.ReceiverEmail);
 
                             var customerId = await _subjectTypesDA.GetById(Convert.ToInt32(item.EntityTypeID), cancellationToken);
-                            var tenantSMTPDetail = _tenantSMTPDetailDA.GetAll(cancellationToken).Result.Where(x => x.TenantID == customerId.TenantId).FirstOrDefault();
+                            var tenantSMTPDetailData = await _tenantSMTPDetailDA.GetAll(cancellationToken);
+                            var tenantSMTPDetail = tenantSMTPDetailData.FirstOrDefault(x => x.TenantID == customerId.TenantId);
 
                             if (tenantSMTPDetail != null && !string.IsNullOrEmpty(tenantSMTPDetail.FromEmail) && !string.IsNullOrEmpty(tenantSMTPDetail.SMTPServer) && !string.IsNullOrEmpty(tenantSMTPDetail.Username) && !string.IsNullOrEmpty(tenantSMTPDetail.Password) && tenantSMTPDetail.SMTPPort > 0)
                             {
