@@ -7,6 +7,7 @@ using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
+using System.Threading;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -221,7 +222,17 @@ namespace MidCapERP.WebAPI.Controllers
                 return new ApiResponse(message: "No Data found", result: validateOTP, statusCode: 404);
         }
 
-
+        [HttpPost("RecordVisit")]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
+        public async Task<ApiResponse> RecordVisit([FromBody] CustomerVisitRequestDto customerVisitRequestDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.CustomersBL.CustomerVisitAPI(customerVisitRequestDto, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+            }
+            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+        }
 
         #region Private Methods
 

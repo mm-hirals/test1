@@ -532,6 +532,25 @@ namespace MidCapERP.BusinessLogic.Repositories
             return newOtpData;
         }
 
+        public async Task<CustomerVisitRequestDto> CustomerVisitAPI(CustomerVisitRequestDto model, CancellationToken cancellationToken)
+        {
+            var allCustomers = await GetAll(cancellationToken);
+            var customerExists = allCustomers.FirstOrDefault(p => p.CustomerId == model.CustomerId);
+            if (customerExists != null)
+            {
+                var customerVisitsToInsert = _mapper.Map<CustomerVisits>(model);
+                customerVisitsToInsert.CustomerId = model.CustomerId;
+                customerVisitsToInsert.Comment = model.Comment;
+                customerVisitsToInsert.CreatedBy = _currentUser.UserId;
+                customerVisitsToInsert.CreatedDate = DateTime.Now;
+                customerVisitsToInsert.CreatedUTCDate = DateTime.UtcNow;
+                var data = await _unitOfWorkDA.CustomersDA.CreateCustomerVisits(customerVisitsToInsert, cancellationToken);
+                return _mapper.Map<CustomerVisitRequestDto>(data);
+            }
+            else
+                throw new Exception("Customer already exist.");
+        }
+
         #region PrivateMethods
 
         private async Task<Customers> CustomerGetById(Int64 Id, CancellationToken cancellationToken)
