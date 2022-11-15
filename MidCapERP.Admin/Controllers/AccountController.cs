@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.Interface;
-using MidCapERP.BusinessLogic.Repositories;
 using MidCapERP.Core.Constants;
-using MidCapERP.Core.Localizer.JsonString;
 using MidCapERP.Dto.User;
 using MidCapERP.Infrastructure.Identity.Models;
 using MidCapERP.Infrastructure.Services.Token;
 using NToastNotify;
+using Razor.Templating.Core;
 
 namespace MidCapERP.Admin.Controllers
 {
