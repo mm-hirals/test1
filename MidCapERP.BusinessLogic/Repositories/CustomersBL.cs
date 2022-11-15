@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.Interface;
@@ -13,6 +15,7 @@ using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.NotificationManagement;
 using MidCapERP.Dto.Paging;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
 
 namespace MidCapERP.BusinessLogic.Repositories
@@ -23,7 +26,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public readonly IMapper _mapper;
         private readonly CurrentUser _currentUser;
         private readonly IEmailHelper _emailHelper;
-        private readonly IOTPLoginDA _loginDA;
+        private readonly IOTPLoginDA _otpLoginDA;
 
         public CustomersBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IEmailHelper emailHelper, IOTPLoginDA otpLoginDA)
         {
@@ -31,7 +34,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             _mapper = mapper;
             _currentUser = currentUser;
             _emailHelper = emailHelper;
-            _loginDA = otpLoginDA;
+            _otpLoginDA = otpLoginDA;
         }
 
         public async Task<IEnumerable<CustomersResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -303,23 +306,19 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<string> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken)
+        public async Task<OTPLogin> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken)
         {
-            string data = string.Empty;
-            //var otpLogin = await _loginDA.GetAll(cancellationToken);
+            //Send OTP to customer through SMS
+            //SendOTPToCustomer(model.PhoneNumber);
 
             OTPLogin loginToken = new OTPLogin()
             {
                 PhoneNumber = model.PhoneNumber,
-                OTP = "0000", //new Random().Next(1, 9999).ToString("D4"),
+                OTP = new Random().Next(1, 9999).ToString("D4"),
                 ExpiryTime = DateTime.UtcNow.AddMinutes(10),
             };
-            var createdToken = await _loginDA.CreateLoginToken(loginToken, cancellationToken);
-            data = createdToken.OTP;
-            return data;
-            //Send OTP to customer through SMS
-            //SendOTPToCustomer(model.PhoneNumber);
-
+            var createdToken = await _otpLoginDA.CreateLoginToken(loginToken, cancellationToken);
+            return createdToken;
         }
 
         public static string SendOTPToCustomer(string phoneNumber)
@@ -359,36 +358,36 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        //public async Task<bool> ValidateCustomerOtpAPI(CustomersSendOtpDto customersSendOtpDto, CancellationToken cancellationToken)
-        //{
-        //    // Get all OTP table data
-        //    //var getAllCustomerOTPData = await GetAll(cancellationToken);
-        //    var customerData = await _loginDA.GetAll(cancellationToken);
-        //    //var customerData = getAllCustomerOTPData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer);
-        //    //if (customersSendOtpDto.CustomerId > 0)
-        //    //{
-            
-        //    var getCustomerById = customerData.Any(c => c.OTP == customersSendOtpDto.OTP);
-        //    if (getCustomerById)
-        //    {
-        //        CreateCustomerApi(customersSendOtpDto, cancellationToken);
-        //    }
+        public async Task<bool> ValidateCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken)
+        {
+            var otpData = await _otpLoginDA.GetAll(cancellationToken);
+            var otpDataByPhoneNo = otpData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+            if (otpDataByPhoneNo != null)
+            {
+                if (otpDataByPhoneNo.OTP == model.OTP)
+                {
+                    if (DateTime.UtcNow < otpDataByPhoneNo.ExpiryTime)
+                        return true;
+                    throw new Exception("OTP is Expired");
+                }
+            }
 
-        //    //if (getCustomerById.PhoneNumber.Trim() == customersSendOtpDto.PhoneNumber.Trim())
-        //    //{
-        //    //    return true;
-        //    //}
-        //    //else
-        //    //{
-        //    //    return !customerData.Any(c => c.PhoneNumber.Trim() == customersSendOtpDto.PhoneNumber.Trim());
-        //    //}
+            return false;
+        }
 
-        //    //}
-        //    //else
-        //    //{
-        //    //    return !customerData.Any(c => c.PhoneNumber.Trim() == customersSendOtpDto.PhoneNumber.Trim());
-        //    //}
-        //}
+        public async Task<OTPLogin> ResendCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken)
+        {
+            //Send OTP to customer through SMS
+            //SendOTPToCustomer(model.PhoneNumber);
+
+            var otpData = await _otpLoginDA.GetAll(cancellationToken);
+            var oldOtpDataByPhoneNo = otpData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+
+            oldOtpDataByPhoneNo.OTP = new Random().Next(1, 9999).ToString("D4");
+            oldOtpDataByPhoneNo.ExpiryTime = DateTime.UtcNow.AddMinutes(10);
+            var newOtpData = await _otpLoginDA.UpdateLoginToken(oldOtpDataByPhoneNo, cancellationToken);
+            return newOtpData;
+        }
 
 
         #region PrivateMethods

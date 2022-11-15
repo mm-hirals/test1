@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MidCapERP.BusinessLogic.UnitOfWork;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
+using MidCapERP.Infrastructure.Identity.Models;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -52,24 +54,22 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> Post([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
         {
-            object data = null;
-            // Check Send OTP flag from tenant
-            var tenantResponseDto = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
-            if (tenantResponseDto.SendOTP)
-            {
-                await SendCustomerOtp(customerApiRequestDto, cancellationToken);
-            }
+            ValidationRequest(customerApiRequestDto);
+            var data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
+            if (data == null)
+                return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
             else
             {
-                ValidationRequest(customerApiRequestDto);
-                data = await _unitOfWorkBL.CustomersBL.CreateCustomerApi(customerApiRequestDto, cancellationToken);
-                if (data == null)
+                var validateOTP = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+                if (validateOTP.SendOTP)
                 {
-                    return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
+                    var dataOtp = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
+                    if (dataOtp == null)
+                        return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+                    return new ApiResponse(message: "OTP sent successfully", result: data, statusCode: 200);
                 }
             }
             return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
-
         }
 
         [HttpGet("CheckCustomer")]
@@ -170,29 +170,44 @@ namespace MidCapERP.WebAPI.Controllers
             return new ApiResponse(message: "Data found", result: data, statusCode: 200);
         }
 
-        [HttpPost("SendCustomerOtp")]
+        [HttpPost("ValidateCustomerOtp")]
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
-        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> ValidateCustomerOtp([FromBody] CustomersRequestOtpDto customersResponseOtpDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
-            if (data == null)
+            var validateOTP = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+            if (validateOTP.SendOTP)
             {
-                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+                var isValidOTP = await _unitOfWorkBL.CustomersBL.ValidateCustomerOtpAPI(customersResponseOtpDto, cancellationToken);
+                if (isValidOTP)
+                    return new ApiResponse(message: "OTP verified successfully", result: isValidOTP, statusCode: 200);
+                else
+                    return new ApiResponse(message: "Invalid OTP", result: isValidOTP, statusCode: 401);
             }
-            return new ApiResponse(message: "OTP sent successfully", result: data, statusCode: 200);
+            else
+            {
+                if (customersResponseOtpDto.OTP == "0000")
+                    return new ApiResponse(message: "OTP verified successfully", statusCode: 200);
+                else
+                    return new ApiResponse(message: "Invalid OTP", statusCode: 401);
+            }
         }
 
-        //[HttpPost("ValidateCustomerOtp")]
-        //[Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
-        //public async Task<ApiResponse> ValidateCustomerOtp([FromBody] CustomersSendOtpDto customerSendOtpDto, CancellationToken cancellationToken)
-        //{
-        //    var data = await _unitOfWorkBL.CustomersBL.ValidateCustomerOtpAPI(customerSendOtpDto, cancellationToken);
-        //    if (data == null)
-        //    {
-        //        return new ApiResponse(message: "Invalid OTP", result: data, statusCode: 401);
-        //    }
-        //    return new ApiResponse(message: "OTP verified successfully", result: data, statusCode: 200);
-        //}
+        [HttpPost("ResendCustomerOtp")]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
+        public async Task<ApiResponse> ResendCustomerOtp([FromBody] CustomersRequestOtpDto customersResponseOtpDto, CancellationToken cancellationToken)
+        {
+            var validateOTP = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
+            if (validateOTP.SendOTP)
+            {
+                var otpData = await _unitOfWorkBL.CustomersBL.ResendCustomerOtpAPI(customersResponseOtpDto, cancellationToken);
+                if (otpData == null)
+                    return new ApiResponse(message: "Failed to send OTP", statusCode: 401);
+                else
+                    return new ApiResponse(message: "OTP sent successfully", result: otpData, statusCode: 200);
+            }
+            else
+                return new ApiResponse(message: "No Data found", result: validateOTP, statusCode: 404);
+        }
 
         #region Private Methods
 
