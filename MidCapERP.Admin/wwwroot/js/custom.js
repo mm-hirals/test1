@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
     // Your code to run since DOM is loaded and ready
 });
 
-
 /*$(".submenu-link").click(function () {
     $(".sub-menu").toggle().animate({}, 500);
 });*/
@@ -94,7 +93,6 @@ $(".submenu-link").click(function () {
 
 /*===== LOGIN PASSWORD SHOW =====*/
 $(".toggle-password").click(function () {
-
     $(this).toggleClass("field-icon bxs-hide");
     var input = $($(this).attr("toggle"));
     if (input.attr("type") == "password") {
@@ -103,7 +101,6 @@ $(".toggle-password").click(function () {
         input.attr("type", "password");
     }
 });
-
 
 //Chart JS For Dashboard page
 var xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
@@ -130,7 +127,6 @@ new Chart("myChart", {
         legend: { display: false }
     }
 });
-
 
 //Chart JS For Dashboard page
 
@@ -175,6 +171,20 @@ function InitSelect2(objParent) {
 function restrictAlphabets(evt) {
     var charCode = (evt.which) ? evt.which : evt.keyCode;
     if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+
+function onlyNumber(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode < 48 || charCode > 57)
+        return false;
+    return true;
+}
+
+function onlyNumberWithNegative(evt) {
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode != 45 && charCode > 31 && (charCode < 48 || charCode > 57))
         return false;
     return true;
 }

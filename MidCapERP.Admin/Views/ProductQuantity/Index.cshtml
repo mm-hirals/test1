@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MidCapERP.Dto.ProductQuantities.ProductQuantitiesResponseDto>
+@{
+    ViewData["Title"] = "Product Quantities";
+}
+
+<div class="c-card--wrapper">
+    <div class="c-card--header">
+        <h4 class="c-card--header-title">Product Quantities</h4>
+        <div class="c-card--header-action">
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkProductQuantitiesFilter"><i class='bx bx-plus me-1'></i>Filters</a>
+        </div>
+    </div>
+    <div class="c-card--body">
+        <div class="card filter-form--wrapper" id="FilterCard">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Category Name</label>
+                        <select id="categoryId" data-val="true" class="drpSelect2 form-control form-select"
+                                asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                            <option>Select Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Product Title</label>
+                        <input id="productTitle" type="text" class="form-control" placeholder="Product Title" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Quantity Date</label>
+                        <input id="quantityDate" type="date" class="form-control" placeholder="Quantity Date" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="_ProductQuantitiesTable" model="@Model" />
+        <div id="divUpdateProductQuantities"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+        <script asp-src-include="~/js/ProductQuantities.js"></script>
+    }
+}
