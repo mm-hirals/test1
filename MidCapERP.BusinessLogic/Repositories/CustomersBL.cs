@@ -548,7 +548,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 return _mapper.Map<CustomerVisitRequestDto>(data);
             }
             else
-                throw new Exception("Customer already exist.");
+                throw new Exception("Customer doesn't exist.");
         }
 
         #region PrivateMethods

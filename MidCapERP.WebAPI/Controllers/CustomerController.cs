@@ -231,7 +231,7 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);
             }
-            return new ApiResponse(message: "Data inserted successful", result: data, statusCode: 200);
+            return new ApiResponse(message: "Data inserted successfully", result: data, statusCode: 200);
         }
 
         #region Private Methods
