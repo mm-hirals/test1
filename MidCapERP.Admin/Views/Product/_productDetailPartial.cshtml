@@ -37,11 +37,15 @@
                                 <label class="custom-control-label" for="customSwitch1">Active</label>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-2">
                             <div class="form-group">
                                 <label asp-for="ProductQuantity" class="form-label">Product Quantity</label>
                                 <input asp-for="ProductQuantity" class="form-control" readonly />
-                                <a class="btn btn-icon btn-outline-primary has-spinner" href="/ProductQuantity/Update/@Model.ProductQuantityId" data-ajax-complete="ProductQuantitiesModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateProductQuantityMain"><i class="bx bxs-save"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <a class="btn btn-icon btn-outline-primary has-spinner" href="/ProductQuantity/Update/@Model.ProductQuantityId" data-ajax-complete="ProductQuantitiesModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateProductQuantityMain" style="margin-top: 22px;"><i class="bx bxs-save"></i></a>
                             </div>
                         </div>
                     </div>

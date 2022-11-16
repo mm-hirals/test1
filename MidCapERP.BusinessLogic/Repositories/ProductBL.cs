@@ -309,6 +309,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             productToInsert.CreatedDate = DateTime.Now;
             productToInsert.CreatedUTCDate = DateTime.UtcNow;
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+
+            // Insert into Product Quantities
+            await InsertProductQuantity(productData, cancellationToken);
+
             await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productData.ProductId, "Product Created", ActivityLogStringConstant.Create, CancellationToken.None);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
@@ -841,6 +845,26 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 UpdateData(getProductById);
                 await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+            }
+        }
+
+        private async Task InsertProductQuantity(Product? productData, CancellationToken cancellationToken)
+        {
+            if (productData != null)
+            {
+                var allProductQty = await _unitOfWorkDA.ProductQuantitiesDA.GetAll(cancellationToken);
+                var productQty = allProductQty.Where(x => x.ProductId == productData.ProductId);
+                if (productQty.Count() == 0)
+                {
+                    ProductQuantities qtyToInsert = new ProductQuantities();
+                    qtyToInsert.ProductId = productData.ProductId;
+                    qtyToInsert.QuantityDate = DateTime.Now.Date;
+                    qtyToInsert.Quantity = 0;
+                    qtyToInsert.LastModifiedBy = _currentUser.UserId;
+                    qtyToInsert.LastModifiedDate = DateTime.Now;
+                    qtyToInsert.LastModifiedUTCDate = DateTime.UtcNow;
+                    var qtyData = await _unitOfWorkDA.ProductQuantitiesDA.CreateProductQuantities(qtyToInsert, cancellationToken);
+                }
             }
         }
 
