@@ -92,10 +92,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 ProductRequestDto productRequestDto = new ProductRequestDto();
                 var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
                 var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var allProductQty = await _unitOfWorkDA.ProductQuantitiesDA.GetAll(cancellationToken);
                 var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
                                    join y in allUsers on x.CreatedBy equals y.UserId
                                    join z in allUsers on x.UpdatedBy equals (int?)z.UserId into updated
                                    from updatedMat in updated.DefaultIfEmpty()
+                                   join u in allProductQty on x.ProductId equals u.ProductId
                                    select new ProductRequestDto()
                                    {
                                        ProductId = Id,
@@ -121,6 +123,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CreatedDate = x.CreatedDate,
                                        UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : null,
                                        UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : null,
+                                       ProductQuantityId = u.ProductQuantityId,
+                                       ProductQuantity = u.Quantity
                                    }).FirstOrDefault();
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
                 return productRequestDto;
@@ -310,6 +314,10 @@ namespace MidCapERP.BusinessLogic.Repositories
             productToInsert.CreatedDate = DateTime.Now;
             productToInsert.CreatedUTCDate = DateTime.UtcNow;
             var productData = await _unitOfWorkDA.ProductDA.CreateProduct(productToInsert, cancellationToken);
+
+            // Insert into Product Quantities
+            await InsertProductQuantity(productData, cancellationToken);
+
             await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productData.ProductId, "Product Created", ActivityLogStringConstant.Create, CancellationToken.None);
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
@@ -845,6 +853,28 @@ namespace MidCapERP.BusinessLogic.Repositories
             {
                 UpdateData(getProductById);
                 await _unitOfWorkDA.ProductDA.UpdateProduct(getProductById, cancellationToken);
+            }
+        }
+
+        private async Task InsertProductQuantity(Product? productData, CancellationToken cancellationToken)
+        {
+            if (productData != null)
+            {
+                var allProductQty = await _unitOfWorkDA.ProductQuantitiesDA.GetAll(cancellationToken);
+                var productQty = allProductQty.Where(x => x.ProductId == productData.ProductId);
+                if (productQty.Count() == 0)
+                {
+                    ProductQuantities qtyToInsert = new ProductQuantities()
+                    {
+                        ProductId = productData.ProductId,
+                        QuantityDate = DateTime.Now.Date,
+                        Quantity = 0,
+                        LastModifiedBy = _currentUser.UserId,
+                        LastModifiedDate = DateTime.Now,
+                        LastModifiedUTCDate = DateTime.UtcNow
+                    };
+                    var qtyData = await _unitOfWorkDA.ProductQuantitiesDA.CreateProductQuantities(qtyToInsert, cancellationToken);
+                }
             }
         }
 
