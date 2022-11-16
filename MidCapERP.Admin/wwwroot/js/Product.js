@@ -253,22 +253,7 @@ $(document).on("click", ".img-wrap .custom-control-input", (function () {
     });
 }));
 
-$(function () {
-    var myDropzone = $("#filedrop");
-    myDropzone.on("success", function (file) {
-        alert('Hello World');
-    });
-})
-
 $('.ProductForm').on('change input', 'input, textarea', function () {
-    formChangedValue = true;
-});
-
-$(document).on("click", ".minus-icon", function () {
-    formChangedValue = true;
-});
-
-$(document).on("click", ".add-icon", function () {
     formChangedValue = true;
 });
 
