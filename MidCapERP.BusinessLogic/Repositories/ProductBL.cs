@@ -856,13 +856,15 @@ namespace MidCapERP.BusinessLogic.Repositories
                 var productQty = allProductQty.Where(x => x.ProductId == productData.ProductId);
                 if (productQty.Count() == 0)
                 {
-                    ProductQuantities qtyToInsert = new ProductQuantities();
-                    qtyToInsert.ProductId = productData.ProductId;
-                    qtyToInsert.QuantityDate = DateTime.Now.Date;
-                    qtyToInsert.Quantity = 0;
-                    qtyToInsert.LastModifiedBy = _currentUser.UserId;
-                    qtyToInsert.LastModifiedDate = DateTime.Now;
-                    qtyToInsert.LastModifiedUTCDate = DateTime.UtcNow;
+                    ProductQuantities qtyToInsert = new ProductQuantities()
+                    {
+                        ProductId = productData.ProductId,
+                        QuantityDate = DateTime.Now.Date,
+                        Quantity = 0,
+                        LastModifiedBy = _currentUser.UserId,
+                        LastModifiedDate = DateTime.Now,
+                        LastModifiedUTCDate = DateTime.UtcNow
+                    };
                     var qtyData = await _unitOfWorkDA.ProductQuantitiesDA.CreateProductQuantities(qtyToInsert, cancellationToken);
                 }
             }
