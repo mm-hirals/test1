@@ -90,10 +90,12 @@ namespace MidCapERP.BusinessLogic.Repositories
                 ProductRequestDto productRequestDto = new ProductRequestDto();
                 var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
                 var allProductdata = await _unitOfWorkDA.ProductDA.GetAll(cancellationToken);
+                var allProductQty = await _unitOfWorkDA.ProductQuantitiesDA.GetAll(cancellationToken);
                 var productData = (from x in allProductdata.Where(x => x.ProductId == Id)
                                    join y in allUsers on x.CreatedBy equals y.UserId
                                    join z in allUsers on x.UpdatedBy equals (int?)z.UserId into updated
                                    from updatedMat in updated.DefaultIfEmpty()
+                                   join u in allProductQty on x.ProductId equals u.ProductId
                                    select new ProductRequestDto()
                                    {
                                        ProductId = Id,
@@ -119,6 +121,8 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        CreatedDate = x.CreatedDate,
                                        UpdatedByName = x.UpdatedBy != null ? updatedMat.FullName : null,
                                        UpdatedDate = x.UpdatedDate != null ? x.UpdatedDate : null,
+                                       ProductQuantityId = u.ProductQuantityId,
+                                       ProductQuantity = u.Quantity
                                    }).FirstOrDefault();
                 productRequestDto = _mapper.Map<ProductRequestDto>(productData);
                 return productRequestDto;
