@@ -535,7 +535,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         public async Task<CustomerVisitRequestDto> CustomerVisitAPI(CustomerVisitRequestDto model, CancellationToken cancellationToken)
         {
             var allCustomers = await GetAll(cancellationToken);
-            var customerExists = allCustomers.FirstOrDefault(p => p.CustomerId == model.CustomerId);
+            var customerExists = allCustomers.FirstOrDefault(p => p.CustomerId == model.CustomerId && p.TenantID == _currentUser.TenantId);
             if (customerExists != null)
             {
                 var customerVisitsToInsert = _mapper.Map<CustomerVisits>(model);
