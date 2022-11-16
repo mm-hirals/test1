@@ -282,8 +282,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product is not found");
 
-            // Product availability
-            var productQuantityCount = await GetProductQuantityCount(productData.ProductId, productData, cancellationToken);
+            var productQuantityCount = await GetProductQuantityCount(productData.ProductId, cancellationToken);
             string availability = productQuantityCount > 0 ? "In Stock" : "Out of Stock";
 
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
@@ -655,8 +654,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product Not Found");
 
-            // Product availability
-            var productQuantityCount = await GetProductQuantityCount(Id, productData, cancellationToken);
+            var productQuantityCount = await GetProductQuantityCount(Id, cancellationToken);
             string availability = productQuantityCount > 0 ? "In Stock" : "Out of Stock";
 
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
@@ -850,16 +848,11 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        private async Task<int> GetProductQuantityCount(Int64 productId, Product productData, CancellationToken cancellationToken)
+        private async Task<int> GetProductQuantityCount(Int64 productId, CancellationToken cancellationToken)
         {
-            List<Product> eachProduct = new List<Product>();
-            eachProduct.Add(productData);
             var productQuantitiesAllData = await _unitOfWorkDA.ProductQuantitiesDA.GetAll(cancellationToken);
-            var productQuantityCount = (from p in eachProduct
-                                        join pq in productQuantitiesAllData on p.ProductId equals pq.ProductId
-                                        select pq.Quantity
-                                ).FirstOrDefault();
-            return productQuantityCount;
+            var quantityExists = productQuantitiesAllData.FirstOrDefault(x => x.ProductId == productId);
+            return quantityExists != null ? quantityExists.Quantity : 0;
         }
 
         #endregion Private Method
