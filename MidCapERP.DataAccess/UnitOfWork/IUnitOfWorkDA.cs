@@ -38,6 +38,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
 
         IWrkImportFilesDA WrkImportFilesDA { get; }
         IWrkImportCustomersDA WrkImportCustomersDA { get; }
+        IProductQuantitiesDA ProductQuantitiesDA { get; }
 
         Task BeginTransactionAsync();
 

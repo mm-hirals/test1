@@ -39,8 +39,9 @@ namespace MidCapERP.DataAccess.UnitOfWork
         public INotificationManagementDA NotificationManagementDA { get; }
         public IWrkImportFilesDA WrkImportFilesDA { get; }
         public IWrkImportCustomersDA WrkImportCustomersDA { get; }
+        public IProductQuantitiesDA ProductQuantitiesDA { get; }
 
-        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IRawMaterialDA rawMaterialDA, IFabricDA fabricDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, ICategoriesDA categoriesDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA, INotificationManagementDA notificationManagementDA, IOrderSetItemImageDA orderSetItemImageDA, IOrderSetItemReceivableDA orderSetItemReceivableDA, IWrkImportFilesDA wrkImportFilesDA, IWrkImportCustomersDA wrkImportCustomersDA)
+        public UnitOfWorkDA(ApplicationDbContext context, ILookupsDA lookupsDA, IContractorsDA contractorsDA, ISubjectTypesDA subjectTypesDA, ILookupValuesDA lookupValuesDA, IContractorCategoryMappingDA contractorCategoryMappingDa, ICustomersDA customersDA, IErrorLogsDA errorLogsDA, IRawMaterialDA rawMaterialDA, IFabricDA fabricDA, IPolishDA polishDA, IUserTenantMappingDA userTenantMappingDA, ITenantDA tenantDA, IUserDA userDA, ICustomerAddressesDA customerAddressesDA, ICustomerTypesDA customerTypesDA, IProductDA productDA, IProductImageDA productImageDA, IProductMaterialDA productMaterialDA, ICategoriesDA categoriesDA, IRoleDA roleDA, IRolePermissionDA rolePermissionDA, IOrderDA orderDA, ITenantBankDetailDA tenantBankDetailDA, IOrderSetDA orderSetDA, IOrderSetItemDA orderSetItemDA, IActivityLogsDA activityLogsDA, IOrderAddressDA orderAddressDA, ITenantSMTPDetailDA tenantSMTPDetailDA, INotificationManagementDA notificationManagementDA, IOrderSetItemImageDA orderSetItemImageDA, IOrderSetItemReceivableDA orderSetItemReceivableDA, IWrkImportFilesDA wrkImportFilesDA, IWrkImportCustomersDA wrkImportCustomersDA, IProductQuantitiesDA productQuantities)
         {
             _context = context;
             ContractorsDA = contractorsDA;
@@ -76,6 +77,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
             OrderSetItemReceivableDA = orderSetItemReceivableDA;
             WrkImportFilesDA = wrkImportFilesDA;
             WrkImportCustomersDA = wrkImportCustomersDA;
+            ProductQuantitiesDA = productQuantities;
         }
 
         #region TransactionMethod
