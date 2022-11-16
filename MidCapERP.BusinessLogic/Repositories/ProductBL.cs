@@ -8,6 +8,7 @@ using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.BusinessLogic.Services.QRCodeGenerate;
 using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -23,6 +24,7 @@ using MidCapERP.Dto.ProductImage;
 using MidCapERP.Dto.ProductMaterial;
 using MidCapERP.Dto.SearchResponse;
 using MidCapERP.Dto.Tenant;
+using System.Threading;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -284,6 +286,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product is not found");
 
+            var productQuantityCount = await GetProductQuantityCount(productData.ProductId, cancellationToken);
+            string availability = productQuantityCount > 0 ? "In Stock" : "Out of Stock";
+
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
@@ -293,7 +298,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (!string.IsNullOrEmpty(productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath))
                     productImage = "https://midcaperp.magnusminds.net/" + productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath;
 
-            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productImage, productSubjectTypeId);
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productImage, productSubjectTypeId, availability);
         }
 
         public async Task<ProductRequestDto> CreateProduct(ProductRequestDto model, CancellationToken cancellationToken)
@@ -657,6 +662,9 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product Not Found");
 
+            var productQuantityCount = await GetProductQuantityCount(productData.ProductId, cancellationToken);
+            string availability = productQuantityCount > 0 ? "In Stock" : "Out of Stock";
+
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
             var tenantData = await _unitOfWorkDA.TenantDA.GetById(productData.TenantId, cancellationToken);
             productData.CostPrice = CommonMethod.GetCalculatedPrice(productData.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
@@ -666,7 +674,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (!string.IsNullOrEmpty(productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath))
                     productImage = "https://midcaperp.magnusminds.net/" + productImagesData.FirstOrDefault(x => x.IsCover)?.ImagePath;
 
-            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productImage, productSubjectTypeId);
+            return new ProductForDetailsByModuleNoResponceDto(productData.ProductId, productData.CategoryId, productData.ProductTitle, productData.ModelNo, productData.Width, productData.Height, productData.Depth, productData.Diameter, productData.FabricNeeded, productData.IsVisibleToWholesalers, productData.TotalDaysToPrepare, productData.Features, productData.Comments, productData.CostPrice, productData.QRImage, productImage, productSubjectTypeId, availability);
         }
 
         public async Task<IEnumerable<MegaSearchResponse>> GetProductMegaSearchForDropDownByModuleNo(string modelno, CancellationToken cancellationToken)
@@ -868,6 +876,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                     var qtyData = await _unitOfWorkDA.ProductQuantitiesDA.CreateProductQuantities(qtyToInsert, cancellationToken);
                 }
             }
+        }
+
+        private async Task<int> GetProductQuantityCount(Int64 productId, CancellationToken cancellationToken)
+        {
+            var productQuantitiesAllData = await _unitOfWorkDA.ProductQuantitiesDA.GetAll(cancellationToken);
+            var quantityExists = productQuantitiesAllData.FirstOrDefault(x => x.ProductId == productId);
+            return quantityExists != null ? quantityExists.Quantity : 0;
         }
 
         #endregion Private Method
