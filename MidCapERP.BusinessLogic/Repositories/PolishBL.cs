@@ -55,7 +55,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             string polishImage = "";
             if (!string.IsNullOrEmpty(polishdata.ImagePath))
                 polishImage = "https://midcaperp.magnusminds.net/" + polishdata.ImagePath;
-            return new ProductForDetailsByModuleNoResponceDto(polishdata.PolishId, 0, polishdata.Title, polishdata.ModelNo, 0, 0, 0, 0, 0, false, 0, "", "", polishdata.UnitPrice, "", polishImage, polishSubjectTypeId);
+            return new ProductForDetailsByModuleNoResponceDto(polishdata.PolishId, 0, polishdata.Title, polishdata.ModelNo, 0, 0, 0, 0, 0, false, 0, "", "", polishdata.UnitPrice, "", polishImage, polishSubjectTypeId, null);
         }
 
         public async Task<JsonRepsonse<PolishResponseDto>> GetFilterPolishData(PolishDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

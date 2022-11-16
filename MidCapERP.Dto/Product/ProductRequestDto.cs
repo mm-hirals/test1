@@ -68,6 +68,7 @@ namespace MidCapERP.Dto.Product
 
         [DisplayName("QR Image")]
         public string? QRImage { get; set; }
+
         public int TenantId { get; set; }
         public int Status { get; set; }
         public int CreatedBy { get; set; }
@@ -78,5 +79,10 @@ namespace MidCapERP.Dto.Product
         public string? UpdatedByName { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+
+        public long ProductQuantityId { get; set; }
+
+        [DisplayName("Quantity")]
+        public int ProductQuantity { get; set; }
     }
 }

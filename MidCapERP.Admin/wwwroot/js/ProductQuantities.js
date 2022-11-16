@@ -64,6 +64,7 @@ ProductQuantitiesModel.onSuccess = function (xhr) {
     tblProductQuantities.ajax.reload(null, false);
     $("#divProductQuantitiesModal").modal('hide');
     toastr.success('Information saved successfully.');
+    $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
 };
 
 ProductQuantitiesModel.onFailed = function (xhr) {

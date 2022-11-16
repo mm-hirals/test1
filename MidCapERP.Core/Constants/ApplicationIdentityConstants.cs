@@ -39,6 +39,8 @@
                     .Union(GeneratePermissionsForModule("Portal", "Product"))
                     .Union(GeneratePermissionsForModule("Portal", "Product", "Publish"))
                     .Union(GeneratePermissionsForModule("Portal", "Product", "CostAnalyser"))
+                    .Union(GeneratePermissionsForModule("Portal", "Product", "QuantityView"))
+                    .Union(GeneratePermissionsForModule("Portal", "Product", "QuantityCreate"))
                     .Union(GeneratePermissionsForModule("Portal", "Order"))
                     .Union(GeneratePermissionsForModule("Portal", "Customer"))
                     .Union(GeneratePermissionsForModule("Portal", "Customer", "Import"))
@@ -88,6 +90,8 @@
                 public const string Delete = "Permissions.Portal.Product.Delete";
                 public const string Publish = "Permissions.Portal.Product.Publish";
                 public const string CostAnalyser = "Permissions.Portal.Product.CostAnalyser";
+                public const string QuantityView = "Permissions.Portal.Product.QuantityView";
+                public const string QuantityCreate = "Permissions.Portal.Product.QuantityCreate";
             }
 
             public static class PortalOrder
