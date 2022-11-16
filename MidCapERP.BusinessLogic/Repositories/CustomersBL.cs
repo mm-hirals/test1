@@ -244,6 +244,31 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<CustomersRequestDto>(data);
         }
 
+        public async Task<CustomersRequestDto> DeleteCustomers(Int64 CustomerId, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkDA.BeginTransactionAsync();
+            //delete customer addresses
+            var getCustomerAddress = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+            getCustomerAddress = getCustomerAddress.Where(x => x.CustomerId == CustomerId);
+            if (getCustomerAddress != null && getCustomerAddress.ToList().Count > 0)
+            {
+                foreach (var item in getCustomerAddress)
+                {
+                    await CustomerAddressUpdate(item.CustomerAddressId, cancellationToken);
+                }
+            }
+
+            // delete customer
+            var getCustomer = await CustomerGetById(CustomerId, cancellationToken);
+            getCustomer.IsDeleted = true;
+            getCustomer.UpdatedBy = _currentUser.UserId;
+            getCustomer.UpdatedDate = DateTime.Now;
+            getCustomer.UpdatedUTCDate = DateTime.UtcNow;
+            var updatedCustomer = await _unitOfWorkDA.CustomersDA.UpdateCustomers(CustomerId, getCustomer, cancellationToken);
+            await _unitOfWorkDA.CommitTransactionAsync();
+            return _mapper.Map<CustomersRequestDto>(updatedCustomer);
+        }
+
         public async Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken)
         {
             var customerTypeId = await _unitOfWorkDA.SubjectTypesDA.GetCustomerSubjectTypeId(cancellationToken);
@@ -486,6 +511,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
             return msg;
         }
+
         public static string GetResponse(string smsURL)
         {
             try
@@ -697,6 +723,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             getWrkImportCustomers.UpdatedDate = DateTime.Now;
             getWrkImportCustomers.UpdatedUTCDate = DateTime.UtcNow;
             await _unitOfWorkDA.WrkImportCustomersDA.Update(getWrkImportCustomers, cancellationToken);
+        }
+
+        private async Task CustomerAddressUpdate(long CustomerAddressId, CancellationToken cancellationToken)
+        {
+            var address = await _unitOfWorkDA.CustomerAddressesDA.GetById(CustomerAddressId, cancellationToken);
+            address.IsDeleted = true;
+            address.UpdatedBy = _currentUser.UserId;
+            address.UpdatedDate = DateTime.Now;
+            address.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(CustomerAddressId, address, cancellationToken);
         }
 
         #endregion PrivateMethods
