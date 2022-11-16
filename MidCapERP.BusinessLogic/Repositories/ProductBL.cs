@@ -654,7 +654,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (productData.TenantId != _currentUser.TenantId)
                 throw new Exception("Product Not Found");
 
-            var productQuantityCount = await GetProductQuantityCount(Id, cancellationToken);
+            var productQuantityCount = await GetProductQuantityCount(productData.ProductId, cancellationToken);
             string availability = productQuantityCount > 0 ? "In Stock" : "Out of Stock";
 
             var productSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken);
