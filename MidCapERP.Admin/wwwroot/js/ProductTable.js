@@ -18,6 +18,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.CategoryId = $("#categoryName").val().trim();
                 d.categoryName = $("#categoryName").val().trim();
                 d.productTitle = $("#productTitle").val().trim();
                 d.modelNo = $("#modelNo").val().trim();
@@ -72,7 +73,11 @@ $("#lnkProductFilter").click(function () {
 });
 
 
-$("#categoryName,#productTitle,#modelNo").keyup("input", function () {
+$("#productTitle,#modelNo").keyup("input", function () {
+    tblProduct.ajax.reload(null, false);
+});
+
+$('#categoryName').change(function () {
     tblProduct.ajax.reload(null, false);
 });
 

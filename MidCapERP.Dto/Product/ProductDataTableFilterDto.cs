@@ -5,8 +5,8 @@ namespace MidCapERP.Dto.Product
 {
     public class ProductDataTableFilterDto : DataTableFilterDto
     {
-        [JsonProperty("categoryName")]
-        public string CategoryName { get; set; }
+        [JsonProperty("categoryId")]
+        public long CategoryId { get; set; }
 
         [JsonProperty("productTitle")]
         public string ProductTitle { get; set; }

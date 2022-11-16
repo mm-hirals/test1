@@ -27,6 +27,7 @@ namespace MidCapERP.Admin.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.View)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
+            await FillCategoryDropDown(cancellationToken);
             return View();
         }
 
