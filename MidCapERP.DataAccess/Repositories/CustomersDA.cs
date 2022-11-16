@@ -8,12 +8,14 @@ namespace MidCapERP.DataAccess.Repositories
     public class CustomersDA : ICustomersDA
     {
         private ISqlRepository<Customers> _customers;
+        private ISqlRepository<CustomerVisits> _customerVisits;
         private CurrentUser _currentUser;
 
-        public CustomersDA(ISqlRepository<Customers> customers, CurrentUser currentUser)
+        public CustomersDA(ISqlRepository<Customers> customers, CurrentUser currentUser, ISqlRepository<CustomerVisits> customerVisits)
         {
             _customers = customers;
             _currentUser = currentUser;
+            _customerVisits = customerVisits;
         }
 
         public async Task CreateScope(CurrentUser currentUser, CancellationToken cancellationToken)
@@ -39,6 +41,11 @@ namespace MidCapERP.DataAccess.Repositories
         public async Task<Customers> UpdateCustomers(Int64 Id, Customers model, CancellationToken cancellationToken)
         {
             return await _customers.UpdateAsync(model, cancellationToken);
+        }
+
+        public async Task<CustomerVisits> CreateCustomerVisits(CustomerVisits model, CancellationToken cancellationToken)
+        {
+            return await _customerVisits.InsertAsync(model, cancellationToken);
         }
     }
 }

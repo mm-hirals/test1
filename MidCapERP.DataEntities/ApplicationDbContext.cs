@@ -68,5 +68,6 @@ namespace MidCapERP.DataEntities
         public DbSet<WrkImportFiles> WrkImportFiles { get; set; }
         public DbSet<WrkImportCustomers> WrkImportCustomers { get; set; }
         public DbSet<ProductQuantities> ProductQuantities { get; set; }
+        public DbSet<CustomerVisits> CustomerVisits { get; set; }
     }
 }
