@@ -260,8 +260,15 @@ $(function () {
     });
 })
 
+$('.ProductForm').on('change input', 'input, textarea', function () {
+    formChangedValue = true;
+});
 
-$('.ProductForm').on('change input', 'input, select, textarea', function () {
+$(document).on("click", ".minus-icon", function () {
+    formChangedValue = true;
+});
+
+$(document).on("click", ".add-icon", function () {
     formChangedValue = true;
 });
 
