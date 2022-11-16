@@ -40,5 +40,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IEmailHelper EmailHelper { get; }
         IWrkImportFilesBL WrkImportFilesBL { get; }
         IWrkImportCustomersBL WrkImportCustomersBL { get; }
+        IProductQuantitiesBL ProductQuantitiesBL { get; }
     }
 }

@@ -45,6 +45,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IEmailHelper, EmailHelper>();
             services.AddScoped<IWrkImportFilesBL, WrkImportFilesBL>();
             services.AddScoped<IWrkImportCustomersBL, WrkImportCustomersBL>();
+            services.AddScoped<IProductQuantitiesBL, ProductQuantitiesBL>();
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }

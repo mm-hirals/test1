@@ -45,6 +45,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IOrderSetItemReceivableDA, OrderSetItemReceivableDA>();
             services.AddScoped<IWrkImportFilesDA, WrkImportFilesDA>();
             services.AddScoped<IWrkImportCustomersDA, WrkImportCustomersDA>();
+            services.AddScoped<IProductQuantitiesDA, ProductQuantitiesDA>();
 
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();

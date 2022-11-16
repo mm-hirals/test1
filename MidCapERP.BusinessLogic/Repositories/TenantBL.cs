@@ -53,6 +53,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             MapToDbObject(model, ref oldData);
             if (model.UploadImage != null)
                 oldData.LogoPath = await _fileStorageService.StoreFile(model.UploadImage, ApplicationFileStorageConstants.FilePaths.OrganizationLogo);
+            oldData.SendOTP = model.SendOtp;
             oldData.UpdatedBy = _currentUser.UserId;
             oldData.UpdatedDate = DateTime.Now;
             oldData.UpdatedUTCDate = DateTime.UtcNow;

@@ -1,0 +1,15 @@
+﻿@model IEnumerable<MidCapERP.Dto.ProductQuantities.ProductQuantitiesResponseDto>
+
+<table class="table c-table c-table-stripted w-100" id="tblProductQuantities">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.CategoryName)</th>
+            <th>@Html.DisplayNameFor(model => model.ProductTitle)</th>
+            <th>@Html.DisplayNameFor(model => model.QuantityDateFormat)</th>
+            <th>@Html.DisplayNameFor(model => model.Quantity)</th>
+            <th>@Html.DisplayNameFor(model => model.LastModifiedByName)</th>
+            <th>@Html.DisplayNameFor(model => model.LastModifiedDateFormat)</th>
+            <th class="text-end">Action</th>
+        </tr>
+    </thead>
+</table>
