@@ -82,7 +82,7 @@ namespace MidCapERP.Dto.Product
 
         public long ProductQuantityId { get; set; }
 
-        [DisplayName("ProductQuantity")]
+        [DisplayName("Quantity")]
         public int ProductQuantity { get; set; }
     }
 }
