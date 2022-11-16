@@ -17,39 +17,44 @@ $(document).ready(function () {
 
 
 $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
-    //debugger;
     console.log(productTabId);
     var tabId = $(e.target).attr("id")
-    if (tabId == "nav-images-tab" ) {
+    $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val(), function (response, status, xhr) {
+        if (status == 'success') {
+            myAwesomeDropzone.on("addedfile", function () {
+                formChangedValue = true;
+            });
+        }
+    });
+    if (tabId == "nav-images-tab") {
         if (formChangedValue && confirm('Do you want to save?')) {
             if (productTabId == "nav-rawmaterial-tab") {
                 getFormName(productTabId);
-                }
+            }
             else if (productTabId == "nav-detail-tab") {
                 getFormName(productTabId);
             }
         }
-        $("#divProductImagePartial").load('/Product/CreateProductImage' + "?ProductId=" + $("#hdnProductId").val());
     } else if (tabId == "nav-rawmaterial-tab") {
         if (formChangedValue && confirm('Do you want to save?')) {
 
             if (productTabId == "nav-images-tab") {
-                    //$("#frmProductMaterial").submit();
+                getFormName(productTabId);
             }
-            else if (productTabId == "nav-detail-tab") {
+            if (productTabId == "nav-detail-tab") {
                 getFormName(productTabId);
             }
         }
         $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
     } else if (tabId == "nav-detail-tab") {
         if (formChangedValue && confirm('Do you want to save?')) {
-            if (productTabId == "nav-rawmaterial-tab")  {
+            if (productTabId == "nav-rawmaterial-tab") {
                 getFormName(productTabId);
             }
             else if (productTabId == "nav-images-tab") {
-                    getFormName(productTabId);
+                getFormName(productTabId);
             }
-        } 
+        }
         $("#divProductMaterialPartial").load('/Product/CreateProductMaterial' + "?ProductId=" + $("#hdnProductId").val());
     } else if (tabId == "nav-productActivity-tab") {
         if (formChangedValue && confirm('Do you want to save?')) {
@@ -61,10 +66,10 @@ $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
                 getFormName(productTabId);
             }
             else if (productTabId == "nav-images-tab") {
-                    $("#frmProductMaterial").submit();
+                getFormName(productTabId);
             }
         }
-       $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
+        $("#divProductActivityPartial").load('/Product/GetProductActivity' + "?ProductId=" + $("#hdnProductId").val());
     }
     formChangedValue = false;
     productTabId = tabId;
@@ -257,13 +262,25 @@ $('.ProductForm').on('change input', 'input, textarea', function () {
     formChangedValue = true;
 });
 
+$('.ProductForm').on('change input', 'select,button', function () {
+    if ($(this).parent().parent().find("select").val() != "") {
+        $(".add-icon").click(function () {
+            formChangedValue = true;
+        });
+    }
+});
+
+$(document).on('click', '.minus-icon', function () {
+    formChangedValue = true;
+});
+
 function getFormName(tabNameId) {
     if (productTabId == "nav-rawmaterial-tab") {
         return $("#frmProductMaterial").submit();
     } else if (productTabId == "nav-detail-tab") {
         return $("#frmProductDetail").submit();
     }
-    else if (productTabId == "nav-detail-tab") {
-        return;
+    else if (productTabId == "nav-images-tab") {
+        $("#submit-all").click();
     }
 }
