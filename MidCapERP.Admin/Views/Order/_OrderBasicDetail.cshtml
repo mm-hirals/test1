@@ -56,6 +56,14 @@
                             {
                                 <span class="form-label badge bg-danger">Cancelled</span>
                             }
+                            else if (@Model.Status == (int)OrderStatusEnum.MaterialReceive)
+                            {
+                                <span class="form-label badge bg-danger">Material Receive</span>
+                            }
+                            else if (@Model.Status == (int)OrderStatusEnum.Declined)
+                            {
+                                <span class="form-label badge bg-danger">Declined</span>
+                            }
                         </div>
                     </div>
                 </div>
