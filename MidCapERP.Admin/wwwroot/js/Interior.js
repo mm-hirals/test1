@@ -42,6 +42,7 @@ $(function () {
             },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {

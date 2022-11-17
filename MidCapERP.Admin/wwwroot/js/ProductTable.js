@@ -22,7 +22,7 @@ $(function () {
                 d.categoryName = $("#categoryName").val().trim();
                 d.productTitle = $("#productTitle").val().trim();
                 d.modelNo = $("#modelNo").val().trim();
-                d.publishStatus = $("#publishStatus").val().trim();
+                d.publishStatus = $("#publishStatus").val();
             }
         },
         "columnDefs": [
@@ -222,3 +222,12 @@ function DeleteProduct(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#categoryName").val(null);
+    $("#categoryName").val('');
+    $("#productTitle").val('');
+    $("#modelNo").val('');
+    $("#publishStatus").val(null);
+    $('#tblProduct').dataTable().fnDraw();
+});

@@ -22,6 +22,15 @@
                         <input id="categoryName" type="text" class="form-control" placeholder="Category Name" />
                     </div>
                 </div>
+               @* <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Fixed Price</label>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" value="">
+                            <label class="custom-control-label" for="isFixedPrice">Fixed Price</label>
+                        </div>
+                    </div>
+                </div>*@
             </div>
         </div>
         <partial name="_CategoryTable" model="@Model" />
@@ -34,6 +43,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Category.js" ></script>
+        <script asp-src-include="~/js/Category.js"></script>
     }
-}
+    }

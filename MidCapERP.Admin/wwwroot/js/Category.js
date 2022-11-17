@@ -21,6 +21,18 @@ $(function () {
         "columns": [
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
             {
+                "data": "fixedPrice", "name": "Fixed Price", "autoWidth": true,
+                "mRender": function (o) {
+                    var fixedPrice = "";
+                    if (o == 0) {
+                        fixedPrice = "No";
+                    } else if (o == 1) {
+                        fixedPrice = "Yes";
+                    }
+                    return fixedPrice;
+                }
+            },
+            {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
                     return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCategory" href="/Category/Update/' + o.categoryId + '"><i class="bx bxs-pencil"></i></a>' +

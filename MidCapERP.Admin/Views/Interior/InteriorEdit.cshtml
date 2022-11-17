@@ -1,5 +1,6 @@
 ﻿@model MidCapERP.Dto.Interior.InteriorRequestDto
 @{
+    ViewData["Title"] = (Model == null) ? "Create Interior" : "Update Interior";
     string action = (Model != null && Model.CustomerId != 0) ? "Update" : "Create";
     Layout = "_Layout";
 }

@@ -47,6 +47,9 @@
                         </select>
                     </div>
                 </div>
+                 <div class="col-md-3" style="border:0px;">
+                    <button type="button" class="btn btn-primary" id="btnReset">Reset</button>
+                </div>
             </div>
         </div>
         <partial name="_ProductTable" />
@@ -61,6 +64,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/ProductTable.js"></script>
+    <script asp-src-include="~/js/ProductTable.js"></script>
     }
     }

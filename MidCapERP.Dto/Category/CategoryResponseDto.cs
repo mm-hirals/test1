@@ -6,8 +6,10 @@ namespace MidCapERP.Dto.Category
     {
         public long CategoryId { get; set; }
         public long CategoryTypeId { get; set; }
+
         [DisplayName("Category Name")]
         public string? CategoryName { get; set; }
+
         public int LookupValueId { get; set; }
         public int LookupId { get; set; }
 
@@ -16,6 +18,10 @@ namespace MidCapERP.Dto.Category
 
         [DisplayName("Category Name")]
         public string LookupValueName { get; set; }
+
+        [DisplayName("Fixed Price")]
+        public bool FixedPrice { get; set; }
+
         public bool IsDeleted { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
