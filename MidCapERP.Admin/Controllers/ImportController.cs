@@ -81,6 +81,7 @@ namespace MidCapERP.Admin.Controllers
             }
             catch (Exception ex)
             {
+                _toastNotification.AddErrorToastMessage(ex.Message);
                 _logger.LogError(1, ex, "Error : ImportCustomer");
                 throw ex;
             }
