@@ -19,6 +19,7 @@ using MidCapERP.Dto.WrkImportCustomers;
 using MidCapERP.Dto.WrkImportFiles;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net;
 
@@ -188,7 +189,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var customerExistOrNot = customerAndInteriorData.FirstOrDefault(p => p.CustomerId == Id);
             if (customerExistOrNot != null)
             {
-                if (customerExistOrNot.PhoneNumber == model.PhoneNumber)
+                bool customerPhonenumer = customerExistOrNot.PhoneNumber == model.PhoneNumber;
+                if (customerPhonenumer == true)
                 {
                     var oldData = await CustomerGetById(Id, cancellationToken);
                     oldData.UpdatedBy = _currentUser.UserId;
@@ -199,23 +201,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                     return _mapper.Map<CustomerApiRequestDto>(data);
                 }
                 else
-                {
-                    var customerPhoneNumberExit = customerAndInteriorData.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
-                    if (customerPhoneNumberExit == null && (customerExistOrNot.PhoneNumber != model.PhoneNumber))
-                    {
-                        var oldData = await CustomerGetById(Id, cancellationToken);
-                        oldData.UpdatedBy = _currentUser.UserId;
-                        oldData.UpdatedDate = DateTime.Now;
-                        oldData.UpdatedUTCDate = DateTime.UtcNow;
-                        MapToDbObject(model, oldData);
-                        var data = await _unitOfWorkDA.CustomersDA.UpdateCustomers(Id, oldData, cancellationToken);
-                        return _mapper.Map<CustomerApiRequestDto>(data);
-                    }
-                    else
-                    {
-                        throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
-                    }
-                }
+                    throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
             }
             else
                 throw new Exception("Phone Number already exist. Please enter a different Phone Number.");
