@@ -16,6 +16,7 @@
                 <div class="col-md-10">
                     <div class="row">
                         <input type="hidden" asp-for="ProductId" />
+                        <input type="hidden" asp-for="ProductQuantityId" class="qtyId" />
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="FabricNeeded" class="form-label"></label>
@@ -45,7 +46,7 @@
                         </div>
                         <div class="col-2">
                             <div class="form-group">
-                                <a class="btn btn-icon btn-outline-primary has-spinner" href="/ProductQuantity/Update/@Model.ProductQuantityId" data-ajax-complete="ProductQuantitiesModel.onComplete" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#divUpdateProductQuantityMain" style="margin-top: 22px;"><i class="bx bxs-save"></i></a>
+                                <a class="btn btn-icon btn-outline-primary has-spinner updateQuantity" style="margin-top: 22px;"><i class="bx bxs-save"></i></a>
                             </div>
                         </div>
                     </div>
