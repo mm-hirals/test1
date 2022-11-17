@@ -443,17 +443,26 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
 
-        public async Task<OrderMaterialReceiveResponseDto> GetOrderReceiveMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
+        public async Task<OrderApiResponseDto> GetOrderReceivableMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
+        {
+            var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
+            var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
+            orderData.OrderSetApiResponseDto = orderData.OrderSetApiResponseDto.Where(x => x.OrderSetId == orderSetItemData.OrderSetId).ToList();
+            orderData.OrderSetApiResponseDto.ForEach(x => x.OrderSetItemResponseDto = x.OrderSetItemResponseDto.Where(x => x.OrderSetItemId == orderSetItemId && x.ReceiveDate != null).ToList());
+            return orderData;
+        }
+
+        public async Task<OrderMaterialReceiveResponseDto> GetOrderReceivedMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
         {
             var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
             var orderSetData = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
             var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
             var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
-            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var orderSetItemImageData = await _unitOfWorkDA.OrderSetItemImageDA.GetAll(cancellationToken);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
 
-            var orderMaterialResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
+            var orderMaterialResponseData = (from x in orderData.Where(x => x.OrderId == orderId)
                                              join z in orderSetItemData on x.OrderId equals orderId
                                              join s in orderSetData on z.OrderSetId equals s.OrderSetId
                                              join y in customerAllData on x.CustomerID equals y.CustomerId into customerData
