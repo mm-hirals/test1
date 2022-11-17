@@ -45,9 +45,21 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpGet("GetReceiveMaterial/{id}/{orderSetItemId}")]
         [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
-        public async Task<ApiResponse> GetOrderbyReceiveMaterial(long id, long orderSetItemId, CancellationToken cancellationToken)
+        public async Task<ApiResponse> GetOrderbyReceivableMaterial(long id, long orderSetItemId, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.OrderBL.GetOrderReceiveMaterial(id, orderSetItemId, cancellationToken);
+            var data = await _unitOfWorkBL.OrderBL.GetOrderReceivableMaterial(id, orderSetItemId, cancellationToken);
+            if (data == null)
+            {
+                return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
+            }
+            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+        }
+
+        [HttpGet("GetReceivedMaterial/{id}/{orderSetItemId}")]
+        [Authorize(ApplicationIdentityConstants.Permissions.AppOrder.View)]
+        public async Task<ApiResponse> GetOrderbyReceivedMaterial(long id, long orderSetItemId, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetOrderReceivedMaterial(id, orderSetItemId, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
