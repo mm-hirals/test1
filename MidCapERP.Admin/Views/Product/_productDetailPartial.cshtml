@@ -16,6 +16,7 @@
                 <div class="col-md-10">
                     <div class="row">
                         <input type="hidden" asp-for="ProductId" />
+                        <input type="hidden" asp-for="ProductQuantityId" class="qtyId" />
                         <div class="col-3">
                             <div class="form-group">
                                 <label asp-for="FabricNeeded" class="form-label"></label>
@@ -30,11 +31,22 @@
                                 <span asp-validation-for="TotalDaysToPrepare" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-2">
                             <div class="custom-control custom-switch">
                                 <label asp-for="IsVisibleToWholesalers" class="form-label"></label>
                                 <input asp-for="IsVisibleToWholesalers" type="checkbox" class="custom-control-input" id="customSwitch1">
                                 <label class="custom-control-label" for="customSwitch1">Active</label>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label asp-for="ProductQuantity" class="form-label"></label>
+                                <input asp-for="ProductQuantity" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <a class="btn btn-icon btn-outline-primary has-spinner updateQuantity" style="margin-top: 22px;"><i class="bx bxs-save"></i></a>
                             </div>
                         </div>
                     </div>

@@ -64,6 +64,7 @@ ProductQuantitiesModel.onSuccess = function (xhr) {
     tblProductQuantities.ajax.reload(null, false);
     $("#divProductQuantitiesModal").modal('hide');
     toastr.success('Information saved successfully.');
+    $("#divProductDetailPartial").load('/Product/CreateProductDetail' + "?ProductId=" + $("#hdnProductId").val());
 };
 
 ProductQuantitiesModel.onFailed = function (xhr) {
@@ -74,4 +75,23 @@ ProductQuantitiesModel.onFailed = function (xhr) {
 
 $(document).on('submit', '#frmCreateUpdateProductQuantities', function (e) {
     $('#btnUpdateProductQuantities').buttonLoader('start');
+});
+
+$(document).delegate(".updateQuantity", "click", function (e) {
+    $('#divUpdateProductQuantityMain').html('');
+    $('.updateQuantity').buttonLoader('start');
+    var qtyId = $(".qtyId").val();
+    $.ajax({
+        url: "/ProductQuantity/Update?Id=" + qtyId,
+        type: "GET",
+        success: function (response) {
+            $('#divUpdateProductQuantityMain').html(response);
+            $('#divProductQuantitiesModal').modal('show');
+            $('.updateQuantity').buttonLoader('stop');
+        },
+        error: function () {
+            $('#divUpdateProductQuantityMain').html('');
+            $('.updateQuantity').buttonLoader('stop');
+        }
+    });
 });

@@ -10,7 +10,7 @@
                     <i class='bx bx-x'></i>
                 </button>
             </div>
-            <form asp-action="Update" asp-controller="ProductQuantity" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
+            <form asp-action="Update" asp-controller="ProductQuantity" asp-route-Id="@Model.ProductQuantityId" method="post" class="modal-form--wrapper" enctype="multipart/form-data"
                   data-ajax="true" data-ajax-method="post"
                   data-ajax-complete="ProductQuantitiesModel.onSuccess"
                   data-ajax-failure="ProductQuantitiesModel.onFailed" id="frmCreateUpdateProductQuantities">
@@ -54,7 +54,7 @@
                         {
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label">Activity</label>
                                     @foreach (var item in Model.activityLogs)
                                     {
                                         <label class="form-control">@item.Description</label><br />

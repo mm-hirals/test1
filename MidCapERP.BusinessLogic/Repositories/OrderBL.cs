@@ -3,7 +3,6 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -444,13 +443,60 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
 
-        public async Task<OrderApiResponseDto> GetOrderReceiveMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
+        public async Task<OrderMaterialReceiveResponseDto> GetOrderReceiveMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
         {
-            var orderData = await GetOrderDetailByOrderIdAPI(orderId, cancellationToken);
-            var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetById(orderSetItemId, cancellationToken);
-            orderData.OrderSetApiResponseDto = orderData.OrderSetApiResponseDto.Where(x => x.OrderSetId == orderSetItemData.OrderSetId).ToList();
-            orderData.OrderSetApiResponseDto.ForEach(x => x.OrderSetItemResponseDto = x.OrderSetItemResponseDto.Where(x => x.OrderSetItemId == orderSetItemId && x.ReceiveDate != null).ToList());
-            return orderData;
+            var orderData = await _unitOfWorkDA.OrderDA.GetAll(cancellationToken);
+            var orderSetData = await _unitOfWorkDA.OrderSetDA.GetAll(cancellationToken);
+            var orderSetItemData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+            var orderSetItemReceivableData = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var orderSetItemImageData = await _unitOfWorkDA.OrderSetItemImageDA.GetAll(cancellationToken);
+            var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+
+            var orderMaterialResponseData = (from x in orderData.Where(x => x.CreatedBy == _currentUser.UserId)
+                                             join z in orderSetItemData on x.OrderId equals orderId
+                                             join s in orderSetData on z.OrderSetId equals s.OrderSetId
+                                             join y in customerAllData on x.CustomerID equals y.CustomerId into customerData
+                                             from c in customerData.DefaultIfEmpty()
+                                             join a in orderSetItemReceivableData on z.OrderSetItemId equals orderSetItemId
+                                             join a1 in orderSetItemReceivableData.Where(d => d.OrderSetItemId == orderSetItemId) on a.OrderSetItemId equals orderSetItemId
+                                             join u in allUsers on a.ReceivedBy equals u.UserId into orderSetItemReceivables
+                                             from b in orderSetItemReceivables.DefaultIfEmpty()
+                                             select new OrderMaterialReceiveResponseDto()
+                                             {
+                                                 OrderId = z.OrderId,
+                                                 OrderNo = x.OrderNo,
+                                                 CustomerName = c.FirstName + " " + c.LastName,
+                                                 MobileNo = c.PhoneNumber,
+                                                 OrderSetItemId = z.OrderSetItemId,
+                                                 OrderSetName = s.SetName,
+                                                 OrderSetComment = z.Comment,
+                                                 ReceivedFrom = a.ReceivedFrom,
+                                                 ProvidedMaterial = a.ProvidedMaterial,
+                                                 ReceiveDate = (DateTime)z.ReceiveDate,
+                                                 ReceivedBy = b.FullName,
+                                                 ReceivedComment = a.Comment
+                                             }).FirstOrDefault();
+
+            if (orderMaterialResponseData != null)
+            {
+                var orderItemImages = orderSetItemImageData.Where(x => x.OrderSetItemId == orderSetItemId).ToList();
+                List<OrderSetItemImageResponseDto> OrderSetItemImageResponseDto = new List<OrderSetItemImageResponseDto>();
+                foreach (var item in orderItemImages)
+                {
+                    OrderSetItemImageResponseDto objOrderSetItemImageResponseDto = new OrderSetItemImageResponseDto();
+                    objOrderSetItemImageResponseDto.OrderSetItemId = orderSetItemId;
+                    objOrderSetItemImageResponseDto.DrawImage = "https://midcaperp.magnusminds.net/" + item.DrawImage;
+                    objOrderSetItemImageResponseDto.OrderSetItemImageId = item.OrderSetItemImageId;
+                    objOrderSetItemImageResponseDto.CreatedBy = item.CreatedBy;
+                    objOrderSetItemImageResponseDto.CreatedDate = item.CreatedDate;
+                    objOrderSetItemImageResponseDto.CreatedUTCDate = item.CreatedUTCDate;
+                    OrderSetItemImageResponseDto.Add(objOrderSetItemImageResponseDto);
+                }
+                orderMaterialResponseData.OrderSetItemImageResponseDto = OrderSetItemImageResponseDto;
+            }
+
+            return orderMaterialResponseData;
         }
 
         public async Task<OrderApiResponseDto> UpdateOrderReceiveMaterial(OrderUpdateReceiveMaterialAPI model, CancellationToken cancellationToken)

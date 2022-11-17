@@ -58,7 +58,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             if (!string.IsNullOrEmpty(fabricData.ImagePath))
                 fabricImage = "https://midcaperp.magnusminds.net/" + fabricData.ImagePath;
 
-            return new ProductForDetailsByModuleNoResponceDto(fabricData.FabricId, 0, fabricData.Title, fabricData.ModelNo, 0, 0, 0, 0, 0, false, 0, "", "", fabricData.UnitPrice, "", fabricImage, fabricSubjectTypeId);
+            return new ProductForDetailsByModuleNoResponceDto(fabricData.FabricId, 0, fabricData.Title, fabricData.ModelNo, 0, 0, 0, 0, 0, false, 0, "", "", fabricData.UnitPrice, "", fabricImage, fabricSubjectTypeId, null);
         }
 
         public async Task<JsonRepsonse<FabricResponseDto>> GetFilterFabricData(FabricDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)

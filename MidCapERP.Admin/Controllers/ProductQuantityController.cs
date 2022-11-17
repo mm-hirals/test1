@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MidCapERP.BusinessLogic.UnitOfWork;
+using MidCapERP.Core.Constants;
 using MidCapERP.Dto.ProductQuantities;
 
 namespace MidCapERP.Admin.Controllers
@@ -15,6 +17,7 @@ namespace MidCapERP.Admin.Controllers
             _unitOfWorkBL = unitOfWorkBL;
         }
 
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.QuantityView)]
         public IActionResult Index(CancellationToken cancellationToken)
         {
             FillCategoryDropDown(cancellationToken);
@@ -22,6 +25,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.QuantityView)]
         public async Task<IActionResult> GetProductQuantitiesData([FromForm] ProductQuantitiesDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
         {
             var data = await _unitOfWorkBL.ProductQuantitiesBL.GetFilterProductQuantitiesData(dataTableFilterDto, cancellationToken);
@@ -29,6 +33,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.QuantityCreate)]
         public async Task<IActionResult> Update(long Id, CancellationToken cancellationToken)
         {
             var productQuantity = await _unitOfWorkBL.ProductQuantitiesBL.GetById(Id, cancellationToken);
@@ -36,6 +41,7 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalProduct.QuantityCreate)]
         public async Task<IActionResult> Update(long Id, ProductQuantitiesRequestDto productQuantitiesRequestDto, CancellationToken cancellationToken)
         {
             await _unitOfWorkBL.ProductQuantitiesBL.UpdateProductQuantities(Id, productQuantitiesRequestDto, cancellationToken);

@@ -8,6 +8,8 @@ namespace MidCapERP.DataAccess.Interface
 
         public Task<ProductQuantities> GetById(long Id, CancellationToken cancellationToken);
 
+        public Task<ProductQuantities> CreateProductQuantities(ProductQuantities model, CancellationToken cancellationToken);
+
         public Task<ProductQuantities> UpdateProductQuantities(long Id, ProductQuantities model, CancellationToken cancellationToken);
     }
 }

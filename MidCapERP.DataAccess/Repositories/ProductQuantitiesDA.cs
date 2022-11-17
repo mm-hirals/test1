@@ -23,6 +23,11 @@ namespace MidCapERP.DataAccess.Repositories
             return await _productQuantities.GetByIdAsync(Id, cancellationToken);
         }
 
+        public async Task<ProductQuantities> CreateProductQuantities(ProductQuantities model, CancellationToken cancellationToken)
+        {
+            return await _productQuantities.InsertAsync(model, cancellationToken);
+        }
+
         public async Task<ProductQuantities> UpdateProductQuantities(long Id, ProductQuantities model, CancellationToken cancellationToken)
         {
             return await _productQuantities.UpdateAsync(model, cancellationToken);
