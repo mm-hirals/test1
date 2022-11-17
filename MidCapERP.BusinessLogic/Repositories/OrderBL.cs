@@ -495,7 +495,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     OrderSetItemImageResponseDto objOrderSetItemImageResponseDto = new OrderSetItemImageResponseDto();
                     objOrderSetItemImageResponseDto.OrderSetItemId = orderSetItemId;
-                    objOrderSetItemImageResponseDto.DrawImage = "https://midcaperp.magnusminds.net/" + item.DrawImage;
+                    objOrderSetItemImageResponseDto.DrawImage = "https://midcaperpapi.magnusminds.net/" + item.DrawImage;
                     objOrderSetItemImageResponseDto.OrderSetItemImageId = item.OrderSetItemImageId;
                     objOrderSetItemImageResponseDto.CreatedBy = item.CreatedBy;
                     objOrderSetItemImageResponseDto.CreatedDate = item.CreatedDate;
