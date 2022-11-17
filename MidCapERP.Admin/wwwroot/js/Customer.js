@@ -43,8 +43,10 @@ $(function () {
                     return row.firstName + " " + row.lastName;
                 }
             },
+            { "data": "refferedName", "name": "RefferedName", "autoWidth": true },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "createdDateFormat", "autoWidth": true },
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {

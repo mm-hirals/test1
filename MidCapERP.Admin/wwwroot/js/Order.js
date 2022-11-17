@@ -31,31 +31,33 @@ $(function () {
             { "data": "orderNo", "name": "OrderNo", "autoWidth": true },
             { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
             { "data": "customerName", "name": "CustomerName", "autoWidth": true },
+            { "data": "refferedName", "name": "RefferedName", "autoWidth": true },
+            { "data": "phoneNumber", "name": "PhoneNumber", "autoWidth": true },
             { "data": "payableAmount", "name": "PayableAmount", "autoWidth": true },
             {
                 "data": "status", "name": "Status", "autoWidth": true,
                 "mRender": function (o) {
                     if (o == 0) {
-                        status = "Inquiry";
+                        status = '<span class="form-label badge bg-warning">' + "Inquiry" + '<span>';
                     } else if (o == 1) {
-                        status = "Pending For Approval";
+                        status = '<span class="form-label badge bg-secondary">' + "Pending For Approval" + '<span>';
                     }
                     else if (o == 2) {
-                        status = "Approved";
+                        status = '<span class="form-label badge bg-secondary">' + "Approved" + '</span>';
                     }
                     else if (o == 3) {
-                        status = "In Progress";
+                        status = '<span class="form-label badge bg-secondary">' + "In Progress" + '</span>';
                     }
                     else if (o == 4) {
-                        status = "Completed";
+                        status = '<span class="form-label badge bg-success">' +"Completed" + '</span>';
                     }
                     else if (o == 5) {
-                        status = "Delivered";
+                        status = '<span class="form-label badge bg-secondary">' + "Delivered" + '</span>';
                     }
                     else if (o == 6) {
-                        status = "Cancelled";
+                        status = '<span class="form-label badge bg-danger">' + "Cancelled" + '</span>'; 
                     }
-                    return status;
+                    return  status ;
                 }
             },
             { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },

@@ -70,6 +70,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                          CreatedBy = x.CreatedBy,
                                          CreatedByName = z.FullName,
                                          RefferedBy = x.RefferedBy,
+                                         RefferedName = string.IsNullOrEmpty(customerData.FirstOrDefault(p=>p.CustomerId == x.RefferedBy).FirstName +     " " + customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).LastName) ? null :     (customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).FirstName + " " + customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).LastName),
                                          PhoneNumber = y.PhoneNumber
                                      }).AsQueryable();
             var orderFilterData = FilterOrderData(dataTableFilterDto, orderResponseData);
