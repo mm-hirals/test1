@@ -113,3 +113,10 @@ function DeleteUser(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#name").val('');
+    $("#email").val('');
+    $("#phoneNumber").val('');
+    $('#tblUser').dataTable().fnDraw();
+});

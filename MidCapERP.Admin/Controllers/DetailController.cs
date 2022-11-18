@@ -30,6 +30,7 @@ namespace MidCapERP.Admin.Controllers
             var data = await _unitOfWorkBL.OrderBL.GetOrderDetailsAnonymous(orderNo, cancellationToken);
             if (data != null)
             {
+                await _unitOfWorkBL.OrderAnonymousBL.CreateOrderDetailsAnonymous(data, cancellationToken);
                 return View("OrderDetail", data);
             }
             else

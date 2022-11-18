@@ -148,10 +148,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     categoryResponseDto = categoryResponseDto.Where(p => p.CategoryName.StartsWith(categoryDataTableFilterDto.CategoryName));
                 }
-               /* if (categoryDataTableFilterDto.FixedPrice != null)
+                if (categoryDataTableFilterDto.FixedPrice != null && categoryDataTableFilterDto.FixedPrice != -1)
                 {
-                    categoryResponseDto = categoryResponseDto.Where(p => p.FixedPrice == categoryDataTableFilterDto.FixedPrice);
-                }*/
+                    categoryResponseDto = categoryResponseDto.Where(p => p.FixedPrice == Convert.ToBoolean(categoryDataTableFilterDto.FixedPrice));
+                }
             }
 
             return categoryResponseDto;
