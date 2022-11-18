@@ -439,8 +439,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             OrderStatusResponseDto response = new OrderStatusResponseDto();
             var orderById = await _unitOfWorkDA.OrderDA.GetById(model.OrderId, cancellationToken);
-            orderById.Status = Convert.ToInt32(model.IsOrderApproved == true ? OrderStatusEnum.Approved : OrderStatusEnum.Declined);
-            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+
+            if (orderById.Status == Convert.ToInt32(model.IsOrderApproved == true ? OrderStatusEnum.Approved : OrderStatusEnum.Declined))
+            {
+                if (model.IsOrderApproved == true)
+                    throw new Exception("Order has been already approved");
+                else
+                    throw new Exception("Order has been already declined");
+            }
 
             if (model.IsOrderApproved == true)
             {
@@ -531,8 +537,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  OrderSetName = s.SetName,
                                                  OrderSetComment = z.Comment,
                                                  ReceivedFrom = a.ReceivedFrom,
-                                                 ProvidedMaterial = a.ProvidedMaterial,
+                                                 ProvidedMaterial = (decimal)z.ProvidedMaterial,
                                                  ReceiveDate = (DateTime)z.ReceiveDate,
+                                                 ReceivedMaterial = a.ProvidedMaterial,
+                                                 ReceivedDate = a.ReceivedDate,
                                                  ReceivedBy = b.FullName,
                                                  ReceivedComment = a.Comment
                                              }).FirstOrDefault();
@@ -566,7 +574,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             OrderSetItemReceivable orderSetItemReceivable = new OrderSetItemReceivable();
             orderSetItemReceivable.OrderSetItemId = model.OrderSetItemId;
             orderSetItemReceivable.ReceivedDate = DateTime.Now;
-            orderSetItemReceivable.ProvidedMaterial = model.ReceivedMaterial;
+            orderSetItemReceivable.ProvidedMaterial = Convert.ToDecimal(model.ReceivedMaterial);
             orderSetItemReceivable.ReceivedFrom = model.ReceivedFrom;
             orderSetItemReceivable.ReceivedBy = _currentUser.UserId;
             orderSetItemReceivable.Comment = model.Comment;
