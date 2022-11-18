@@ -17,10 +17,10 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.refferedBy = $("#refferedBy").val().trim();
+                d.refferedBy = $("#refferedBy").val();
                 d.customerName = $("#customerName").val().trim();
                 d.phoneNumber = $("#phoneNumber").val().trim();
-                d.status = $("#status").val().trim();
+                d.status = $("#status").val();
                 d.orderFromDate = $("#orderFromDate").val().trim();
                 d.orderToDate = $("#orderToDate").val().trim();
                 d.deliveryFromDate = $("#deliveryFromDate").val().trim();
@@ -103,4 +103,16 @@ $("#orderToDate").on("input", function () {
 
 $("#deliveryFromDate,#deliveryToDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
+});
+
+$(document).on('click', '#btnReset', function (e) {
+     $("#refferedBy").val(null);
+     $("#customerName").val('');
+     $("#phoneNumber").val('');
+     $("#status").val(null);
+     $("#orderFromDate").val('');
+     $("#orderToDate").val('');
+     $("#deliveryFromDate").val('');
+     $("#deliveryToDate").val('');
+     $('#tblOrder').dataTable().fnDraw();
 });

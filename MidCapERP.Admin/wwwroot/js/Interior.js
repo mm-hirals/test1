@@ -181,3 +181,11 @@ $(document).on('submit', '#frmInteriorEdit', function (e) {
     $('#dataSave').buttonLoader('start');
     toastr.success('Information saved successfully.');
 });
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#interiorName").val('');
+    $("#interiorMobileNo").val('');
+    $("#interiorFromDate").val('');
+    $("#interiorToDate").val('');
+    $('#tblInterior').dataTable().fnDraw();
+});

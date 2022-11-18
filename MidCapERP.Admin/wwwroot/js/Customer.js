@@ -18,7 +18,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.refferedBy = $("#refferedBy").val().trim();
+                d.refferedBy = $("#refferedBy").val();
                 d.customerName = $("#customerName").val().trim();
                 d.customerMobileNo = $("#customerMobileNo").val().trim();
                 d.customerFromDate = $("#customerFromDate").val().trim();
@@ -188,3 +188,12 @@ $(document).on('submit', '#frmCusomerDetails', function (e) {
     $('#dataSave').buttonLoader('start');
     toastr.success('Information saved successfully.');
 }); 
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#refferedBy").val('');
+    $("#customerName").val('');
+    $("#customerMobileNo").val('');
+    $("#customerFromDate").val('');
+    $("#customerToDate").val('');
+    $('#tblCustomer').dataTable().fnDraw();
+});

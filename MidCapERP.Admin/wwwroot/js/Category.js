@@ -105,3 +105,8 @@ function DeleteCategory(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#categoryName").val('');
+    $('#tblCategory').dataTable().fnDraw();
+});
