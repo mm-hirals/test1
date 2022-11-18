@@ -33,5 +33,7 @@ namespace MidCapERP.Core.CommonHelper
             _generatePdf.SetConvertOptions(options);
             return _generatePdf.GetPDF(html);
         }
+
+        public static string ProvidedByCustomer = "provided by customer";
     }
 }

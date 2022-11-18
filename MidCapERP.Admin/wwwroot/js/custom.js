@@ -42,6 +42,23 @@ function SweetAlert(title, id, callback) {
         }
     );
 }
+function DeclineConfirmation() {
+    swal({
+        title: "Are you sure?",
+        text: "This order will be declined! ",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, decline!",
+    },
+        function (isConfirm) {
+            if (isConfirm) {
+                $("#declineOrderModal").modal('show');
+            }
+        }
+    );
+}
+
 document.addEventListener("DOMContentLoaded", function (event) {
     const showNavbar = (toggleId, navId, bodyId, headerId) => {
         const toggle = document.getElementById(toggleId),

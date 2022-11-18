@@ -38,26 +38,32 @@ $(function () {
                 "data": "status", "name": "Status", "autoWidth": true,
                 "mRender": function (o) {
                     if (o == 0) {
-                        status = '<span class="form-label badge bg-warning">' + "Inquiry" + '<span>';
+                        status = '<span class="form-label badge bg-warning">Inquiry<span>';
                     } else if (o == 1) {
-                        status = '<span class="form-label badge bg-secondary">' + "Pending For Approval" + '<span>';
+                        status = '<span class="form-label badge bg-secondary">Pending For Approval<span>';
                     }
                     else if (o == 2) {
-                        status = '<span class="form-label badge bg-secondary">' + "Approved" + '</span>';
+                        status = '<span class="form-label badge bg-secondary">Approved</span>';
                     }
                     else if (o == 3) {
-                        status = '<span class="form-label badge bg-secondary">' + "In Progress" + '</span>';
+                        status = '<span class="form-label badge bg-secondary">In Progress</span>';
                     }
                     else if (o == 4) {
-                        status = '<span class="form-label badge bg-success">' +"Completed" + '</span>';
+                        status = '<span class="form-label badge bg-success">Completed</span>';
                     }
                     else if (o == 5) {
-                        status = '<span class="form-label badge bg-secondary">' + "Delivered" + '</span>';
+                        status = '<span class="form-label badge bg-secondary">Delivered</span>';
                     }
                     else if (o == 6) {
-                        status = '<span class="form-label badge bg-danger">' + "Cancelled" + '</span>'; 
+                        status = '<span class="form-label badge bg-danger">Cancelled</span>';
                     }
-                    return  status ;
+                    else if (o == 7) {
+                        status = '<span class="form-label badge bg-danger">Material Receive</span>';
+                    }
+                    else if (o == 8) {
+                        status = '<span class="form-label badge bg-danger">Declined</span>';
+                    }
+                    return status;
                 }
             },
             { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
@@ -108,13 +114,13 @@ $("#deliveryFromDate,#deliveryToDate").on("input", function () {
 $(document).on('click', '#btnReset', function (e) {
     $("#select2-refferedBy-container").text("Select Reffered");
     $("#select2-status-container").text("Select Reffered");
-     $("#refferedBy").val(null);
-     $("#customerName").val('');
-     $("#phoneNumber").val('');
-     $("#status").val(null);
-     $("#orderFromDate").val('');
-     $("#orderToDate").val('');
-     $("#deliveryFromDate").val('');
-     $("#deliveryToDate").val('');
-     $('#tblOrder').dataTable().fnDraw();
+    $("#refferedBy").val(null);
+    $("#customerName").val('');
+    $("#phoneNumber").val('');
+    $("#status").val(null);
+    $("#orderFromDate").val('');
+    $("#orderToDate").val('');
+    $("#deliveryFromDate").val('');
+    $("#deliveryToDate").val('');
+    $('#tblOrder').dataTable().fnDraw();
 });
