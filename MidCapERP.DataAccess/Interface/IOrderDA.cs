@@ -1,4 +1,5 @@
 ﻿using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.Order;
 
 namespace MidCapERP.DataAccess.Interface
 {
@@ -14,6 +15,6 @@ namespace MidCapERP.DataAccess.Interface
 
         public Task<Order> DeleteOrder(Order model, CancellationToken cancellationToken);
 
-        public Task<string?> CreateOrderNo(string type, CancellationToken cancellationToken);
+        public Task<string?> CreateOrderNo(string type, CancellationToken cancellationToken);        
     }
 }
