@@ -153,6 +153,13 @@ namespace MidCapERP.Admin.Controllers
 
         #region Private Method
 
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerVisitCount(long customerId, CancellationToken cancellationToken)
+        {
+            var customerCounts = await _unitOfWorkBL.CustomerVisitsBL.GetById(customerId, cancellationToken);
+            return PartialView("_CustomerVisitCounts", customerCounts);
+        }
+
         private async Task FillRefferedDropDown(CancellationToken cancellationToken)
         {
             try

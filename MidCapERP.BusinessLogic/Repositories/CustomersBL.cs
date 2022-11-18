@@ -143,7 +143,7 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerData = customerAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Customer);
-            
+            var customerVisits = await _unitOfWorkDA.CustomerVisitsDA.GetAll(cancellationToken);
             var customerAndInteriorData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             var customerAddressesResponseData = (from x in customerData
                                                  join y in customerAndInteriorData on x.CustomerId equals y.CustomerId
@@ -153,19 +153,20 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                      CustomerId = x.CustomerId,
                                                      FirstName = x.FirstName,
                                                      LastName = x.LastName,
-                                                     CustomerTypeId  = x.CustomerTypeId,
+                                                     CustomerTypeId = x.CustomerTypeId,
                                                      EmailId = x.EmailId,
                                                      PhoneNumber = x.PhoneNumber,
                                                      AltPhoneNumber = x.PhoneNumber,
                                                      GSTNo = x.GSTNo,
                                                      RefferedName = string.IsNullOrEmpty(customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).FirstName + " " + customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).LastName) ? null : (customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).FirstName + " " + customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).LastName),
                                                      Discount = x.Discount,
-                                                     CreatedDate =x.CreatedDate,
+                                                     CreatedDate = x.CreatedDate,
                                                      UpdatedBy = x.UpdatedBy,
                                                      UpdatedDate = x.UpdatedDate,
-                                                     UpdatedUTCDate= x.UpdatedUTCDate,
-                                                     IsSubscribe =x.IsSubscribe,
-                                                     RefferedBy = x.RefferedBy
+                                                     UpdatedUTCDate = x.UpdatedUTCDate,
+                                                     IsSubscribe = x.IsSubscribe,
+                                                     RefferedBy = x.RefferedBy,
+                                                     VisitCounts = customerVisits.Where(v => v.CustomerId == x.CustomerId).Count(),
                                                  }).AsQueryable();
 
             var customerFilteredData = FilterCustomerData(dataTableFilterDto, customerAddressesResponseData);
@@ -585,25 +586,6 @@ namespace MidCapERP.BusinessLogic.Repositories
             return newOtpData;
         }
 
-        public async Task<CustomerVisitRequestDto> CustomerVisitAPI(CustomerVisitRequestDto model, CancellationToken cancellationToken)
-        {
-            var allCustomers = await GetAll(cancellationToken);
-            var customerExists = allCustomers.FirstOrDefault(p => p.CustomerId == model.CustomerId);
-            if (customerExists != null)
-            {
-                var customerVisitsToInsert = _mapper.Map<CustomerVisits>(model);
-                customerVisitsToInsert.CustomerId = model.CustomerId;
-                customerVisitsToInsert.Comment = model.Comment;
-                customerVisitsToInsert.CreatedBy = _currentUser.UserId;
-                customerVisitsToInsert.CreatedDate = DateTime.Now;
-                customerVisitsToInsert.CreatedUTCDate = DateTime.UtcNow;
-                var data = await _unitOfWorkDA.CustomersDA.CreateCustomerVisits(customerVisitsToInsert, cancellationToken);
-                return _mapper.Map<CustomerVisitRequestDto>(data);
-            }
-            else
-                throw new Exception("Customer doesn't exist.");
-        }
-
         #region PrivateMethods
 
         private async Task<Customers> CustomerGetById(Int64 Id, CancellationToken cancellationToken)
@@ -691,7 +673,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
                 {
-                    customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName) || (p.FirstName + " "+ p.LastName).StartsWith(dataTableFilterDto.customerName));
+                    customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName) || (p.FirstName + " " + p.LastName).StartsWith(dataTableFilterDto.customerName));
                 }
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerMobileNo))
                 {

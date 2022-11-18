@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using MagnusMinds.Utility.EmailService;
 using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
-using MidCapERP.DataAccess.Repositories;
+using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -28,14 +29,16 @@ namespace MidCapERP.BusinessLogic.Repositories
         public readonly CurrentUser _currentUser;
         private readonly IFileStorageService _fileStorageService;
         private readonly IActivityLogsService _activityLogsService;
+        private readonly IEmailHelper _emailHelper;
 
-        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IActivityLogsService activityLogsService)
+        public OrderBL(IUnitOfWorkDA unitOfWorkDA, IMapper mapper, CurrentUser currentUser, IFileStorageService fileStorageService, IActivityLogsService activityLogsService, IEmailHelper emailHelper)
         {
             _unitOfWorkDA = unitOfWorkDA;
             _mapper = mapper;
             _currentUser = currentUser;
             _fileStorageService = fileStorageService;
             _activityLogsService = activityLogsService;
+            _emailHelper = emailHelper;
         }
 
         public async Task<IEnumerable<OrderResponseDto>> GetAll(CancellationToken cancellationToken)
@@ -826,6 +829,48 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
+        public async Task ShareOrderWithCustomer(long Id, CancellationToken cancellationToken)
+        {
+            var getOrderData = await GetById(Id, cancellationToken);
+            if (getOrderData == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            var customerId = await _unitOfWorkDA.CustomersDA.GetById(getOrderData.CustomerID, cancellationToken);
+            var tenantSMTPDetailData = await _unitOfWorkDA.TenantSMTPDetailDA.GetAll(cancellationToken);
+            var tenantSMTPDetail = tenantSMTPDetailData.FirstOrDefault(x => x.TenantID == customerId.TenantId);
+            string emailSubject = "Share Order | MidCap - ERP";
+
+            if (!string.IsNullOrEmpty(customerId.EmailId))
+            {
+                List<string> emailList = new List<string>();
+                emailList.Add(customerId.EmailId);
+
+                string emailBody = ShareOrderGenerateHTMl(getOrderData);
+
+                if (tenantSMTPDetail != null && !string.IsNullOrEmpty(tenantSMTPDetail.FromEmail) && !string.IsNullOrEmpty(tenantSMTPDetail.SMTPServer) && !string.IsNullOrEmpty(tenantSMTPDetail.Username) && !string.IsNullOrEmpty(tenantSMTPDetail.Password) && tenantSMTPDetail.SMTPPort > 0)
+                {
+                    EmailSender emailSender = new EmailSender(new EmailConfiguration()
+                    {
+                        From = tenantSMTPDetail.FromEmail,
+                        Password = tenantSMTPDetail.Password,
+                        Port = tenantSMTPDetail.SMTPPort,
+                        SmtpServer = tenantSMTPDetail.SMTPServer,
+                        UserName = tenantSMTPDetail.Username,
+                        UseSSL = tenantSMTPDetail.EnableSSL
+                    });
+
+                    EmailHelper _email = new EmailHelper(emailSender);
+                    await _email.SendEmail(subject: emailSubject, htmlContent: emailBody, to: emailList);
+                }
+                else
+                {
+                    await _emailHelper.SendEmail(subject: emailSubject, htmlContent: emailBody, to: emailList);
+                }
+            }
+        }
+
         #region Private Method
 
         private async Task DeleteOrder(Int64 orderId, CancellationToken cancellationToken)
@@ -1331,6 +1376,19 @@ namespace MidCapERP.BusinessLogic.Repositories
                     await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductQuantitySubjectTypeId(cancellationToken), productQuantityDataById.ProductQuantityId, "Product quantity has been updated from " + oldQuantity + " to " + productQuantityDataById.Quantity + " (-" + item.Quantity + ") for order " + orderNo, ActivityLogStringConstant.Update, cancellationToken);
                 }
             }
+        }
+
+        private static string ShareOrderGenerateHTMl(OrderResponseDto model)
+        {
+            string htmlTableStart = "<table style=\"width: 100 %; border: 1px solid #e5e5e5;\" border=\"1\" cellspacing=\"0\" cellpadding=\"6\">";
+            string htmlTrStart = "<tr>";
+            string htmlTableEnd = "</table>";
+            string htmlTrEnd = "</tr>";
+            string htmlTdStart = "<td>";
+            string htmlTdEnd = "</td>";
+            string htmlContent = htmlTableStart + htmlTrStart + htmlTdStart + "URL" + htmlTdEnd + htmlTdStart + "https://midcaperp.magnusminds.net/OrderDetail/" + model.OrderNo + htmlTdEnd + htmlTrEnd
+                                 + htmlTableEnd;
+            return htmlContent;
         }
 
         #endregion Private Method

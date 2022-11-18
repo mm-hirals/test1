@@ -42,5 +42,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IWrkImportFilesBL WrkImportFilesBL { get; }
         IWrkImportCustomersBL WrkImportCustomersBL { get; }
         IProductQuantitiesBL ProductQuantitiesBL { get; }
+        ICustomerVisitsBL CustomerVisitsBL { get; }
     }
 }

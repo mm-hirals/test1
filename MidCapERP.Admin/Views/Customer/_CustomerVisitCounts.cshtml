@@ -1,0 +1,21 @@
+﻿@model List<MidCapERP.Dto.CustomerVisit.CustomerVisitResponseDto>
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var item in Model.OrderByDescending(x => x.CreatedDate))
+        {
+            <div>@item.Comment</div>
+            <div>@item.CreatedDate</div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidatejQueryUnobtrusive");
+        await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
+
+        <script asp-src-include="~/js/Customer.js"></script>
+    }
+}

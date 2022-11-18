@@ -106,6 +106,8 @@ $("#deliveryFromDate,#deliveryToDate").on("input", function () {
 });
 
 $(document).on('click', '#btnReset', function (e) {
+    $("#select2-refferedBy-container").text("Select Reffered");
+    $("#select2-status-container").text("Select Reffered");
      $("#refferedBy").val(null);
      $("#customerName").val('');
      $("#phoneNumber").val('');
