@@ -42,6 +42,7 @@ $(function () {
             },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "CreatedDateFormat", "autoWidth": true },
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
@@ -209,3 +210,11 @@ function DeleteInterior(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#interiorName").val('');
+    $("#interiorMobileNo").val('');
+    $("#interiorFromDate").val('');
+    $("#interiorToDate").val('');
+    $('#tblInterior').dataTable().fnDraw();
+});

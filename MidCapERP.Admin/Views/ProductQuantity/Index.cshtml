@@ -18,7 +18,7 @@
                         <label class="form-label">Category Name</label>
                         <select id="categoryId" data-val="true" class="drpSelect2 form-control form-select"
                                 asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
-                            <option>Select Category</option>
+                            <option value="@null">Select Category</option>
                         </select>
                     </div>
                 </div>
@@ -34,6 +34,11 @@
                         <input id="quantityDate" type="date" class="form-control" placeholder="Quantity Date" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
+                    </div>
+                </div>
             </div>
         </div>
         <partial name="_ProductQuantitiesTable" model="@Model" />
@@ -47,4 +52,4 @@
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
         <script asp-src-include="~/js/ProductQuantities.js"></script>
     }
-}
+        }

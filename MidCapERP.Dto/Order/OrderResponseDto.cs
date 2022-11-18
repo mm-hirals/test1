@@ -56,6 +56,9 @@ namespace MidCapERP.Dto.Order
 
         public long? RefferedBy { get; set; }
 
+        [DisplayName("Reffered Name")]
+        public string? RefferedName { get; set; }
+
         public string PhoneNumber { get; set; }
 
         public int CreatedBy { get; set; }
@@ -63,7 +66,7 @@ namespace MidCapERP.Dto.Order
         [DisplayName("Salesman Name")]
         public string CreatedByName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } 
 
         [DisplayName("Order Date")]
         public string CreatedDateFormat => CreatedDate.ToLongDateString();

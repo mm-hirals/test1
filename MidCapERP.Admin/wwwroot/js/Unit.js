@@ -95,3 +95,8 @@ function DeleteUnit(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#unitName").val('')
+    $('#tblUnit').dataTable().fnDraw();
+});

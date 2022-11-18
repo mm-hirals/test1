@@ -18,7 +18,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.refferedBy = $("#refferedBy").val().trim();
+                d.refferedBy = $("#refferedBy").val();
                 d.customerName = $("#customerName").val().trim();
                 d.customerMobileNo = $("#customerMobileNo").val().trim();
                 d.customerFromDate = $("#customerFromDate").val().trim();
@@ -43,8 +43,10 @@ $(function () {
                     return row.firstName + " " + row.lastName;
                 }
             },
+            { "data": "refferedName", "name": "RefferedName", "autoWidth": true },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "createdDateFormat", "autoWidth": true },
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
@@ -216,4 +218,13 @@ function DeleteCustomer(id) {
     } else {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
-}
+} 
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#refferedBy").val('');
+    $("#customerName").val('');
+    $("#customerMobileNo").val('');
+    $("#customerFromDate").val('');
+    $("#customerToDate").val('');
+    $('#tblCustomer').dataTable().fnDraw();
+});

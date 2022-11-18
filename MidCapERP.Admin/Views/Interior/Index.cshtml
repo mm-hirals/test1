@@ -8,6 +8,7 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Interiors</h4>
         <div class="c-card--header-action">
+            <button class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectInterior">Send Email</button>
             <a class="c-card--header-action-btn btn btn-outline-primary" asp-controller="Import" asp-action="Index" asp-route-Id="Interior">Import/Export</a>
             <button class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectInterior">Send</button>
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkInteriorFilter"><i class='bx bx-plus me-2'></i>Filters</a>
@@ -41,6 +42,11 @@
                         <input id="interiorToDate" type="date" class="form-control" placeholder="To Date" />
                     </div>
                 </div>
+                  <div class="col-md-3">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
+                        </div>
+                    </div>
             </div>
         </div>
         <partial name="_InteriorTable" />
