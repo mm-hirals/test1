@@ -77,6 +77,36 @@ namespace MidCapERP.Admin.Controllers
             return PartialView("_OrderSetDetailPartial", orderSetData);
         }
 
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.Create)]
+        public async Task<JsonResult> ApproveOrderStatus(long Id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var data = await _unitOfWorkBL.OrderBL.ApproveOrderStatus(Id, cancellationToken);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return Json("error");
+            }
+        }
+
+        [HttpPost]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.Create)]
+        public async Task<JsonResult> DeclineOrderStatus(long Id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _unitOfWorkBL.OrderBL.DeclineOrderStatus(Id, cancellationToken);
+                return Json("success");
+            }
+            catch (Exception ex)
+            {
+                return Json("error");
+            }
+        }
+
         #region Private Method
 
         private async void FillRefferedDropDown(CancellationToken cancellationToken)

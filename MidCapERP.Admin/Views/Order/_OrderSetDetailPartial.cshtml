@@ -1,7 +1,16 @@
-﻿@model MidCapERP.Dto.Order.OrderResponseDto
+﻿@using MidCapERP.Core.Constants
+@model MidCapERP.Dto.Order.OrderResponseDto
+@{
+    var isDisable = string.Empty;
+    if (@Model.Status == (int)OrderStatusEnum.Approved || Model.Status == (int)OrderStatusEnum.Declined)
+    {
+        isDisable = "disabled";
+    }
+}
 <div class="row">
     <div class="col-12">
         <div class="accordion mb-3" id="accordionExample">
+            <input type="hidden" asp-for="@Model.OrderId" id="orderId" />
             @if (@Model.OrderSetResponseDto != null)
             {
                 @foreach (var orderSet in @Model.OrderSetResponseDto)
@@ -178,5 +187,21 @@
 
             </div>
         </div>
+
+        <div class="row c-card-footer--btn">
+            <div class="col-12">
+                <div class="c-card--wrapper c-card-sm--wrapper">
+                    <div class="c-card--footer">
+                        <button class="btn btn-danger declineOrder" @isDisable>
+                            Decline
+                        </button>
+                        <button class="btn btn-primary ms-2 approveOrder" @isDisable>
+                            Approve
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

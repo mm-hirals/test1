@@ -20,6 +20,7 @@ if (isDropZoneInit !== false) {
                 setTimeout(function () {
                     $('#submit-all').buttonLoader('stop');
                 }, 300);
+                var formChangedValue = false;
             });
 
             this.on("addedfile", function (file) {

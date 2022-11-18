@@ -8,8 +8,8 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Customers</h4>
         <div class="c-card--header-action">
-            <a class="c-card--header-action-btn btn btn-outline-primary" asp-controller="Customer" asp-action="ImportCustomer">Import/Export</a>
-            <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectCustomer">Send</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" asp-controller="Customer" asp-action="ImportCustomer">Import</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectCustomer">Send Email</a>
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerFilter"><i class='bx bx-plus me-2'></i>Filters</a>
             <a asp-controller="Customer" asp-action="Create" class="btn btn-primary">Create New</a>
         </div>
@@ -43,11 +43,16 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label">Please Select Reffered By</label>
+                        <label class="form-label">Reffered By</label>
                         <select id="refferedBy" data-val="true" class="drpSelect2 form-control form-select"
                                 asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
                             <option>Select Reffered</option>
                         </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
                     </div>
                 </div>
             </div>
@@ -94,4 +99,4 @@
 
         <script asp-src-include="~/js/Customer.js"></script>
     }
-} 
+    } 

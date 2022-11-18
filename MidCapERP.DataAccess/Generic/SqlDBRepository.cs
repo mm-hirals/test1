@@ -43,7 +43,7 @@ namespace MidCapERP.DataAccess.Generic
                 var entries = dbContext.ChangeTracker.Entries()
                     .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
 
-                entries.ForEach(entry => entry.State = EntityState.Unchanged);
+                entries.ForEach(entry => entry.State = EntityState.Detached);
             }
 
             _context.SaveChanges();
@@ -304,10 +304,8 @@ namespace MidCapERP.DataAccess.Generic
             }
             catch (Exception e)
             {
-
                 throw;
             }
-            
         }
 
         /// <summary>

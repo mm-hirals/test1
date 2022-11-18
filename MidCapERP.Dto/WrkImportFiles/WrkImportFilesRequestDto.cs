@@ -5,7 +5,7 @@ namespace MidCapERP.Dto.WrkImportFiles
 {
     public class WrkImportFilesRequestDto
     {
-        [Required]
+        [Required(ErrorMessage = "Please select file")]
         public IFormFile formFile { get; set; }
     }
 }

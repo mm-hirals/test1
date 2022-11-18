@@ -25,5 +25,7 @@ namespace MidCapERP.DataAccess.Interface
         public Task<int> GetCustomerSubjectTypeId(CancellationToken cancellationToken);
 
         public Task<int> GetProductQuantitySubjectTypeId(CancellationToken cancellationToken);
+
+        public Task<int> GetOrderSubjectTypeId(CancellationToken cancellationToken);
     }
 }

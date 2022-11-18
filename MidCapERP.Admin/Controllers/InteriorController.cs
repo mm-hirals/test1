@@ -89,6 +89,14 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
+        public async Task<IActionResult> Delete(Int64 Id, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.InteriorsBL.DeleteInterior(Id, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalInterior.Create)]
         public async Task<IActionResult> UpdateInteriorAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var interiorsAddress = await _unitOfWorkBL.InteriorAddressesBL.GetById(Id, cancellationToken);

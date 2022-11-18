@@ -18,10 +18,11 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.CategoryId = $("#categoryName").val().trim();
                 d.categoryName = $("#categoryName").val().trim();
                 d.productTitle = $("#productTitle").val().trim();
                 d.modelNo = $("#modelNo").val().trim();
-                d.publishStatus = $("#publishStatus").val().trim();
+                d.publishStatus = $("#publishStatus").val();
             }
         },
         "columnDefs": [
@@ -72,7 +73,11 @@ $("#lnkProductFilter").click(function () {
 });
 
 
-$("#categoryName,#productTitle,#modelNo").keyup("input", function () {
+$("#productTitle,#modelNo").keyup("input", function () {
+    tblProduct.ajax.reload(null, false);
+});
+
+$('#categoryName').change(function () {
     tblProduct.ajax.reload(null, false);
 });
 
@@ -217,3 +222,12 @@ function DeleteProduct(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#categoryName").val(null);
+    $("#categoryName").val('');
+    $("#productTitle").val('');
+    $("#modelNo").val('');
+    $("#publishStatus").val(null);
+    $('#tblProduct').dataTable().fnDraw();
+});

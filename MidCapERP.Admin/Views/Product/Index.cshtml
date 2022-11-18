@@ -19,7 +19,10 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">Category Name</label>
-                        <input id="categoryName" type="text" class="form-control" placeholder="Category Name" />
+                        <select id="categoryName" data-val="true" class="drpSelect2 form-control form-select"
+                                asp-items="@(new SelectList((List<SelectListItem>)ViewBag.CategorySelectedList, "Value", "Text"))">
+                            <option value="">Select Category</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -31,7 +34,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">Model No</label>
-                        <input id="modelNo" type="text" class="form-control" placeholder="Model No"/>
+                        <input id="modelNo" type="text" class="form-control" placeholder="Model No" />
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -44,11 +47,14 @@
                         </select>
                     </div>
                 </div>
+                 <div class="col-md-3" style="border:0px;">
+                    <button type="button" class="btn btn-primary" id="btnReset">Reset</button>
+                </div>
             </div>
         </div>
         <partial name="_ProductTable" />
         <div id="divUpdateProduct"></div>
-            <div id="sendSMSModal" class="modal fade" tabindex="-1">
+        <div id="sendSMSModal" class="modal fade" tabindex="-1">
         </div>
     </div>
 </div>
@@ -58,6 +64,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/ProductTable.js"></script>
+    <script asp-src-include="~/js/ProductTable.js"></script>
     }
-}
+    }
