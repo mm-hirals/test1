@@ -45,7 +45,8 @@ $(function () {
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
-                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Interior/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Interior/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' +
+                        '<a id="' + row.customerId + '" class="btn btn-icon btn-outline-danger delete-interior" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -180,3 +181,31 @@ $(document).on('submit', '#frmInteriorEdit', function (e) {
     $('#dataSave').buttonLoader('start');
     toastr.success('Information saved successfully.');
 });
+
+// Delete interior
+$(document).delegate(".delete-interior", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteInterior);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteInterior(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Interior/Delete?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblInterior.ajax.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}

@@ -17,14 +17,14 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.refferedBy = $("#refferedBy").val().trim();
-                d.customerName = $("#customerName").val().trim();
-                d.phoneNumber = $("#phoneNumber").val().trim();
-                d.status = $("#status").val().trim();
-                d.orderFromDate = $("#orderFromDate").val().trim();
-                d.orderToDate = $("#orderToDate").val().trim();
-                d.deliveryFromDate = $("#deliveryFromDate").val().trim();
-                d.deliveryToDate = $("#deliveryToDate").val().trim();
+                d.refferedBy = $("#refferedBy").val() == undefined ? null : $("#refferedBy").val().trim();
+                d.customerName = $("#customerName").val() == undefined ? null : $("#customerName").val().trim();
+                d.phoneNumber = $("#phoneNumber").val() == undefined ? null : $("#phoneNumber").val().trim();
+                d.status = $("#status").val() == undefined ? null : $("#status").val().trim();
+                d.orderFromDate = $("#orderFromDate").val() == undefined ? null : $("#orderFromDate").val().trim();
+                d.orderToDate = $("#orderToDate").val() == undefined ? null : $("#orderToDate").val().trim();
+                d.deliveryFromDate = $("#deliveryFromDate").val() == undefined ? null : $("#deliveryFromDate").val().trim();
+                d.deliveryToDate = $("#deliveryToDate").val() == undefined ? null : $("#deliveryToDate").val().trim();
             }
         },
         "columns": [

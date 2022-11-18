@@ -1,4 +1,5 @@
-﻿using MidCapERP.Dto.DataGrid;
+﻿using MidCapERP.Dto.Customers;
+using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.Interior;
 
 namespace MidCapERP.BusinessLogic.Interface
@@ -14,6 +15,8 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<InteriorRequestDto> CreateInteriors(InteriorRequestDto model, CancellationToken cancellationToken);
 
         public Task<InteriorRequestDto> UpdateInteriors(Int64 Id, InteriorRequestDto model, CancellationToken cancellationToken);
+
+        public Task<InteriorRequestDto> DeleteInterior(Int64 InteriorId, CancellationToken cancellationToken);
 
         public Task SendSMSToInteriors(InteriorsSendSMSDto model, CancellationToken cancellationToken);
 
