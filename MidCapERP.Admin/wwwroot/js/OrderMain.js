@@ -33,3 +33,42 @@ $(document).delegate(".saveDiscount", "click", function (e) {
         $('.saveDiscount').buttonLoader('stop');
     }
 });
+
+$(document).delegate(".approveOrder", "click", function (e) {
+    $.ajax({
+        url: "/Order/ApproveOrderStatus",
+        type: "POST",
+        data: { "Id": $('#orderId').val() },
+        success: function (response) {
+            if (response.status) {
+                toastr.success(response.message);
+                $("#divOrderInfo").load('/Order/GetOrderBasicDetail' + "?OrderId=" + $("#hdnOrderId").val());
+                $("#divOrderSetDetailPartial").load('/Order/GetOrderSetDetailData' + "?OrderId=" + $("#hdnOrderId").val());
+            }
+            else {
+                toastr.error(response.message);
+                var errorMessages = "";
+                $(response.errorMessages).each(function (i, k) {
+                    errorMessages += k + "\n";
+                });
+                errorMessage("Oops...", errorMessages, "error");
+            }
+        }
+    });
+});
+
+$(document).delegate(".declineOrder", "click", function (e) {
+    $.ajax({
+        url: "/Order/DeclineOrderStatus",
+        type: "POST",
+        data: { "Id": $('#orderId').val() },
+        success: function (response) {
+            if (response == "success") {
+                $("#divOrderInfo").load('/Order/GetOrderBasicDetail' + "?OrderId=" + $("#hdnOrderId").val());
+                $("#divOrderSetDetailPartial").load('/Order/GetOrderSetDetailData' + "?OrderId=" + $("#hdnOrderId").val());
+            }
+            else
+                alert("Error: " + response);
+        }
+    });
+});
