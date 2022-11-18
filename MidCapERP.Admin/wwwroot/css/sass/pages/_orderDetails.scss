@@ -285,7 +285,7 @@
 
         @include media("<sm") {
             border-radius: 6px;
-            box-shadow: 2px 2px 12px -1px rgb($black, 10%);
+            box-shadow: 2px 2px 12px -1px rgba($black, 10%);
             margin: 10px 0 16px 0px;
         }
 

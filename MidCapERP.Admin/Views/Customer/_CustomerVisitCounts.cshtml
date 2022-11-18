@@ -1,14 +1,22 @@
 ﻿@model List<MidCapERP.Dto.CustomerVisit.CustomerVisitResponseDto>
 
-<div class="row">
-    <div class="col-md-12">
+<table class="table c-table c-table-stripted w-100">
+    <thead>
+        <tr>
+            <th>Comments</th>
+            <th class="text-end">Visited Date</th>
+        </tr>
+    </thead>
+    <tbody>
         @foreach (var item in Model.OrderByDescending(x => x.CreatedDate))
         {
-            <div>@item.Comment</div>
-            <div>@item.CreatedDate</div>
+            <tr>
+                <td>@item.Comment</td>
+                <td class="text-end">@item.CreatedDate</td>
+            </tr>
         }
-    </div>
-</div>
+    </tbody>
+</table>
 
 @section Scripts {
     @{
@@ -18,4 +26,4 @@
 
         <script asp-src-include="~/js/Customer.js"></script>
     }
-}
+    }
