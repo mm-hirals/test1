@@ -38,6 +38,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<ITenantBL, TenantBL>();
             services.AddScoped<ITenantBankDetailBL, TenantBankDetailBL>();
             services.AddScoped<IOrderBL, OrderBL>();
+            services.AddScoped<IOrderAnonymousBL, OrderAnonymousBL>();
             services.AddScoped<IDashboardBL, DashboardBL>();
             services.AddScoped<IActivityLogsService, ActivityLogsService>();
             services.AddScoped<ITenantSMTPDetailBL, TenantSMTPDetailBL>();
@@ -46,6 +47,7 @@ namespace MidCapERP.BusinessLogic.Extention
             services.AddScoped<IWrkImportFilesBL, WrkImportFilesBL>();
             services.AddScoped<IWrkImportCustomersBL, WrkImportCustomersBL>();
             services.AddScoped<IProductQuantitiesBL, ProductQuantitiesBL>();
+            services.AddScoped<ICustomerVisitsBL, CustomerVisitsBL>();
             //KEEP THIS LINE AT THE BOTTOM
             services.AddScoped<IUnitOfWorkBL, UnitOfWorkBL>();
         }

@@ -92,6 +92,30 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<InteriorRequestDto>(data);
         }
 
+        public async Task<InteriorRequestDto> DeleteInterior(Int64 InteriorId, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkDA.BeginTransactionAsync();
+            //delete Interior addresses
+            var getCustomerAddress = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
+            getCustomerAddress = getCustomerAddress.Where(x => x.CustomerId == InteriorId);
+            if (getCustomerAddress != null && getCustomerAddress.ToList().Count > 0)
+            {
+                foreach (var item in getCustomerAddress)
+                {
+                    await CustomerAddressUpdate(item.CustomerAddressId, cancellationToken);
+                }
+            }
+            //delete Interior
+            var interiorData = await InteriorGetById(InteriorId, cancellationToken);
+            interiorData.IsDeleted = true;
+            interiorData.UpdatedBy = _currentUser.UserId;
+            interiorData.UpdatedDate = DateTime.Now;
+            interiorData.UpdatedUTCDate = DateTime.UtcNow;
+            var updatedInterior = await _unitOfWorkDA.CustomersDA.UpdateCustomers(InteriorId, interiorData, cancellationToken);
+            await _unitOfWorkDA.CommitTransactionAsync();
+            return _mapper.Map<InteriorRequestDto>(updatedInterior);
+        }
+
         public async Task SendSMSToInteriors(InteriorsSendSMSDto model, CancellationToken cancellationToken)
         {
             foreach (var item in model.CustomerList)
@@ -123,7 +147,7 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<bool> ValidateInteriorPhoneNumber(InteriorRequestDto interiorRequestDto, CancellationToken cancellationToken)
         {
-                var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
+            var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerAndInteriorData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
             if (interiorRequestDto.CustomerId > 0)
             {
@@ -215,6 +239,16 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
 
             return interiorAllData;
+        }
+
+        private async Task CustomerAddressUpdate(long CustomerAddressId, CancellationToken cancellationToken)
+        {
+            var address = await _unitOfWorkDA.CustomerAddressesDA.GetById(CustomerAddressId, cancellationToken);
+            address.IsDeleted = true;
+            address.UpdatedBy = _currentUser.UserId;
+            address.UpdatedDate = DateTime.Now;
+            address.UpdatedUTCDate = DateTime.UtcNow;
+            await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(CustomerAddressId, address, cancellationToken);
         }
 
         #endregion PrivateMethods

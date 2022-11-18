@@ -21,6 +21,7 @@ namespace MidCapERP.Dto.OrderSetItem
         public int Quantity { get; set; }
         public string ProductTitle { get; set; }
         public string ModelNo { get; set; }
+        public decimal CostPrice { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal DiscountPrice { get; set; }
         public decimal TotalAmount { get; set; }

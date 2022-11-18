@@ -7,7 +7,7 @@ using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using MidCapERP.Dto.WrkImportFiles;
+using NToastNotify;
 using System.Data;
 
 namespace MidCapERP.Admin.Controllers
@@ -17,12 +17,14 @@ namespace MidCapERP.Admin.Controllers
         private IUnitOfWorkBL _unitOfWorkBL;
         private CurrentUser _currentUser;
         private ILogger<CustomerController> _logger;
+        private readonly IToastNotification _toastNotification;
 
-        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser, ILogger<CustomerController> logger) : base(localizer)
+        public CustomerController(IUnitOfWorkBL unitOfWorkBL, IStringLocalizer<BaseController> localizer, CurrentUser currentUser, ILogger<CustomerController> logger, IToastNotification toastNotification) : base(localizer)
         {
             _unitOfWorkBL = unitOfWorkBL;
             _currentUser = currentUser;
             _logger = logger;
+            _toastNotification = toastNotification;
         }
 
         [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
@@ -100,6 +102,14 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
+        public async Task<IActionResult> Delete(Int64 id, CancellationToken cancellationToken)
+        {
+            await _unitOfWorkBL.CustomersBL.DeleteCustomers(id, cancellationToken);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.Create)]
         public async Task<IActionResult> UpdateCustomerAddresses(Int64 Id, CancellationToken cancellationToken)
         {
             var customersAddress = await _unitOfWorkBL.CustomerAddressesBL.GetById(Id, cancellationToken);
@@ -136,45 +146,19 @@ namespace MidCapERP.Admin.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult ImportCustomer()
-        {
-            WrkImportFilesRequestDto wrkImportFilesRequestDto = new WrkImportFilesRequestDto();
-            return View(wrkImportFilesRequestDto);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> ImportCustomer(WrkImportFilesRequestDto entity, CancellationToken cancellationToken)
-        {
-            try
-            {
-                if (entity != null && entity.formFile != null)
-                {
-                    var wrkFileEntity = CovertRequestDtoToWrkImportFilesDto(entity);
-                    var wrkFileData = await _unitOfWorkBL.WrkImportFilesBL.CreateWrkImportFiles(wrkFileEntity, cancellationToken);
-                    var getWrkCustomerList = _unitOfWorkBL.CustomersBL.CustomerFileImport(entity, wrkFileData.WrkImportFileID);
-                    _logger.LogWarning("Thread Started");
-                    _ = Task.Run(async () =>
-                    {
-                        await _unitOfWorkBL.WrkImportCustomersBL.CreateWrkCustomer(getWrkCustomerList, cancellationToken);
-                        await _unitOfWorkBL.CustomersBL.ImportCustomers( wrkFileData.WrkImportFileID, cancellationToken);
-                    }, cancellationToken).ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(1, ex, "Error : ImportCustomer");
-                throw ex;
-            }
-            return RedirectToAction("Index");
-        }
-
         public async Task<bool> DuplicateCustomerPhoneNumber(CustomersRequestDto customersRequestDto, CancellationToken cancellationToken)
         {
             return await _unitOfWorkBL.CustomersBL.ValidateCustomerPhoneNumber(customersRequestDto, cancellationToken);
         }
 
         #region Private Method
+
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerVisitCount(long customerId, CancellationToken cancellationToken)
+        {
+            var customerCounts = await _unitOfWorkBL.CustomerVisitsBL.GetById(customerId, cancellationToken);
+            return PartialView("_CustomerVisitCounts", customerCounts);
+        }
 
         private async Task FillRefferedDropDown(CancellationToken cancellationToken)
         {
@@ -195,25 +179,6 @@ namespace MidCapERP.Admin.Controllers
             {
                 throw;
             }
-        }
-
-        private WrkImportFilesDto CovertRequestDtoToWrkImportFilesDto(WrkImportFilesRequestDto entity)
-        {
-            int count = 0;
-            using (StreamReader file = new(entity.formFile.OpenReadStream()))
-            {
-                while (file.ReadLine() != null)
-                    count++;
-                file.Close();
-            }
-
-            return new WrkImportFilesDto()
-            {
-                FileType = Enum.GetName(typeof(CustomerTypeEnum), CustomerTypeEnum.Customer),
-                ImportFileName = entity.formFile.FileName,
-                TotalRecords = count - 1,
-                Status = (int)FileUploadStatusEnum.Pending,
-            };
         }
 
         #endregion Private Method

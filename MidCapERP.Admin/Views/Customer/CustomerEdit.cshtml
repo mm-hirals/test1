@@ -1,11 +1,13 @@
 ﻿@model MidCapERP.Dto.Customers.CustomersRequestDto
 @{
+    ViewData["Title"] = (Model == null) ? "Create Customer" : "Update Customer";
     string action = (Model != null && Model.CustomerId != 0) ? "Update" : "Create";
+    string colClass = action == "Create" ? "3" : "12";
     Layout = "_Layout";
 }
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="@(action == "Create" ? "col-md-12" : "col-md-3")">
         <div class="card">
             <div class="c-card--wrapper c-card-sm--wrapper">
                 <div class="c-card--header">
@@ -16,42 +18,42 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="FirstName" class="form-control" />
                                     <span asp-validation-for="FirstName" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="LastName" class="form-control" />
                                     <span asp-validation-for="LastName" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="EmailId" class="form-label"></label>
                                     <input asp-for="EmailId" class="form-control" />
                                     <span asp-validation-for="EmailId" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
                                     <input asp-for="PhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)' />
                                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="AltPhoneNumber" class="form-label"></label>
-                                    <input asp-for="AltPhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)'/>
+                                    <input asp-for="AltPhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)' />
                                     <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="RefferedBy" class="form-label"></label>
                                     <select asp-for="RefferedBy" data-val="true" class="form-control form-select"
@@ -61,54 +63,54 @@
                                     <span asp-validation-for="RefferedBy" class="text-danger"></span>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-@colClass">
                                 <div class="form-group">
                                     <label asp-for="GSTNo" class="form-label"></label>
-                                    <input asp-for="GSTNo" class="form-control" minlength="2" minlength="15"/>
+                                    <input asp-for="GSTNo" class="form-control" minlength="2" minlength="15" />
                                     <span asp-validation-for="GSTNo" class="text-danger"></span>
                                 </div>
                             </div>
                             @if (Model == null)
                             {
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.Street1" class="form-control" />
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.Street2" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.Street2" class="form-control" />
                                         <span asp-validation-for="CustomerAddressesRequestDto.Street2" class="text-danger"></span>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.Landmark" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.Landmark" class="form-control" />
                                         <span asp-validation-for="CustomerAddressesRequestDto.Landmark" class="text-danger"></span>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.Area" class="form-control" />
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.City" class="form-control" onkeypress='return restrictNumber(event)' />
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.State" class="form-control" onkeypress='return restrictNumber(event)' />
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-@colClass">
                                     <div class="form-group">
                                         <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
                                         <input asp-for="CustomerAddressesRequestDto.ZipCode" type="text" minlength="0" maxlength="6" onkeypress='return restrictAlphabets(event)' class="form-control" />
@@ -116,7 +118,7 @@
                                     </div>
                                 </div>
                             }
-                            <div class="col-md-12">
+                            <div class="col-md-@colClass">
                                 <div class="form-group">
                                     <label asp-for="IsSubscribe" class="form-label"></label>
                                     <div class="custom-control custom-switch">
@@ -128,11 +130,9 @@
                         </div>
                         <div class="row c-card-footer--btn">
                             <div class="col-12">
-                                <div class="c-card--wrapper c-card-sm--wrapper">
-                                    <div class="c-card--footer">
-                                        <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
-                                        <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner customerSave" id="dataSave">Save</button>
-                                    </div>
+                                <div class="c-card--footer pe-0">
+                                    <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
+                                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner customerSave" id="dataSave">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -141,14 +141,17 @@
             </div>
         </div>
     </div>
-    <div class="col-md-9">
-        <div class="card c-card--wrapper c-card-sm--wrapper overflow-hidden h-100">
-            @if (Model != null && Model.CustomerId != null)
-            {
+    @if (Model != null && Model.CustomerId != null)
+    {
+        <div class="col-md-9">
+            <div class="card c-card--wrapper c-card-sm--wrapper overflow-hidden h-100">
                 <nav class="product-nav-tab--sticky bg-white">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                             Addresses
+                        </button>
+                        <button class="nav-link" id="nav-visit-tab" data-bs-toggle="tab" data-bs-target="#nav-visits" type="button" role="tab" aria-controls="nav-visits" aria-selected="false">
+                            Visits
                         </button>
                     </div>
                 </nav>
@@ -173,10 +176,13 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade show" id="nav-visits" role="tabpanel" aria-labelledby="nav-visit-tab">
+                        <div id="divCustomerVisit"></div>
+                    </div>
                 </div>
-            }
+            </div>
         </div>
-    </div>
+    }
 </div>
 
 @section Scripts {
@@ -187,5 +193,5 @@
 
         <script asp-src-include="~/js/Customer.js"></script>
         <script asp-src-include="~/js/CustomerAddresses.js"></script>
-     }
+    }
     }

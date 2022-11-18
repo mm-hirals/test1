@@ -65,6 +65,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        select new ProductResponseDto()
                                        {
                                            ProductId = x.ProductId,
+                                           CategoryId = Convert.ToInt16(y.CategoryId),
                                            CategoryName = y.CategoryName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
@@ -319,10 +320,15 @@ namespace MidCapERP.BusinessLogic.Repositories
             await InsertProductQuantity(productData, cancellationToken);
 
             await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productData.ProductId, "Product Created", ActivityLogStringConstant.Create, CancellationToken.None);
+
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
             {
-                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(productData.ProductId));
+                string tenantLogo = "";
+                var tenantData = await _unitOfWorkDA.TenantDA.GetById(_currentUser.TenantId, cancellationToken);
+                if (!string.IsNullOrEmpty(tenantData.LogoPath))
+                    tenantLogo = "https://midcaperp.magnusminds.net/" + tenantData.LogoPath;
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(productData.ProductId), tenantLogo);
                 await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
             }
             return _mappedUser;
@@ -826,9 +832,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             if (productDataTableFilterDto != null)
             {
-                if (!string.IsNullOrEmpty(productDataTableFilterDto.CategoryName))
+                if (productDataTableFilterDto.CategoryId != null && productDataTableFilterDto.CategoryId != 0)
                 {
-                    productResponseDto = productResponseDto.Where(p => p.CategoryName.StartsWith(productDataTableFilterDto.CategoryName));
+                    productResponseDto = productResponseDto.Where(p => p.CategoryId == productDataTableFilterDto.CategoryId);
                 }
                 if (!string.IsNullOrEmpty(productDataTableFilterDto.ModelNo))
                 {

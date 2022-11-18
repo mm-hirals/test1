@@ -15,7 +15,8 @@
         Polish = 3,
         Fabrics = 4,
         Customers = 5,
-        ProductQuantity = 6
+        ProductQuantity = 6,
+        Orders = 7
     }
 
     public enum ProductCategoryTypesEnum

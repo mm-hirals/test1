@@ -26,6 +26,7 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IRoleDA RoleDA { get; }
         IRolePermissionDA RolePermissionDA { get; }
         IOrderDA OrderDA { get; }
+        IOrderAnonymousDA OrderAnonymousDA { get; }
         IOrderSetDA OrderSetDA { get; }
         IOrderSetItemDA OrderSetItemDA { get; }
         IOrderSetItemImageDA OrderSetItemImageDA { get; }
@@ -39,6 +40,8 @@ namespace MidCapERP.DataAccess.UnitOfWork
         IWrkImportFilesDA WrkImportFilesDA { get; }
         IWrkImportCustomersDA WrkImportCustomersDA { get; }
         IProductQuantitiesDA ProductQuantitiesDA { get; }
+
+        ICustomerVisitsDA CustomerVisitsDA { get; }
 
         Task BeginTransactionAsync();
 

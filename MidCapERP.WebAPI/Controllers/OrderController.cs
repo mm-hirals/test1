@@ -76,6 +76,7 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
+            await _unitOfWorkBL.OrderBL.ShareOrderWithCustomer(id, cancellationToken);
             return new ApiResponse(message: "Data updated successful", result: "https://midcaperp.magnusminds.net/OrderDetail/" + data.OrderNo, statusCode: 200);
         }
 
@@ -162,7 +163,13 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+            else
+            {
+                if (data.Status == true)
+                    return new ApiResponse(message: data.Message, result: data, statusCode: 200);
+                else
+                    return new ApiResponse(statusCode: 400, apiError: data);
+            }
         }
 
 

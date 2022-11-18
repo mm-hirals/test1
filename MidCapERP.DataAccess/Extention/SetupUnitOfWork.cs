@@ -34,6 +34,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IRolePermissionDA, RolePermissionDA>();
             services.AddScoped<IOTPLoginDA, OTPLoginDA>();
             services.AddScoped<IOrderDA, OrderDA>();
+            services.AddScoped<IOrderAnonymousDA, OrderAnonymousDA>();
             services.AddScoped<ITenantBankDetailDA, TenantBankDetailDA>();
             services.AddScoped<IOrderSetDA, OrderSetDA>();
             services.AddScoped<IOrderSetItemDA, OrderSetItemDA>();
@@ -46,6 +47,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IWrkImportFilesDA, WrkImportFilesDA>();
             services.AddScoped<IWrkImportCustomersDA, WrkImportCustomersDA>();
             services.AddScoped<IProductQuantitiesDA, ProductQuantitiesDA>();
+            services.AddScoped<ICustomerVisitsDA, CustomerVisitsDA>();
 
             // KEEP THIS LINE AT THE END.
             services.AddScoped<IUnitOfWorkDA, UnitOfWorkDA>();

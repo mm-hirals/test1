@@ -5,6 +5,7 @@ using MidCapERP.BusinessLogic.Services.FileStorage;
 using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net;
 
 namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
 {
@@ -19,7 +20,7 @@ namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
             _configuration = configuration;
         }
 
-        public async Task<string> GenerateQRCodeImageAsync(string productIdEnc)
+        public async Task<string> GenerateQRCodeImageAsync(string productIdEnc, string tenantLogo)
         {
             String QrCode = string.Empty;
             string serverPath = _configuration["AppSettings:HostURL"];
@@ -28,12 +29,29 @@ namespace MidCapERP.BusinessLogic.Services.QRCodeGenerate
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(serverPath + "/ProductDetail/" + productIdEnc, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
-                using (Bitmap bitMap = qrCode.GetGraphic(20))
+                if (!string.IsNullOrEmpty(tenantLogo))
                 {
-                    bitMap.Save(ms, ImageFormat.Png);
-                    //QrCode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
-                    IFormFile formFile = new FormFile(ms, 0, ms.Length, "", "QRCode.png");
-                    QrCode = await _fileStorageService.StoreFile(formFile, ApplicationFileStorageConstants.FilePaths.QRCode);
+                    using (WebClient wc = new WebClient())
+                    {
+                        using (Stream fileStream = wc.OpenRead(tenantLogo))
+                        {
+                            using (Bitmap bitMap = qrCode.GetGraphic(20, Color.Black, Color.White, (Bitmap)Bitmap.FromStream(fileStream)))
+                            {
+                                bitMap.Save(ms, ImageFormat.Png);
+                                IFormFile formFile = new FormFile(ms, 0, ms.Length, "", "QRCode.png");
+                                QrCode = await _fileStorageService.StoreFile(formFile, ApplicationFileStorageConstants.FilePaths.QRCode);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (Bitmap bitMap = qrCode.GetGraphic(20))
+                    {
+                        bitMap.Save(ms, ImageFormat.Png);
+                        IFormFile formFile = new FormFile(ms, 0, ms.Length, "", "QRCode.png");
+                        QrCode = await _fileStorageService.StoreFile(formFile, ApplicationFileStorageConstants.FilePaths.QRCode);
+                    }
                 }
             }
             return QrCode;

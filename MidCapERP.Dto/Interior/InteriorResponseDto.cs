@@ -42,6 +42,10 @@ namespace MidCapERP.Dto.Interior
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        [DisplayName("Created Date")]
+        public string CreatedDateFormat => CreatedDate.ToLongDateString();
+
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }

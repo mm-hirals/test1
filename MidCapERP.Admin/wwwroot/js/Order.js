@@ -17,43 +17,51 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.refferedBy = $("#refferedBy").val().trim();
-                d.customerName = $("#customerName").val().trim();
-                d.phoneNumber = $("#phoneNumber").val().trim();
-                d.status = $("#status").val().trim();
-                d.orderFromDate = $("#orderFromDate").val().trim();
-                d.orderToDate = $("#orderToDate").val().trim();
-                d.deliveryFromDate = $("#deliveryFromDate").val().trim();
-                d.deliveryToDate = $("#deliveryToDate").val().trim();
+                d.refferedBy = $("#refferedBy").val();
+                d.customerName = $("#customerName").val();
+                d.phoneNumber = $("#phoneNumber").val();
+                d.status = $("#status").val();
+                d.orderFromDate = $("#orderFromDate").val();
+                d.orderToDate = $("#orderToDate").val();
+                d.deliveryFromDate = $("#deliveryFromDate").val();
+                d.deliveryToDate = $("#deliveryToDate").val();
             }
         },
         "columns": [
             { "data": "orderNo", "name": "OrderNo", "autoWidth": true },
             { "data": "createdByName", "name": "CreatedByName", "autoWidth": true },
             { "data": "customerName", "name": "CustomerName", "autoWidth": true },
+            { "data": "refferedName", "name": "RefferedName", "autoWidth": true },
+            { "data": "phoneNumber", "name": "PhoneNumber", "autoWidth": true },
             { "data": "payableAmount", "name": "PayableAmount", "autoWidth": true },
             {
                 "data": "status", "name": "Status", "autoWidth": true,
                 "mRender": function (o) {
                     if (o == 0) {
-                        status = "Inquiry";
+                        status = '<span class="form-label badge bg-warning">Inquiry<span>';
                     } else if (o == 1) {
-                        status = "Pending For Approval";
+                        status = '<span class="form-label badge bg-secondary">Pending For Approval<span>';
                     }
                     else if (o == 2) {
-                        status = "Approved";
+                        status = '<span class="form-label badge bg-secondary">Approved</span>';
                     }
                     else if (o == 3) {
-                        status = "In Progress";
+                        status = '<span class="form-label badge bg-secondary">In Progress</span>';
                     }
                     else if (o == 4) {
-                        status = "Completed";
+                        status = '<span class="form-label badge bg-success">Completed</span>';
                     }
                     else if (o == 5) {
-                        status = "Delivered";
+                        status = '<span class="form-label badge bg-secondary">Delivered</span>';
                     }
                     else if (o == 6) {
-                        status = "Cancelled";
+                        status = '<span class="form-label badge bg-danger">Cancelled</span>';
+                    }
+                    else if (o == 7) {
+                        status = '<span class="form-label badge bg-danger">Material Receive</span>';
+                    }
+                    else if (o == 8) {
+                        status = '<span class="form-label badge bg-danger">Declined</span>';
                     }
                     return status;
                 }
@@ -101,4 +109,18 @@ $("#orderToDate").on("input", function () {
 
 $("#deliveryFromDate,#deliveryToDate").on("input", function () {
     tblOrder.ajax.reload(null, false);
+});
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#select2-refferedBy-container").text("Select Reffered");
+    $("#select2-status-container").text("Select Reffered");
+    $("#refferedBy").val(null);
+    $("#customerName").val('');
+    $("#phoneNumber").val('');
+    $("#status").val(null);
+    $("#orderFromDate").val('');
+    $("#orderToDate").val('');
+    $("#deliveryFromDate").val('');
+    $("#deliveryToDate").val('');
+    $('#tblOrder').dataTable().fnDraw();
 });

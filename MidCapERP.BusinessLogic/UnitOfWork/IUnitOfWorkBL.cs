@@ -33,6 +33,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         ITenantBL TenantBL { get; }
         ITenantBankDetailBL TenantBankDetailBL { get; }
         IOrderBL OrderBL { get; }
+        IOrderAnonymousBL OrderAnonymousBL { get; }
         IDashboardBL DashboardBL { get; }
         IActivityLogsService ActivityLogsService { get; }
         ITenantSMTPDetailBL TenantSMTPDetailBL { get; }
@@ -41,5 +42,6 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         IWrkImportFilesBL WrkImportFilesBL { get; }
         IWrkImportCustomersBL WrkImportCustomersBL { get; }
         IProductQuantitiesBL ProductQuantitiesBL { get; }
+        ICustomerVisitsBL CustomerVisitsBL { get; }
     }
 }

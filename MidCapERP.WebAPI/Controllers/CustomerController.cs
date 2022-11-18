@@ -7,7 +7,7 @@ using MidCapERP.Core.Constants;
 using MidCapERP.Dto;
 using MidCapERP.Dto.CustomerAddresses;
 using MidCapERP.Dto.Customers;
-using System.Threading;
+using MidCapERP.Dto.CustomerVisit;
 
 namespace MidCapERP.WebAPI.Controllers
 {
@@ -64,7 +64,7 @@ namespace MidCapERP.WebAPI.Controllers
                 var validateOTP = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
                 if (validateOTP.SendOTP)
                 {
-                    var dataOtp = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
+                    var dataOtp = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto.PhoneNumber, cancellationToken);
                     if (dataOtp == null)
                         return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
                     return new ApiResponse(message: "OTP sent successfully", result: data, statusCode: 200);
@@ -173,9 +173,9 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPost("SendCustomerOtp")]
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
-        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomersRequestOtpDto customersResponseOtpDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customersResponseOtpDto.PhoneNumber, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
@@ -226,7 +226,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.View)]
         public async Task<ApiResponse> RecordVisit([FromBody] CustomerVisitRequestDto customerVisitRequestDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.CustomerVisitAPI(customerVisitRequestDto, cancellationToken);
+            var data = await _unitOfWorkBL.CustomerVisitsBL.CustomerVisitAPI(customerVisitRequestDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "Internal server error", result: data, statusCode: 500);

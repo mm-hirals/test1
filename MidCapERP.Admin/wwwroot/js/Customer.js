@@ -18,7 +18,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.refferedBy = $("#refferedBy").val().trim();
+                d.refferedBy = $("#refferedBy").val();
                 d.customerName = $("#customerName").val().trim();
                 d.customerMobileNo = $("#customerMobileNo").val().trim();
                 d.customerFromDate = $("#customerFromDate").val().trim();
@@ -43,12 +43,16 @@ $(function () {
                     return row.firstName + " " + row.lastName;
                 }
             },
+            { "data": "refferedName", "name": "RefferedName", "autoWidth": true },
             { "data": "emailId", "name": "emailId", "autoWidth": true },
             { "data": "phoneNumber", "name": "phoneNumber", "autoWidth": true },
+            { "data": "createdDateFormat", "name": "createdDateFormat", "autoWidth": true },
+            { "data": "visitCounts", "name": "VisitCounts", "autoWidth": true },
             {
                 "bSortable": false,
                 "mRender": (data, type, row) => {
-                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Customer/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-end"><a  href="/Customer/Update/' + row.customerId + '" class="btn btn-icon btn-outline-primary"><i class="bx bxs-pencil"></i></a>' +
+                        '<a id="' + row.customerId + '" class="btn btn-icon btn-outline-danger delete-customer" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
                 }
             }
         ]
@@ -185,4 +189,59 @@ $('#sendSMSModal').on('hidden.bs.modal', function () {
 $(document).on('submit', '#frmCusomerDetails', function (e) {
     $('#dataSave').buttonLoader('start');
     toastr.success('Information saved successfully.');
-}); 
+});
+
+// Delete Customer
+$(document).delegate(".delete-customer", "click", function () {
+    if (!$.isEmptyObject(this.id) && this.id > 0) {
+        SweetAlert("Home", this.id, DeleteCustomer);
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+});
+
+function DeleteCustomer(id) {
+    if (!$.isEmptyObject(id) && id > 0) {
+        $.ajax({
+            url: "/Customer/Delete?Id=" + id,
+            type: "GET",
+            success: function (response) {
+                message("Deleted!", "Your record has been deleted.", "success");
+                tblCustomer.ajax.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    } else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
+}
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#select2-refferedBy-container").text("Select Reffered");
+    $("#refferedBy").val('');
+    $("#customerName").val('');
+    $("#customerMobileNo").val('');
+    $("#customerFromDate").val('');
+    $("#customerToDate").val('');
+    $('#tblCustomer').dataTable().fnDraw();
+});
+
+// Customer visits list
+$(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
+    var tabId = $(e.target).attr("id");
+    if (tabId == "nav-visit-tab") {
+        $.ajax({
+            url: "/Customer/GetCustomerVisitCount?customerId=" + $("#customerId").val(),
+            type: "GET",
+            success: function (response) {
+                $("#divCustomerVisit").html(response);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
+            }
+        });
+    }
+});

@@ -23,7 +23,6 @@ $(function () {
         "columns": [
             { "data": "firstName", "name": "FirstName", "autoWidth": true },
             { "data": "lastName", "name": "LastName", "autoWidth": true },
-            { "data": "userName", "name": "UserName", "autoWidth": true },
             { "data": "email", "name": "Email", "autoWidth": true },
             { "data": "userRole", "name": "UserRole", "autoWidth": true },
             { "data": "phoneNumber", "name": "PhoneNumber", "autoWidth": true },
@@ -114,3 +113,10 @@ function DeleteUser(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#name").val('');
+    $("#email").val('');
+    $("#phoneNumber").val('');
+    $('#tblUser').dataTable().fnDraw();
+});

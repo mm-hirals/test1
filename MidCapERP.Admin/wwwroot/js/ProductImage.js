@@ -1,5 +1,6 @@
 ﻿var isDropZoneInit = true;
 Dropzone.autoDiscover = false;
+var formChangedValue = false;
 if (isDropZoneInit !== false) {
     Dropzone.autoDiscover = false;
     var myAwesomeDropzone = new Dropzone("#productImagesDropZone", {
@@ -48,3 +49,7 @@ if (isDropZoneInit !== false) {
     myAwesomeDropzone;
     isDropZoneInit = false;
 }
+
+$("#submit-all").on('click', function (event) {
+    formChangedValue = false;
+});

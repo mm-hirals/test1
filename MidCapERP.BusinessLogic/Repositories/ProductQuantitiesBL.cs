@@ -88,10 +88,11 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var oldData = await GetProductQuantityById(Id, cancellationToken);
             var oldQuantity = oldData.Quantity;
+            var sign = model.UpdatedQuantity > 0 ? "+" : "";
             UpdateData(oldData);
             MapToDbObject(model, oldData);
             var data = await _unitOfWorkDA.ProductQuantitiesDA.UpdateProductQuantities(Id, oldData, cancellationToken);
-            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductQuantitySubjectTypeId(cancellationToken), Id, "Product quantity has been updated from " + oldQuantity + " to " + data.Quantity, ActivityLogStringConstant.Update, cancellationToken);
+            await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductQuantitySubjectTypeId(cancellationToken), Id, "Product quantity has been updated from " + oldQuantity + " to " + data.Quantity + " (" + sign + model.UpdatedQuantity + ")", ActivityLogStringConstant.Update, cancellationToken);
             var _mappedProductQuantities = _mapper.Map<ProductQuantitiesRequestDto>(data);
             return _mappedProductQuantities;
         }
