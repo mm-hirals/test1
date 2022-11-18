@@ -34,6 +34,7 @@ namespace MidCapERP.DataAccess.Extention
             services.AddScoped<IRolePermissionDA, RolePermissionDA>();
             services.AddScoped<IOTPLoginDA, OTPLoginDA>();
             services.AddScoped<IOrderDA, OrderDA>();
+            services.AddScoped<IOrderAnonymousDA, OrderAnonymousDA>();
             services.AddScoped<ITenantBankDetailDA, TenantBankDetailDA>();
             services.AddScoped<IOrderSetDA, OrderSetDA>();
             services.AddScoped<IOrderSetItemDA, OrderSetItemDA>();
