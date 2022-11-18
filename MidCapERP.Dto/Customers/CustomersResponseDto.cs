@@ -30,7 +30,9 @@ namespace MidCapERP.Dto.Customers
 
         public CustomersResponseDto? Reffered { get; set; }
 
-        [DisplayName("Reffered Name")]
+        public long? RefferedBy { get; set; }
+
+        [DisplayName("Reffered By")]
         public string? RefferedName { get; set; }
 
         [JsonIgnore]
@@ -42,6 +44,8 @@ namespace MidCapERP.Dto.Customers
         public bool IsDeleted { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
+        [DisplayName("Created Date")]
+        public string CreatedDateFormat => CreatedDate.ToLongDateString();
         public DateTime CreatedUTCDate { get; set; }
         public int? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }

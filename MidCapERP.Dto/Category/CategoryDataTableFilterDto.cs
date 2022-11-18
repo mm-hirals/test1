@@ -7,5 +7,8 @@ namespace MidCapERP.Dto.Category
     {
         [JsonProperty("categoryName")]
         public string CategoryName { get; set; }
+
+        [JsonProperty("fixedPrice")]
+        public bool FixedPrice { get; set; }
     }
 }

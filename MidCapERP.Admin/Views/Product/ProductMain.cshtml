@@ -1,6 +1,6 @@
 ﻿@model MidCapERP.Dto.Product.ProductMainRequestDto
 @{
-    ViewData["Title"] = (Model != null && Model.ProductId != 0) ? "Update Product" : "Add Product";
+    ViewData["Title"] = (Model != null && Model.ProductId != 0) ? "Update Product" : "Create Product";
     var i = 0;
 
     var productId = (Model == null) ? 0 : Model.ProductId;

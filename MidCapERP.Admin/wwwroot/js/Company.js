@@ -95,3 +95,8 @@ function DeleteCompany(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#companyName").val('')
+    $('#tblCompany').dataTable().fnDraw();
+});

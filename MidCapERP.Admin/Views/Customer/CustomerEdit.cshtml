@@ -1,5 +1,6 @@
 ﻿@model MidCapERP.Dto.Customers.CustomersRequestDto
 @{
+    ViewData["Title"] = (Model == null) ? "Create Customer" : "Update Customer";
     string action = (Model != null && Model.CustomerId != 0) ? "Update" : "Create";
     Layout = "_Layout";
 }
