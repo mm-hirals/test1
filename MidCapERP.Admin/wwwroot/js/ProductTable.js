@@ -18,8 +18,8 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.CategoryId = $("#categoryName").val().trim();
-                d.categoryName = $("#categoryName").val().trim();
+                d.CategoryId = $("#categoryName").val();
+                d.categoryName = $("#categoryName").val();
                 d.productTitle = $("#productTitle").val().trim();
                 d.modelNo = $("#modelNo").val().trim();
                 d.publishStatus = $("#publishStatus").val();

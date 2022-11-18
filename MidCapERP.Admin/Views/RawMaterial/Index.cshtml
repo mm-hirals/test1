@@ -28,6 +28,12 @@
                         <input id="unitName" type="text" class="form-control" placeholder="Unit Name" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
+                    </div>
+                </div>
+
             </div>
         </div>
         <partial name="_RawMaterialTable" model="@Model" />
@@ -39,6 +45,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-        <script asp-src-include="~/js/RawMaterial.js" ></script>
+        <script asp-src-include="~/js/RawMaterial.js"></script>
     }
-}
+    }

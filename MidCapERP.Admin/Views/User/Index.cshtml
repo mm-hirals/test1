@@ -16,7 +16,7 @@
     <div class="c-card--body">
         <div class="card filter-form--wrapper" id="FilterCard">
             <div class="row">
-                 <div class="col-md-3">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label class="form-label">Name</label>
                         <input id="name" type="text" class="form-control" placeholder="Name" />
@@ -34,6 +34,11 @@
                         <input id="phoneNumber" type="number" class="form-control" placeholder="Phone Number" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
+                    </div>
+                </div>
             </div>
         </div>
         <partial name="_UserTable" model="@Model" />
@@ -46,6 +51,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/User.js" ></script>
+        <script asp-src-include="~/js/User.js"></script>
     }
-}
+    }

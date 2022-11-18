@@ -12,7 +12,7 @@ namespace MidCapERP.Dto.Order
         public Int64 OrderSetItemId { get; set; }
 
         [Required]
-        public decimal ReceivedMaterial { get; set; }
+        public string ReceivedMaterial { get; set; }
 
         [Required]
         public string ReceivedFrom { get; set; }
