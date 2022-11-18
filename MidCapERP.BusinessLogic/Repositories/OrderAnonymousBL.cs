@@ -4,7 +4,6 @@ using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
 using MidCapERP.Dto.Order;
-using System.Net;
 
 namespace MidCapERP.BusinessLogic.Repositories
 {
@@ -26,7 +25,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             OrderAnonymousView orderAnonymousData = new OrderAnonymousView();
             orderAnonymousData.OrderId = model.OrderId;
             orderAnonymousData.CustomerId = model.CustomerID;
-            orderAnonymousData.IPAddress = Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString();
+            orderAnonymousData.IPAddress = model.IpAddress;
             orderAnonymousData.CreatedDate = DateTime.Now;
             orderAnonymousData.CreatedUTCDate = DateTime.Now;
             var data = await _unitOfWorkDA.OrderAnonymousDA.CreateOrderAnonymousViews(orderAnonymousData, cancellationToken);
