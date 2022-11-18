@@ -15,7 +15,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
-                d.categoryId = $("#categoryId").val().trim();
+                d.categoryId = $("#categoryId").val();
                 d.productTitle = $("#productTitle").val().trim();
                 d.quantityDate = $("#quantityDate").val().trim();
             }
@@ -94,4 +94,11 @@ $(document).delegate(".updateQuantity", "click", function (e) {
             $('.updateQuantity').buttonLoader('stop');
         }
     });
+});
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#categoryId").val(null);
+    $("#productTitle").val('');
+    $("#quantityDate").val('');
+    $('#tblProductQuantities').dataTable().fnDraw();
 });

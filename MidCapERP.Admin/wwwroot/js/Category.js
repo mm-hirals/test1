@@ -15,11 +15,24 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.fixedPrice = $("#fixedPrice").val();
                 d.categoryName = $("#categoryName").val().trim()
             }
         },
         "columns": [
             { "data": "categoryName", "name": "CategoryName", "autoWidth": true },
+            {
+                "data": "fixedPrice", "name": "Fixed Price", "autoWidth": true,
+                "mRender": function (o) {
+                    var fixedPrice = "";
+                    if (o == 0) {
+                        fixedPrice = "No";
+                    } else if (o == 1) {
+                        fixedPrice = "Yes";
+                    }
+                    return fixedPrice;
+                }
+            },
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
@@ -34,6 +47,10 @@ $(function () {
 $("#lnkCategoryFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$('#fixedPrice').change(function () {
+    tblCategory.ajax.reload(null, false);
 });
 
 $("#categoryName").on("input", function () {
@@ -93,3 +110,9 @@ function DeleteCategory(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#fixedPrice").val(-1);
+    $("#categoryName").val('');
+    $('#tblCategory').dataTable().fnDraw();
+});

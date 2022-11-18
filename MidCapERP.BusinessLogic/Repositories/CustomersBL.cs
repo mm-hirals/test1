@@ -143,7 +143,32 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             var customerAllData = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerData = customerAllData.Where(x => x.CustomerTypeId == (int)CustomerTypeEnum.Customer);
-            var customerFilteredData = FilterCustomerData(dataTableFilterDto, customerData);
+            
+            var customerAndInteriorData = customerAllData.Where(p => p.CustomerTypeId == (int)CustomerTypeEnum.Customer || p.CustomerTypeId == (int)CustomerTypeEnum.Interior);
+            var customerAddressesResponseData = (from x in customerData
+                                                 join y in customerAndInteriorData on x.CustomerId equals y.CustomerId
+                                                 where x.CustomerId == y.CustomerId
+                                                 select new CustomersResponseDto()
+                                                 {
+                                                     CustomerId = x.CustomerId,
+                                                     FirstName = x.FirstName,
+                                                     LastName = x.LastName,
+                                                     CustomerTypeId  = x.CustomerTypeId,
+                                                     EmailId = x.EmailId,
+                                                     PhoneNumber = x.PhoneNumber,
+                                                     AltPhoneNumber = x.PhoneNumber,
+                                                     GSTNo = x.GSTNo,
+                                                     RefferedName = string.IsNullOrEmpty(customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).FirstName + " " + customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).LastName) ? null : (customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).FirstName + " " + customerData.FirstOrDefault(p => p.CustomerId == x.RefferedBy).LastName),
+                                                     Discount = x.Discount,
+                                                     CreatedDate =x.CreatedDate,
+                                                     UpdatedBy = x.UpdatedBy,
+                                                     UpdatedDate = x.UpdatedDate,
+                                                     UpdatedUTCDate= x.UpdatedUTCDate,
+                                                     IsSubscribe =x.IsSubscribe,
+                                                     RefferedBy = x.RefferedBy
+                                                 }).AsQueryable();
+
+            var customerFilteredData = FilterCustomerData(dataTableFilterDto, customerAddressesResponseData);
             var customerGridData = new PagedList<CustomersResponseDto>(_mapper.Map<List<CustomersResponseDto>>(customerFilteredData).AsQueryable(), dataTableFilterDto);
             return new JsonRepsonse<CustomersResponseDto>(dataTableFilterDto.Draw, customerGridData.TotalCount, customerGridData.TotalCount, customerGridData);
         }
@@ -477,14 +502,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<OTPLogin> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken)
+        public async Task<OTPLogin> SendCustomerOtpAPI(string PhoneNumber, CancellationToken cancellationToken)
         {
             //Send OTP to customer through SMS
             //SendOTPToCustomer(model.PhoneNumber);
 
             OTPLogin loginToken = new OTPLogin()
             {
-                PhoneNumber = model.PhoneNumber,
+                PhoneNumber = PhoneNumber,
                 OTP = new Random().Next(1, 9999).ToString("D4"),
                 ExpiryTime = DateTime.UtcNow.AddMinutes(10),
             };
@@ -656,7 +681,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             await _unitOfWorkDA.CommitTransactionAsync();
         }
 
-        private static IQueryable<Customers> FilterCustomerData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<Customers> customerAllData)
+        private static IQueryable<CustomersResponseDto> FilterCustomerData(CustomerDataTableFilterDto dataTableFilterDto, IQueryable<CustomersResponseDto> customerAllData)
         {
             if (dataTableFilterDto != null)
             {
@@ -666,7 +691,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 }
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerName))
                 {
-                    customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName));
+                    customerAllData = customerAllData.Where(p => p.FirstName.StartsWith(dataTableFilterDto.customerName) || p.LastName.StartsWith(dataTableFilterDto.customerName) || (p.FirstName + " "+ p.LastName).StartsWith(dataTableFilterDto.customerName));
                 }
                 if (!string.IsNullOrEmpty(dataTableFilterDto.customerMobileNo))
                 {

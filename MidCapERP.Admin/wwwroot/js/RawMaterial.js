@@ -9,7 +9,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
-        "iDisplayLength": 50, 
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/RawMaterial/GetRawMaterialData",
             "type": "POST",
@@ -98,3 +98,9 @@ function DeleteRawMaterial(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#title").val('');
+    $("#unitName").val('');
+    $('#tblRawMaterial').dataTable().fnDraw();
+});

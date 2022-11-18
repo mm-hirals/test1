@@ -37,6 +37,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                         {
                                             CategoryId = x.CategoryId,
                                             CategoryName = x.CategoryName,
+                                            FixedPrice = x.IsFixedPrice,
                                             IsDeleted = x.IsDeleted,
                                             CreatedBy = (int)x.CreatedBy,
                                             CreatedDate = x.CreatedDate,
@@ -146,6 +147,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                 if (!string.IsNullOrEmpty(categoryDataTableFilterDto.CategoryName))
                 {
                     categoryResponseDto = categoryResponseDto.Where(p => p.CategoryName.StartsWith(categoryDataTableFilterDto.CategoryName));
+                }
+                if (categoryDataTableFilterDto.FixedPrice != null && categoryDataTableFilterDto.FixedPrice != -1)
+                {
+                    categoryResponseDto = categoryResponseDto.Where(p => p.FixedPrice == Convert.ToBoolean(categoryDataTableFilterDto.FixedPrice));
                 }
             }
 

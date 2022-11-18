@@ -55,7 +55,7 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task ImportCustomers(long WrkImportFileID, CancellationToken cancellationToken);
 
-        public Task<OTPLogin> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken);
+        public Task<OTPLogin> SendCustomerOtpAPI(string PhoneNumber, CancellationToken cancellationToken);
 
         public Task<bool> ValidateCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken);
 

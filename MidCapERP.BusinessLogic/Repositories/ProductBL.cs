@@ -65,6 +65,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                        select new ProductResponseDto()
                                        {
                                            ProductId = x.ProductId,
+                                           CategoryId = Convert.ToInt16(y.CategoryId),
                                            CategoryName = y.CategoryName,
                                            ProductTitle = x.ProductTitle,
                                            ModelNo = x.ModelNo,
@@ -826,9 +827,9 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             if (productDataTableFilterDto != null)
             {
-                if (!string.IsNullOrEmpty(productDataTableFilterDto.CategoryName))
+                if (productDataTableFilterDto.CategoryId != null && productDataTableFilterDto.CategoryId != 0)
                 {
-                    productResponseDto = productResponseDto.Where(p => p.CategoryName.StartsWith(productDataTableFilterDto.CategoryName));
+                    productResponseDto = productResponseDto.Where(p => p.CategoryId == productDataTableFilterDto.CategoryId);
                 }
                 if (!string.IsNullOrEmpty(productDataTableFilterDto.ModelNo))
                 {
