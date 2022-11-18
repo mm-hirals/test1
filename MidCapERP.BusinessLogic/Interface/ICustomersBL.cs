@@ -1,5 +1,4 @@
-﻿using MidCapERP.DataAccess.Interface;
-using MidCapERP.DataEntities.Models;
+﻿using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.CustomersTypes;
 using MidCapERP.Dto.DataGrid;
@@ -60,7 +59,5 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task<bool> ValidateCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken);
 
         public Task<OTPLogin> ResendCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken);
-
-        public Task<CustomerVisitRequestDto> CustomerVisitAPI(CustomerVisitRequestDto model, CancellationToken cancellation);
     }
 }
