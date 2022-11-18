@@ -3,7 +3,9 @@ using MidCapERP.BusinessLogic.Constants;
 using MidCapERP.BusinessLogic.Interface;
 using MidCapERP.BusinessLogic.Services.ActivityLog;
 using MidCapERP.BusinessLogic.Services.FileStorage;
+using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -223,6 +225,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 {
                     throw new Exception("Order not found");
                 }
+
+                var tenantData = await _unitOfWorkDA.TenantDA.GetById(orderById.TenantId, cancellationToken);
+
                 orderApiResponseDto = _mapper.Map<OrderApiResponseDto>(orderById);
                 orderApiResponseDto.PayableAmount = (orderApiResponseDto.GrossTotal - orderApiResponseDto.Discount) + orderApiResponseDto.GSTTaxAmount;
                 var allUsers = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
@@ -279,6 +284,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Quantity = x.Quantity,
                                                  ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
                                                  ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
+                                                 CostPrice = CommonMethod.GetCalculatedPrice(productMat.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,

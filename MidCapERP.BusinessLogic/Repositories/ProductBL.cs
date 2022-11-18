@@ -320,10 +320,15 @@ namespace MidCapERP.BusinessLogic.Repositories
             await InsertProductQuantity(productData, cancellationToken);
 
             await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetProductSubjectTypeId(cancellationToken), productData.ProductId, "Product Created", ActivityLogStringConstant.Create, CancellationToken.None);
+
             var _mappedUser = _mapper.Map<ProductRequestDto>(productData);
             if (productData.ProductId > 0)
             {
-                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(productData.ProductId));
+                string tenantLogo = "";
+                var tenantData = await _unitOfWorkDA.TenantDA.GetById(_currentUser.TenantId, cancellationToken);
+                if (!string.IsNullOrEmpty(tenantData.LogoPath))
+                    tenantLogo = "https://midcaperp.magnusminds.net/" + tenantData.LogoPath;
+                productToInsert.QRImage = await _iQRCodeService.GenerateQRCodeImageAsync(Convert.ToString(productData.ProductId), tenantLogo);
                 await _unitOfWorkDA.ProductDA.UpdateProduct(productToInsert, cancellationToken);
             }
             return _mappedUser;
