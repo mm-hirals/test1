@@ -224,10 +224,12 @@ function DeleteProduct(id) {
 }
 
 $(document).on('click', '#btnReset', function (e) {
-    $("#categoryName").val(null);
+    $("#select2-categoryName-container").text("Select Reffered");
+    $("#select2-publishStatus-container").text("Select Status");
+    $("#categoryName").val('');
     $("#categoryName").val('');
     $("#productTitle").val('');
     $("#modelNo").val('');
-    $("#publishStatus").val(null);
+    $("#publishStatus").val('');
     $('#tblProduct').dataTable().fnDraw();
 });
