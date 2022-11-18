@@ -760,7 +760,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                 response.ErrorMessages = objOrderProductQuantityDto.OrderProductQuantities.Where(x => !string.IsNullOrEmpty(x.Message)).Select(x => x.Message).ToList();
 
                 //Order Activity Log for Not Approve Order due to Product available quantity
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), Id, "Order has been Declined", ActivityLogStringConstant.Update, cancellationToken);
+                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), Id, "Error in approving order!", ActivityLogStringConstant.Update, cancellationToken);
             }
             return response;
         }
@@ -776,6 +776,9 @@ namespace MidCapERP.BusinessLogic.Repositories
                 orderById.UpdatedDate = DateTime.Now;
                 orderById.UpdatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+
+                //Order Activity Log for Not Approve Order due to Product available quantity
+                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), Id, "Order has been Declined", ActivityLogStringConstant.Update, cancellationToken);
             }
         }
 
