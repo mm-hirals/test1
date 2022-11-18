@@ -434,42 +434,62 @@ namespace MidCapERP.BusinessLogic.Repositories
             return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
         }
 
-        public async Task<OrderApiResponseDto> UpdateOrderApprovedOrDeclinedAPI(OrderUpdateApproveOrDeclineAPI model, CancellationToken cancellationToken)
+        public async Task<OrderStatusResponseDto> UpdateOrderApprovedOrDeclinedAPI(OrderUpdateApproveOrDeclineAPI model, CancellationToken cancellationToken)
         {
+            OrderStatusResponseDto response = new OrderStatusResponseDto();
             var orderById = await _unitOfWorkDA.OrderDA.GetById(model.OrderId, cancellationToken);
             orderById.Status = Convert.ToInt32(model.IsOrderApproved == true ? OrderStatusEnum.Approved : OrderStatusEnum.Declined);
-
             await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
-            OrderProductQuantityDto objOrderProductQuantityDto = await CheckProductAvailableQuantity(model.OrderId, cancellationToken);
-            if (orderById != null && objOrderProductQuantityDto.Status == true)
+
+            if (model.IsOrderApproved == true)
             {
-                await UpdateProductQuantityAndActivityLog(objOrderProductQuantityDto.OrderProductQuantities, orderById.OrderNo, cancellationToken);
-                orderById.Status = (int)OrderStatusEnum.Approved;
+                OrderProductQuantityDto objOrderProductQuantityDto = await CheckProductAvailableQuantity(model.OrderId, cancellationToken);
+                if (orderById != null && objOrderProductQuantityDto.Status == true)
+                {
+                    await UpdateProductQuantityAndActivityLog(objOrderProductQuantityDto.OrderProductQuantities, orderById.OrderNo, cancellationToken);
+                    orderById.Status = (int)OrderStatusEnum.Approved;
+                    orderById.Comments = model.Comments;
+                    orderById.UpdatedBy = _currentUser.UserId;
+                    orderById.UpdatedDate = DateTime.Now;
+                    orderById.UpdatedUTCDate = DateTime.UtcNow;
+                    await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+
+                    //Order Activity Log for Approve Order
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), model.OrderId, "Order has been Approved", ActivityLogStringConstant.Update, cancellationToken);
+
+                    response.OrderId = model.OrderId;
+                    response.Status = true;
+                    response.Message = "Order has been approved successfully!";
+                }
+                else
+                {
+                    response.OrderId = model.OrderId;
+                    response.Status = false;
+                    response.Message = "Error in approving order!";
+                    response.ErrorMessages = objOrderProductQuantityDto.OrderProductQuantities.Where(x => !string.IsNullOrEmpty(x.Message)).Select(x => x.Message).ToList();
+
+                    //Order Activity Log for Not Approve Order due to Product available quantity
+                    await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), model.OrderId, "Error in approving order!", ActivityLogStringConstant.Update, cancellationToken);
+                }
+            }
+            else
+            {
+                orderById.Status = (int)OrderStatusEnum.Declined;
                 orderById.Comments = model.Comments;
                 orderById.UpdatedBy = _currentUser.UserId;
                 orderById.UpdatedDate = DateTime.Now;
                 orderById.UpdatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
 
-                //Order Activity Log for Approve Order
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), model.OrderId, "Order has been Approved", ActivityLogStringConstant.Update, cancellationToken);
-
-                //response.OrderId = Id;
-                //response.Status = true;
-                //response.Message = "Order has been approved successfully!";
-            }
-            else
-            {
-                //response.OrderId = Id;
-                //response.Status = false;
-                //response.Message = "Error in approving order!";
-                //response.ErrorMessages = objOrderProductQuantityDto.OrderProductQuantities.Select(x => x.Message).ToList();
+                response.OrderId = model.OrderId;
+                response.Status = false;
+                response.Message = "Order has been declined successfully!";
 
                 //Order Activity Log for Not Approve Order due to Product available quantity
                 await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), model.OrderId, "Order has been Declined", ActivityLogStringConstant.Update, cancellationToken);
             }
 
-            return await GetOrderDetailByOrderIdAPI(model.OrderId, cancellationToken);
+            return response;
         }
 
         public async Task<OrderApiResponseDto> GetOrderReceivableMaterial(Int64 orderId, Int64 orderSetItemId, CancellationToken cancellationToken)
