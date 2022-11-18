@@ -18,13 +18,13 @@ $(function () {
             "datatype": "json",
             "data": function (d) {
                 d.refferedBy = $("#refferedBy").val();
-                d.customerName = $("#customerName").val().trim();
-                d.phoneNumber = $("#phoneNumber").val().trim();
+                d.customerName = $("#customerName").val();
+                d.phoneNumber = $("#phoneNumber").val();
                 d.status = $("#status").val();
-                d.orderFromDate = $("#orderFromDate").val().trim();
-                d.orderToDate = $("#orderToDate").val().trim();
-                d.deliveryFromDate = $("#deliveryFromDate").val().trim();
-                d.deliveryToDate = $("#deliveryToDate").val().trim();
+                d.orderFromDate = $("#orderFromDate").val();
+                d.orderToDate = $("#orderToDate").val();
+                d.deliveryFromDate = $("#deliveryFromDate").val();
+                d.deliveryToDate = $("#deliveryToDate").val();
             }
         },
         "columns": [
