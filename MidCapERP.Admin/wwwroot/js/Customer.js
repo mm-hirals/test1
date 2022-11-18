@@ -218,8 +218,7 @@ function DeleteCustomer(id) {
     } else {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
-}
-}); 
+} 
 
 $(document).on('click', '#btnReset', function (e) {
     $("#refferedBy").val('');
