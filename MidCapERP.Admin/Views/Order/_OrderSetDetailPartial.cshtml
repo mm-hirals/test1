@@ -43,19 +43,21 @@
                                         <div class="c-card--wrapper p-3">
                                             <div class="row">
                                                 <div class="col-2">
-                                                    <div class="product-order--info mb-1 d-flex align-items-center">
-                                                        <label for="" class="form-label mb-0">
-                                                            Receive Date:
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Receive Date
                                                         </label>
-                                                        <div class="form-value fw-bold ms-2">
+                                                        <div class="order-final-price fw-bold">
                                                             @(orderSetItem.ReceiveDate != null ? orderSetItem.ReceiveDate : "")
                                                         </div>
                                                     </div>
-                                                    <div class="product-order--info mb-1 d-flex align-items-center">
-                                                        <label for="" class="form-label mb-0">
-                                                            Provided Material:
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Provided Material
                                                         </label>
-                                                        <div class="form-value fw-bold ms-2">
+                                                        <div class="order-final-price fw-bold">
                                                             @(orderSetItem.ProvidedMaterial != null ? orderSetItem.ProvidedMaterial : "")
                                                         </div>
                                                     </div>
@@ -100,16 +102,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-2">
-                                                    <div class="product-order--info mb-3 text-center">
-                                                        <label for="" class="form-label mb-1 fs-12">
-                                                            Received Comment
-                                                        </label>
-                                                        <div class="order-final-price fw-bold">
-                                                            @(orderSetItem.RecievedComment != null ? orderSetItem.RecievedComment : "")
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
@@ -119,6 +111,18 @@
                                                         </label>
                                                         <div class="form-value">
                                                             @(orderSetItem.Comment != null ? orderSetItem.Comment : "")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="product-order--info">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Received Comment
+                                                        </label>
+                                                        <div class="form-value">
+                                                            @(orderSetItem.RecievedComment != null ? orderSetItem.RecievedComment : "")
                                                         </div>
                                                     </div>
                                                 </div>
