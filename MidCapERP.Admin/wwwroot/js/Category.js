@@ -15,6 +15,7 @@ $(function () {
             "type": "POST",
             "datatype": "json",
             "data": function (d) {
+                d.fixedPrice = $("#fixedPrice").val();
                 d.categoryName = $("#categoryName").val().trim()
             }
         },
@@ -46,6 +47,10 @@ $(function () {
 $("#lnkCategoryFilter").click(function () {
     $(this).toggleClass("filter-icon");
     $("#FilterCard").slideToggle("slow");
+});
+
+$('#fixedPrice').change(function () {
+    tblCategory.ajax.reload(null, false);
 });
 
 $("#categoryName").on("input", function () {
@@ -107,6 +112,7 @@ function DeleteCategory(id) {
 }
 
 $(document).on('click', '#btnReset', function (e) {
+    $("#fixedPrice").val(-1);
     $("#categoryName").val('');
     $('#tblCategory').dataTable().fnDraw();
 });

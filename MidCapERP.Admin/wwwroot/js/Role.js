@@ -43,3 +43,8 @@ $("#lnkToredirect").click(function () {
     $('#lnkToredirect').buttonLoader('start');
     window.location.href = "/Role/RolePermission"
 });
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#roleName").val('')
+    $('#tblRole').dataTable().fnDraw();
+});

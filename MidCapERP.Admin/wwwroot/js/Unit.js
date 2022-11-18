@@ -9,7 +9,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "filter": true,
-        "iDisplayLength": 50, 
+        "iDisplayLength": 50,
         "ajax": {
             "url": "/Unit/GetUnitData",
             "type": "POST",
@@ -95,6 +95,11 @@ function DeleteUnit(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#unitName").val('')
+    $('#tblUnit').dataTable().fnDraw();
+});
 
 $(document).on('click', '#btnReset', function (e) {
     $("#unitName").val('')

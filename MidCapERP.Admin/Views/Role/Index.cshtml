@@ -22,6 +22,11 @@
                         <input type="text" id="roleName" class="form-control" placeholder="Role Name" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
+                    </div>
+                </div>
             </div>
         </div>
         <partial name="_RoleTable" model="@Model" />
@@ -33,6 +38,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
-        <script asp-src-include="~/js/Role.js" ></script>
+        <script asp-src-include="~/js/Role.js"></script>
     }
-}
+    }

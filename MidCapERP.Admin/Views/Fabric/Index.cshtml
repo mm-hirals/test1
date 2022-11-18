@@ -35,6 +35,11 @@
                         <input id="companyName" type="text" class="form-control" placeholder="Company Name" />
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary mt-3" id="btnReset">Reset</button>
+                    </div>
+                </div>
             </div>
         </div>
         <partial name="_FabricTable" model="@Model" />
@@ -47,6 +52,6 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_JqueryDatatableScriptsPartial");
 
-        <script asp-src-include="~/js/Fabric.js" ></script>
+        <script asp-src-include="~/js/Fabric.js"></script>
     }
-}
+    }
