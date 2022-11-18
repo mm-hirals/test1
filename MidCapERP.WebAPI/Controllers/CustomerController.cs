@@ -173,9 +173,9 @@ namespace MidCapERP.WebAPI.Controllers
 
         [HttpPost("SendCustomerOtp")]
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
-        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomerApiRequestDto customerApiRequestDto, CancellationToken cancellationToken)
+        public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomersRequestOtpDto customersResponseOtpDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customersResponseOtpDto, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);

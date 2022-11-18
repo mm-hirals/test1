@@ -502,7 +502,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<OTPLogin> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken)
+        public async Task<OTPLogin> SendCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken)
         {
             //Send OTP to customer through SMS
             //SendOTPToCustomer(model.PhoneNumber);
