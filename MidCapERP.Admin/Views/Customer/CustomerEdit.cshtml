@@ -10,11 +10,6 @@
         <div class="card-prpoduct-cotent--wrapper">
             <div class="c-card--header">
                 <h4 class="c-card--header-title">Customer Details</h4>
-                <div class="c-card--header-action">
-                    <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary has-spinner"
-                       data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
-                       data-ajax="true" data-ajax-mode="replace">Create New</a>
-                </div>
             </div>
             <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmCusomerDetails">
                 <div class="modal-body">

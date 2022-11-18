@@ -106,9 +106,9 @@
                                                             <label for="" class="form-label mb-1 fs-12">
                                                                 Discount(%)
                                                             </label>
-                                                            <div class="order-final-price fw-bold">
-                                                                <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" min="0" max="100" id="@orderSetItem.OrderSetItemId">&nbsp;
-                                                                <button type="button" class="saveDiscount btn btn-icon btn-outline-primary has-spinner" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-save"></i></button>
+                                                            <div class="order-final-price fw-bold form-group d-flex justify-content-center">
+                                                                <input class="form-control-sm border" type="number" asp-for="@orderSetItem.DiscountPrice" min="0" max="100" id="@orderSetItem.OrderSetItemId">&nbsp;
+                                                                <button type="button" class="saveDiscount btn btn-icon btn-outline-primary has-spinner btn-sm" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-save"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
