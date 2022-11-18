@@ -58,17 +58,48 @@ $(document).delegate(".approveOrder", "click", function (e) {
 });
 
 $(document).delegate(".declineOrder", "click", function (e) {
-    $.ajax({
-        url: "/Order/DeclineOrderStatus",
-        type: "POST",
-        data: { "Id": $('#orderId').val() },
-        success: function (response) {
-            if (response == "success") {
-                $("#divOrderInfo").load('/Order/GetOrderBasicDetail' + "?OrderId=" + $("#hdnOrderId").val());
-                $("#divOrderSetDetailPartial").load('/Order/GetOrderSetDetailData' + "?OrderId=" + $("#hdnOrderId").val());
-            }
-            else
-                alert("Error: " + response);
-        }
-    });
+    if (!$.isEmptyObject($('#orderId').val()) && $('#orderId').val() > 0) {
+        DeclineConfirmation();
+    }
+    else {
+        errorMessage("Oops...", "Something went wrong!", "error");
+    }
 });
+
+// On modal button click call controller decline method with comment
+$(".declineOrderModalBtn").click(function () {
+    if ($.isEmptyObject($("#txtComment").val()) == true) {
+        $("#errorComment").text("Please enter comment.");
+        $("#errorComment").show();
+    }
+    else {
+        $('.declineOrderModalBtn').buttonLoader('start');
+        $("#errorComment").hide();
+
+        var data = {
+            OrderId: $('#hdnOrderId').val(),
+            Comments: $("#txtComment").val()
+        };
+        $.ajax({
+            url: "/Order/DeclineOrderStatus",
+            type: "POST",
+            data: data,
+            success: function (response) {
+                $('.declineOrderModalBtn').buttonLoader('stop');
+                if (response == "success") {
+                    $("#declineOrderModal").modal('hide');
+                    $("#divOrderInfo").load('/Order/GetOrderBasicDetail' + "?OrderId=" + $("#hdnOrderId").val());
+                    $("#divOrderSetDetailPartial").load('/Order/GetOrderSetDetailData' + "?OrderId=" + $("#hdnOrderId").val());
+                }
+                else
+                    alert("Error: " + response);
+            }
+        });
+    }
+});
+
+// Reset modal values after close
+$('#declineOrderModal').on('hidden.bs.modal', function () {
+    $("#txtComment").val("");
+    $("#errorComment").hide();
+})

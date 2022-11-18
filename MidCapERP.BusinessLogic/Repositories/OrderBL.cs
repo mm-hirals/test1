@@ -812,20 +812,20 @@ namespace MidCapERP.BusinessLogic.Repositories
             return response;
         }
 
-        public async Task DeclineOrderStatus(long Id, CancellationToken cancellationToken)
+        public async Task DeclineOrderStatus(OrderResponseDto model, CancellationToken cancellationToken)
         {
-            var orderById = await _unitOfWorkDA.OrderDA.GetById(Id, cancellationToken);
+            var orderById = await _unitOfWorkDA.OrderDA.GetById(model.OrderId, cancellationToken);
             if (orderById != null)
             {
                 orderById.Status = (int)OrderStatusEnum.Declined;
-                //orderById.Comments = model.Comments;
+                orderById.Comments = model.Comments;
                 orderById.UpdatedBy = _currentUser.UserId;
                 orderById.UpdatedDate = DateTime.Now;
                 orderById.UpdatedUTCDate = DateTime.UtcNow;
                 await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
 
                 //Order Activity Log for Not Approve Order due to Product available quantity
-                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), Id, "Order has been Declined", ActivityLogStringConstant.Update, cancellationToken);
+                await _activityLogsService.PerformActivityLog(await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken), model.OrderId, "Order has been Declined", ActivityLogStringConstant.Update, cancellationToken);
             }
         }
 
@@ -1282,6 +1282,8 @@ namespace MidCapERP.BusinessLogic.Repositories
             var polishSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetPolishSubjectTypeId(cancellationToken);
             var fabricSubjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetFabricSubjectTypeId(cancellationToken);
             var orderSetItemAllData = await _unitOfWorkDA.OrderSetItemDA.GetAll(cancellationToken);
+            var orderReceivables = await _unitOfWorkDA.OrderSetItemReceivableDA.GetAll(cancellationToken);
+            var allUserData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
             foreach (var item in orderResponseDto.OrderSetResponseDto)
             {
                 var orderSetItemDataById = orderSetItemAllData.Where(x => x.OrderId == Id && x.OrderSetId == item.OrderSetId).ToList();
@@ -1296,6 +1298,9 @@ namespace MidCapERP.BusinessLogic.Repositories
 
                                          join a in fabricData on x.SubjectId equals a.FabricId into fabricM
                                          from fabricMat in fabricM.DefaultIfEmpty()
+
+                                         join b in orderReceivables on x.OrderSetItemId equals b.OrderSetItemId
+                                         join c in allUserData on b.ReceivedBy equals c.UserId
 
                                          select new OrderSetItemResponseDto
                                          {
@@ -1315,7 +1320,14 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              DiscountPrice = x.DiscountPrice,
                                              TotalAmount = x.TotalAmount,
                                              Comment = x.Comment,
-                                             Status = x.MakingStatus
+                                             Status = x.MakingStatus,
+                                             ReceiveDate = x.ReceiveDate,
+                                             ProvidedMaterial = x.ProvidedMaterial,
+                                             ReceivedDate = b.ReceivedDate,
+                                             ReceivedMaterial = b.ProvidedMaterial,
+                                             ReceivedFrom = b.ReceivedFrom,
+                                             ReceivedByName = c.FullName,
+                                             RecievedComment = b.Comment
                                          }).ToList();
 
                 item.OrderSetItemResponseDto = orderSetItemsData;
