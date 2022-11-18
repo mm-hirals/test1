@@ -41,6 +41,8 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<CustomersRequestDto> UpdateCustomers(Int64 Id, CustomersRequestDto model, CancellationToken cancellationToken);
 
+        public Task<CustomersRequestDto> DeleteCustomers(Int64 CustomerId, CancellationToken cancellationToken);
+
         public Task<int> GetCustomerCount(CancellationToken cancellationToken);
 
         public Task SendSMSToCustomers(CustomersSendSMSDto model, CancellationToken cancellationToken);
@@ -52,6 +54,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public List<WrkImportCustomersDto> CustomerFileImport(WrkImportFilesRequestDto entity, long WrkImportFileID);
 
         public Task ImportCustomers(long WrkImportFileID, CancellationToken cancellationToken);
+
         public Task<OTPLogin> SendCustomerOtpAPI(CustomerApiRequestDto model, CancellationToken cancellationToken);
 
         public Task<bool> ValidateCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken);

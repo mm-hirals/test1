@@ -258,6 +258,14 @@ $(document).on("click", ".img-wrap .custom-control-input", (function () {
     });
 }));
 
+$(document).on('click', '.productDetailsSubmit', function () {
+    formChangedValue = false;
+});
+
+$(document).on('click', '.btnProductMaterial', function () {
+    formChangedValue = false;
+});
+
 $('.ProductForm').on('change input', 'input, textarea', function () {
     formChangedValue = true;
 });

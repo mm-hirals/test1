@@ -162,7 +162,7 @@ namespace MidCapERP.WebAPI.Controllers
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
             }
-            return new ApiResponse(message: "Data updated successful", result: data, statusCode: 200);
+            return new ApiResponse(message: data.Message, result: data, statusCode: 200);
         }
 
 
