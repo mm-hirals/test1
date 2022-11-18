@@ -60,6 +60,7 @@ namespace MidCapERP.Dto.Order
         public string? RefferedName { get; set; }
 
         public string PhoneNumber { get; set; }
+        public string IpAddress { get; set; }
 
         public int CreatedBy { get; set; }
 

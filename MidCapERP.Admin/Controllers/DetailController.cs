@@ -30,6 +30,8 @@ namespace MidCapERP.Admin.Controllers
             var data = await _unitOfWorkBL.OrderBL.GetOrderDetailsAnonymous(orderNo, cancellationToken);
             if (data != null)
             {
+                string ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+                data.IpAddress = ipAddress;
                 await _unitOfWorkBL.OrderAnonymousBL.CreateOrderDetailsAnonymous(data, cancellationToken);
                 return View("OrderDetail", data);
             }
