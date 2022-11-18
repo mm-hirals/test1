@@ -7,6 +7,7 @@ using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -287,7 +288,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Quantity = x.Quantity,
                                                  ProductTitle = (x.SubjectTypeId == productSubjectTypeId ? productMat.ProductTitle : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.Title : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.Title : ""))),
                                                  ModelNo = (x.SubjectTypeId == productSubjectTypeId ? productMat.ModelNo : (x.SubjectTypeId == polishSubjectTypeId ? polishMat.ModelNo : (x.SubjectTypeId == fabricSubjectTypeId ? fabricMat.ModelNo : ""))),
-                                                 CostPrice = CommonMethod.GetCalculatedPrice(productMat.CostPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple),
                                                  UnitPrice = x.UnitPrice,
                                                  DiscountPrice = x.DiscountPrice,
                                                  TotalAmount = x.TotalAmount,
@@ -297,6 +297,13 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  Status = x.MakingStatus,
                                                  IsItemReceived = (osirData == null) ? false : true
                                              }).ToList();
+
+                    foreach (var osItem in orderSetItemsData.Where(x => x.SubjectTypeId == productSubjectTypeId))
+                    {
+                        var productDetailData = productData.FirstOrDefault(x => x.ProductId == osItem.SubjectId);
+                        var costPrice = productDetailData != null ? productDetailData.CostPrice : 0;
+                        osItem.CostPrice = CommonMethod.GetCalculatedPrice(costPrice, tenantData.ProductRSPPercentage, tenantData.AmountRoundMultiple);
+                    }
 
                     item.OrderSetItemResponseDto = orderSetItemsData;
                     item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
