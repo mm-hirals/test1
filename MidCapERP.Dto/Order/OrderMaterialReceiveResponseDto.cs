@@ -10,6 +10,8 @@
         public string OrderSetName { get; set; }
         public string OrderSetComment { get; set; }
         public string ReceivedFrom { get; set; }
+        public decimal ReceivedMaterial { get; set; }
+        public DateTime ReceivedDate { get; set; }
         public decimal ProvidedMaterial { get; set; }
         public DateTime ReceiveDate { get; set; }
         public string ReceivedBy { get; set; }

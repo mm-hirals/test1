@@ -481,8 +481,10 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                  OrderSetName = s.SetName,
                                                  OrderSetComment = z.Comment,
                                                  ReceivedFrom = a.ReceivedFrom,
-                                                 ProvidedMaterial = a.ProvidedMaterial,
+                                                 ProvidedMaterial = (decimal)z.ProvidedMaterial,
                                                  ReceiveDate = (DateTime)z.ReceiveDate,
+                                                 ReceivedMaterial = a.ProvidedMaterial,
+                                                 ReceivedDate = a.ReceivedDate,
                                                  ReceivedBy = b.FullName,
                                                  ReceivedComment = a.Comment
                                              }).FirstOrDefault();
@@ -516,7 +518,7 @@ namespace MidCapERP.BusinessLogic.Repositories
             OrderSetItemReceivable orderSetItemReceivable = new OrderSetItemReceivable();
             orderSetItemReceivable.OrderSetItemId = model.OrderSetItemId;
             orderSetItemReceivable.ReceivedDate = DateTime.Now;
-            orderSetItemReceivable.ProvidedMaterial = model.ReceivedMaterial;
+            orderSetItemReceivable.ProvidedMaterial = Convert.ToDecimal(model.ReceivedMaterial);
             orderSetItemReceivable.ReceivedFrom = model.ReceivedFrom;
             orderSetItemReceivable.ReceivedBy = _currentUser.UserId;
             orderSetItemReceivable.Comment = model.Comment;
