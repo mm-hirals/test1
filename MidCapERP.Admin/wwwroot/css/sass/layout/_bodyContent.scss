@@ -34,7 +34,7 @@ body {
     }
     .select2-results__option{
         font-size: 12px;
-    }   
+    }
 }
 
 select[readonly]{
@@ -45,4 +45,9 @@ select[readonly]{
            background: $disabled;
         }
     }
+}
+
+//Badge
+.badge-sm{
+    font-size: 10px;
 }

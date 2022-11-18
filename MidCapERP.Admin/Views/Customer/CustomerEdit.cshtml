@@ -4,170 +4,179 @@
     Layout = "_Layout";
 }
 
-<div class="">
-    <div class="card mb-3">
-        <div class="card-prpoduct-cotent--wrapper">
-            <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmCusomerDetails">
-                <div class="modal-body">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="FirstName" class="form-control" />
-                                <span asp-validation-for="FirstName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="LastName" class="form-control" />
-                                <span asp-validation-for="LastName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="EmailId" class="form-label"></label>
-                                <input asp-for="EmailId" class="form-control" />
-                                <span asp-validation-for="EmailId" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
-                                <input asp-for="PhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)' />
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="AltPhoneNumber" class="form-label"></label>
-                                <input asp-for="AltPhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)'/>
-                                <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="RefferedBy" class="form-label"></label>
-                                <select asp-for="RefferedBy" data-val="true" class="form-control form-select"
-                                        asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
-                                    <option>Please Select</option>
-                                </select>
-                                <span asp-validation-for="RefferedBy" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label asp-for="GSTNo" class="form-label"></label>
-                                <input asp-for="GSTNo" class="form-control" minlength="2" minlength="15"/>
-                                <span asp-validation-for="GSTNo" class="text-danger"></span>
-                            </div>
-                        </div>
-                        @if (Model == null)
-                        {
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.Street1" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Street2" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.Street2" class="form-control" />
-                                    <span asp-validation-for="CustomerAddressesRequestDto.Street2" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Landmark" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.Landmark" class="form-control" />
-                                    <span asp-validation-for="CustomerAddressesRequestDto.Landmark" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.Area" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.City" class="form-control" onkeypress='return restrictNumber(event)' />
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.State" class="form-control" onkeypress='return restrictNumber(event)' />
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
-                                    <input asp-for="CustomerAddressesRequestDto.ZipCode" type="text" minlength="0" maxlength="6" onkeypress='return restrictAlphabets(event)' class="form-control" />
-                                    <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
-                                </div>
-                            </div>
-                        }
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="IsSubscribe" class="form-label"></label>
-                                <div class="custom-control custom-switch">
-                                    <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isSubscribe" data-val="true">
-                                    <label class="custom-control-label" for="isSubscribe">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row c-card-footer--btn">
-                        <div class="col-12">
-                            <div class="c-card--wrapper c-card-sm--wrapper">
-                                <div class="c-card--footer">
-                                    <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
-                                    <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner customerSave" id="dataSave">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="c-card--wrapper c-card-sm--wrapper">
+                <div class="c-card--header">
+                    <h4 class="c-card--header-title">Personal Information</h4>
                 </div>
-            </form>
-        </div>
-    </div>
-    @if (Model != null && Model.CustomerId != null)
-    {
-        <nav class="product-nav-tab--sticky">
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-                    Addresses
-                </button>
-            </div>
-        </nav>
-        <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
-                <div class="c-card--wrapper c-card-sm--wrapper mb-3">
-                    <div class="c-card--header">
-                        <h4 class="c-card--header-title">Address Details</h4>
-                        <div class="c-card--header-action">
-                            <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary has-spinner"
-                           data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
-                           data-ajax="true" data-ajax-mode="replace">Create New</a>
-                        </div>
-                    </div>
+                <form asp-action="@action" method="post" class="modal-form--wrapper" id="frmCusomerDetails">
                     <div class="c-card--body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input asp-for="CustomerId" id="customerId" hidden class="form-control" />
                         <div class="row">
                             <div class="col-12">
-                                <partial name="_CustomerAddressesTable" model="null" />
-                                <div id="divUpdateCustomerAddresses"></div>
+                                <div class="form-group">
+                                    <label asp-for="FirstName" class="form-label"></label><span class="required">*</span>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="LastName" class="form-label"></label><span class="required">*</span>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="EmailId" class="form-label"></label>
+                                    <input asp-for="EmailId" class="form-control" />
+                                    <span asp-validation-for="EmailId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="form-label"></label><span class="required">*</span>
+                                    <input asp-for="PhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)' />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="AltPhoneNumber" class="form-label"></label>
+                                    <input asp-for="AltPhoneNumber" class="form-control" type="text" minlength="0" maxlength="10" onkeypress='return restrictAlphabets(event)'/>
+                                    <span asp-validation-for="AltPhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="RefferedBy" class="form-label"></label>
+                                    <select asp-for="RefferedBy" data-val="true" class="form-control form-select"
+                                            asp-items="@(new SelectList((List<SelectListItem>)ViewBag.ReferedBySelectItemList, "Value", "Text"))">
+                                        <option>Please Select</option>
+                                    </select>
+                                    <span asp-validation-for="RefferedBy" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label asp-for="GSTNo" class="form-label"></label>
+                                    <input asp-for="GSTNo" class="form-control" minlength="2" minlength="15"/>
+                                    <span asp-validation-for="GSTNo" class="text-danger"></span>
+                                </div>
+                            </div>
+                            @if (Model == null)
+                            {
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.Street1" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.Street1" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.Street2" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.Street2" class="form-control" />
+                                        <span asp-validation-for="CustomerAddressesRequestDto.Street2" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.Landmark" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.Landmark" class="form-control" />
+                                        <span asp-validation-for="CustomerAddressesRequestDto.Landmark" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.Area" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.Area" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.City" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.City" class="form-control" onkeypress='return restrictNumber(event)' />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.State" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.State" class="form-control" onkeypress='return restrictNumber(event)' />
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CustomerAddressesRequestDto.ZipCode" class="form-label"></label>
+                                        <input asp-for="CustomerAddressesRequestDto.ZipCode" type="text" minlength="0" maxlength="6" onkeypress='return restrictAlphabets(event)' class="form-control" />
+                                        <span asp-validation-for="CustomerAddressesRequestDto.ZipCode" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="IsSubscribe" class="form-label"></label>
+                                    <div class="custom-control custom-switch">
+                                        <input asp-for="IsSubscribe" type="checkbox" class="custom-control-input" id="isSubscribe" data-val="true">
+                                        <label class="custom-control-label" for="isSubscribe">Active</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row c-card-footer--btn">
+                            <div class="col-12">
+                                <div class="c-card--wrapper c-card-sm--wrapper">
+                                    <div class="c-card--footer">
+                                        <a class="btn btn-danger" href="/Customer/Index">Cancel</a>
+                                        <button type="submit" value="Save" class="btn btn-primary ms-2 has-spinner customerSave" id="dataSave">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card c-card--wrapper c-card-sm--wrapper overflow-hidden h-100">
+            @if (Model != null && Model.CustomerId != null)
+            {
+                <nav class="product-nav-tab--sticky bg-white">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                            Addresses
+                        </button>
+                    </div>
+                </nav>
+                <div class="tab-content c-card--body" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+                        <div class="c-card--wrapper c-card-sm--wrapper mb-3">
+                            <div class="c-card--header">
+                                <h4 class="c-card--header-title">Address Details</h4>
+                                <div class="c-card--header-action ms-auto">
+                                    <a asp-controller="Customer" asp-action="CreateCustomerAddress" class="btn btn-primary has-spinner"
+                                   data-ajax-complete="CustomerAddressesModel.onComplete" id="customersId" asp-route-customerId="@Model.CustomerId" data-ajax-update="#divUpdateCustomerAddresses"
+                                   data-ajax="true" data-ajax-mode="replace">Create New</a>
+                                </div>
+                            </div>
+                            <div class="c-card--body px-2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <partial name="_CustomerAddressesTable" model="null" />
+                                        <div id="divUpdateCustomerAddresses"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
-    }
+    </div>
 </div>
 
 @section Scripts {
