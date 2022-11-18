@@ -53,5 +53,13 @@ namespace MidCapERP.Dto.OrderSetItem
         public long? UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
+        public DateTime? ReceiveDate { get; set; }
+        public decimal? ProvidedMaterial { get; set; }
+        public DateTime ReceivedDate { get; set; }
+        public decimal ReceivedMaterial { get; set; }
+        public string ReceivedFrom { get; set; }
+        public long ReceivedBy { get; set; }
+        public string ReceivedByName { get; set; }
+        public string? RecievedComment { get; set; }
     }
 }

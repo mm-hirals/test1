@@ -55,6 +55,12 @@ $(function () {
                     else if (o == 6) {
                         status = "Cancelled";
                     }
+                    else if (o == 7) {
+                        status = "Material Receive";
+                    }
+                    else if (o == 8) {
+                        status = "Declined";
+                    }
                     return status;
                 }
             },

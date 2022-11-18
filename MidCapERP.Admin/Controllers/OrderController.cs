@@ -94,11 +94,11 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.Create)]
-        public async Task<JsonResult> DeclineOrderStatus(long Id, CancellationToken cancellationToken)
+        public async Task<JsonResult> DeclineOrderStatus(OrderResponseDto model, CancellationToken cancellationToken)
         {
             try
             {
-                await _unitOfWorkBL.OrderBL.DeclineOrderStatus(Id, cancellationToken);
+                await _unitOfWorkBL.OrderBL.DeclineOrderStatus(model, cancellationToken);
                 return Json("success");
             }
             catch (Exception ex)

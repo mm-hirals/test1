@@ -58,6 +58,6 @@ namespace MidCapERP.BusinessLogic.Interface
 
         public Task<OrderStatusResponseDto> ApproveOrderStatus(long Id, CancellationToken cancellationToken);
 
-        public Task DeclineOrderStatus(long Id, CancellationToken cancellationToken);
+        public Task DeclineOrderStatus(OrderResponseDto model, CancellationToken cancellationToken);
     }
 }

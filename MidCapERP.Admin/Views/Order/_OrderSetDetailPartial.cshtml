@@ -1,4 +1,5 @@
-﻿@using MidCapERP.Core.Constants
+﻿@using MidCapERP.Core.CommonHelper
+@using MidCapERP.Core.Constants
 @model MidCapERP.Dto.Order.OrderResponseDto
 @{
     var isDisable = string.Empty;
@@ -37,107 +38,197 @@
                                             @orderSetItem.ModelNo - @orderSetItem.ProductTitle
                                         </h5>
                                     </div>
-                                    <div class="c-card--wrapper p-3">
-                                        <div class="row">
-                                            <div class="col-1">
-                                                <div class="product-order--info mb-3">
-                                                    <div class="overflow-hidden">
-                                                        <div class="avatar-title bg-soft-info">
-                                                            <img class="w-100" src="@orderSetItem.ProductImage" alt="Wood type">
+                                    @if (orderSetItem.ProductTitle.ToLower() == CommonMethod.ProvidedByCustomer)
+                                    {
+                                        <div class="c-card--wrapper p-3">
+                                            <div class="row">
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-1 d-flex align-items-center">
+                                                        <label for="" class="form-label mb-0">
+                                                            Receive Date:
+                                                        </label>
+                                                        <div class="form-value fw-bold ms-2">
+                                                            @(orderSetItem.ReceiveDate != null ? orderSetItem.ReceiveDate : "")
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-order--info mb-1 d-flex align-items-center">
+                                                        <label for="" class="form-label mb-0">
+                                                            Provided Material:
+                                                        </label>
+                                                        <div class="form-value fw-bold ms-2">
+                                                            @(orderSetItem.ProvidedMaterial != null ? orderSetItem.ProvidedMaterial : "")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Received Date
+                                                        </label>
+                                                        <div class="order-final-price fw-bold">
+                                                            @orderSetItem.ReceivedDate
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Received Material
+                                                        </label>
+                                                        <div class="order-final-price fw-bold">
+                                                            @orderSetItem.ReceivedMaterial
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Received From
+                                                        </label>
+                                                        <div class="order-final-price fw-bold">
+                                                            @orderSetItem.ReceivedFrom
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Received By
+                                                        </label>
+                                                        <div class="order-final-price fw-bold">
+                                                            @orderSetItem.ReceivedByName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="product-order--info mb-3 text-center">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Received Comment
+                                                        </label>
+                                                        <div class="order-final-price fw-bold">
+                                                            @(orderSetItem.RecievedComment != null ? orderSetItem.RecievedComment : "")
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col">
-                                                <div class="row">
-                                                    <div class="col-4">
-                                                        <div class="product-order--info mb-1">
-                                                            <label for="" class="form-label mb-1 fs-12">
-                                                                Dimensions
-                                                            </label>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="product-order--info">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Comment
+                                                        </label>
+                                                        <div class="form-value">
+                                                            @(orderSetItem.Comment != null ? orderSetItem.Comment : "")
                                                         </div>
-                                                        <div class="product-order--info mb-1 d-flex align-items-center">
-                                                            <label for="" class="form-label mb-0">
-                                                                Width:
-                                                            </label>
-                                                            <div class="form-value fw-bold ms-2">
-                                                                @orderSetItem.Width
-                                                            </div>
-                                                        </div>
-                                                        <div class="product-order--info mb-1 d-flex align-items-center">
-                                                            <label for="" class="form-label mb-0">
-                                                                Height:
-                                                            </label>
-                                                            <div class="form-value fw-bold ms-2">
-                                                                @orderSetItem.Height
-                                                            </div>
-                                                        </div>
-                                                        <div class="product-order--info mb-1 d-flex align-items-center">
-                                                            <label for="" class="form-label mb-0">
-                                                                Depth:
-                                                            </label>
-                                                            <div class="form-value fw-bold ms-2">
-                                                                @orderSetItem.Depth
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="c-card--wrapper p-3">
+                                            <div class="row">
+                                                <div class="col-1">
+                                                    <div class="product-order--info mb-3">
+                                                        <div class="overflow-hidden">
+                                                            <div class="avatar-title bg-soft-info">
+                                                                <img class="w-100" src="@orderSetItem.ProductImage" alt="Wood type">
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-2">
-                                                        <div class="product-order--info mb-3 text-center">
-                                                            <label for="" class="form-label mb-1 fs-12">
-                                                                Unit Price
-                                                            </label>
-                                                            <div class="order-final-price fw-bold">
-                                                                @orderSetItem.UnitPrice
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="product-order--info mb-1">
+                                                                <label for="" class="form-label mb-1 fs-12">
+                                                                    Dimensions
+                                                                </label>
+                                                            </div>
+                                                            <div class="product-order--info mb-1 d-flex align-items-center">
+                                                                <label for="" class="form-label mb-0">
+                                                                    Width:
+                                                                </label>
+                                                                <div class="form-value fw-bold ms-2">
+                                                                    @orderSetItem.Width
+                                                                </div>
+                                                            </div>
+                                                            <div class="product-order--info mb-1 d-flex align-items-center">
+                                                                <label for="" class="form-label mb-0">
+                                                                    Height:
+                                                                </label>
+                                                                <div class="form-value fw-bold ms-2">
+                                                                    @orderSetItem.Height
+                                                                </div>
+                                                            </div>
+                                                            <div class="product-order--info mb-1 d-flex align-items-center">
+                                                                <label for="" class="form-label mb-0">
+                                                                    Depth:
+                                                                </label>
+                                                                <div class="form-value fw-bold ms-2">
+                                                                    @orderSetItem.Depth
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="product-order--info mb-3 text-center">
+                                                                <label for="" class="form-label mb-1 fs-12">
+                                                                    Unit Price
+                                                                </label>
+                                                                <div class="order-final-price fw-bold">
+                                                                    @orderSetItem.UnitPrice
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="product-order--info mb-3 text-center">
+                                                                <label for="" class="form-label mb-1 fs-12">
+                                                                    Quantity
+                                                                </label>
+                                                                <div class="order-final-price fw-bold">
+                                                                    @orderSetItem.Quantity
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <div class="product-order--info mb-3 text-center">
+                                                                <label for="" class="form-label mb-1 fs-12">
+                                                                    Discount(%)
+                                                                </label>
+                                                                <div class="order-final-price fw-bold">
+                                                                    <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" min="0" max="100" id="@orderSetItem.OrderSetItemId">&nbsp;
+                                                                    <button type="button" class="saveDiscount btn btn-icon btn-outline-primary has-spinner" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-save"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2 ms-auto">
+                                                            <div class="product-order--info mb-3 text-end">
+                                                                <label for="" class="form-label mb-1 fs-12">
+                                                                    Total Amount
+                                                                </label>
+                                                                <div class="order-final-price fw-bold">
+                                                                    @orderSetItem.TotalAmount
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-2">
-                                                        <div class="product-order--info mb-3 text-center">
-                                                            <label for="" class="form-label mb-1 fs-12">
-                                                                Quantity
-                                                            </label>
-                                                            <div class="order-final-price fw-bold">
-                                                                @orderSetItem.Quantity
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <div class="product-order--info mb-3 text-center">
-                                                            <label for="" class="form-label mb-1 fs-12">
-                                                                Discount(%)
-                                                            </label>
-                                                            <div class="order-final-price fw-bold">
-                                                                <input class="form-control-sm" type="number" asp-for="@orderSetItem.DiscountPrice" min="0" max="100" id="@orderSetItem.OrderSetItemId">&nbsp;
-                                                                <button type="button" class="saveDiscount btn btn-icon btn-outline-primary has-spinner" id="@orderSetItem.OrderSetItemId"><i class="bx bxs-save"></i></button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-2 ms-auto">
-                                                        <div class="product-order--info mb-3 text-end">
-                                                            <label for="" class="form-label mb-1 fs-12">
-                                                                Total Amount
-                                                            </label>
-                                                            <div class="order-final-price fw-bold">
-                                                                @orderSetItem.TotalAmount
-                                                            </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="product-order--info">
+                                                        <label for="" class="form-label mb-1 fs-12">
+                                                            Comment
+                                                        </label>
+                                                        <div class="form-value">
+                                                            @orderSetItem.Comment
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="product-order--info">
-                                                    <label for="" class="form-label mb-1 fs-12">
-                                                        Comment
-                                                    </label>
-                                                    <div class="form-value">
-                                                        @orderSetItem.Comment
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    }
                                 </div>
                             }
                         </div>
