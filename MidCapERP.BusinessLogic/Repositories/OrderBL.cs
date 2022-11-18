@@ -7,7 +7,6 @@ using MidCapERP.BusinessLogic.Services.FileStorage;
 using MidCapERP.Core.CommonHelper;
 using MidCapERP.Core.Constants;
 using MidCapERP.Core.Services.Email;
-using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -1306,9 +1305,6 @@ namespace MidCapERP.BusinessLogic.Repositories
                                          join a in fabricData on x.SubjectId equals a.FabricId into fabricM
                                          from fabricMat in fabricM.DefaultIfEmpty()
 
-                                         join b in orderReceivables on x.OrderSetItemId equals b.OrderSetItemId
-                                         join c in allUserData on b.ReceivedBy equals c.UserId
-
                                          select new OrderSetItemResponseDto
                                          {
                                              OrderSetItemId = x.OrderSetItemId,
@@ -1329,13 +1325,22 @@ namespace MidCapERP.BusinessLogic.Repositories
                                              Comment = x.Comment,
                                              Status = x.MakingStatus,
                                              ReceiveDate = x.ReceiveDate,
-                                             ProvidedMaterial = x.ProvidedMaterial,
-                                             ReceivedDate = b.ReceivedDate,
-                                             ReceivedMaterial = b.ProvidedMaterial,
-                                             ReceivedFrom = b.ReceivedFrom,
-                                             ReceivedByName = c.FullName,
-                                             RecievedComment = b.Comment
+                                             ProvidedMaterial = x.ProvidedMaterial
                                          }).ToList();
+
+                foreach (var item2 in orderSetItemsData)
+                {
+                    var orderReceivableData = orderReceivables.FirstOrDefault(x => x.OrderSetItemId == item2.OrderSetItemId);
+                    if (orderReceivableData != null)
+                    {
+                        item2.ReceivedDate = orderReceivableData.ReceivedDate;
+                        item2.ReceivedMaterial = orderReceivableData.ProvidedMaterial;
+                        item2.ReceivedFrom = orderReceivableData.ReceivedFrom;
+                        item2.RecievedComment = orderReceivableData.Comment;
+                        item2.ReceivedBy = orderReceivableData.ReceivedBy;
+                        item2.ReceivedByName = allUserData.FirstOrDefault(x => x.UserId == item2.ReceivedBy)?.FullName;
+                    }
+                }
 
                 item.OrderSetItemResponseDto = orderSetItemsData;
                 item.TotalAmount = orderSetItemsData.Sum(x => x.TotalAmount);
