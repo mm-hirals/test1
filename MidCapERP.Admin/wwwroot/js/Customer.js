@@ -221,6 +221,7 @@ function DeleteCustomer(id) {
 } 
 
 $(document).on('click', '#btnReset', function (e) {
+    $("#select2-refferedBy-container").text("Select Reffered");
     $("#refferedBy").val('');
     $("#customerName").val('');
     $("#customerMobileNo").val('');
