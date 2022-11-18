@@ -44,8 +44,9 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
         public IWrkImportCustomersBL WrkImportCustomersBL { get; }
         public IWrkImportFilesBL WrkImportFilesBL { get; }
         public IProductQuantitiesBL ProductQuantitiesBL { get; }
+        public ICustomerVisitsBL CustomerVisitsBL { get; }
 
-        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IInteriorsBL interiorsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IRawMaterialBL rawMaterialBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IInteriorAddressesBL interiorAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IOrderAnonymousBL orderAnonymousBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice, IEmailHelper emailHelper, IWrkImportCustomersBL wrkImportCustomersBL, IWrkImportFilesBL wrkImportFilesBL, IProductQuantitiesBL productQuantitiesBL)
+        public UnitOfWorkBL(ApplicationDbContext context, IContractorsBL contractorsBL, ISubjectTypesBL subjectTypesBL, IContractorCategoryMappingBL contractorCategoryMapping, IInteriorsBL interiorsBL, ICustomersBL customersBL, IErrorLogsBL errorLogsBL, ICategoryBL categoryBL, ICompanyBL companyBL, IUnitBL unitBL, IRawMaterialBL rawMaterialBL, IFileStorageService fileStorageService, IQRCodeService iQRCodeService, IFabricBL fabricBL, IPolishBL polishBL, IUserTenantMappingBL userTenantMappingBL, IUserBL userBL, IProductBL productBL, IInteriorAddressesBL interiorAddressesBL, ICustomerAddressesBL customerAddressesBL, IRoleBL roleBL, IRolePermissionBL rolePermissionBL, IOrderBL orderBL, IOrderAnonymousBL orderAnonymousBL, IDashboardBL dashboardBL, ITenantBL tenantBL, ITenantBankDetailBL tenantBankDetailBL, IActivityLogsService activityLogsService, ITenantSMTPDetailBL tenantSMTPDetailBL, ISendSMSservice sendSMSservice, IEmailHelper emailHelper, IWrkImportCustomersBL wrkImportCustomersBL, IWrkImportFilesBL wrkImportFilesBL, IProductQuantitiesBL productQuantitiesBL, ICustomerVisitsBL customerVisitsBL)
         {
             _context = context;
             ContractorsBL = contractorsBL;
@@ -81,6 +82,7 @@ namespace MidCapERP.BusinessLogic.UnitOfWork
             WrkImportCustomersBL = wrkImportCustomersBL;
             WrkImportFilesBL = wrkImportFilesBL;
             ProductQuantitiesBL = productQuantitiesBL;
+            CustomerVisitsBL = customerVisitsBL;
         }
 
         #region DisposeMethod
