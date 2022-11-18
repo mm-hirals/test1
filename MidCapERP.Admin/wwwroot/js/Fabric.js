@@ -144,3 +144,11 @@ function DeleteFabric(id) {
         errorMessage("Oops...", "Something went wrong!", "error");
     }
 }
+
+$(document).on('click', '#btnReset', function (e) {
+    $("#title").val('');
+    $("#modelNo").val('');
+    $("#companyName").val('');
+    $("#companyName").val('');
+    $('#tblFabric').dataTable().fnDraw();
+});
