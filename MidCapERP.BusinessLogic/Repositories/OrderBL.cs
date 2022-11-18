@@ -439,8 +439,14 @@ namespace MidCapERP.BusinessLogic.Repositories
         {
             OrderStatusResponseDto response = new OrderStatusResponseDto();
             var orderById = await _unitOfWorkDA.OrderDA.GetById(model.OrderId, cancellationToken);
-            orderById.Status = Convert.ToInt32(model.IsOrderApproved == true ? OrderStatusEnum.Approved : OrderStatusEnum.Declined);
-            await _unitOfWorkDA.OrderDA.UpdateOrder(orderById, cancellationToken);
+
+            if (orderById.Status == Convert.ToInt32(model.IsOrderApproved == true ? OrderStatusEnum.Approved : OrderStatusEnum.Declined))
+            {
+                if (model.IsOrderApproved == true)
+                    throw new Exception("Order has been already approved");
+                else
+                    throw new Exception("Order has been already declined");
+            }
 
             if (model.IsOrderApproved == true)
             {
