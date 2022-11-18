@@ -53,6 +53,7 @@ namespace MidCapERP.Dto.Customers
         public DateTime? UpdatedDate { get; set; }
         public DateTime? UpdatedUTCDate { get; set; }
 
+        [DisplayName("Visits")]
         public int VisitCounts { get; set; }
 
         /// <summary>
