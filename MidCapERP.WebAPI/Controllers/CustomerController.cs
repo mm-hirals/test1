@@ -64,7 +64,7 @@ namespace MidCapERP.WebAPI.Controllers
                 var validateOTP = await _unitOfWorkBL.TenantBL.GetById(_currentUser.TenantId, cancellationToken);
                 if (validateOTP.SendOTP)
                 {
-                    var dataOtp = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto, cancellationToken);
+                    var dataOtp = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customerApiRequestDto.PhoneNumber, cancellationToken);
                     if (dataOtp == null)
                         return new ApiResponse(message: "No Data found", result: data, statusCode: 404);
                     return new ApiResponse(message: "OTP sent successfully", result: data, statusCode: 200);
@@ -175,7 +175,7 @@ namespace MidCapERP.WebAPI.Controllers
         [Authorize(ApplicationIdentityConstants.Permissions.AppCustomer.Create)]
         public async Task<ApiResponse> SendCustomerOtp([FromBody] CustomersRequestOtpDto customersResponseOtpDto, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customersResponseOtpDto, cancellationToken);
+            var data = await _unitOfWorkBL.CustomersBL.SendCustomerOtpAPI(customersResponseOtpDto.PhoneNumber, cancellationToken);
             if (data == null)
             {
                 return new ApiResponse(message: "No Data found", result: data, statusCode: 404);

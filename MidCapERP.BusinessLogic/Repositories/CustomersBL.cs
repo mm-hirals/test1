@@ -502,14 +502,14 @@ namespace MidCapERP.BusinessLogic.Repositories
             }
         }
 
-        public async Task<OTPLogin> SendCustomerOtpAPI(CustomersRequestOtpDto model, CancellationToken cancellationToken)
+        public async Task<OTPLogin> SendCustomerOtpAPI(string PhoneNumber, CancellationToken cancellationToken)
         {
             //Send OTP to customer through SMS
             //SendOTPToCustomer(model.PhoneNumber);
 
             OTPLogin loginToken = new OTPLogin()
             {
-                PhoneNumber = model.PhoneNumber,
+                PhoneNumber = PhoneNumber,
                 OTP = new Random().Next(1, 9999).ToString("D4"),
                 ExpiryTime = DateTime.UtcNow.AddMinutes(10),
             };
