@@ -36,8 +36,8 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCategory" href="/Category/Update/' + o.categoryId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a id="' + o.categoryId + '" data-ajax-complete="CategoryModel.onDelete" data-ajax="true" class="btn btn-icon btn-outline-danger btnRemoveCategory" data-ajax-mode="replace" href="/Category/Delete/' + o.categoryId + '"><i class="bx bxs-trash"></i></a></div>';
+                    return '<div class="c-action-btn-group justify-content-end"><a data - ajax - complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data - ajax - mode="replace" data-ajax-update="#divUpdateCategory" href = "/Category/Update/' + o.categoryId + '" ><i class="bx bxs-pencil"></i></a > ' +
+                        '<a id="' + o.categoryId + '" class="btn btn-icon btn-outline-danger btnRemoveCategory"><i class="bx bxs-trash" ></i ></a ></div>';
                 }
             }
         ]
@@ -63,7 +63,6 @@ CategoryModel.onComplete = function () {
     $("#divCategoryModal").modal('show');
 }
 
-  
 CategoryModel.onSuccess = function (xhr) {
     $('#btnCreateCategory').buttonLoader('stop');
     $('#btnSaveCategory').buttonLoader('stop');
@@ -104,6 +103,9 @@ function DeleteCategory(id) {
             success: function (response) {
                 message("Deleted!", "Your record has been deleted.", "success");
                 tblCategory.ajax.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                errorMessage("Oops...", "Something went wrong!", "error");
             }
         });
     } else {
