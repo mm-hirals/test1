@@ -36,7 +36,7 @@ $(function () {
             {
                 "mData": null, "bSortable": false,
                 "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-end"><a data - ajax - complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data - ajax - mode="replace" data-ajax-update="#divUpdateCategory" href = "/Category/Update/' + o.categoryId + '" ><i class="bx bxs-pencil"></i></a > ' +
+                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CategoryModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCategory" href="/Category/Update/' + o.categoryId + '" ><i class="bx bxs-pencil"></i></a>' +
                         '<a id="' + o.categoryId + '" class="btn btn-icon btn-outline-danger btnRemoveCategory"><i class="bx bxs-trash" ></i ></a ></div>';
                 }
             }
