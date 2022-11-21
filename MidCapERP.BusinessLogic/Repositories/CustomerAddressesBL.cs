@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MidCapERP.BusinessLogic.Interface;
+using MidCapERP.DataAccess.Repositories;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
@@ -28,13 +29,13 @@ namespace MidCapERP.BusinessLogic.Repositories
             return _mapper.Map<List<CustomerAddressesResponseDto>>(data.ToList());
         }
 
-        public async Task<JsonRepsonse<CustomerAddressesResponseDto>> GetFilterCustomerAddressesData(CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CustomerAddressesResponseDto>> GetFilterCustomerAddressesData(long customerId, CancellationToken cancellationToken)
         {
             var customerAddressesAllData = await _unitOfWorkDA.CustomerAddressesDA.GetAll(cancellationToken);
             var customer = await _unitOfWorkDA.CustomersDA.GetAll(cancellationToken);
             var customerAddressesResponseData = (from x in customerAddressesAllData
                                                  join y in customer on x.CustomerId equals y.CustomerId
-                                                 where x.CustomerId == dataTableFilterDto.customerId
+                                                 where x.CustomerId == customerId
                                                  select new CustomerAddressesResponseDto()
                                                  {
                                                      CustomerAddressId = x.CustomerAddressId,
@@ -49,8 +50,7 @@ namespace MidCapERP.BusinessLogic.Repositories
                                                      ZipCode = x.ZipCode,
                                                      IsDefault = x.IsDefault,
                                                  }).AsQueryable();
-            var customerAddressesData = new PagedList<CustomerAddressesResponseDto>(customerAddressesResponseData, dataTableFilterDto);
-            return new JsonRepsonse<CustomerAddressesResponseDto>(dataTableFilterDto.Draw, customerAddressesData.TotalCount, customerAddressesData.TotalCount, customerAddressesData);
+            return customerAddressesResponseData;
         }
 
         public async Task<CustomerAddressesResponseDto> GetDetailsById(Int64 Id, CancellationToken cancellationToken)

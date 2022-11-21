@@ -3,60 +3,37 @@
 var CustomerAddressesModel = {};
 var tblCustomerAddresses;
 
-$(function () {
-    tblCustomerAddresses = $("#tblCustomerAddresses").DataTable({
-        "searching": false,
-        "processing": true,
-        "serverSide": true,
-        "filter": true,
-        "ajax": {
-            "url": "/Customer/GetCustomerAddressesData",
-            "type": "POST",
-            "datatype": "json",
-            "data": function (d) {
-                d.customerId = $('#customerId').val().trim()
+GetCustomerAddressData();
+
+function GetCustomerAddressData() {
+    $.ajax({
+        url: "/Customer/GetCustomerAddressesData",
+        type: "POST",
+        dataType: "json",
+        data: { customerId: $('#customerId').val().trim() },
+        success: function (response) {
+            if (response !== null) {
+                var card = '';
+                $.each(response, function (i, item) {
+                    $.each(item, function (key, val) {
+                        var isDefault = item.isDefault === true ? 'Default' : '';
+                        var addressUrl = "/Customer/UpdateCustomerAddresses/" + item.customerAddressId;
+                        card = "<div class='customer-address-card--wrapper' id='customerAddresses'><div class='col-md-3 mb-2'><div class='c-card--wrapper c-card-sm--wrapper addressDetails'><div class='c-card--header'><h4 class='c-card--header-title'>" + item.addressType + "&nbsp;<span class='badge bg-primary badge-sm'>" + isDefault + "</span></h4><div class='c-card--header-action'><a data-ajax-complete='CustomerAddressesModel.onComplete' data-ajax='true' class='btn btn-icon btn-outline-primary btn-sm' data-ajax-mode='replace' data-ajax-update='#divUpdateCustomerAddresses' href='" + addressUrl + "'><i class='bx bxs-pencil'></i></a><a class='btn btn-icon btn-outline-danger btnRemoveAddress ms-2 btn-sm' id=" + item.customerAddressId +"><i class='bx bxs-trash'></i></a></div></div><div class='c-card--body'<p class='customer-address-text m-0'>" + item.street1 + ", " + item.street2 + ", " + item.area + " " + "<br />" + item.city + ", " + item.state + "-" + item.zipCode + "</p></div></div></div> "
+                    });
+                    $('#addressCard').append(card);
+                });
+            } else {
+                alert("Something went wrong");
             }
         },
-        "columns": [
-            {
-                "data": "addressType", "name": "Address Type", "autoWidth": true,
-                "mRender": function (o) {
-                    var addressTypeName = "Other";
-                    if (o == "Home") {
-                        addressTypeName = "Home";
-                    } else if (o == "Office") {
-                        addressTypeName = "Office";
-                    }
-                    return addressTypeName;
-                }
-            },
-            { "data": "street1", "name": "Street1", "autoWidth": true },
-            { "data": "street2", "name": "Street2", "autoWidth": true },
-            { "data": "landmark", "name": "Landmark", "autoWidth": true },
-            { "data": "area", "name": "Area", "autoWidth": true },
-            { "data": "city", "name": "City", "autoWidth": true },
-            { "data": "state", "name": "State", "autoWidth": true },
-            { "data": "zipCode", "name": "ZipCode", "autoWidth": true },
-            {
-                "data": "isDefault", "name": "Default", "autoWidth": true,
-                "mRender": function (o) {
-                    var isDefaultAddress = "No";
-                    if (o) {
-                        isDefaultAddress = "Yes";
-                    }
-                    return isDefaultAddress;
-                }
-            },
-            {
-                "mData": null, "bSortable": false,
-                "mRender": function (o) {
-                    return '<div class="c-action-btn-group justify-content-end"><a data-ajax-complete="CustomerAddressesModel.onComplete" data-ajax="true" class="btn btn-icon btn-outline-primary" data-ajax-mode="replace" data-ajax-update="#divUpdateCustomerAddresses" href="/Customer/UpdateCustomerAddresses/' + o.customerAddressId + '"><i class="bx bxs-pencil"></i></a>' +
-                        '<a id="' + o.customerAddressId + '" class="btn btn-icon btn-outline-danger btnRemoveAddress" data-ajax-mode="replace"><i class="bx bxs-trash"></i></a></div>';
-                }
-            }
-        ]
+        failure: function (response) {
+            alert(response.responseText);
+        },
+        error: function (response) {
+            alert(response.responseText);
+        }
     });
-});
+}
 
 $("#lnkCustemerAddressFilter").click(function () {
     $(this).toggleClass("filter-icon");
@@ -69,12 +46,12 @@ CustomerAddressesModel.onComplete = function () {
 }
 
 CustomerAddressesModel.onDelete = function () {
-    tblCustomerAddresses.ajax.reload(null, false);
     toastr.error('Data deleted successfully.');
 }
 
 CustomerAddressesModel.onSuccess = function (xhr) {
-    tblCustomerAddresses.ajax.reload(null, false);
+    $("#addressCard").html("");
+    GetCustomerAddressData();
     $('.CustomerAddressDetails').buttonLoader('stop');
     $('#customersId').buttonLoader('stop');
     $("#divCustomerAddressModal").modal('hide');
@@ -82,7 +59,6 @@ CustomerAddressesModel.onSuccess = function (xhr) {
 };
 
 CustomerAddressesModel.onFailed = function (xhr) {
-    tblCustomerAddresses.ajax.reload(null, false);
     $('.CustomerAddressDetails').buttonLoader('stop');
     $('#customersId').buttonLoader('stop');
     $("#divCustomerAddressModal").modal('hide');
@@ -112,7 +88,8 @@ function DeleteAddress(id) {
             type: "GET",
             success: function (response) {
                 message("Deleted!", "Your record has been deleted.", "success");
-                tblCustomerAddresses.ajax.reload();
+                $("#addressCard").html("");
+                GetCustomerAddressData();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 errorMessage("Oops...", "Something went wrong!", "error");
