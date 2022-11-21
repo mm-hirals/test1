@@ -12,7 +12,8 @@ function GetCustomerAddressData() {
         dataType: "json",
         data: { customerId: $('#customerId').val().trim() },
         success: function (response) {
-            if (response !== null) {
+            
+            if (response.length > 0) {
                 var card = '';
                 $.each(response, function (i, item) {
                     $.each(item, function () {
@@ -23,7 +24,8 @@ function GetCustomerAddressData() {
                     $('#addressCard').append(card);
                 });
             } else {
-                alert("Something went wrong");
+                card = "<div class='text-center customer-address-text'>No Address Details found!</div>";
+                $('#addressCard').append(card);
             }
         },
         failure: function (response) {
