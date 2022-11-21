@@ -8,7 +8,7 @@
     <div class="c-card--header">
         <h4 class="c-card--header-title">Customers</h4>
         <div class="c-card--header-action">
-            <a class="c-card--header-action-btn btn btn-outline-primary" asp-controller="Customer" asp-action="ImportCustomer">Import</a>
+            <a class="c-card--header-action-btn btn btn-outline-primary" asp-controller="Import" asp-action="Index" asp-route-Id="Customer">Import</a>
             <a class="c-card--header-action-btn btn btn-outline-primary" id="multiSelectCustomer">Send Email</a>
             <a class="c-card--header-action-btn btn btn-outline-primary" id="lnkCustomerFilter"><i class='bx bx-plus me-2'></i>Filters</a>
             <a asp-controller="Customer" asp-action="Create" class="btn btn-primary">Create New</a>
