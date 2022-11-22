@@ -133,6 +133,15 @@ namespace MidCapERP.BusinessLogic.Repositories
 
         public async Task<CustomerAddressesRequestDto> UpdateCustomerAddresses(Int64 Id, CustomerAddressesRequestDto model, CancellationToken cancellationToken)
         {
+            if (model.IsDefault)
+            {
+                var defualtAddress = await GetCustomerDefualtAddress(model.CustomerId, cancellationToken);
+                if (defualtAddress != null)
+                {
+                    defualtAddress.IsDefault = false;
+                    await _unitOfWorkDA.CustomerAddressesDA.UpdateCustomerAddress(defualtAddress.CustomerAddressId, defualtAddress, cancellationToken);
+                }
+            }
             var oldData = await CustomerAddressesGetById(Id, cancellationToken);
             UpdateCustomerAddresses(oldData);
             MapToDbObject(model, oldData);
