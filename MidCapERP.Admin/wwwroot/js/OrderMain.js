@@ -6,7 +6,7 @@
 $(document).on("shown.bs.tab", 'button[data-bs-toggle="tab"]', function (e) {
     var tabId = $(e.target).attr("id")
     if (tabId == "nav-activity-tab") {
-        $("#divOrderActivityPartial").load();
+        $("#divOrderActivityPartial").load('/Order/GetOrderActivity' + "?OrderId=" + $("#hdnOrderId").val());
     }
 });
 

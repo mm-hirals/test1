@@ -34,6 +34,19 @@ namespace MidCapERP.Admin.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetOrderActivity(long orderId, CancellationToken cancellationToken)
+        {
+            return PartialView("_OrderActivityPartial");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetOrderActivityDataById([FromForm] OrderActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkBL.OrderBL.GetFilterOrderActivityData(dataTableFilterDto, cancellationToken);
+            return Ok(data);
+        }
+
+        [HttpGet]
         [Authorize(ApplicationIdentityConstants.Permissions.PortalOrder.View)]
         public async Task<IActionResult> OrderDetail(long Id, CancellationToken cancellationToken)
         {

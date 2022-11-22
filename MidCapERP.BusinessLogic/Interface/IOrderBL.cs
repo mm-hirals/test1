@@ -1,4 +1,5 @@
 ﻿using MidCapERP.DataEntities.Models;
+using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.DataGrid;
 using MidCapERP.Dto.MegaSearch;
 using MidCapERP.Dto.Order;
@@ -61,5 +62,7 @@ namespace MidCapERP.BusinessLogic.Interface
         public Task DeclineOrderStatus(OrderResponseDto model, CancellationToken cancellationToken);
 
         public Task ShareOrderWithCustomer(long Id, CancellationToken cancellationToken);
+
+        public Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterOrderActivityData(OrderActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken);
     }
 }

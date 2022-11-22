@@ -7,17 +7,15 @@
     <nav class="order-nav-tab--sticky">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
-            <button class="nav-link" id="nav-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-rawmaterial" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Activity</button>
+            <button class="nav-link" id="nav-activity-tab" data-bs-toggle="tab" data-bs-target="#nav-activity" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Activity</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-images-tab">
+        <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
             <div id="divOrderSetDetailPartial"></div>
         </div>
-        <div class="tab-pane fade" id="nav-rawmaterial" role="tabpanel" aria-labelledby="nav-rawmaterial-tab">
-            <div id="divOrderActivityPartial">
-                <partial name="_OrderActivityPartial" />
-            </div>
+        <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
+            <div id="divOrderActivityPartial"></div>
         </div>
     </div>
 </div>

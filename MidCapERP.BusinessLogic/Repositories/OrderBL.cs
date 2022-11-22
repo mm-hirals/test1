@@ -10,6 +10,7 @@ using MidCapERP.Core.Services.Email;
 using MidCapERP.DataAccess.UnitOfWork;
 using MidCapERP.DataEntities.Models;
 using MidCapERP.Dto;
+using MidCapERP.Dto.ActivityLogs;
 using MidCapERP.Dto.Constants;
 using MidCapERP.Dto.Customers;
 using MidCapERP.Dto.DataGrid;
@@ -875,6 +876,27 @@ namespace MidCapERP.BusinessLogic.Repositories
                     await _emailHelper.SendEmail(subject: emailSubject, htmlContent: emailBody, to: emailList);
                 }
             }
+        }
+
+        public async Task<JsonRepsonse<ActivityLogsResponseDto>> GetFilterOrderActivityData(OrderActivityDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        {
+            var data = await _unitOfWorkDA.ActivityLogsDA.GetAll(cancellationToken);
+            var subjectTypeId = await _unitOfWorkDA.SubjectTypesDA.GetOrderSubjectTypeId(cancellationToken);
+            data = data.Where(p => p.SubjectId == dataTableFilterDto.orderId && p.SubjectTypeId == subjectTypeId);
+            var userData = await _unitOfWorkDA.UserDA.GetUsers(cancellationToken);
+            var dataResponse = (from x in data
+                                join y in userData on new { UserId = x.CreatedBy } equals new { UserId = y.UserId }
+                                select new ActivityLogsResponseDto()
+                                {
+                                    Description = x.Description,
+                                    Action = x.Action,
+                                    CreatedBy = x.CreatedBy,
+                                    CreatedByName = y.FirstName + " " + y.LastName,
+                                    CreatedDate = x.CreatedDate,
+                                    ActivityLogID = x.ActivityLogID,
+                                }).OrderByDescending(p => p.CreatedDate).AsQueryable();
+            var orderData = new PagedList<ActivityLogsResponseDto>(dataResponse, dataTableFilterDto);
+            return new JsonRepsonse<ActivityLogsResponseDto>(dataTableFilterDto.Draw, orderData.TotalCount, orderData.TotalCount, orderData);
         }
 
         #region Private Method
