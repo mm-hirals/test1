@@ -44,9 +44,9 @@ namespace MidCapERP.Admin.Controllers
 
         [HttpPost]
         [Authorize(ApplicationIdentityConstants.Permissions.PortalCustomer.View)]
-        public async Task<IActionResult> GetCustomerAddressesData([FromForm] CustomerAddressDataTableFilterDto dataTableFilterDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCustomerAddressesData(long customerId, CancellationToken cancellationToken)
         {
-            var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(dataTableFilterDto, cancellationToken);
+            var data = await _unitOfWorkBL.CustomerAddressesBL.GetFilterCustomerAddressesData(customerId, cancellationToken);
             return Ok(data);
         }
 
