@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'midcaptest'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0A283EEEA9E145F8845D951798BEE657 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AB9B5A2EB3EC40DCA8BAB2162B1A0E91 }}
           package: .
